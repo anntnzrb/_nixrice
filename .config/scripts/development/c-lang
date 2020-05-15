@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# compiler (alternatively tcc)
+yay --needed --noconfirm -S gcc
+
+## ALE
+# linter
+yay --needed --noconfirm -S clang
+
+# fixer
+yay --needed --noconfirm -S uncrustify
+
+## C.O.C
+nvim -c 'CocInstall -sync coc-clangd |q'

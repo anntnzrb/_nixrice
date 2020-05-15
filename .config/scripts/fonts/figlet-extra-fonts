@@ -1,0 +1,9 @@
+#!/bin/sh
+
+git clone https://github.com/xero/figlet-fonts.git ~/temp/figlet-fonts
+sudo mv -fv ~/temp/figlet-fonts/* /usr/share/figlet/
+rm -fr ~/temp/figlet-fonts/
+
+printf '████████████████████████████████████████\n'
+echo "figlet fonts were downloaded and applied"
+printf '\n████████████████████████████████████████'

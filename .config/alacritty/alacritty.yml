@@ -1,0 +1,210 @@
+#             ██                          ██   ██     ██
+#            ░██                         ░░   ░██    ░██    ██   ██
+#   ██████   ░██  ██████    █████  ██████ ██ ██████ ██████ ░░██ ██
+#  ░░░░░░██  ░██ ░░░░░░██  ██░░░██░░██░░█░██░░░██░ ░░░██░   ░░███
+#   ███████  ░██  ███████ ░██  ░░  ░██ ░ ░██  ░██    ░██     ░██
+#  ██░░░░██  ░██ ██░░░░██ ░██   ██ ░██   ░██  ░██    ░██     ██
+# ░░████████ ███░░████████░░█████ ░███   ░██  ░░██   ░░██   ██
+#  ░░░░░░░░ ░░░  ░░░░░░░░  ░░░░░  ░░░    ░░    ░░     ░░   ░░
+# configuration for Alacritty, the GPU enhanced terminal emulator
+
+# Any items in the `env` entry below will be added as environment variables
+#env:
+  #TERM: xterm-256color
+
+#=================================================================================
+# colors / transparency
+#=================================================================================
+
+#◦◝◟∘◞◜◦ transparency
+# `0.0` to `1.0`.
+background_opacity: 0.85
+
+#◦◝◟∘◞◜◦ font configuration
+font:
+# default - (Linux/BSD): monospace
+    normal:
+        family: Overpass Mono
+        style: Regular
+
+    bold:
+        family: Overpass Mono
+        style: Bold
+
+    italic:
+        family: Overpass Mono
+        style: Italic
+
+    bold_italic:
+        family: Overpass Mono
+        style: Bold Italic
+
+#◦◝◟∘◞◜◦ point size
+    size: 11.0
+
+#◦◝◟∘◞◜◦ offset is the extra space around each character
+    offset:
+        x: 0
+        y: 0
+
+# glyph offset determines the locations of the glyphs within their cells with
+# the default being at the bottom. increasing `x` moves the glyph to the right,
+# increasing `y` moves the glyph upwards.
+    glyph_offset:
+        x: 0
+        y: 0
+
+# if `true`, bold text is drawn using the bright color variants
+    draw_bold_text_with_bright_colors: false
+
+
+#◦◝◟∘◞◜◦ colors (Dracula)
+colors:
+    primary:
+        background: '0x282a36'
+        foreground: '0xf8f8f2'
+
+# cursor colors
+    cursor:
+        text: '0x44475a'
+        cursor: '0xf8f8f2'
+
+# normal colors
+    normal:
+        black:   '0x000000'
+        red:     '0xff5555'
+        green:   '0x50fa7b'
+        yellow:  '0xf1fa8c'
+        blue:    '0xbd93f9'
+        magenta: '0xff79c6'
+        cyan:    '0x8be9fd'
+        white:   '0xbfbfbf'
+
+# bright colors
+    bright:
+        black:   '0x4d4d4d'
+        red:     '0xff6e67'
+        green:   '0x5af78e'
+        yellow:  '0xf4f99d'
+        blue:    '0xcaa9fa'
+        magenta: '0xff92d0'
+        cyan:    '0x9aedfe'
+        white:   '0xe6e6e6'
+
+# dim colors
+    dim:
+        black:   '0x14151b'
+        red:     '0xff2222'
+        green:   '0x1ef956'
+        yellow:  '0xebf85b'
+        blue:    '0x4d5b86'
+        magenta: '0xff46b0'
+        cyan:    '0x59dffc'
+        white:   '0xe6e6d1'
+
+#◦◝◟∘◞◜◦ indexed colors
+# the indexed colors include all colors from 16 to 256.
+# when these are not set, they're filled with sensible defaults.
+    indexed_colors: []
+
+#=================================================================================
+# window settings
+#=================================================================================
+
+window:
+#◦◝◟∘◞◜◦ dimensions
+# specified in number of columns/lines, not pixels. `0` to ignore
+    dimensions:
+        columns: 75
+        lines: 18
+
+#◦◝◟∘◞◜◦ padding
+# blank space added around the window in pixels.
+    padding:
+        x: 12
+        y: 12
+
+# spread additional padding evenly around the terminal content.
+    dynamic_padding: true
+
+#◦◝◟∘◞◜◦ decorations
+# values for `decorations`:
+#     - full: Borders and title bar
+#     - none: Neither borders nor title bar
+    decorations: full
+
+#◦◝◟∘◞◜◦ startup mode
+# values for `startup_mode`:
+#   - Windowed
+#   - Maximized
+#   - Fullscreen
+    startup_mode: Windowed
+
+#=================================================================================
+# misc settings
+#=================================================================================
+
+#◦◝◟∘◞◜◦ window title
+title: Alacritty
+
+#◦◝◟∘◞◜◦ window class
+class:
+# application instance name
+    instance: Alacritty
+# general application class
+    general: Alacritty
+
+#◦◝◟∘◞◜◦ GTK theme variant (Linux/BSD only)
+# override the variant of the gtk theme. supported values are `dark` and `light`.
+# `none` to use the default theme variant.
+gtk_theme_variant: None
+
+#◦◝◟∘◞◜◦ scrolling
+# maximum number of lines in the scrollback buffer. '0' will disable scrolling.
+history: 10000
+
+# number of lines the viewport will move for every line scrolled when (history > 0)
+multiplier: 3
+
+# cursor
+## cursor style
+cursor:
+# values for `style`:
+#   - ▇ Block
+#   - _ Underline
+#   - | Beam
+    style: Underline
+
+# window is not focused.
+    unfocused_hollow: true
+
+#◦◝◟∘◞◜◦ URL launcher
+url:
+## when set to `None`, URL launching will be disabled completely
+#   - (Linux/BSD) xdg-open
+    launcher:
+        program: xdg-open
+        args: []
+        modifiers: Control
+
+#=================================================================================
+# key bindings
+#=================================================================================
+
+# to unset a default binding, it can be mapped to the `ReceiveChar` action.
+# alternatively, you can use `None` for a no-op if you do not wish to receive
+# input characters for that binding
+
+key_bindings:
+  - { key: C,        mods: Alt,           action: Copy             }
+  - { key: V,        mods: Alt,           action: Paste            }
+  - { key: Insert,   mods: Alt,           action: PasteSelection   }
+  - { key: Key0,     mods: Control,       action: ResetFontSize    }
+  - { key: Equals,   mods: Control,       action: IncreaseFontSize }
+  - { key: Add,      mods: Control,       action: IncreaseFontSize }
+  - { key: Subtract, mods: Control,       action: DecreaseFontSize }
+  - { key: Minus,    mods: Control,       action: DecreaseFontSize }
+  - { key: PageUp,   mods: Alt,           action: ScrollPageUp,   mode: ~Alt       }
+  - { key: PageDown, mods: Alt,           action: ScrollPageDown, mode: ~Alt       }
+  - { key: Home,     mods: Alt,           action: ScrollToTop,    mode: ~Alt       }
+  - { key: End,      mods: Alt,           action: ScrollToBottom, mode: ~Alt       }

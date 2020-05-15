@@ -1,0 +1,19 @@
+#!/bin/sh
+
+echo "amount of cached packages and size"
+sudo ls /var/cache/pacman/pkg/ | wc -l
+du -hs /var/cache/pacman/pkg/
+
+# clear ~/.cache folder
+rm -fr ~/.cache/
+
+# clear pkg cache
+sudo pacman -Scc
+sudo paccache -r
+
+echo "amount of cached packages and size"
+sudo ls /var/cache/pacman/pkg/ | wc -l
+du -hs /var/cache/pacman/pkg/
+
+# clear orphans
+sudo pacman -Rns --noconfirm $(pacman -Qdqt)

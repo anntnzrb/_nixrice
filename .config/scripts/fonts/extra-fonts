@@ -1,0 +1,9 @@
+#!/bin/sh
+
+yay --needed --noconfirm -S \
+	ttf-ms-fonts \
+	ttf-vista-fonts
+
+printf '████████████████████████████████████████\n'
+echo "extra fonts were installed"
+printf '\n████████████████████████████████████████'
