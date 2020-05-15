@@ -1,9 +1,6 @@
-#!/usr/bin/env zsh
+#!/bin/sh
 
-# In LARBS, ~/.config/wall.png is the location of the system wallpaper.  This
-# script, if given an argument, moves it there.  This script without an
-# argument sets ~/.config/wall.png as the wallpaper, which is required on login
-# if you don't want a blakc screen.
+# this script will set the wallpaper named `wally.png` @ ~/lib/imgs/wallpapers
 
-[ ! -z "$1" ] && cp "$1" ~/lib/imgs/wallpapers/wally.png
+[ -n "$1" ] && cp "$1" ~/lib/imgs/wallpapers/wally.png
 xwallpaper --zoom ~/lib/imgs/wallpapers/wally.png
