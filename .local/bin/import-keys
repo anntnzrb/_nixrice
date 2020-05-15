@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# CRL/OCSP (keyservers daemon)
+pkill -9 -x dirmngr
 # clear out the software packages downloaded during the aborted installation (optional)
 sudo pacman -Scc
 # remove old (and possibly broken) keys by entering this command
