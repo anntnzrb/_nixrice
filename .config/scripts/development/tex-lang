@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# compiler
+yay --needed --noconfirm -S \
+	biber \
+	pandoc \
+	pandoc-citeproc \
+	texlive-most
+
+## ALE
+# N/A (latexindent by default)
+
+## C.O.C
+nvim -c 'CocInstall -sync coc-texlab |q'

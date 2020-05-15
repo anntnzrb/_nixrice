@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# compiler (alternatively openjdk)
+yay --needed --noconfirm -S \
+	jdk \
+	jre \
+	jre8
+
+# change environment
+archlinux-java status
+sudo archlinux-java set java-14-jdk
+archlinux-java status
+
+## ALE
+# linter (already installed (javac))
+
+# fixer
+yay --needed --noconfirm -S uncrustify
+
+## C.O.C
+nvim -c 'CocInstall -sync coc-java |q'

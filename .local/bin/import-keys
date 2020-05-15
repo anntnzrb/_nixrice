@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# clear out the software packages downloaded during the aborted installation (optional)
+sudo pacman -Scc
+# remove old (and possibly broken) keys by entering this command
+sudo rm -fr /etc/pacman.d/gnupg ~/.gnupg ~/.cache
+# initialize the pacman keyring
+sudo pacman-key --init
+# load the signature keys
+sudo pacman-key --populate archlinux
+# reinstall keyrings including the latest keys
+sudo pacman --noconfirm -Syy gnupg archlinux-keyring
+# refresh and update the signature keys
+sudo pacman-key --refresh-keys
+# sync packages
+sudo pacman -Syy
+
+#==============================================================================
+# references
+#==============================================================================
+
+# https//0x0.st/-7ts

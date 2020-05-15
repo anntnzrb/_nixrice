@@ -1,0 +1,11 @@
+#!/bin/sh
+
+## ALE
+# linter
+yay --needed --noconfirm -S shellcheck
+
+# fixer
+yay --needed --noconfirm -S shfmt
+
+## C.O.C
+# N/A
