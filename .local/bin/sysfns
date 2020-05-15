@@ -1,0 +1,30 @@
+#!/usr/bin/env zsh
+
+# menu of system options
+
+# non-systemd init systems (OpenRC missing)
+case "$(readlink -f /sbin/init)" in
+*runit*) zzz="zzz" ;;
+esac
+
+declare opts=("reboot
+sleep
+shutdown
+end-x-session")
+
+choice=$(printf '%s' "${opts[@]}" | dmenu -c -i -l 20 -bw 6 -fn "Overpass Mono" -p 'command: ')
+
+case "$choice" in
+reboot)
+	${reb:-reboot}
+	;;
+sleep)
+	${zzz:-systemctl suspend-then-hibernate}
+	;;
+shutdown)
+	${sdn:-shutdown -h now}
+	;;
+end-x-session)
+	killall -9 Xorg
+	;;
+esac

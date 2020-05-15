@@ -1,0 +1,68 @@
+#!/usr/bin/env zsh
+
+declare opts=("alacritty
+aliasrc
+dunst
+functions
+i3
+nvim
+picom
+profile
+spectrwm
+sxhkd
+xinitrc
+xprofile
+xresources
+zsh
+this-file")
+
+choice=$(printf '%s' "${opts[@]}" | dmenu -c -i -l 20 -bw 2 -fn "Overpass Mono" -p 'edit config file: ')
+edit="$TERMINAL -e $EDITOR"
+
+case "$choice" in
+alacritty)
+	$edit "$HOME"/.config/alacritty/alacritty.yml
+	;;
+aliasrc)
+	$edit "$HOME"/.config/sh/aliasrc
+	;;
+dunst)
+	$edit "$HOME"/.config/dunst/dunstrc
+	;;
+functions)
+	$edit "$HOME"/.config/sh/functions
+	;;
+i3)
+	$edit "$HOME"/.config/i3/config
+	;;
+nvim)
+	$edit "$HOME"/.config/nvim/init.vim
+	;;
+picom)
+	$edit "$HOME"/.config/picom/picom.conf
+	;;
+profile)
+	$edit "$HOME"/.profile
+	;;
+spectrwm)
+	$edit "$HOME"/.config/spectrwm/spectrwm.conf
+	;;
+sxhkd)
+	$edit "$HOME"/.config/sxhkd/sxhkdrc
+	;;
+xinitrc)
+	$edit "$HOME"/.xinitrc
+	;;
+xprofile)
+	$edit "$HOME"/.xprofile
+	;;
+xresources)
+	$edit "$HOME"/.Xresources
+	;;
+zsh)
+	$edit "$HOME"/.config/zsh/.zshrc
+	;;
+this-file)
+	$edit "$HOME"/.local/bin/edit-cfgs
+	;;
+esac

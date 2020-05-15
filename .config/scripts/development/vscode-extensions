@@ -1,0 +1,32 @@
+#!/bin/sh
+
+VS_VER="codium"
+
+# general
+$VS_VER --install-extension davidanson.vscode-markdownlint
+$VS_VER --install-extension dracula-theme.theme-dracula
+$VS_VER --install-extension eamodio.gitlens
+$VS_VER --install-extension formulahendry.code-runner
+$VS_VER --install-extension foxundermoon.shell-format
+$VS_VER --install-extension robbowen.synthwave-vscode
+$VS_VER --install-extension streetsidesoftware.code-spell-checker
+$VS_VER --install-extension streetsidesoftware.code-spell-checker-spanish
+$VS_VER --install-extension teabyii.ayu
+$VS_VER --install-extension visualstudioexptteam.vscodeintellicode
+
+# java
+$VS_VER --install-extension redhat.java
+$VS_VER --install-extension vscjava.vscode-java-dependency
+$VS_VER --install-extension vscjava.vscode-java-test
+
+# markdown
+$VS_VER --install-extension yzhang.markdown-all-in-one
+
+# python
+$VS_VER --install-extension ms-python.python
+
+# uncrustify (formatter/fixer)
+$VS_VER --install-extension laurenttreguier.uncrustify
+
+printf '\nthe following extensions are currently installed:\n\n'
+$VS_VER --list-extensions

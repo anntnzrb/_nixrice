@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# set-up location
+LOCATION="Guayaquil"
+
+if if-net; then
+	curl -fs "wttr.in/$LOCATION?format='%c+%t'" | sed "s/'//g"
+else
+	echo "N/A"
+fi
