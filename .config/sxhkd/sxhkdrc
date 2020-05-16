@@ -21,6 +21,9 @@ super + d
 # launch file manager
 super + e
 	$FILE
+# launch blank vim
+super + v
+	$TERMINAL -e $EDITOR
 # launch GUI audio control
 super + p
 	pavucontrol
