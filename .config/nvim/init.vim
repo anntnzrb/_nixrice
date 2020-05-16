@@ -28,7 +28,6 @@ Plug 'kovetskiy/sxhkd-vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-surround'
-Plug 'vimwiki/vimwiki'
 call plug#end()
 
 set bg=light
@@ -79,13 +78,6 @@ set clipboard+=unnamedplus
 " Nerd tree
 	map <leader>n :NERDTreeToggle<CR>
 	autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-" vimling:
-	nm <leader>d :call ToggleDeadKeys()<CR>
-	imap <leader>d <esc>:call ToggleDeadKeys()<CR>a
-	nm <leader>i :call ToggleIPA()<CR>
-	imap <leader>i <esc>:call ToggleIPA()<CR>a
-	nm <leader>q :call ToggleProse()<CR>
 
 " shortcutting split navigation
 	map <C-h> <C-w>h
