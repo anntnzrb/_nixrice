@@ -10,26 +10,25 @@
 let mapleader =","
 
 if ! filereadable(expand('~/.config/nvim/autoload/plug.vim'))
-	echo "Downloading junegunn/vim-plug to manage plugins..."
+	echo "downloading vim-plug plugin manager..."
 	silent !mkdir -p ~/.config/nvim/autoload/
 	silent !curl "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > ~/.config/nvim/autoload/plug.vim
 	autocmd VimEnter * PlugInstall
 endif
 
 call plug#begin('~/.config/nvim/plugged')
-Plug 'dense-analysis/ale'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
-Plug 'junegunn/limelight.vim'
-Plug 'junegunn/goyo.vim'
-Plug 'scrooloose/nerdtree'
-Plug 'ap/vim-css-color'
-Plug 'kovetskiy/sxhkd-vim'
 Plug 'PotatoesMaster/i3-vim-syntax'
+Plug 'ap/vim-css-color'
+Plug 'bling/vim-airline'
+Plug 'dense-analysis/ale'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
+Plug 'kovetskiy/sxhkd-vim'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-surround'
 Plug 'vimwiki/vimwiki'
-Plug 'bling/vim-airline'
-Plug 'lukesmithxyz/vimling'
 call plug#end()
 
 set bg=light
