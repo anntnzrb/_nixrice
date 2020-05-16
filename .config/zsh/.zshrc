@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 #                 ██
 #                ░██
 #  ██████  ██████░██      ██████  █████
@@ -6,8 +8,7 @@
 #   ██    ░░░░░██░██  ░██ ░██   ░██   ██
 #  ██████ ██████ ░██  ░██░███   ░░█████
 # ░░░░░░ ░░░░░░  ░░   ░░ ░░░     ░░░░░
-# useful stuff should be at ../zsh/lib/
-
+# useful stuff should be @ ../zsh/lib/
 
 #◦◝◟∘◞◜◦  random quote on zsh launch
 
@@ -37,15 +38,49 @@ setopt EXTENDED_HISTORY
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt SHARE_HISTORY
 
+#◦◝◟∘◞◜◦ keybinds
+typeset -g -A key
+
+# declarations
+key[Home]="${terminfo[khome]}"
+key[End]="${terminfo[kend]}"
+key[Delete]="${terminfo[kdch1]}"
+key[Control-Left]="${terminfo[kLFT5]}"
+key[Control-Right]="${terminfo[kRIT5]}"
+key[Shift-Tab]="${terminfo[kcbt]}"
+
+# actual binding
+[[ -n "${key[Home]}"          ]] && bindkey -- "${key[Home]}"          beginning-of-line
+[[ -n "${key[End]}"           ]] && bindkey -- "${key[End]}"           end-of-line
+[[ -n "${key[Delete]}"        ]] && bindkey -- "${key[Delete]}"        delete-char
+[[ -n "${key[Control-Left]}"  ]] && bindkey -- "${key[Control-Left]}"  backward-word
+[[ -n "${key[Control-Right]}" ]] && bindkey -- "${key[Control-Right]}" forward-word
+[[ -n "${key[Shift-Tab]}"     ]] && bindkey -- "${key[Shift-Tab]}"     reverse-menu-complete
+
+# force terminal in application mode
+if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
+	autoload -Uz add-zle-hook-widget
+	function zle_application_mode_start { echoti smkx }
+	function zle_application_mode_stop { echoti rmkx }
+	add-zle-hook-widget -Uz zle-line-init zle_application_mode_start
+	add-zle-hook-widget -Uz zle-line-finish zle_application_mode_stop
+fi
+
 #◦◝◟∘◞◜◦ file sourcing
 
 # aliases / functions / prompt
-[ -f "$HOME/.config/sh/aliasrc" ] && source "$HOME/.config/sh/aliasrc"
+[ -f "$HOME/.config/sh/aliasrc"   ] && source "$HOME/.config/sh/aliasrc"
 [ -f "$HOME/.config/sh/functions" ] && source "$HOME/.config/sh/functions"
-[ -f "$HOME/.config/sh/prompt" ] && source "$HOME/.config/sh/prompt"
+[ -f "$HOME/.config/sh/prompt"    ] && source "$HOME/.config/sh/prompt"
 
 # uncrustify config (for some reason this needs to be sourced every time)
 export UNCRUSTIFY_CONFIG="$HOME/.config/uncrustify/uncrustify.cfg"
 
 # extensions
 for extension ($ZDOTDIR/lib/extensions/*) source $extension
+
+#================================================================================
+# references
+#================================================================================
+
+# https://0x0.st/oCRf
