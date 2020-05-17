@@ -41,13 +41,22 @@ set nohlsearch
 set clipboard+=unnamedplus
 
 "" general:
-	set ma
+	set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
 	nnoremap c "_c
 	set nocompatible
 	filetype plugin on
 	syntax on
 	set encoding=utf-8
 	set number relativenumber
+
+" shortcutting split navigation
+	map <C-h> <C-w>h
+	map <C-j> <C-w>j
+	map <C-k> <C-w>k
+	map <C-l> <C-w>l
+
+" this allows to jump thru these: '+===+'
+	nnoremap <Space><Space> <Esc>/+===+<CR>"_c5l
 
 " force reload buffer
 	nmap <F5> :edit!<CR>
@@ -67,6 +76,13 @@ set clipboard+=unnamedplus
 " splits open at the bottom and right
 	set splitbelow splitright
 
+" replace all aliased to `S`
+	nnoremap S :%s//g<Left><Left>
+
+" auto delete trailing whitespace and \n's at end of file on save
+	autocmd BufWritePre * %s/\s\+$//e
+	autocmd BufWritepre * %s/\n\+\%$//e
+
 " Goyo
 	map <leader>g :Goyo \| set bg=light \| set linebreak<CR>
 
@@ -85,7 +101,7 @@ set clipboard+=unnamedplus
 
 " Nerd tree
 	map <leader>n :NERDTreeToggle<CR>
-	let NERDTreeShowHidden=1
+	autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " coc
 	nmap <leader>gd <Plug>(coc-definition)
@@ -98,50 +114,13 @@ set clipboard+=unnamedplus
 	nmap <leader>gf :diffget //3<CR>
 	nmap <leader>gh :diffget //2<CR>
 
-"" languages
-	"" C
-	autocmd BufRead,BufNewFile *.h set filetype=c
+" ALE
 
-" shortcutting split navigation
-	map <C-h> <C-w>h
-	map <C-j> <C-w>j
-	map <C-k> <C-w>k
-	map <C-l> <C-w>l
-
-" replace all aliased to `S`
-	nnoremap S :%s//g<Left><Left>
-
-" copy selected text to system clipboard
-	vnoremap <C-c> "+y
-	map <C-p> "+P
-
-" compile document
-	map <leader>c :w! \| !compiler <c-r>%<CR>
-
-" auto delete trailing whitespace and \n's at end of file on save
-	autocmd BufWritePre * %s/\s\+$//e
-	autocmd BufWritepre * %s/\n\+\%$//e
-
-"" file specific:
-" save file as sudo
-	cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
-
-" script that cleans build files whenever vim buffer is closed
-	autocmd VimLeave *.tex,*.java !clean-build %
-
-" source xrdb whenever Xdefaults / Xresources are updated.
-	autocmd BufWritePost *Xresources,*Xdefaults !xrdb %
-
-" source sxhkd whenever Xdefaults / Xresources is updated
-	autocmd BufWritePost *sxhkdrc !pkill -USR1 sxhkd
-
-"" ALE
+" F11 checks errors
+  nmap <F11> <Plug>(ale_lint)
 
 " F12 fixes errors
   nmap <F12> <Plug>(ale_fix)
-
-" F11 fixes errors
-  nmap <F11> <Plug>(ale_lint)
 
 " linters
 let g:ale_linters = {
@@ -159,3 +138,27 @@ let g:ale_fixers = {
 \   'sh': ['shfmt'],
 \   'markdown': ['prettier'],
 \}
+
+"" file specific:
+" compile document
+	map <leader>c :w! \| !compiler <c-r>%<CR>
+
+" save file as sudo
+	cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
+
+" source xrdb whenever Xdefaults / Xresources are updated.
+	autocmd BufWritePost *Xresources,*Xdefaults !xrdb %
+
+" source sxhkd whenever Xdefaults / Xresources is updated
+	autocmd BufWritePost *sxhkdrc !pkill -USR1 sxhkd
+
+"" source external configs
+let cfgs = [
+\  "languages",
+\]
+for file in cfgs
+	let x = expand("~/.config/nvim/lib/".file.".vim")
+        if filereadable(x)
+		execute 'source' x
+	endif
+endfor
