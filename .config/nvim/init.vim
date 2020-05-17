@@ -22,11 +22,14 @@ Plug 'ap/vim-css-color'
 Plug 'bling/vim-airline'
 Plug 'dense-analysis/ale'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'kovetskiy/sxhkd-vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'scrooloose/nerdtree'
+Plug 'preservim/nerdtree'
 Plug 'tpope/vim-surround'
 call plug#end()
 
@@ -37,12 +40,16 @@ set nohlsearch
 set clipboard+=unnamedplus
 
 "" general:
+	set ma
 	nnoremap c "_c
 	set nocompatible
 	filetype plugin on
 	syntax on
 	set encoding=utf-8
 	set number relativenumber
+
+" force reload buffer
+	nmap <F5> :edit!<CR>
 
 " swap `ex mode` from Q to gq (probably most retarded default keybind in vim)
 	map Q gq
@@ -60,7 +67,7 @@ set clipboard+=unnamedplus
 	set splitbelow splitright
 
 " Goyo
-	map <leader>f :Goyo \| set bg=light \| set linebreak<CR>
+	map <leader>g :Goyo \| set bg=light \| set linebreak<CR>
 
 " limelight
 	" colors
@@ -69,7 +76,7 @@ set clipboard+=unnamedplus
 	autocmd! User GoyoEnter Limelight
 	autocmd! User GoyoLeave Limelight!
 
-" Markdown
+" markdown
 	" live preview
 	nmap <leader>md <Plug>MarkdownPreviewToggle
 	" refresh when save or leave insert mode
@@ -78,6 +85,17 @@ set clipboard+=unnamedplus
 " Nerd tree
 	map <leader>n :NERDTreeToggle<CR>
 	autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" coc
+	nmap <leader>gd <Plug>(coc-definition)
+	nmap <leader>gr <Plug>(coc-references)
+
+" fzf
+	map <leader>f :Files<CR>
+
+"" languages
+	"" C
+	autocmd BufRead,BufNewFile *.h set filetype=c
 
 " shortcutting split navigation
 	map <C-h> <C-w>h
@@ -102,6 +120,9 @@ set clipboard+=unnamedplus
 "" file specific:
 " save file as sudo
 	cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
+
+" script that cleans build files whenever vim buffer is closed
+	autocmd VimLeave *.tex,*.java !clean-build %
 
 " source xrdb whenever Xdefaults / Xresources are updated.
 	autocmd BufWritePost *Xresources,*Xdefaults !xrdb %
