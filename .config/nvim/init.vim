@@ -28,8 +28,9 @@ Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'kovetskiy/sxhkd-vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'scrooloose/nerdtree'
 Plug 'preservim/nerdtree'
+Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 call plug#end()
 
@@ -84,7 +85,7 @@ set clipboard+=unnamedplus
 
 " Nerd tree
 	map <leader>n :NERDTreeToggle<CR>
-	autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+	let NERDTreeShowHidden=1
 
 " coc
 	nmap <leader>gd <Plug>(coc-definition)
@@ -92,6 +93,10 @@ set clipboard+=unnamedplus
 
 " fzf
 	map <leader>f :Files<CR>
+
+" fugitive
+	nmap <leader>gf :diffget //3<CR>
+	nmap <leader>gh :diffget //2<CR>
 
 "" languages
 	"" C
