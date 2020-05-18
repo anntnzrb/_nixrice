@@ -141,7 +141,7 @@ let g:ale_fixers = {
 
 "" file specific:
 " compile document
-	map <leader>c :w! \| !compiler <c-r>%<CR>
+	map <leader>c :w! \| :10new \| :term compiler <c-r>%<CR>
 
 " save file as sudo
 	cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
