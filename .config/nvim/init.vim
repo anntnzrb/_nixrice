@@ -32,19 +32,29 @@ Plug 'preservim/nerdtree'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
+Plug 'vim-airline/vim-airline-themes'
+"" themes
+Plug 'franbach/miramare'
+Plug 'morhetz/gruvbox'
 call plug#end()
 
-set bg=light
 set go=a
 set mouse=a
 set nohlsearch
 set clipboard+=unnamedplus
+
+"" miramare
+set termguicolors
+colorscheme miramare
+set background=dark
 
 "" general:
 	set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
 	nnoremap c "_c
 	set nocompatible
 	filetype plugin on
+    set hidden
+    set noswapfile
 	syntax on
 	set encoding=utf-8
 	set number relativenumber
@@ -71,7 +81,7 @@ set clipboard+=unnamedplus
 	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " spell-check set to <leader>o, 'o' for 'orthography'
-	map <leader>o :setlocal spell! spelllang=en_us<CR>
+	map <leader>o :setlocal spell! spelllang=en_us,es<CR>
 
 " splits open at the bottom and right
 	set splitbelow splitright
@@ -82,6 +92,10 @@ set clipboard+=unnamedplus
 " auto delete trailing whitespace and \n's at end of file on save
 	autocmd BufWritePre * %s/\s\+$//e
 	autocmd BufWritepre * %s/\n\+\%$//e
+
+" airline
+    let g:airline#extensions#tabline#enabled = 1
+    let g:airline_theme='solarized_flood'
 
 " Goyo
 	map <leader>g :Goyo \| set bg=light \| set linebreak<CR>

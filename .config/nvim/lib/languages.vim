@@ -34,3 +34,7 @@ autocmd FileType java inoremap !scanner Scanner scanf = new Scanner(System.in);
 
 " script that cleans build files whenever vim buffer is closed
 autocmd VimLeave *.tex,*.java !clean-build %
+
+" comment/uncomment in c*/java
+autocmd FileType c,cpp,java nnoremap <leader>/ <Esc>I/*<Space><ESC>A<Space>*/<Esc>
+autocmd FileType c,cpp,java nnoremap <leader>? <Esc>:s/\/\*<Esc>:s/\*\/<Esc>
