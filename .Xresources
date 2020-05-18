@@ -1,24 +1,12 @@
-!! urxvt
+!! general
 
-URxvt.font: xft:Overpass Mono:pixelsize=14
-urxvt*termName: rxvt
-urxvt*scrollBar: false
-urxvt*matcher.button: 1
-urxvt.transparent: false
-urxvt.boldFont:
-URxvt.letterSpace: -1
-Xft*dpi: 96
 Xft*antialias: true
+Xft*dpi: 96
 Xft*hinting: true
 Xft*hintstyle: hintfull
-URxvt*cursorUnderline: true
 Xft*rgba: rgb
-URxvt*geometry: 75x18
-*internalBorder: 26
-URxvt*fading: 0
-URxvt*tintColor: #ffffff
-URxvt*shading: 0
-URxvt*inheritPixmap: False
+
+!! themes
 ! special
 *.foreground:   #c5c8c6
 *.background:   #1f1f1f
