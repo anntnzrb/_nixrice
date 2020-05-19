@@ -13,23 +13,23 @@
 qgc() {
     git clone -q "$1" ~/temp/"$2" || exit
     cd ~/temp/"$2" || exit
-    notify-send -t 0 "repository cloned to ~/temp/$2"
+    fnNotify 0 "repository cloned to ~/temp/$2"
 }
 
 # misc
 url_short() {
     curl -Ss -F"shorten=$*" https://0x0.st | xclip -selection clipboard || exit
-    notify-send -t 0 "link copied to clipboard"
+    fnNotify 0 "link copied to clipboard"
 }
 
 file_upl() {
     curl -Ss -F"file=@$*" https://0x0.st | xclip -selection clipboard || exit
-    notify-send -t 0 "link copied to clipboard"
+    fnNotify 0 "link copied to clipboard"
 }
 
 dddd() {
     sudo dd if="$1" of="$2" bs=1M status=progress && sync || exit
-    notify-send -t 0 "dd finished its job"
+    fnNotify 0 "dd finished copying $2"
 }
 
 sh_script() {
@@ -54,3 +54,10 @@ sh_script() {
             sudo pacman-key --lsign-key "$1" &&
             sudo pacman --noconfirm -Syy archlinux-keyring
     }
+
+#◦◝◟∘◞◜◦ misc
+fnNotify() {
+    [ -x "$(command -v notify-send)" ] &&
+        pgrep -x Xorg >/dev/null 2>&1 &&
+        notify-send -t "$1" "$2"
+}
