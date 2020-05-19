@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 #    ████                            ██   ██
 #   ░██░                            ░██  ░░
@@ -9,38 +9,37 @@
 #   ░██  ░░██████ ███  ░██░░█████   ░░██ ░██░░██████  ███  ░██ ██████
 #   ░░    ░░░░░░ ░░░   ░░  ░░░░░     ░░  ░░  ░░░░░░  ░░░   ░░ ░░░░░░
 
-#◦◝◟∘◞◜◦ s
-
 # git
 qgc() {
-	git clone "$1" ~/temp/"$2" &&
-		notify-send -t 0 "repository cloned to ~/temp/$2"
+    git clone -q "$1" ~/temp/"$2" || exit
+    cd ~/temp/"$2" || exit
+    notify-send -t 0 "repository cloned to ~/temp/$2"
 }
 
 # misc
 url_short() {
-	curl -Ss -F"shorten=$*" https://0x0.st | xclip -selection clipboard &&
-		notify-send -t 0 "link copied to clipboard"
+    curl -Ss -F"shorten=$*" https://0x0.st | xclip -selection clipboard || exit
+    notify-send -t 0 "link copied to clipboard"
 }
 
 file_upl() {
-	curl -Ss -F"file=@$*" https://0x0.st | xclip -selection clipboard &&
-		notify-send -t 0 "link copied to clipboard"
+    curl -Ss -F"file=@$*" https://0x0.st | xclip -selection clipboard || exit
+    notify-send -t 0 "link copied to clipboard"
 }
 
 dddd() {
-	sudo dd if="$1" of="$2" bs=1M status=progress && sync &&
-		notify-send -t 0 "dd finished its job"
+    sudo dd if="$1" of="$2" bs=1M status=progress && sync || exit
+    notify-send -t 0 "dd finished its job"
 }
 
 sh_script() {
-	SCRIPT_PATH="$HOME/.local/bin/$1"
+    SCRIPT_PATH="$HOME/.local/bin/$1"
 
-	if [ -f "$SCRIPT_PATH" ]; then
-		echo "file already exists"
-	else
-		printf '#!/usr/bin/env sh\n\n' >"$SCRIPT_PATH"
-		chmod +x "$SCRIPT_PATH"
-		$EDITOR "$SCRIPT_PATH"
-	fi
+    if [ -f "$SCRIPT_PATH" ]; then
+        echo "file already exists"
+    else
+        printf '#!/bin/sh\n\n' >"$SCRIPT_PATH"
+        chmod +x "$SCRIPT_PATH"
+        $EDITOR "$SCRIPT_PATH"
+    fi
 }
