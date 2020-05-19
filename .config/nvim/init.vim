@@ -49,15 +49,16 @@ colorscheme miramare
 set background=dark
 
 "" general:
-	set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
-	nnoremap c "_c
-	set nocompatible
+	syntax on
 	filetype plugin on
+	nnoremap c "_c
     set hidden
     set noswapfile
-	syntax on
 	set encoding=utf-8
+	set nocompatible
 	set number relativenumber
+	set tabstop=4 softtabstop=0 expandtab shiftwidth=4 smarttab
+    set colorcolumn=80
 
 " shortcutting split navigation
 	map <C-h> <C-w>h
@@ -115,7 +116,7 @@ set background=dark
 
 " Nerd tree
 	map <leader>n :NERDTreeToggle<CR>
-	autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+    let NERDTreeShowHidden=1
 
 " coc
 	nmap <leader>gd <Plug>(coc-definition)
@@ -123,10 +124,6 @@ set background=dark
 
 " fzf
 	map <leader>f :Files<CR>
-
-" fugitive
-	nmap <leader>gf :diffget //3<CR>
-	nmap <leader>gh :diffget //2<CR>
 
 " ALE
 
