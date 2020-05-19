@@ -43,3 +43,14 @@ sh_script() {
         $EDITOR "$SCRIPT_PATH"
     fi
 }
+
+#◦◝◟∘◞◜◦ distro-specific
+# arch
+
+[ -x "$(command -v pacman)" ] &&
+    add_key() {
+        sudo pacman-key --recv-keys "$1" &&
+            sudo pacman-key --finger "$1" &&
+            sudo pacman-key --lsign-key "$1" &&
+            sudo pacman --noconfirm -Syy archlinux-keyring
+    }
