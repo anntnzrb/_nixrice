@@ -11,62 +11,63 @@
 
 #◦◝◟∘◞◜◦ colors / settings / verbosity
 alias \
-	cp="cp -irv" \
-	diff="diff --color=auto" \
-	grep="grep -i --color=auto" \
-	ll="ls -AFSho --color=auto --group-directories-first" \
-	ls="ls -AFSh --color=auto --group-directories-first" \
-	mkdir="mkdir -pv" \
-	mv="mv -iv" \
-	rm="rm -v" \
-	rmfr="rm -frv" \
-	yt="yt -fx bestaudio/best" \
-	zip="zip -rv"
+    cp="cp -irv" \
+    diff="diff --color=auto" \
+    grep="grep -i --color=auto" \
+    ll="ls -AFSho --color=auto --group-directories-first" \
+    ls="ls -AFSh --color=auto --group-directories-first" \
+    mkdir="mkdir -pv" \
+    mv="mv -iv" \
+    rm="rm -v" \
+    rmfr="rm -frv" \
+    yt="yt -fx bestaudio/best" \
+    zip="zip -rv"
 
 #◦◝◟∘◞◜◦ shortcuts
 alias \
-	e='$EDITOR' \
-	ka="killall" \
-	kx11="sudo pkill -x Xorg" \
-	rl="source" \
-	sdn="sudo shutdown -h now" \
-	se='sudo $EDITOR' \
-	smci="sudo make clean install" \
-	sx11="startx"
+    e='$EDITOR' \
+    ka="killall" \
+    kx11="sudo pkill -x Xorg" \
+    rl="source" \
+    sdn="sudo shutdown -h now" \
+    se='sudo $EDITOR' \
+    smci="sudo make clean install" \
+    sx11="startx"
 
 #◦◝◟∘◞◜◦ cfgs
 alias \
-	cfgalacritty='$EDITOR ~/.config/alacritty/alacritty.yml' \
-	cfgaliases='$EDITOR ~/.config/zsh/lib/01-aliases' \
-	cfgbinds='$EDITOR ~/.config/sxhkd/sxhkdrc' \
-	cfgi3='$EDITOR ~/.config/i3/config' \
-	cfgspectrwm='$EDITOR ~/.config/spectrwm/spectrwm.conf' \
-	cfgvim='$EDITOR ~/.config/nvim/init.vim' \
-	cfgzsh='$EDITOR ~/.config/zsh/.zshrc'
+    cfgalacritty='$EDITOR ~/.config/alacritty/alacritty.yml' \
+    cfgaliases='$EDITOR ~/.config/zsh/lib/01-aliases' \
+    cfgbinds='$EDITOR ~/.config/sxhkd/sxhkdrc' \
+    cfgi3='$EDITOR ~/.config/i3/config' \
+    cfgspectrwm='$EDITOR ~/.config/spectrwm/spectrwm.conf' \
+    cfgvim='$EDITOR ~/.config/nvim/init.vim' \
+    cfgzsh='$EDITOR ~/.config/zsh/.zshrc'
 
-#◦◝◟∘◞◜◦ distro-specific shortcuts
+#◦◝◟∘◞◜◦ distro-specific aliases
 # arch
-alias \
-	ppaci="sudo pacman -S --needed" \
-	ppacr="sudo pacman -R" \
-	ppacs="sudo pacman -Ss" \
-	ppacu="sudo pacman -Suyy"
+[ -x "$(command -v pacman)" ] &&
+    alias \
+        pkgf="pacman -Ss" \
+        pkgi="sudo pacman -S" \
+        pkgr="sudo pacman -R" \
+        pkgu="sudo pacman -Suyy"
 
 # void
-alias \
-	xxi="sudo xbps-install -S" \
-	xxq="xbps-query -s" \
-	xxqr="xbps-query -Rs" \
-	xxr="sudo xbps-remove" \
-	xxu="sudo xbps-install -Su"
+[ -x "$(command -v xbps)" ] &&
+    alias \
+        pkgf="xbps-query -s" \
+        pkgi="sudo xbps-install -S" \
+        pkgr="sudo xbps-remove" \
+        pkgu="sudo xbps-install -Su"
 
 #◦◝◟∘◞◜◦ misc
 alias \
-	ascii="toilet -t -f 3d" \
-	future="toilet -t -f future" \
-	matrix="cmatrix -b" \
-	rusto="toilet -t -f rusto" \
-	rustofat="toilet -t -f rustofat" \
-	screenkey="screenkey -t 2 -p bottom -s small --opacity 0.55" \
-	tnet="ping 1.1.1.1" \
-	tnetspeed="speedtest-cli"
+    ascii="toilet -t -f 3d" \
+    future="toilet -t -f future" \
+    matrix="cmatrix -b" \
+    rusto="toilet -t -f rusto" \
+    rustofat="toilet -t -f rustofat" \
+    screenkey="screenkey -t 2 -p bottom -s small --opacity 0.55" \
+    tnet="ping 1.1.1.1" \
+    tnetspeed="speedtest-cli"
