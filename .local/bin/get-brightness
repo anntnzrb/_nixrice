@@ -1,3 +1,5 @@
 #!/bin/sh
 
-xbacklight | sed 's/\..*//'
+# gets brightness level of your screen
+
+printf '☀ %s%%' "$(xbacklight | sed 's/\..*//')"

@@ -1,9 +1,35 @@
 #!/bin/sh
 
-[ -n "$1" ] &&
-	if pgrep -x "$1" >/dev/null; then
-		killall -9 "$1" && notify-send -t 3000 "'$1' terminated"
-	else
-		$1 &
-		notify-send -t 3000 "'$1' now running"
-	fi
+# toggle a program if installed & running
+#
+# useful to toggle on the go;
+# example would be toggling compositor;
+# notifies with `dunst` if installed and `X` is running
+
+# checks if program is installed
+fnIs_Installed() {
+    [ -x "$(command -v "$1")" ]
+}
+
+# verify if program is running
+fnIs_Running() {
+    pidof -s "$1" >/dev/null
+}
+
+# checks if dunst is installed; recieves parameters
+fnNotify() {
+    fnIs_Installed notify-send &&
+        pgrep -x Xorg >/dev/null 2>&1 &&
+        notify-send -t "$1" "$2"
+}
+
+if fnIs_Installed "$1"; then
+    if fnIs_Running "$1"; then
+        killall -9 "$1" && fnNotify 3000 "'$1' terminated"
+    else
+        $1 &
+        fnNotify 3000 "'$1' now running"
+    fi
+else
+    fnNotify 0 "$1: unknown program"
+fi
