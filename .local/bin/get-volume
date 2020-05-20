@@ -1,20 +1,33 @@
 #!/bin/sh
 
-# get pulseaudio info
-vol_stat="$(pactl list sinks)"
+# get volume level
+#
+# currently only working for pulseaudio
 
-# get volume value
-vol="$(echo "$vol_stat" | grep '[0-9]\+%' | sed "s,.* \([0-9]\+\)%.*,\1,;1q")"
+# checks if program is installed
+fnIs_Installed() {
+    [ -x "$(command -v "$1")" ]
+}
 
-# check if muted
-echo "$vol_stat" | grep -q "Mute: yes" && printf "🔇\\n" && exit
+if fnIs_Installed pulseaudio; then
+    # get pulseaudio info
+    vol_stat="$(pactl list sinks)"
 
-if [ "$vol" -gt "70" ]; then
-	icon="🔊"
-elif [ "$vol" -lt "30" ]; then
-	icon="🔈"
+    # get volume value
+    vol="$(echo "$vol_stat" | grep '[0-9]\+%' | sed "s,.* \([0-9]\+\)%.*,\1,;1q")"
+
+    # check if muted
+    echo "$vol_stat" | grep -q "Mute: yes" && printf "🔇\\n" && exit
+
+    if [ "$vol" -gt "70" ]; then
+        icon="🔊"
+    elif [ "$vol" -lt "30" ]; then
+        icon="🔈"
+    else
+        icon="🔉"
+    fi
+
+    printf "%s %s%%" "$icon" "$vol"
 else
-	icon="🔉"
+    echo '🔊???'
 fi
-
-printf "%s %s%%\n" "$icon" "$vol"

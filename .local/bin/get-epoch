@@ -1,3 +1,5 @@
 #!/bin/sh
 
-date '+%a, %d %b @ %H:%M'
+# retrieves formatted date
+
+printf '🕓 %s' "$(date '+%a, %d %b @ %H:%M')"

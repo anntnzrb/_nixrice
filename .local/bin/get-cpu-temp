@@ -1,3 +1,8 @@
 #!/bin/sh
 
-sensors | awk '/Core 0/ { print $3 }' | sed 's/+// ; s/\..//'
+# gets CPU temperature
+#
+# checks for the first "Core" on `sensors`
+
+printf '🌡 %s' \
+    "$(sensors | awk '/Core 0/ { print $3 }' | sed 's/+// ; s/\..//')"

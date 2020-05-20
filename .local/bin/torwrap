@@ -1,8 +1,31 @@
 #!/bin/sh
 
-ifinstalled tremc transmission-cli || exit
+# launches torrent
+#
+# launches and enables if inactive
 
-! pidof transmission-daemon >/dev/null && transmission-daemon &&
-    notify-send "Starting torrent daemon..."
+# checks if program is installed
+fnIs_Installed() {
+    [ -x "$(command -v "$1")" ]
+}
 
-$TERMINAL -e tremc
+# verify if program is running
+fnIs_Running() {
+    pidof -s "$1" >/dev/null
+}
+
+# checks if dunst is installed; recieves parameters
+fnNotify() {
+    fnIs_Installed notify-send &&
+        pgrep -x Xorg >/dev/null 2>&1 &&
+        notify-send -t "$1" "$2"
+}
+
+if fnIs_Installed tremc && fnIs_Installed transmission-cli; then
+    ! fnIs_Running transmission-daemon && transmission-daemon &&
+        fnNotify 3 "Starting torrent daemon..."
+
+    $TERMINAL -e tremc
+else
+    exit
+fi
