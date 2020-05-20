@@ -1,6 +1,15 @@
 #!/bin/sh
 
-# this script will set the wallpaper named `wally.png` @ ~/lib/imgs/wallpapers
+# This script does the following:
+#	Run by itself, set the wallpaper (at X start).
+#	If given a file, set that as the new wallpaper.
+#	If given a directory, choose random file in it.
 
-[ -n "$1" ] && cp "$1" ~/lib/imgs/wallpapers/wally.png
-xwallpaper --zoom ~/lib/imgs/wallpapers/wally.png
+# Location of link to wallpaper link.
+bgloc="$HOME/lib/imgs/wallpapers/wally.png"
+
+[ -f "$1" ] && ln -sf "$(readlink -f "$1")" "$bgloc" && notify-send -i "$bgloc" "updating wallpaper..."
+
+[ -d "$1" ] && ln -sf "$(find "$(readlink -f "$1")" -iregex '.*.\(jpg\|jpeg\|png\|gif\)' -type f | shuf -n 1)" "$bgloc" && notify-send -i "$bgloc" "Random Wallpaper chosen."
+
+xwallpaper --zoom "$bgloc"
