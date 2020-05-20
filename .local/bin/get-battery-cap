@@ -1,4 +1,35 @@
 #!/bin/sh
 
-# meant for only one battery
-printf '%s%%\n' "$(cat /sys/class/power_supply/BAT0/capacity)"
+# gets the current battery capacity
+#
+# only tested with one battery attached
+
+# loop through all batteries
+for battery in /sys/class/power_supply/BAT?; do
+    capacity=$(cat "$battery"/capacity)
+    status=$(cat "$battery"/status)
+
+    if [ "$status" = "Discharging" ] || [ "$status" = "Charging" ] ||
+        [ "$status" = "Unknown" ]; then
+        # pick icon depending on the amount of battery
+        if [ "$capacity" -ge 80 ]; then
+            icon=" "
+        elif [ "$capacity" -ge 60 ]; then
+            icon=" "
+        elif [ "$capacity" -ge 30 ]; then
+            icon=" "
+        elif [ "$capacity" -ge 15 ]; then
+            icon=" "
+        elif [ "$capacity" -lt 15 ]; then
+            icon=" "
+        fi
+        # if charging, plug icon + %
+        [ "$status" = "Charging" ] && icon="🔌"
+
+        printf '%s%%' "$icon $capacity"
+    else
+        icon="🔌"
+        printf '%s' "🟢$icon"
+    fi
+
+done

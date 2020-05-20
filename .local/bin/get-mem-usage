@@ -1,3 +1,5 @@
 #!/bin/sh
 
-free --si -h | awk '/Mem/ { print $3 }'
+# gets hte currently used ram memory
+
+printf ' %s' "$(free --si -h | awk '/Mem/ { print $3 }')"

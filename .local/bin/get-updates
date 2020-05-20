@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# gets the amount of pending packages
+#
+# only checks the cached amount of packages;
+# meaning there needs to be a job that fetches updates
+
+# checks if there's internet connection
+fnIs_Net() {
+    ping -q -c 1 1.1.1.1 >/dev/null 2>&1
+}
+
+if fnIs_Net; then
+    # arch
+    if [ -x "$(command -v "pacman")" ]; then
+        pacman -Qu | grep -Fcv "[ignored]" | sed "s/^/📦 /;s/^📦 0$//g"
+    # void
+    elif [ -x "$(command -v "xbps")" ]; then
+        echo "missing update command for void"
+    else
+        echo '📦?'
+    fi
+else
+    echo '📡❌'
+fi
