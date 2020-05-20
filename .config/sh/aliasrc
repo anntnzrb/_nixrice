@@ -65,7 +65,7 @@ alias \
 alias \
     ascii="toilet -t -f 3d" \
     future="toilet -t -f future" \
-    matrix="cmatrix -b" \
+    matrix="unimatrix -a -l GRgors -s 96" \
     rusto="toilet -t -f rusto" \
     rustofat="toilet -t -f rustofat" \
     screenkey="screenkey -t 2 -p bottom -s small --opacity 0.55" \
