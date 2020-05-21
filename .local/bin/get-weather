@@ -4,16 +4,16 @@
 #
 # should adjust the varibale `LOCATION` to desired location
 
+# set-up location
+LOCATION="Guayaquil"
+
 # checks if there's internet connection
 fnIs_Net() {
     ping -q -c 1 1.1.1.1 >/dev/null 2>&1
 }
-# set-up location
-LOCATION="Guayaquil"
 
 if fnIs_Net; then
-    curl -fs "wttr.in/$LOCATION?format='%c+%t'" | tr -d '[:space:]' | \
-        sed "s/'//g"
+    printf '⛅ %s'"$(curl -fs "wttr.in/$LOCATION?format='%t'" | sed "s/'//g")"
 else
     echo "📡❌"
 fi
