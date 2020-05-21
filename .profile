@@ -6,7 +6,7 @@ export PATH="$PATH:$(du "$HOME/.local/bin/" | cut -f2 | tr '\n' ':' | sed 's/:*$
 
 #◦◝◟∘◞◜◦ default programs
 export EDITOR="nvim"
-export TERMINAL="alacritty"
+export TERMINAL="st"
 export BROWSER="qutebrowser"
 export READER="zathura"
 export FILE="pcmanfm"
