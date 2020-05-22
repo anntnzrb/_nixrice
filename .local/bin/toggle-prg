@@ -7,29 +7,29 @@
 # notifies with `dunst` if installed and `X` is running
 
 # checks if program is installed
-fnIs_Installed() {
+is_installed() {
     [ -x "$(command -v "$1")" ]
 }
 
 # verify if program is running
-fnIs_Running() {
+is_running() {
     pidof -s "$1" >/dev/null
 }
 
-# checks if dunst is installed; recieves parameters
-fnNotify() {
-    fnIs_Installed notify-send &&
+# checks if dunst is installed; receives parameters
+notify() {
+    is_installed notify-send &&
         pgrep -x Xorg >/dev/null 2>&1 &&
         notify-send -t "$1" "$2"
 }
 
-if fnIs_Installed "$1"; then
-    if fnIs_Running "$1"; then
-        killall -9 "$1" && fnNotify 3000 "'$1' terminated"
+if is_installed "$1"; then
+    if is_running "$1"; then
+        killall -9 "$1" && notify 3000 "'$1' terminated"
     else
         $1 &
-        fnNotify 3000 "'$1' now running"
+        notify 3000 "'$1' now running"
     fi
 else
-    fnNotify 0 "$1: unknown program"
+    notify 0 "$1: unknown program"
 fi
