@@ -13,14 +13,13 @@
 alias \
     cp="cp -irv" \
     diff="diff --color=auto" \
-    grep="grep -i --color=auto" \
-    ll="ls -AFSho --color=auto --group-directories-first" \
-    ls="ls -AFSh --color=auto --group-directories-first" \
+    grep="grep --color=auto" \
+    ll="ls -AFho --color=auto --group-directories-first" \
+    ls="ls -AFh --color=auto --group-directories-first" \
     mkdir="mkdir -pv" \
     mv="mv -iv" \
     rm="rm -v" \
     rmfr="rm -frv" \
-    yt="yt -fx bestaudio/best" \
     zip="zip -rv"
 
 #◦◝◟∘◞◜◦ shortcuts
@@ -70,4 +69,6 @@ alias \
     rustofat="toilet -t -f rustofat" \
     screenkey="screenkey -t 2 -p bottom -s small --opacity 0.55" \
     tnet="ping 1.1.1.1" \
-    tnetspeed="speedtest-cli"
+    tnetspeed="speedtest-cli" \
+    yta="youtube-dl --extract-audio --audio-format best" \
+    ytv="youtube-dl -f"
