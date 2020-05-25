@@ -8,7 +8,7 @@ _or i'd say, literally my home folder..._
 
 ## table of contents
 
-- [\*nixrice](#*nixrice)
+- [\*nixrice](#nixrice)
   - [intro](#intro)
   - [software](#software)
   - [installation](#installation)
@@ -58,7 +58,7 @@ this table displays _most_ of the programs i have configuration files for
 | file manager       | _PCManFM_                   | :large_blue_circle:  |
 | pdf viewer         | _zathura_                   | :large_blue_circle:  |
 | language formatter | _uncrustify_                | :large_blue_circle:  |
-| ---                | _miscellaneous_             |
+|                    | **miscellaneous**           |
 | key-binds          | _sxhkd_                     | :large_blue_circle:  |
 | sys-info tool      | _neofetch_                  | :large_blue_circle:  |
 
