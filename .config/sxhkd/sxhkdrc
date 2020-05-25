@@ -17,7 +17,7 @@ super + Return
 	$TERMINAL
 # launch dmenu
 super + d
-	dmenu_run
+	dmenu_run -i -p 'summon:'
 # launch file manager
 super + e
 	$FILE
