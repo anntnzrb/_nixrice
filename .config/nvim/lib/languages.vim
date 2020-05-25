@@ -6,10 +6,10 @@
 "  ░░░░░
 
 " .h files ac C instead of cpp
-autocmd BufRead,BufNewFile *.h set filetype=c
+au BufRead,BufNewFile *.h set filetype=c
 
 " printf()
-autocmd FileType c inoremap !printf printf("\n", +===+);<ESC>F\i
+au FileType c ino !printf printf("\n", +===+);<ESC>F\i
 
 "     ██
 "    ░░
@@ -21,10 +21,10 @@ autocmd FileType c inoremap !printf printf("\n", +===+);<ESC>F\i
 "  ░░░   ░░░░░░░░    ░░     ░░░░░░░░
 
 " System.out.printf()
-autocmd FileType java inoremap !printf System.out.printf("%n", +===+);<ESC>F%i
+au FileType java ino !printf System.out.printf("%n", +===+);<ESC>F%i
 
 "Scanner scanf = new Scanner(System.in)
-autocmd FileType java inoremap !scanner Scanner scanf = new Scanner(System.in);
+au FileType java ino !scanner Scanner scanf = new Scanner(System.in);
 
 "           ██
 "          ░░
@@ -36,8 +36,8 @@ autocmd FileType java inoremap !scanner Scanner scanf = new Scanner(System.in);
 "    ░░    ░░ ░░░  ░░  ░░
 
 " comment/uncomment in vim
-autocmd FileType vim nnoremap <leader>/ <Esc>I"<Space><ESC>
-autocmd FileType vim nnoremap <leader>? <Esc>:s/"\s<Esc>
+au FileType vim nn <leader>/ <Esc>I"<Space><ESC>
+au FileType vim nn <leader>? <Esc>:s/"\s<Esc>
 
 "              ██
 "             ░░
@@ -49,12 +49,12 @@ autocmd FileType vim nnoremap <leader>? <Esc>:s/"\s<Esc>
 " ░░░  ░░  ░░ ░░ ░░░░░░   ░░░░░
 
 " script that cleans build files whenever vim buffer is closed
-autocmd VimLeave *.tex,*.java !clean-build %
+au VimLeave *.tex,*.java !clean-build %
 
 " comment/uncomment in c*/java
-autocmd FileType c,cpp,java nnoremap <leader>/ <Esc>I/*<Space><ESC>A<Space>*/<Esc>
-autocmd FileType c,cpp,java nnoremap <leader>? <Esc>:s/\/\*\s<Esc>:s/\s\*\/<Esc>
+au FileType c,cpp,java nn <leader>/ <Esc>I/*<Space><ESC>A<Space>*/<Esc>
+au FileType c,cpp,java nn <leader>? <Esc>:s/\/\*\s<Esc>:s/\s\*\/<Esc>
 
 " comment/uncomment in shell/python
-autocmd FileType sh,zsh,python nnoremap <leader>/ <Esc>I#<Space><ESC>
-autocmd FileType sh,zsh,python nnoremap <leader>? <Esc>:s/#\s<Esc>
+au FileType sh,zsh,python nn <leader>/ <Esc>I#<Space><ESC>
+au FileType sh,zsh,python nn <leader>? <Esc>:s/#\s<Esc>
