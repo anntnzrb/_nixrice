@@ -11,9 +11,9 @@ let mapleader =","
 
 if ! filereadable(expand('~/.config/nvim/autoload/plug.vim'))
 	echo "downloading vim-plug plugin manager..."
-	silent !mkdir -p ~/.config/nvim/autoload/
-	silent !curl "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > ~/.config/nvim/autoload/plug.vim
-	autocmd VimEnter * PlugInstall
+	sil !mkdir -p ~/.config/nvim/autoload/
+	sil !curl "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > ~/.config/nvim/autoload/plug.vim
+	au VimEnter * PlugInstall
 endif
 
 call plug#begin('~/.config/nvim/plugged')
@@ -51,7 +51,7 @@ set background=dark
 "" general:
 	syntax on
 	filetype plugin on
-	nnoremap c "_c
+	nn c "_c
     set hidden
     set noswapfile
 	set encoding=utf-8
@@ -67,10 +67,10 @@ set background=dark
 	map <C-l> <C-w>l
 
 " this allows to jump thru these: '+===+'
-	nnoremap <Space><Space> <Esc>/+===+<CR>"_c5l
+	nn <Space><Space> <Esc>/+===+<CR>"_c5l
 
 " force reload buffer
-	nmap <F5> :edit!<CR>
+	nm <F5> :edit!<CR>
 
 " swap `ex mode` from Q to gq (probably most retarded default keybind in vim)
 	map Q gq
@@ -79,7 +79,7 @@ set background=dark
 	set wildmode=longest,list,full
 
 " disable auto commenting on \n
-	autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+	au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " spell-check set to <leader>o, 'o' for 'orthography'
 	map <leader>o :setlocal spell! spelllang=en_us,es<CR>
@@ -88,11 +88,11 @@ set background=dark
 	set splitbelow splitright
 
 " replace all aliased to `S`
-	nnoremap S :%s//g<Left><Left>
+	nn S :%s//g<Left><Left>
 
 " auto delete trailing whitespace and \n's at end of file on save
-	autocmd BufWritePre * %s/\s\+$//e
-	autocmd BufWritepre * %s/\n\+\%$//e
+	au BufWritePre * %s/\s\+$//e
+	au BufWritepre * %s/\n\+\%$//e
 
 " airline
     let g:airline#extensions#tabline#enabled = 1
@@ -105,12 +105,12 @@ set background=dark
 	" colors
 	let g:limelight_conceal_ctermfg = 'gray'
 	" goyo integration
-	autocmd! User GoyoEnter Limelight
-	autocmd! User GoyoLeave Limelight!
+	au! User GoyoEnter Limelight
+	au! User GoyoLeave Limelight!
 
 " markdown
 	" live preview
-	nmap <leader>md <Plug>MarkdownPreviewToggle
+	nm <leader>md <Plug>MarkdownPreviewToggle
 	" refresh when save or leave insert mode
 	let g:mkdp_refresh_slow = 1
 
@@ -119,8 +119,8 @@ set background=dark
     let NERDTreeShowHidden=1
 
 " coc
-	nmap <leader>gd <Plug>(coc-definition)
-	nmap <leader>gr <Plug>(coc-references)
+	nm <leader>gd <Plug>(coc-definition)
+	nm <leader>gr <Plug>(coc-references)
 
 " fzf
 	map <leader>f :Files<CR>
@@ -128,10 +128,10 @@ set background=dark
 " ALE
 
 " F11 checks errors
-  nmap <F11> <Plug>(ale_lint)
+  nm <F11> <Plug>(ale_lint)
 
 " F12 fixes errors
-  nmap <F12> <Plug>(ale_fix)
+  nm <F12> <Plug>(ale_fix)
 
 " linters
 let g:ale_linters = {
@@ -155,13 +155,13 @@ let g:ale_fixers = {
 	map <leader>c :w! \| :10new \| :term compiler <c-r>%<CR>
 
 " save file as sudo
-	cnoremap w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
+	cno w!! execute 'sil! write !sudo tee % >/dev/null' <bar> edit!
 
 " source xrdb whenever Xdefaults / Xresources are updated.
-	autocmd BufWritePost *Xresources,*Xdefaults !xrdb %
+	au BufWritePost *Xresources,*Xdefaults !xrdb %
 
 " source sxhkd whenever Xdefaults / Xresources is updated
-	autocmd BufWritePost *sxhkdrc !pkill -USR1 sxhkd
+	au BufWritePost *sxhkdrc !pkill -USR1 sxhkd
 
 "" source external configs
 let cfgs = [
