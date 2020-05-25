@@ -2,7 +2,7 @@
 # environmental variables are set here.
 
 # adds `~/.local/bin` to $PATH
-export PATH="$PATH:$(du "$HOME/.local/bin/" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
+export PATH="$PATH:$(du "$HOME/.local/bin/" | cut -f2 | paste -sd ':')"
 
 #◦◝◟∘◞◜◦ default programs
 export EDITOR="nvim"
