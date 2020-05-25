@@ -71,4 +71,4 @@ alias \
     tnet="ping 1.1.1.1" \
     tnetspeed="speedtest-cli" \
     yta="youtube-dl --extract-audio --audio-format best" \
-    ytv="youtube-dl -f"
+    ytv="youtube-dl -f best"
