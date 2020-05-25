@@ -10,30 +10,29 @@
 
 # general
 set smooth-scroll "true"
+set selection-clipboard clipboard
 
 # colors
-set statusbar-fg "#000000"
-set statusbar-bg "#3B4252"
-set inputbar-fg "#D8DEE9"
+set completion-highlight-bg "#5E81AC"
+set completion-highlight-fg "#000000"
+set highlight-active-color "#88C0D0"
+set highlight-color "#5E81AC"
 set inputbar-bg "#3B4252"
+set inputbar-fg "#D8DEE9"
+set notification-bg "#5E81AC"
+set notification-fg "#000000"
+set page-padding 1
+set statusbar-bg "#3B4252"
+set statusbar-fg "#000000"
 set statusbar-h-padding 0
 set statusbar-v-padding 0
-set page-padding 1
-set completion-highlight-fg "#000000"
-set completion-highlight-bg "#5E81AC"
-set highlight-color "#5E81AC"
-set highlight-active-color "#88C0D0"
-set notification-fg "#000000"
-set notification-bg "#5E81AC"
 
 # keybinds
-map u scroll half-up
-map d scroll half-down
 map D toggle_page_mode
-map r reload
-map R rotate
-map K zoom in
 map J zoom out
+map K zoom in
+map R rotate
 map i recolor
 map p print
+map r reload
 map ZQ quit
