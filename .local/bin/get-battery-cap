@@ -13,15 +13,15 @@ for battery in /sys/class/power_supply/BAT?; do
         [ "$status" = "Unknown" ]; then
         # pick icon depending on the amount of battery
         if [ "$capacity" -ge 80 ]; then
-            icon=" "
+            icon=""
         elif [ "$capacity" -ge 60 ]; then
-            icon=" "
+            icon=""
         elif [ "$capacity" -ge 30 ]; then
-            icon=" "
+            icon=""
         elif [ "$capacity" -ge 15 ]; then
-            icon=" "
+            icon=""
         elif [ "$capacity" -lt 15 ]; then
-            icon=" "
+            icon=""
         fi
         # if charging, plug icon + %
         [ "$status" = "Charging" ] && icon="🔌"
@@ -31,5 +31,4 @@ for battery in /sys/class/power_supply/BAT?; do
         icon="🔌"
         printf '%s' "🟢$icon"
     fi
-
 done
