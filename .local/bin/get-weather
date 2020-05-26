@@ -8,12 +8,12 @@
 LOCATION="Guayaquil"
 
 # checks if there's internet connection
-fnIs_Net() {
+is_net() {
     ping -q -c 1 1.1.1.1 >/dev/null 2>&1
 }
 
-if fnIs_Net; then
-    printf '⛅ %s'"$(curl -fs "wttr.in/$LOCATION?format='%t'" | sed "s/'//g")"
+if is_net; then
+    curl -fs "wttr.in/$LOCATION?format=%c+%t" | tr -d '[:space:]' || exit 1
 else
     echo "📡❌"
 fi
