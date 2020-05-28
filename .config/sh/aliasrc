@@ -67,7 +67,7 @@ alias \
     matrix="unimatrix -a -l GRgors -s 96" \
     rusto="toilet -t -f rusto" \
     rustofat="toilet -t -f rustofat" \
-    screenkey="screenkey -t 2 -p bottom -s small --opacity 0.55" \
+    sscreenkey="setsid screenkey --no-systray -t 2 -p bottom -s small --opacity 0.55 --show-settings >/dev/null 2>&1 &" \
     tnet="ping 1.1.1.1" \
     tnetspeed="speedtest-cli" \
     yta="youtube-dl --extract-audio --audio-format best" \
