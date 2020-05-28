@@ -2,13 +2,12 @@
 
 # compiler (alternatively openjdk)
 yay --needed --noconfirm -S \
-	jdk \
-	jre \
-	jre8
+    jdk11-openjdk \
+    jre11-openjdk
 
 # change environment
 archlinux-java status
-sudo archlinux-java set java-14-jdk
+sudo archlinux-java set java-11-openjdk
 archlinux-java status
 
 ## ALE
