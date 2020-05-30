@@ -8,6 +8,9 @@
 "    ░░   ░░░░░░ ░░   ░░ 
 " 
 
+" ensure all tex files are read properly
+au BufRead,BufNewFile *.tex set filetype=tex
+
 " [dense-analysis/ale]
 let g:ale_linters = {'tex': ['texlab']}
 

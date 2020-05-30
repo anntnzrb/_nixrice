@@ -169,3 +169,4 @@ au BufWritePost *Xresources,*Xdefaults !xrdb %
 
 " source sxhkd whenever Xdefaults / Xresources is updated
 au BufWritePost *sxhkdrc !pkill -USR1 sxhkd
+
