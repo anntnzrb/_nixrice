@@ -2,15 +2,10 @@
 
 # dependencies
 yay --needed --noconfirm -S \
-	nodejs \
-	yarn
+    nodejs \
+    yarn
 
 ## ALE
-# linter
-# N/A
 
 # fixer
 yay --needed --noconfirm -S prettier
-
-## C.O.C
-nvim -c 'CocInstall -sync coc-markdownlint |q'

@@ -1,10 +1,9 @@
 #!/bin/sh
 
-## development
-# compiler (alternatively openjdk)
+## dependencies
 yay --needed --noconfirm -S \
-	python3 \
-	python-pip
+    python3 \
+    python-pip
 
 ## ALE
 # linter
@@ -13,13 +12,10 @@ python3 -m pip install -U flake8
 # fixer
 python3 -m pip install -U black
 
-## C.O.C
-# N/A
-
 ## libs
 python3 -m pip install -U \
-	pylint \
-	rope \
-	numpy \
-	matplotlib \
-	--user
+    pylint \
+    rope \
+    numpy \
+    matplotlib \
+    --user
