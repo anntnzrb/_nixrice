@@ -9,7 +9,7 @@
 au BufRead,BufNewFile *.h set filetype=c
 
 " printf()
-au FileType c ino !printf printf("\n", +===+);<ESC>F\i
+ino !printf printf("\n", +===+);<ESC>F\i
 
 " [scrooloose/nerdcommenter]
 "TODO
@@ -21,3 +21,6 @@ let g:ale_fixers = {'c': ['uncrustify']}
 
 " [neoclide/coc.nvim]
 let g:coc_global_extensions = ['coc-clangd']
+
+" [majutsushi/tagbar]
+au BufEnter * TagbarToggle
