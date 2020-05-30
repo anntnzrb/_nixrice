@@ -95,8 +95,8 @@ Plug 'airblade/vim-gitgutter'
 Plug 'ap/vim-css-color'
 Plug 'bling/vim-airline'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+Plug 'tpope/vim-surround'
 Plug 'majutsushi/tagbar'
-Plug 'jiangmiao/auto-pairs'
 Plug 'junegunn/fzf.vim'
 Plug 'kovetskiy/sxhkd-vim'
 Plug 'machakann/vim-highlightedyank'
@@ -127,10 +127,6 @@ map <leader>n :NERDTreeToggle<CR>
 let NERDTreeShowHidden = 1
 let NERDTreeMinimalUI = 1
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-" auto-pairs
-" don't insert extra spaces
-let g:AutoPairsMapSpace=0
 
 " nerdcommenter
 map <leader>/ <Plug>NERDCommenterNested
@@ -173,4 +169,3 @@ au BufWritePost *Xresources,*Xdefaults !xrdb %
 
 " source sxhkd whenever Xdefaults / Xresources is updated
 au BufWritePost *sxhkdrc !pkill -USR1 sxhkd
-
