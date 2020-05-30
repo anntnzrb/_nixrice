@@ -1,7 +1,0 @@
-#!/bin/sh
-
-## ALE
-# N/A
-
-## C.O.C
-nvim -c 'CocInstall -sync coc-vimlsp |q'

@@ -1,20 +1,19 @@
 #!/bin/sh
 
-# compiler (alternatively openjdk)
+# compiler (using lts)
 yay --needed --noconfirm -S \
     jdk11-openjdk \
     jre11-openjdk
 
 # change environment
-archlinux-java status
-sudo archlinux-java set java-11-openjdk
-archlinux-java status
+[ -x "$(command -v "pacman")" ] && {
+    archlinux-java status
+    sudo archlinux-java set java-11-openjdk
+    archlinux-java status
+}
 
 ## ALE
 # linter (already installed (javac))
 
 # fixer
 yay --needed --noconfirm -S uncrustify
-
-## C.O.C
-nvim -c 'CocInstall -sync coc-java |q'
