@@ -126,7 +126,7 @@ let g:airline_theme='powerlineish'
 map <leader>n :NERDTreeToggle<CR>
 let NERDTreeShowHidden = 1
 let NERDTreeMinimalUI = 1
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+au BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " nerdcommenter
 map <leader>/ <Plug>NERDCommenterNested
@@ -169,4 +169,3 @@ au BufWritePost *Xresources,*Xdefaults !xrdb %
 
 " source sxhkd whenever Xdefaults / Xresources is updated
 au BufWritePost *sxhkdrc !pkill -USR1 sxhkd
-
