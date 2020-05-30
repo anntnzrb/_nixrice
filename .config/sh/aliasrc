@@ -67,8 +67,14 @@ alias \
     matrix="unimatrix -a -l GRgors -s 96" \
     rusto="toilet -t -f rusto" \
     rustofat="toilet -t -f rustofat" \
-    sscreenkey="setsid screenkey --no-systray -t 2 -p bottom -s small --opacity 0.55 --show-settings >/dev/null 2>&1 &" \
     tnet="ping 1.1.1.1" \
     tnetspeed="speedtest-cli" \
     yta="youtube-dl --extract-audio --audio-format best" \
     ytv="youtube-dl -f best"
+
+sscreenkey() {
+    killall -9 screenkey >/dev/null 2>&1
+    setsid screenkey --no-systray --vis-shift --bak-mode full \
+        --opacity 0.55 -f FiraCodeRetina -t 2 \
+        -p bottom -s small >/dev/null 2>&1 &
+}
