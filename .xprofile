@@ -1,14 +1,22 @@
-#!/usr/bin/env sh
+#!/bin/sh
 
-#                                     ████ ██  ██
-#           ██████                   ░██░ ░░  ░██
-#   ██   ██░██░░░██ ██████  ██████  ██████ ██ ░██  █████
-#  ░░██ ██ ░██  ░██░░██░░█ ██░░░░██░░░██░ ░██ ░██ ██░░░██
-#  ░░███  ░██████  ░██ ░ ░██   ░██  ░██  ░██ ░██░███████
-#██  ██░██ ░██░░░   ░██   ░██   ░██  ░██  ░██ ░██░██░░░░
-#██ ██ ░░██░██     ░███   ░░██████   ░██  ░██ ███░░██████
-#░ ░░   ░░ ░░      ░░░     ░░░░░░    ░░   ░░ ░░░  ░░░░░░
-#░░░░ runs on tty / dm login
+#                                      ████ ██  ██
+#            ██████                   ░██░ ░░  ░██
+#    ██   ██░██░░░██ ██████  ██████  ██████ ██ ░██  █████
+#   ░░██ ██ ░██  ░██░░██░░█ ██░░░░██░░░██░ ░██ ░██ ██░░░██
+#   ░░███  ░██████  ░██ ░ ░██   ░██  ░██  ░██ ░██░███████
+# ██  ██░██ ░██░░░   ░██   ░██   ░██  ░██  ░██ ░██░██░░░░
+# ██ ██ ░░██░██     ░███   ░░██████   ░██  ░██ ███░░██████
+# ░ ░░   ░░ ░░      ░░░     ░░░░░░    ░░   ░░ ░░░  ░░░░░░
+# ░░░░ runs on tty / dm login
+
+#◦◝◟∘◞◜◦ X settings
+# disable screensaver
+xset s off &
+# off-screen time
+xset dpms 0 0 300 &
+# key-press repeat rate
+xset r rate 225 50 &
 
 #◦◝◟∘◞◜◦ sets the background with `setbg` script
 setbg &
@@ -25,17 +33,15 @@ dwmblocks &
 #◦◝◟∘◞◜◦ dunst
 dunst &
 
-#◦◝◟∘◞◜◦ speed xrate up
-xset r rate 300 50 &
-
 #◦◝◟∘◞◜◦ remove mouse when idle
 unclutter &
 
 #◦◝◟∘◞◜◦ sources Xresources
 xrdb ~/.Xresources &
 
-#◦◝◟∘◞◜◦ altgr + a letter for extra stuff (accents, etc) | remaps capslock to escape
-setxkbmap -option caps:super -variant altgr-intl && killall xcape 2>/dev/null ; xcape -e 'Super_L=Escape' &
+#◦◝◟∘◞◜◦ altgr + letter for (accents, etc) | remaps capslock to escape
+setxkbmap -option caps:super -variant altgr-intl &&
+    killall xcape 2>/dev/null && xcape -e 'Super_L=Escape' &
 
 #◦◝◟∘◞◜◦ choose display (should be at last)
 displayselect
