@@ -8,12 +8,9 @@
 " .h files ac C instead of cpp
 au BufRead,BufNewFile *.h set filetype=c
 
-" printf()
-ino !printf printf("\n", +===+);<ESC>F\i
-
 " [scrooloose/nerdcommenter]
 "TODO
-let g:NERDCustomDelimiters = { 'c': { 'left': '/* ' } }
+let g:NERDCustomDelimiters = { 'c': { 'left': '/*','right': '*/' } }
 
 " [dense-analysis/ale]
 let g:ale_linters = {'c': ['clang']}

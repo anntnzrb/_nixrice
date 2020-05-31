@@ -7,15 +7,9 @@
 " ░░███ ░░████████  ░░██   ░░████████
 "  ░░░   ░░░░░░░░    ░░     ░░░░░░░░
 
-" System.out.printf()
-ino !printf System.out.printf("%n", +===+);<ESC>F%i
-
-"Scanner scanf = new Scanner(System.in)
-ino !scanner Scanner scanf = new Scanner(System.in);
-
 " [scrooloose/nerdcommenter]
 "TODO
-let g:NERDCustomDelimiters = { 'java': { 'left': '/* ' } }
+let g:NERDAltDelims_java = 1
 
 " [dense-analysis/ale]
 let g:ale_linters = {'java': ['javac']}

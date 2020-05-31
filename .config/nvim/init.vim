@@ -99,6 +99,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdcommenter'
+Plug 'SirVer/ultisnips'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-surround'
 
@@ -134,6 +135,8 @@ let NERDTreeMinimalUI = 1
 au BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 "" nerdcommenter
+" add space delimiter
+let g:NERDSpaceDelims = 1
 map <leader>/ <Plug>NERDCommenterNested
 map <leader>? <Plug>NERDCommenterUncomment
 "
@@ -150,6 +153,13 @@ endif
 
 "" tagbar
 nm <F7> :TagbarToggle<CR>
+
+"" snippets
+" <Tab> unavailable if using YCM
+let g:UltiSnipsExpandTrigger="<Tab>"
+let g:UltiSnipsJumpForwardTrigger="<Tab>"
+let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
+let g:UltiSnipsEditSplit="vertical"
 
 "" ALE
 " F12 fixes errors
