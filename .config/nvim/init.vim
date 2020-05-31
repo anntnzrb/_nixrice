@@ -92,65 +92,68 @@ endif
 
 call plug#begin('~/.config/nvim/plugged')
 Plug 'airblade/vim-gitgutter'
-Plug 'ap/vim-css-color'
-Plug 'bling/vim-airline'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
-Plug 'tpope/vim-surround'
-Plug 'majutsushi/tagbar'
 Plug 'junegunn/fzf.vim'
-Plug 'kovetskiy/sxhkd-vim'
 Plug 'machakann/vim-highlightedyank'
-Plug 'PotatoesMaster/i3-vim-syntax'
+Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'tpope/vim-surround'
+
 " themes
-Plug 'morhetz/gruvbox'
+Plug 'gruvbox-community/gruvbox'
+Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+" syntax highlighting
+Plug 'PotatoesMaster/i3-vim-syntax'
+Plug 'ap/vim-css-color'
+Plug 'kovetskiy/sxhkd-vim'
 
 " LSP
 Plug 'dense-analysis/ale'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
-"colorscheme
-" gruvbox
+"" colorscheme
+"" gruvbox
 colorscheme gruvbox
 set background=dark
 let g:gruvbox_contrast_dark = 'hard'
 
-" airline
+"" airline
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme='powerlineish'
 
-" nerdtree
+"" nerdtree
 map <leader>n :NERDTreeToggle<CR>
 let NERDTreeShowHidden = 1
 let NERDTreeMinimalUI = 1
 au BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-" nerdcommenter
+"" nerdcommenter
 map <leader>/ <Plug>NERDCommenterNested
 map <leader>? <Plug>NERDCommenterUncomment
-
+"
 " markdown
 " live preview
 nm <leader>md <Plug>MarkdownPreviewToggle
 "refresh when save or leave insert mode
 let g:mkdp_refresh_slow = 1
 
-" fzf
+"" fzf
 if executable('fzf')
     nn <C-p> :Files<CR>
 endif
 
-" tagbar
+"" tagbar
 nm <F7> :TagbarToggle<CR>
 
-" ALE
+"" ALE
 " F12 fixes errors
 nm <F12> <Plug>(ale_fix)
 
-" COC
+"" COC
 nmap <leader><F2> <Plug>(coc-rename)
 nmap <leader>gd <Plug>(coc-definition)
 
