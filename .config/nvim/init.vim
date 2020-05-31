@@ -54,6 +54,8 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 
+" save
+map <C-s> :w<CR>
 " `ex mode` Q -> gq (probably the most retarded default keybind in vim)
 map Q gq
 
