@@ -1,0 +1,47 @@
+#          ██               ██  ██
+#         ░██              ░██ ░██
+#   ██████░██       █████  ░██ ░██
+#  ██░░░░ ░██████  ██░░░██ ░██ ░██
+# ░░█████ ░██░░░██░███████ ░██ ░██
+#  ░░░░░██░██  ░██░██░░░░  ░██ ░██
+#  ██████ ░██  ░██░░██████ ███ ███
+# ░░░░░░  ░░   ░░  ░░░░░░ ░░░ ░░░ 
+# snippets
+
+# default shell (hopefully POSIX-compliant)
+snippet #!s
+#!/bin/sh
+
+$0
+endsnippet
+
+# env sh
+snippet #!env
+#!/usr/bin/env sh
+
+$0
+endsnippet
+
+#------------------------------------------------------------------------------
+# control sctructures
+#------------------------------------------------------------------------------
+
+# function
+snippet !func
+${1:foobar}() {
+    ${0:# foo}
+}
+endsnippet
+
+snippet !if
+if ${1:condition}; then
+    ${0:# foo}
+fi
+endsnippet
+
+# while loop
+snippet !while
+while ${1:condition}; do
+    ${0:# foo}
+done
+endsnippet
