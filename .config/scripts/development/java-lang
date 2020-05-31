@@ -5,6 +5,9 @@ yay --needed --noconfirm -S \
     jdk11-openjdk \
     jre11-openjdk
 
+# ide
+#yay --needed --noconfirm -S intellij-idea-ce
+
 # change environment
 [ -x "$(command -v "pacman")" ] && {
     archlinux-java status
