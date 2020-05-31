@@ -31,7 +31,7 @@ super + p
 super + w
     $BROWSER
 # open resource monitor
-super + shift + escape
+super + shift + Escape
     $TERMINAL -e htop
 # close window (not wm-specific)
 super + shift + q
