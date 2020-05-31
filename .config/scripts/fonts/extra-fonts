@@ -1,9 +1,23 @@
 #!/bin/sh
 
 yay --needed --noconfirm -S \
-	ttf-ms-fonts \
-	ttf-vista-fonts
+    gnu-free-fonts \
+    noto-fonts-emoji \
+    otf-overpass \
+    ttf-dejavu \
+    ttf-droid \
+    ttf-fira-code \
+    ttf-font-awesome \
+    ttf-hack \
+    ttf-joypixels \
+    ttf-junicode \
+    ttf-linux-libertine \
+    ttf-ms-fonts \
+    ttf-nerd-fonts-symbols \
+    ttf-ubuntu-font-family \
+    xorg-fonts-type1
 
-printf '████████████████████████████████████████\n'
-echo "extra fonts were installed"
-printf '\n████████████████████████████████████████'
+printf '\nextra fonts were installed...\n'
+
+# broken
+#ttf-vista-fonts
