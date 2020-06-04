@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # compiler (using lts)
-yay --needed --noconfirm -S \
+yay --needed --noconfirm -Syy \
     jdk11-openjdk \
     jre11-openjdk
 
@@ -19,4 +19,4 @@ yay --needed --noconfirm -S \
 # linter (already installed (javac))
 
 # fixer
-yay --needed --noconfirm -S uncrustify
+yay --needed --noconfirm -Syy uncrustify

@@ -1,11 +1,11 @@
 #!/bin/sh
 
 # dependencies
-yay --needed --noconfirm -S \
+yay --needed --noconfirm -Syy \
     nodejs \
     yarn
 
 ## ALE
 
 # fixer
-yay --needed --noconfirm -S prettier
+yay --needed --noconfirm -Syy prettier

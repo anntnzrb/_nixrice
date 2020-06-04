@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ## dependencies
-yay --needed --noconfirm -S \
+yay --needed --noconfirm -Syy \
     python3 \
     python-pip
 

@@ -2,7 +2,7 @@
 
 ## ALE
 # linter
-yay --needed --noconfirm -S shellcheck
+yay --needed --noconfirm -Syy shellcheck
 
 # fixer
-yay --needed --noconfirm -S shfmt
+yay --needed --noconfirm -Syy shfmt

@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # compiler (alternatively tcc)
-yay --needed --noconfirm -S gcc
+yay --needed --noconfirm -Syy gcc
 
 ## ALE
 # fixer
-yay --needed --noconfirm -S uncrustify
+yay --needed --noconfirm -Syy uncrustify
