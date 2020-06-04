@@ -176,6 +176,9 @@ nmap <leader>gd <Plug>(coc-definition)
 " compile document
 map <leader>c :w! \| :10new \| :term compiler <c-r>%<CR>
 
+" open preview .pdf/.html
+map <leader>p :!opout <c-r>%<CR><CR>
+
 " save file as sudo
 cno w!! execute 'sil! write !sudo tee % >/dev/null' <bar> edit!
 
