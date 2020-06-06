@@ -63,7 +63,7 @@ this table displays _most_ of the programs i have configuration files for
 | sys-info tool      | _neofetch_                  | :large_blue_circle:  |
 
 **note**: names described above are just the official given names of the
-software; package names varies depending on the linux distribution
+software; package names varies depending on the `GNU/Linux` distribution
 
 - :first_quarter_moon: represents the status of the program
 
