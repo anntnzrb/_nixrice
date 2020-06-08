@@ -1,6 +1,4 @@
 {
-	// $1, $2, $n for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another}, ${n:another-another} for placeholders.
-	// Placeholders with the same ids are connected.
 	"user input with data type request": {
 		"prefix": "!input",
 		"body": [
