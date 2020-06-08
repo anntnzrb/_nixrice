@@ -75,7 +75,10 @@ nn <Space><Space> <Esc>/+===+<CR>"_c5l
 nn S :%s//g<Left><Left>
 
 " sort in alphabetical order
-vnoremap <leader>S :'<,'>!sort -f<CR>
+vn <leader>S :'<,'>!sort -f<CR>
+
+" un-spanish
+command Untilde :%s/á/a/g |:%s/é/e/g |:%s/í/i/g |:%s/ó/o/g |:%s/ú/u/g |
 
 " disable auto commenting on \n
 au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
