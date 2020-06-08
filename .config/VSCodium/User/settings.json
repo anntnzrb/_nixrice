@@ -1,16 +1,11 @@
 {
-    /* ████████████████████████████████
-     * general
-     */
     "editor.formatOnSave": true,
     "files.autoSave": "afterDelay",
     "files.autoSaveDelay": 500,
     "workbench.settings.editor": "json",
     "workbench.settings.openDefaultSettings": true,
     "workbench.startupEditor": "newUntitledFile",
-    /* ████████████████████████████████
-     * appearance
-     */
+
     "debug.console.fontSize": 14,
     "editor.fontFamily": "Fira Code Retina",
     "editor.fontLigatures": true,
@@ -19,21 +14,16 @@
     "terminal.integrated.fontSize": 14,
     "workbench.colorTheme": "SynthWave '84",
     "workbench.iconTheme": "ayu",
-    /* ████████████████████████████████
-     * git
-     */
+
     "git.autofetch": false,
     "git.postCommitCommand": "push",
-    /* ████████████████████████████████
-     * languages
-     */
-    /* >> python */
+
     "editor.minimap.enabled": false,
     "python.formatting.provider": "black",
     "python.linting.enabled": true,
     "python.linting.pylintEnabled": true,
     "python.pythonPath": "/usr/bin/python3",
-    /* >> java */
+
     "java.errors.incompleteClasspath.severity": "ignore",
     "java.format.comments.enabled": false,
     "java.format.enabled": false,
@@ -47,10 +37,7 @@
         "**/.settings": true,
         "**/.factorypath": true
     },
-    /* ████████████████████████████████
-     * extensions
-     */
-    /* >> Code Runner */
+
     "code-runner.clearPreviousOutput": true,
     "code-runner.enableAppInsights": false,
     "code-runner.preserveFocus": false,
@@ -60,13 +47,13 @@
         "python": "$pythonPath -u $fullFileName",
         "shellscript": "$SHELL"
     },
-    /* >> Markdown (AIO) & (Lint) */
+
     "markdown.extension.preview.autoShowPreviewToSide": true,
     "markdown.extension.toc.githubCompatibility": true,
     "markdownlint.run": "onSave",
-    /* >> Spell Checker */
+
     "cSpell.language": "es,en",
     "editor.suggestSelection": "first",
-    /* >> uncrustify */
-    "uncrustify.configPath.linux": "$HOME/.config/uncrustify/uncrustify.cfg",
+
+    "uncrustify.configPath.linux": "$HOME/.config/uncrustify/uncrustify.cfg"
 }
