@@ -1,5 +1,8 @@
 # \*nixrice
 
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/anntnzrb/_nixrice/master?style=flat-square)
+![GitHub](https://img.shields.io/github/license/anntnzrb/_nixrice?style=flat-square)
+
 (wip)
 
 **dotfiles**;
