@@ -38,7 +38,7 @@ fi ;;
 h) sudo make install ;;
 c) cc "$file" -o "$base" && "$base" ;;
 py) python "$file" ;;
-rs) cargo build ;;
+rs) cargo run ;;
 m) octave "$file" ;;
 scad) openscad -o "$base".stl "$file" ;;
 go) go run "$file" ;;
