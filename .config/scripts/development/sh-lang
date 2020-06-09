@@ -1,8 +1,10 @@
 #!/bin/sh
 
-## ALE
-# linter
-yay --needed --noconfirm -Syy shellcheck
+if [ -x "$(command -v "yay")" ]; then
+    ## ALE
+    # linter
+    yay --needed --noconfirm -Syy shellcheck
 
-# fixer
-yay --needed --noconfirm -Syy shfmt
+    # fixer
+    yay --needed --noconfirm -Syy shfmt
+fi

@@ -1,8 +1,10 @@
 #!/bin/sh
 
-# compiler
-yay --needed --noconfirm -S \
-    biber \
-    pandoc \
-    pandoc-citeproc \
-    texlive-most
+if [ -x "$(command -v "yay")" ]; then
+    # compiler
+    yay --needed --noconfirm -S \
+        biber \
+        pandoc \
+        pandoc-citeproc \
+        texlive-most
+fi

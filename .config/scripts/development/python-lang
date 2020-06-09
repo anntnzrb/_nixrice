@@ -1,9 +1,11 @@
 #!/bin/sh
 
-## dependencies
-yay --needed --noconfirm -Syy \
-    python3 \
-    python-pip
+if [ -x "$(command -v "yay")" ]; then
+    ## dependencies
+    yay --needed --noconfirm -Syy \
+        python3 \
+        python-pip
+fi
 
 ## ALE
 # linter
@@ -15,6 +17,7 @@ python3 -m pip install -U black
 ## libs
 python3 -m pip install -U \
     pylint \
+    pynvim \
     rope \
     numpy \
     matplotlib \
