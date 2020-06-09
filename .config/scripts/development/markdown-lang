@@ -1,11 +1,12 @@
 #!/bin/sh
 
-# dependencies
-yay --needed --noconfirm -Syy \
-    nodejs \
-    yarn
+if [ -x "$(command -v "yay")" ]; then
+    # dependencies
+    yay --needed --noconfirm -Syy \
+        nodejs \
+        yarn
 
-## ALE
-
-# fixer
-yay --needed --noconfirm -Syy prettier
+    ## ALE
+    # fixer
+    yay --needed --noconfirm -Syy prettier
+fi

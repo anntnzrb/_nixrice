@@ -1,8 +1,10 @@
 #!/bin/sh
 
-# compiler (alternatively tcc)
-yay --needed --noconfirm -Syy gcc
+if [ -x "$(command -v "yay")" ]; then
+    # compiler (alternatively tcc)
+    yay --needed --noconfirm -Syy gcc
 
-## ALE
-# fixer
-yay --needed --noconfirm -Syy uncrustify
+    ## ALE
+    # fixer
+    yay --needed --noconfirm -Syy uncrustify
+fi

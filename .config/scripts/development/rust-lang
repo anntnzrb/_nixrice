@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# arch
+if [ -x "$(command -v "yay")" ]; then
+    # compiler (cargo, cargo-nightly, rust, rustfmt, rust-nightly)
+    yay --needed --noconfirm -Syy rustup
+fi
+
+# rustup
+rustup toolchain install stable || exit
+rustup default stable || exit
+rustup component add rls rust-analysis rust-src || exit
+rustup update || exit
