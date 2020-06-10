@@ -14,7 +14,7 @@
 # disable screensaver
 xset s off &
 # off-screen time
-xset dpms 0 0 300 &
+xset dpms 0 0 900 &
 # key-press repeat rate
 xset r rate 225 50 &
 
