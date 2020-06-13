@@ -37,16 +37,18 @@ snippet !scan
 ${1:Type}.parse${2:Type}(${3:scanner}.nextLine());
 endsnippet
 
-# setter
-snippet !setter
+# setters & getters
+snippet !sgetter
 public void
-set${1:Atribute}(${2:type} ${3:atribute}) { this.$3 = $3; }
-endsnippet
-
-# getter
-snippet !getter
-public ${1:type}
-get${2:Atribute}() { return ${3:atribute}; }
+set${1:Atribute}(${2:type} `!p snip.rv = mixedCase(t[1])`)
+{
+    this.`!p snip.rv = mixedCase(t[1])` = `!p snip.rv = mixedCase(t[1])`;
+}`!p snip.rv += "\n"`
+public $2
+get$1()
+{
+    return `!p snip.rv = mixedCase(t[1])`;
+}
 endsnippet
 
 # author
@@ -56,3 +58,13 @@ snippet !doc
  * @author $0
  */
 endsnippet
+
+################################################################################
+# globals
+################################################################################
+
+global !p
+def mixedCase(word):
+    if not word: return ''
+    return word[0].lower() + word[1:]
+endglobal
