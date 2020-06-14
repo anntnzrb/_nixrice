@@ -1,32 +1,43 @@
 #!/bin/sh
 
-VS_VER="codium"
+vs_install() {
+    if [ -x "$(command -v "codium")" ]; then
+        codium --install-extension "$1"
+    elif [ -x "$(command -v "code-oss")" ]; then
+        code-oss --install-extension "$1"
+    fi
+}
 
 # general
-$VS_VER --install-extension davidanson.vscode-markdownlint
-$VS_VER --install-extension dracula-theme.theme-dracula
-$VS_VER --install-extension eamodio.gitlens
-$VS_VER --install-extension formulahendry.code-runner
-$VS_VER --install-extension foxundermoon.shell-format
-$VS_VER --install-extension robbowen.synthwave-vscode
-$VS_VER --install-extension streetsidesoftware.code-spell-checker
-$VS_VER --install-extension streetsidesoftware.code-spell-checker-spanish
-$VS_VER --install-extension teabyii.ayu
-$VS_VER --install-extension visualstudioexptteam.vscodeintellicode
+vs_install eamodio.gitlens
+# vs_install formulahendry.code-runner
+vs_install visualstudioexptteam.vscodeintellicode
+
+# visual
+vs_install teabyii.ayu
+# vs_install dracula-theme.theme-dracula
+vs_install robbowen.synthwave-vscode
 
 # java
-$VS_VER --install-extension redhat.java
-$VS_VER --install-extension vscjava.vscode-java-dependency
-$VS_VER --install-extension vscjava.vscode-java-test
+vs_install redhat.java
+vs_install vscjava.vscode-java-debug
+vs_install vscjava.vscode-java-dependency
+vs_install vscjava.vscode-java-pack
+vs_install vscjava.vscode-java-test
+
+# shell
+# vs_install foxundermoon.shell-format
 
 # markdown
-$VS_VER --install-extension yzhang.markdown-all-in-one
+# vs_install yzhang.markdown-all-in-one
+# vs_install davidanson.vscode-markdownlint
 
 # python
-$VS_VER --install-extension ms-python.python
+# vs_install ms-python.python
 
 # uncrustify (formatter/fixer)
-$VS_VER --install-extension laurenttreguier.uncrustify
+vs_install laurenttreguier.uncrustify
 
-printf '\nthe following extensions are currently installed:\n\n'
-$VS_VER --list-extensions
+# spell
+vs_install streetsidesoftware.code-spell-checker
+vs_install streetsidesoftware.code-spell-checker-spanish
