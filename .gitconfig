@@ -9,5 +9,18 @@
 # ░░░░░  ░░    ░░     ░░░░░   ░░░░░░  ░░░   ░░   ░░   ░░  ░░░░░
 
 [user]
-	email = anntnzrb@hotmail.com
-	name = anntnzrb
+    name = anntnzrb
+    username = anntnzrb
+    email = anntnzrb@hotmail.com
+
+[alias]
+    a = add
+    b = branch
+    cm = commit -m
+    d = diff
+    l = log --graph --decorate
+    ls = ls-files
+    m = merge
+    ps = push
+    s = status -sb
+    unstage = reset HEAD --
