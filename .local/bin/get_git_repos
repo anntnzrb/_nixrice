@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# checks if repo is existants, downloads if false
+git_install() {
+    for animal in "${repos[@]}"; do
+        url="${animal%%;*}"
+        file="${animal##*;}"
+        repo_dir="$HOME/lib/repos/$file"
+
+        if [ ! -d "$repo_dir" ]; then
+            git clone -q "$url" "$repo_dir"
+            echo "downloaded -> $repo_dir"
+        else
+            echo "$file is already @ $repo_dir"
+        fi
+    done
+}
+# python-like array to store url;repo_name
+repos=(
+    "https://github.com/anntnzrb/_nixrice.git;_nixrice"
+    "https://github.com/anntnzrb/rerum.git;rerum"
+    "https://github.com/anntnzrb/uarbs.git;uarbs"
+    "https://github.com/anntnzrb/st.git;st"
+    "https://github.com/anntnzrb/dwm.git;dwm"
+)
+
+# actual script
+git_install
