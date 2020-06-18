@@ -142,7 +142,7 @@ au BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTre
 let g:NERDSpaceDelims = 1
 map <leader>/ <Plug>NERDCommenterNested
 map <leader>? <Plug>NERDCommenterUncomment
-"
+
 " markdown
 " live preview
 nm <leader>md <Plug>MarkdownPreviewToggle
@@ -165,12 +165,15 @@ let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 let g:UltiSnipsEditSplit="vertical"
 
 "" ALE
+" only run linters specified at 'ale_linters'
+let g:ale_linters_explicit = 1
+
 " F12 fixes errors
-nm <F12> <Plug>(ale_fix)
+nm <leader><F9> <Plug>(ale_fix)
 
 "" COC
-nmap <leader><F2> <Plug>(coc-rename)
-nmap <leader>gd <Plug>(coc-definition)
+nm <leader><F2> <Plug>(coc-rename)
+nm <leader><F12> <Plug>(coc-definition)
 
 "==============================================================================
 " file specific
