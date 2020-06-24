@@ -9,7 +9,6 @@
 
 
 # general
-set smooth-scroll "true"
 set selection-clipboard clipboard
 
 # colors
