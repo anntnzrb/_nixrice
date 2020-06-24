@@ -44,26 +44,26 @@ see [installation](#installation)
 
 this table displays _most_ of the programs i have configuration files for
 
-| software           | name                        | :first_quarter_moon: |
-| ------------------ | --------------------------- | -------------------- |
-| terminal emulator  | _st_                        | :large_blue_circle:  |
-| :arrow_up:         | _alacritty_                 | :red_circle:         |
-| shell              | _zsh_                       | :large_blue_circle:  |
-|                    | **graphical**               |
-| window manager     | _dwm_                       | :large_blue_circle:  |
-| :arrow_up:         | _i3_                        | :red_circle:         |
-| :arrow_up:         | _spectrwm_                  | :red_circle:         |
-| compositor         | _picom/compton_             | :large_blue_circle:  |
-| notifications      | _dunst_                     | :large_blue_circle:  |
-|                    | **files/text/docs/editors** |
-| text editor        | _[n]vim_                    | :large_blue_circle:  |
-| :arrow_up:         | _vscod[e/ium]_              | :red_circle:         |
-| file manager       | _PCManFM_                   | :large_blue_circle:  |
-| pdf viewer         | _zathura_                   | :large_blue_circle:  |
-| language formatter | _uncrustify_                | :large_blue_circle:  |
-|                    | **miscellaneous**           |
-| key-binds          | _sxhkd_                     | :large_blue_circle:  |
-| sys-info tool      | _neofetch_                  | :large_blue_circle:  |
+| software           | name                                    | :first_quarter_moon: |
+| ------------------ | --------------------------------------- | -------------------- |
+| terminal emulator  | _st_                                    | :large_blue_circle:  |
+| :arrow_up:         | _alacritty_                             | :red_circle:         |
+| shell              | _zsh_                                   | :large_blue_circle:  |
+|                    | **graphical**                           |
+| window manager     | _dwm_ ([external](https://0x0.st/XsOC)) | :large_blue_circle:  |
+| :arrow_up:         | _i3_                                    | :red_circle:         |
+| :arrow_up:         | _spectrwm_                              | :red_circle:         |
+| compositor         | _picom/compton_                         | :large_blue_circle:  |
+| notifications      | _dunst_                                 | :large_blue_circle:  |
+|                    | **files/text/docs/editors**             |
+| text editor        | _[n]vi[m]_                              | :large_blue_circle:  |
+| :arrow_up:         | _vscod[e/ium]_                          | :red_circle:         |
+| file manager       | _PCManFM_                               | :large_blue_circle:  |
+| pdf viewer         | _zathura_                               | :large_blue_circle:  |
+| language formatter | _uncrustify_                            | :large_blue_circle:  |
+|                    | **miscellaneous**                       |
+| key-binds          | _sxhkd_                                 | :large_blue_circle:  |
+| sys-info tool      | _neofetch_                              | :large_blue_circle:  |
 
 **note**: names described above are just the official given names of the
 software; package names varies depending on the `GNU/Linux` distribution
