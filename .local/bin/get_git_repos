@@ -2,26 +2,27 @@
 
 # checks if repo is existants, downloads if false
 git_install() {
-    for animal in "${repos[@]}"; do
-        url="${animal%%;*}"
-        file="${animal##*;}"
-        repo_dir="$HOME/lib/repos/$file"
+    for animal in "${REPOS[@]}"; do
+        URL="${animal%%;*}"
+        FILE="${animal##*;}"
+        REPO_DIR="$HOME/lib/repos/$FILE"
 
-        if [ ! -d "$repo_dir" ]; then
-            git clone -q "$url" "$repo_dir"
-            echo "downloaded -> $repo_dir"
+        if [ ! -d "$REPO_DIR" ]; then
+            printf "downloading \"%s\"...\n" "$FILE"
+            git clone -q "$URL" "$REPO_DIR"
+            echo "downloaded -> $REPO_DIR"
         else
-            echo "$file is already @ $repo_dir"
+            printf "skipping...\n\"%s\" is already @ %s\n\n" "$FILE" "$REPO_DIR"
         fi
     done
 }
 # python-like array to store url;repo_name
-repos=(
-    "https://github.com/anntnzrb/_nixrice.git;_nixrice"
-    "https://github.com/anntnzrb/rerum.git;rerum"
-    "https://github.com/anntnzrb/uarbs.git;uarbs"
-    "https://github.com/anntnzrb/st.git;st"
-    "https://github.com/anntnzrb/dwm.git;dwm"
+REPOS=(
+    "git@gitlab.com:anntnzrb/_nixrice.git;_nixrice"
+    "git@gitlab.com:anntnzrb/rerum.git;rerum"
+    "git@gitlab.com:anntnzrb/uarbs.git;uarbs"
+    "git@gitlab.com:anntnzrb/st.git;st"
+    "git@gitlab.com:anntnzrb/dwm.git;dwm"
 )
 
 # actual script
