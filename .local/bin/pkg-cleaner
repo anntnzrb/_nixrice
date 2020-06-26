@@ -1,19 +1,23 @@
 #!/bin/sh
 
-echo "amount of cached packages and size"
-sudo ls /var/cache/pacman/pkg/ | wc -l
-du -hs /var/cache/pacman/pkg/
+# arch-based
+if [ -x "$(command -v pacman)" ]; then
+    # display cached packages
+    echo "amount of cached packages and size..."
+    sudo ls /var/cache/pacman/pkg/ | wc -l
+    du -hs /var/cache/pacman/pkg/
 
-# clear ~/.cache folder
-rm -fr ~/.cache/
+    # clear ~/.cache folder
+    rm -fr ~/.cache/
 
-# clear pkg cache
-sudo pacman -Scc
-sudo paccache -r
+    # clear pkg cache
+    sudo pacman -Scc
+    sudo paccache -r
 
-echo "amount of cached packages and size"
-sudo ls /var/cache/pacman/pkg/ | wc -l
-du -hs /var/cache/pacman/pkg/
+    echo "amount of cached packages and size..."
+    sudo ls /var/cache/pacman/pkg/ | wc -l
+    du -hs /var/cache/pacman/pkg/
 
-# clear orphans
-sudo pacman -Rns --noconfirm $(pacman -Qdqt)
+    # clear orphans
+    sudo pacman -Rns --noconfirm $(pacman -Qdqt)
+fi
