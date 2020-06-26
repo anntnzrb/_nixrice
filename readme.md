@@ -1,3 +1,7 @@
+<!-- markdownlint rules -->
+<!-- markdownlint-disable MD013 -->
+<!-- markdownlint-disable MD037 -->
+
 # \*nixrice
 
 (wip)
@@ -27,7 +31,7 @@ i tend to re-install my os a lot, this leads me not only to have everything
 pre-configured already but also to have a way of installing all the software
 i normally use with their corresponding configuration files as soon as possible
 
-because of this, [uarbs](https://0x0.st/i3U-) was created, with this, i'm able
+because of this, [uarbs](https://0x0.st/X86L) was created, with this, i'm able
 to install a completely functional operating system within a few minutes
 whether i wake up in the morning with a zero-filled storage drive or anyone
 erases my whole drive, i can just run named program in order to have everything
@@ -46,19 +50,19 @@ this table displays _most_ of the programs i have configuration files for
 | terminal emulator  | _st_                                    | :large_blue_circle:  |
 | :arrow_up:         | _alacritty_                             | :red_circle:         |
 | shell              | _zsh_                                   | :large_blue_circle:  |
-|                    | **graphical**                           |
-| window manager     | _dwm_ ([external](https://0x0.st/XsOC)) | :large_blue_circle:  |
+|                    | **graphical**                           |                      |
+| window manager     | _dwm_ ([external](https://0x0.st/X869)) | :large_blue_circle:  |
 | :arrow_up:         | _i3_                                    | :red_circle:         |
 | :arrow_up:         | _spectrwm_                              | :red_circle:         |
 | compositor         | _picom/compton_                         | :large_blue_circle:  |
 | notifications      | _dunst_                                 | :large_blue_circle:  |
-|                    | **files/text/docs/editors**             |
+|                    | **files/text/docs/editors**             |                      |
 | text editor        | _[n]vi[m]_                              | :large_blue_circle:  |
 | :arrow_up:         | _vscod[e/ium]_                          | :red_circle:         |
 | file manager       | _PCManFM_                               | :large_blue_circle:  |
 | pdf viewer         | _zathura_                               | :large_blue_circle:  |
 | language formatter | _uncrustify_                            | :large_blue_circle:  |
-|                    | **miscellaneous**                       |
+|                    | **miscellaneous**                       |                      |
 | key-binds          | _sxhkd_                                 | :large_blue_circle:  |
 | sys-info tool      | _neofetch_                              | :large_blue_circle:  |
 
@@ -82,7 +86,7 @@ software; package names varies depending on the `GNU/Linux` distribution
 ## installation
 
 as described @ [intro](#intro), this dotfiles may be installed using
-[uarbs](https://0x0.st/i3U-), please refer to linked repo for instructions
+[uarbs](https://0x0.st/X86L), please refer to linked repo for instructions
 
 you can also `git clone` (alternatively manually download) this repo and
 copy the contents you're interested in
