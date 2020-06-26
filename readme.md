@@ -1,8 +1,5 @@
 # \*nixrice
 
-![GitHub last commit](https://img.shields.io/github/last-commit/anntnzrb/_nixrice?style=flat-square)
-![GitHub](https://img.shields.io/github/license/anntnzrb/_nixrice?style=flat-square)
-
 (wip)
 
 **dotfiles**;
