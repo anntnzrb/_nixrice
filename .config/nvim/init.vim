@@ -169,7 +169,7 @@ let g:UltiSnipsEditSplit="vertical"
 let g:ale_linters_explicit = 1
 
 " F12 fixes errors
-nm <leader><F9> <Plug>(ale_fix)
+nm <F9> <Plug>(ale_fix)
 
 "" COC
 nm <leader><F2> <Plug>(coc-rename)
