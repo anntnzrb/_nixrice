@@ -9,4 +9,15 @@ if [ -x "$(command -v "yay")" ]; then
     ## ALE
     # fixer
     yay --needed --noconfirm -Syy prettier
+
+elif [ -x "$(command -v "xbps-install")" ]; then
+    # dependencies
+    sudo xbps-install -Sy \
+        nodejs \
+        yarn
+
+    ## ALE
+    # fixer
+    echo 'installing via npm...'
+    sudo npm install --global prettier
 fi

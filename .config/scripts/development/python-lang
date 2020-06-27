@@ -1,8 +1,16 @@
 #!/bin/sh
 
+# arch
 if [ -x "$(command -v "yay")" ]; then
     ## dependencies
     yay --needed --noconfirm -Syy \
+        python3 \
+        python-pip
+
+# void
+elif [ -x "$(command -v "xbps-install")" ]; then
+    ## dependencies
+    sudo xbps-install -Sy \
         python3 \
         python-pip
 fi
