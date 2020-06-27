@@ -21,7 +21,7 @@ fnNotify() {
 
 if fnIs_Running transmission-daemon; then
     [ "$(printf "No\\nYes" | dmenu -i -p "Turn off transmission-daemon?")" = "Yes" ] &&
-        killall transmission-da &&
+        pkill -9 transmission-da &&
         fnNotify 3 "transmission-daemon disabled."
 else
     fnIs_Installed transmission-cli || exit

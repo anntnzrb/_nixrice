@@ -25,6 +25,6 @@ shutdown)
 	${sdn:-shutdown -h now}
 	;;
 end-x-session)
-	killall -9 Xorg
+	pkill -9 Xorg
 	;;
 esac
