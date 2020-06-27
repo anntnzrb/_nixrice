@@ -4,5 +4,5 @@
 #
 # checks for the first "Core" on `sensors`
 
-printf '🌡 %s' \
+printf ' %s' \
     "$(sensors | awk '/Core 0/ { print $3 }' | sed 's/+// ; s/\..//')"
