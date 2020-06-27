@@ -15,8 +15,8 @@ if fnIs_Net; then
     if [ -x "$(command -v "pacman")" ]; then
         pacman -Qu | grep -Fcv "[ignored]" | sed "s/^/📦 /;s/^📦 0$//g"
     # void
-    elif [ -x "$(command -v "xbps")" ]; then
-        echo "missing update command for void"
+    elif [ -x "$(command -v "xbps-install")" ]; then
+        echo '📦?'
     else
         echo '📦?'
     fi

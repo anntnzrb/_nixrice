@@ -4,7 +4,10 @@
 
 # non-systemd init systems (OpenRC missing)
 case "$(readlink -f /sbin/init)" in
-*runit*) zzz="zzz" ;;
+*runit*)
+    zzz="sudo zzz"
+    sdn="sudo poweroff"
+    ;;
 esac
 
 declare opts=("reboot
@@ -16,15 +19,15 @@ choice=$(printf '%s' "${opts[@]}" | dmenu -c -i -l 20 -bw 6 -fn "Overpass Mono" 
 
 case "$choice" in
 reboot)
-	${reb:-reboot}
-	;;
+    ${reb:-sudo reboot}
+    ;;
 sleep)
-	${zzz:-systemctl suspend-then-hibernate}
-	;;
+    ${zzz:-sudo systemctl suspend-then-hibernate}
+    ;;
 shutdown)
-	${sdn:-shutdown -h now}
-	;;
+    ${sdn:-sudo shutdown -h now}
+    ;;
 end-x-session)
-	pkill -9 Xorg
-	;;
+    pkill -9 Xorg
+    ;;
 esac
