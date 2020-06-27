@@ -25,7 +25,7 @@ notify() {
 
 if is_installed "$1"; then
     if is_running "$1"; then
-        killall -9 "$1" && notify 3000 "'$1' terminated"
+        pkill -9 "$1" && notify 3000 "'$1' terminated"
     else
         $1 &
         notify 3000 "'$1' now running"
