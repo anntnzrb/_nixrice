@@ -25,7 +25,6 @@ alias \
 #◦◝◟∘◞◜◦ shortcuts
 alias \
     e='$EDITOR' \
-    ka="killall" \
     kx11="sudo pkill -x Xorg" \
     rl="source" \
     sdn="sudo shutdown -h now" \
@@ -73,7 +72,7 @@ alias \
     ytv="youtube-dl -f best"
 
 sscreenkey() {
-    killall -9 screenkey >/dev/null 2>&1
+    pkill -9 screenkey >/dev/null 2>&1
     setsid screenkey --no-systray --vis-shift --bak-mode full \
         --opacity 0.55 -f FiraCodeRetina -t 2 \
         -p bottom -s small >/dev/null 2>&1 &
