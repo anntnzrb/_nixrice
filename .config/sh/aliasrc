@@ -53,7 +53,7 @@ alias \
         pkgu="sudo pacman -Suyy"
 
 # void
-[ -x "$(command -v xbps)" ] &&
+[ -x "$(command -v xbps-install)" ] &&
     alias \
         pkgf="xbps-query -s" \
         pkgi="sudo xbps-install -S" \
