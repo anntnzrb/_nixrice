@@ -1,23 +1,41 @@
 #!/bin/sh
 
 # arch-based
-if [ -x "$(command -v pacman)" ]; then
+if [ -x "$(command -v "pacman")" ]; then
     # display cached packages
-    echo "amount of cached packages and size..."
-    sudo ls /var/cache/pacman/pkg/ | wc -l
-    du -hs /var/cache/pacman/pkg/
+    printf "amount of cached packages: %s | size: %s\n" \
+        "$(sudo ls /var/cache/pacman/pkg | wc -l)" \
+        "$(sudo du -hs /var/cache/pacman/pkg)"
 
     # clear ~/.cache folder
-    rm -fr ~/.cache/
+    rm -fr "$HOME"/.cache/
 
     # clear pkg cache
     sudo pacman -Scc
     sudo paccache -r
 
-    echo "amount of cached packages and size..."
-    sudo ls /var/cache/pacman/pkg/ | wc -l
-    du -hs /var/cache/pacman/pkg/
-
     # clear orphans
     sudo pacman -Rns --noconfirm $(pacman -Qdqt)
+
+    # display cached packages after
+    printf "amount of cached packages: %s | size: %s\n" \
+        "$(sudo ls /var/cache/pacman/pkg | wc -l)" \
+        "$(sudo du -hs /var/cache/pacman/pkg)"
+
+    # void
+elif [ -x "$(command -v "xbps-install")" ]; then
+    # display cached packages
+    printf "amount of cached packages: %s | size: %s\n" \
+        "$(sudo ls /var/cache/xbps | wc -l)" "$(sudo du -hs /var/cache/xbps)"
+
+    # clear ~/.cache folder
+    rm -fr "$HOME"/.cache/
+
+    # clear pkg cache
+    sudo xbps-remove -Ofoy
+
+    # display cached packages after
+    printf "amount of cached packages: %s | size: %s\n" \
+        "$(sudo ls /var/cache/pacman/pkg | wc -l)" \
+        "$(sudo du -hs /var/cache/pacman/pkg)"
 fi
