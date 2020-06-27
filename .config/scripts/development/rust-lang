@@ -4,6 +4,11 @@
 if [ -x "$(command -v "yay")" ]; then
     # compiler (cargo, cargo-nightly, rust, rustfmt, rust-nightly)
     yay --needed --noconfirm -Syy rustup
+
+# void
+elif [ -x "$(command -v "xbps-install")" ]; then
+    # compiler (cargo, cargo-nightly, rust, rustfmt, rust-nightly)
+    sudo xbps-install -Sy rustup
 fi
 
 # rustup

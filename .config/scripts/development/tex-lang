@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# arch
 if [ -x "$(command -v "yay")" ]; then
     # compiler
     yay --needed --noconfirm -S \
@@ -7,4 +8,12 @@ if [ -x "$(command -v "yay")" ]; then
         pandoc \
         pandoc-citeproc \
         texlive-most
+
+# void
+elif [ -x "$(command -v "xbps-install")" ]; then
+    # compiler
+    sudo xbps-install -Sy \
+        biber \
+        pandoc \
+        texlive-bin
 fi

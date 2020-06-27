@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# arch
 if [ -x "$(command -v "yay")" ]; then
     # compiler (using lts)
     yay --needed --noconfirm -Syy \
@@ -10,7 +11,7 @@ if [ -x "$(command -v "yay")" ]; then
     #yay --needed --noconfirm -S intellij-idea-ce
 
     ## ALE
-    # linter (already installed (javac))
+    # linter (CoC)
 
     # fixer
     yay --needed --noconfirm -Syy uncrustify
@@ -19,4 +20,14 @@ if [ -x "$(command -v "yay")" ]; then
     archlinux-java status
     sudo archlinux-java set java-11-openjdk
     archlinux-java status
+
+# void
+elif [ -x "$(command -v "xbps-install")" ]; then
+    # compiler (using lts)
+    sudo xbps-install -Sy openjdk11
+
+    ## ALE
+    # linter (CoC)
+    # fixer
+    sudo xbps-install -Sy uncrustify
 fi
