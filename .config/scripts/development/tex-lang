@@ -16,4 +16,20 @@ elif [ -x "$(command -v "xbps-install")" ]; then
         biber \
         pandoc \
         texlive-bin
+
+    # tlmgr
+    # gnupg is required to install via tlmgr
+    sudo xbps-install -Sy gnupg
+    sudo tlmgr install biblatex
+    sudo tlmgr install biber
+    sudo tlmgr install biblatex-apa
+    # update
+    sudo tlmgr update --all
+    sudo texhash
 fi
+
+#******************************************************************************
+# references
+#******************************************************************************
+
+# https://0x0.st/XmyQ
