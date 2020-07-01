@@ -146,8 +146,6 @@ map <leader>? <Plug>NERDCommenterUncomment
 " markdown
 " live preview
 nm <leader>md <Plug>MarkdownPreviewToggle
-"refresh when save or leave insert mode
-let g:mkdp_refresh_slow = 1
 
 "" fzf
 if executable('fzf')
@@ -180,8 +178,7 @@ nm <leader><F12> <Plug>(coc-definition)
 "==============================================================================
 
 " compile document
-map <leader>c :w! \| :10new \| :term compiler <c-r>%<CR>
-
+map <leader>c :w! \| !compiler <c-r>%<CR>
 " open preview .pdf/.html
 map <leader>p :!opout <c-r>%<CR><CR>
 

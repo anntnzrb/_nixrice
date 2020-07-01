@@ -1,0 +1,126 @@
+# bold
+snippet !bold
+\textbf{${1:bold_text}} $0
+endsnippet
+
+# italics
+snippet !italics
+\textit{${1:italic_text}} $0
+endsnippet
+
+# emph
+snippet !emph
+\emph{${1:empathic_text}} $0
+endsnippet
+
+# underline
+snippet !underline
+\underline{${1:underlined_text}} $0
+endsnippet
+
+# references
+snippet !ref
+\ref{${1:reference}} $0
+endsnippet
+
+# figures
+snippet !fig
+\begin{figure}[${2:htpb}]
+    \centering
+    \includegraphics[width=${3:0.8}\linewidth]{${4:name.ext}}
+    \caption{${4/(\w+)\.\w+/\u$1/}$0}%
+    \label{fig:${4/(\w+)\.\w+/$1/}}
+\end{figure}
+endsnippet
+
+# abstract
+snippet !abs
+\begin{abstract}
+    $0
+\end{abstract}
+endsnippet
+
+# section
+snippet !section
+\section{${1:${VISUAL:section name}}}%
+\label{sec:${2:${1/\\\w+\{(.*?)\}|\\(.)|(\w+)|([^\w\\]+)/(?4:_:\L$1$2$3\E)/ga}}}
+
+$0
+endsnippet
+
+# sub-section
+snippet !subsec
+\subsection{${1:${VISUAL:subsection name}}}%
+\label{sub:${2:${1/\\\w+\{(.*?)\}|\\(.)|(\w+)|([^\w\\]+)/(?4:_:\L$1$2$3\E)/ga}}}
+
+$0
+endsnippet
+
+# sub-sub-section
+snippet !ssub
+\subsubsection{${1:${VISUAL:subsubsection name}}}%
+\label{ssub:${2:${1/\\\w+\{(.*?)\}|\\(.)|(\w+)|([^\w\\]+)/(?4:_:\L$1$2$3\E)/ga}}}
+
+$0
+endsnippet
+
+# enumerate
+snippet !enum
+\begin{enumerate}
+    \item $0
+\end{enumerate}
+endsnippet
+
+# itemize
+snippet !item
+\begin{itemize}
+    \item $0
+\end{itemize}
+endsnippet
+
+#******************************************************************************
+# templates
+#******************************************************************************
+snippet !apa
+%******************************************************************************
+% preamble
+%******************************************************************************
+\documentclass[12pt]{article}
+\usepackage{geometry}
+\geometry{
+    letterpaper,
+    margin=1in
+}
+
+% title/author
+\title{${1:TITLE}}
+\author{${2:AUTHOR}}
+
+% language & encoding
+\usepackage[${3:spanish}]{babel}
+\usepackage[utf8]{inputenc}
+% images
+\usepackage{graphicx}
+
+% citation style
+\usepackage[
+backend=biber,
+style=apalike,
+citestyle=authoryear-icomp
+]{biblatex}
+\addbibresource{$HOME/lib/biblio.bib}
+
+\begin{document}
+% title
+\maketitle
+% TOC
+\tableofcontents
+%******************************************************************************
+% document itself
+%******************************************************************************
+
+$0
+
+\printbibliography
+\end{document}
+endsnippet
