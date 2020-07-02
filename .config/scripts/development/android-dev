@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# arch-based
+if [ -x "$(command -v "yay")" ]; then
+    # pkgs
+    yay --needed --noconfirm -S android-tools
+
+# void
+elif [ -x "$(command -v "xbps-install")" ]; then
+    # pkgs
+    sudo xbps-install -Sy android-tools
+fi
