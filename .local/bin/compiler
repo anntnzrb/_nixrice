@@ -37,6 +37,6 @@ py) python "$file" ;;
 [rR]md) Rscript -e "rmarkdown::render('$file', quiet=TRUE)" ;;
 rs) cargo build ;;
 sent) setsid -f sent "$file" 2>/dev/null ;;
-tex) textype "$file" ;;
+tex) textype "$file" && clean-build "$file" ;;
 *) sed 1q "$file" | grep "^#!/" | sed "s/^#!//" | xargs -r -I % "$file" ;;
 esac
