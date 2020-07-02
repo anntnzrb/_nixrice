@@ -20,8 +20,9 @@ elif [ -x "$(command -v "xbps-install")" ]; then
     # tlmgr
     # gnupg is required to install via tlmgr
     sudo xbps-install -Sy gnupg
-    sudo tlmgr install biblatex
+    sudo tlmgr install authblk
     sudo tlmgr install biber
+    sudo tlmgr install biblatex
     sudo tlmgr install biblatex-apa
     # update
     sudo tlmgr update --all

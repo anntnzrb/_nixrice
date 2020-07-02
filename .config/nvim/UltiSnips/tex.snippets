@@ -23,6 +23,16 @@ snippet !ref
 \ref{${1:reference}} $0
 endsnippet
 
+# text cite
+snippet !tcite
+\textcite{${1:cite_id}} $0
+endsnippet
+
+# parenthesis cite
+snippet !pcite
+\parencite{${1:cite_id}} $0
+endsnippet
+
 # figures
 snippet !fig
 \begin{figure}[${2:htpb}]
@@ -85,16 +95,22 @@ snippet !apa
 %******************************************************************************
 % preamble
 %******************************************************************************
+% formato
 \documentclass[12pt]{article}
 \usepackage{geometry}
 \geometry{
     letterpaper,
     margin=1in
 }
+% fuente
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+% interlineado | 1.6 === 2.0
+\renewcommand{\baselinestretch}{1.6}
 
 % title/author
-\title{${1:TITLE}}
-\author{${2:AUTHOR}}
+\title{\textbf{${1:TITLE}}}
+\author{\textit{${2:AUTHOR}}}
 
 % language & encoding
 \usepackage[${3:spanish}]{babel}
@@ -105,22 +121,25 @@ snippet !apa
 % citation style
 \usepackage[
 backend=biber,
-style=apalike,
+style=apa,
 citestyle=authoryear-icomp
 ]{biblatex}
-\addbibresource{$HOME/lib/biblio.bib}
+\addbibresource{$HOME/lib/docs/biblio.bib}
 
+%******************************************************************************
+% document itself
+%******************************************************************************
 \begin{document}
 % title
 \maketitle
 % TOC
+\clearpage
 \tableofcontents
-%******************************************************************************
-% document itself
-%******************************************************************************
+\clearpage
 
 $0
 
+\clearpage
 \printbibliography
 \end{document}
 endsnippet
