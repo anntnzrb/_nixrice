@@ -13,8 +13,7 @@ ext="${file##*.}"
 cd "$dir" || exit
 
 textype() {
-    command="pdflatex"
-    (sed 5q "$file" | grep -i -q 'xelatex') && command="xelatex"
+    command="xelatex"
     $command --output-directory="$dir" "$base" &&
         grep -i addbibresource "$file" >/dev/null &&
         biber --input-directory "$dir" "$base" &&
@@ -35,6 +34,7 @@ fi ;;
 mom) preconv "$file" | refer -PS -e | groff -mom -kept -T pdf >"$base".pdf ;;
 ms) preconv "$file" | refer -PS -e | groff -me -ms -kept -T pdf >"$base".pdf ;;
 py) python "$file" ;;
+[rR]md) Rscript -e "rmarkdown::render('$file', quiet=TRUE)" ;;
 rs) cargo build ;;
 sent) setsid -f sent "$file" 2>/dev/null ;;
 tex) textype "$file" ;;
