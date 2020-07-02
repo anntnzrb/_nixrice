@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# void
+if [ -x "$(command -v "xbps-install")" ]; then
+    # pkgs
+    sudo xbps-install -Sy qemu virt-manager libvirt
+
+    # symlink services; enable & start
+    sudo ln -fs /etc/sv/libvirtd /var/service
+    sudo ln -fs /etc/sv/virtlockd /var/service
+    sudo ln -fs /etc/sv/virtlogd /var/service
+    sudo sv start libvirtd
+    sudo sv start virtlockd
+    sudo sv start virtlogd
+
+    # add user to libvirtd
+    sudo groupadd libvirtd
+    sudo usermod -G libvirtd -a "$USER"
+fi
+
+printf "\n...consider rebooting system...\n"
