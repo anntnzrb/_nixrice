@@ -95,28 +95,57 @@ snippet !apa
 %******************************************************************************
 % preamble
 %******************************************************************************
-% formato
+% type/format
 \documentclass[12pt]{article}
 \usepackage{geometry}
 \geometry{
     letterpaper,
     margin=1in
 }
-% fuente
+% spacing | 1.6 === 2.0
+\renewcommand{\baselinestretch}{1.6}
+% font
 \usepackage{fontspec}
 \setmainfont{Times New Roman}
-% interlineado | 1.6 === 2.0
-\renewcommand{\baselinestretch}{1.6}
-
-% title/author
-\title{\textbf{${1:TITLE}}}
-\author{\textit{${2:AUTHOR}}}
-
 % language & encoding
-\usepackage[${3:spanish}]{babel}
+\usepackage[${1:LANGUAGE}]{babel}
 \usepackage[utf8]{inputenc}
-% images
+% support images
 \usepackage{graphicx}
+
+% header & footer
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\thepage}
+\lfoot{\includegraphics[scale=0.40]{${2:LEFT FOOTER}}}
+
+% title/author/date
+\newcommand{\cTitle}{\LARGE{${3:TITLE}}}
+\newcommand{\cInstitution}{\textbf{${4:INSTITUTION}}}
+\newcommand{\cClass}{${5:CLASS}}
+\newcommand{\cClassID}{${6:CLASS_ID}}
+\newcommand{\cTerm}{\textbf{${7:TERM}}}
+\newcommand{\cInstructor}{${8:INSTRUCTOR}}
+\title{
+    \centering
+    \includegraphics[scale=0.50]{${9:TITLE_LOGO}}\\\
+    \textbf{\cTitle}
+    \vspace{1in}
+}
+\author{
+    \emph{{${10:AUTHOR}}}\\\
+    \normalsize \cInstitution\\\
+    \normalsize \textbf{\cClassID}: \cClass\\\
+    \normalsize \textbf{Instructor}: \cInstructor\\\
+    \normalsize \cTerm
+}
+\date{
+    \vspace{2in}
+    \centering
+    \includegraphics[scale=0.15]{${11:SUB_LOGO}}\\\
+    \emph{\today}
+}
 
 % citation style
 \usepackage[

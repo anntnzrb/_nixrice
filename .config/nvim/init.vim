@@ -168,6 +168,7 @@ let g:ale_linters_explicit = 1
 
 " F12 fixes errors
 nm <F9> <Plug>(ale_fix)
+let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace']}
 
 "" COC
 nm <leader><F2> <Plug>(coc-rename)
