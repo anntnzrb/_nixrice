@@ -23,6 +23,7 @@ elif [ -x "$(command -v "xbps-install")" ]; then
     sudo tlmgr install biber
     sudo tlmgr install biblatex
     sudo tlmgr install biblatex-apa
+    sudo tlmgr install biblatex-ieee
     # update
     sudo tlmgr update --all
     sudo texhash
