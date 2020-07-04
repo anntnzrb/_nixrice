@@ -55,9 +55,9 @@ alias \
 [ -x "$(command -v xbps-install)" ] &&
     alias \
         pkgf="xbps-query -s" \
-        pkgi="sudo xbps-install -S" \
+        pkgi="sudo xbps-install -u xbps && sudo xbps-install -S" \
         pkgr="sudo xbps-remove" \
-        pkgu="sudo xbps-install -Su"
+        pkgu="sudo xbps-install -u xbps && sudo xbps-install -Su"
 
 #◦◝◟∘◞◜◦ misc
 alias \
