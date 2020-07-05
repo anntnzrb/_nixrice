@@ -7,28 +7,28 @@
 # arch-based
 if [ -x "$(command -v pacman)" ]; then
     # unlock pacman if locked
-    [ -f "/var/lib/pacman/db.lck" ] && command sudo rm -fr /var/lib/pacman/db.lck
+    [ -f "/var/lib/pacman/db.lck" ] && sudo rm -fr /var/lib/pacman/db.lck
     # install & enable haveged
-    command sudo pacman --needed --noconfirm -Syy haveged
-    command sudo systemctl enable haveged --now
+    sudo pacman --needed --noconfirm -Syy haveged
+    sudo systemctl enable haveged --now
     # CRL/OCSP (keyservers daemon)
-    command sudo pkill -9 -x dirmngr
+    sudo pkill -9 -x dirmngr
     # remove old (and possibly broken) keys (cache also)
-    command sudo rm -fr /root/.gnupg/ /etc/pacman.d/gnupg "$HOME"/.gnupg "$HOME"/.cache
+    sudo rm -fr /root/.gnupg/ /etc/pacman.d/gnupg "$HOME"/.gnupg "$HOME"/.cache
     # clear downloaded aborted installation pkgs
-    command sudo pacman -Scc
+    sudo pacman -Scc
     # initialize the pacman keyring
-    command sudo pacman-key --init
+    sudo pacman-key --init
     # load the signature keys
-    command sudo pacman-key --populate archlinux
+    sudo pacman-key --populate archlinux
     # refresh and update the signature keys
-    command sudo pacman-key --refresh-keys
+    sudo pacman-key --refresh-keys
     # reinstall keyrings including the latest keys
-    command sudo pacman --noconfirm -Syy gnupg archlinux-keyring
+    sudo pacman --noconfirm -Syy gnupg archlinux-keyring
     # start CRL/OCSP
-    command sudo dirmngr </dev/null
+    sudo dirmngr </dev/null
     # sync packages
-    command sudo pacman -Syy
+    sudo pacman -Syy
 fi
 
 #==============================================================================
