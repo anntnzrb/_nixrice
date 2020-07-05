@@ -1,28 +1,34 @@
 #!/bin/sh
 
+# **
 # assigns an icon depending on the status of the torrent(s)
 #
 # checks if program is running
+# *
 
-# verify if program is running
-fnIs_Running() {
-    pidof -s "$1" >/dev/null
-
+# *****************************************************************************
+# functions
+# *****************************************************************************
+is_running() {
+    command pidof -s "$1" >/dev/null
 }
 
-fnIs_Running transmission-daemon &&
+# *****************************************************************************
+# main
+# *****************************************************************************
+is_running transmission-daemon &&
     transmission-remote -l | grep % |
     sed " # This first sed command is to ensure a desirable order with sort
-	s/.*Stopped.*/A/g;
-	s/.*Seeding.*/Z/g;
-	s/.*100%.*/N/g;
-	s/.*Idle.*/B/g;
-	s/.*Uploading.*/L/g;
-	s/.*%.*/M/g" |
-        sort -h | uniq -c | sed "
-				s/A/🛑/g;
-				s/B/🕰/g;
-				s/L/🔼/g;
-				s/M/🔽/g;
-				s/N/✅/g;
-				s/Z/🌱/g" | awk '{print $2, $1}' | paste -sd ' '
+    s/.*Stopped.*/A/g;
+    s/.*Seeding.*/Z/g;
+    s/.*100%.*/N/g;
+    s/.*Idle.*/B/g;
+    s/.*Uploading.*/L/g;
+    s/.*%.*/M/g" |
+    sort -h | uniq -c | sed "
+                s/A/🛑/g;
+                s/B/🕰/g;
+                s/L/🔼/g;
+                s/M/🔽/g;
+                s/N/✅/g;
+                s/Z/🌱/g" | awk '{print $2, $1}' | paste -sd ' '

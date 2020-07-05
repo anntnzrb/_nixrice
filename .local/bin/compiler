@@ -5,38 +5,37 @@
 # note: .tex files which you wish to compile with XeLaTeX should have the
 # string "xelatex" somewhere in a comment/command in the first 5 lines
 
-file=$(readlink -f "$1")
-dir=${file%/*}
-base="${file%.*}"
-ext="${file##*.}"
+FILE=$(readlink -f "$1")
+DIR=${FILE%/*}
+BASE="${FILE%.*}"
+EXT="${FILE##*.}"
 
-cd "$dir" || exit
+cd "$DIR" || exit
 
 textype() {
     command="xelatex"
-    $command --output-directory="$dir" "$base" &&
-        grep -i addbibresource "$file" >/dev/null &&
-        biber --input-directory "$dir" "$base" &&
-        $command --output-directory="$dir" "$base" &&
-        $command --output-directory="$dir" "$base"
+    $command --output-directory="$DIR" "$BASE" &&
+        grep -i addbibresource "$FILE" >/dev/null &&
+        biber --input-directory "$DIR" "$BASE" &&
+        $command --output-directory="$DIR" "$BASE" &&
+        $command --output-directory="$DIR" "$BASE"
 }
 
-case "$ext" in
-[0-9]) preconv "$file" | refer -PS -e | groff -mandoc -T pdf >"$base".pdf ;;
-c) cc "$file" -o "$base" && "$base" ;;
-md) if command -v lowdown >/dev/null; then
-    lowdown -d nointem -e super "$file" -Tms | groff -mpdfmark -ms -kept >"$base".pdf
-elif command -v groffdown >/dev/null; then
-    groffdown -i "$file" | groff >"$base.pdf"
+case "$EXT" in
+[0-9]) preconv "$FILE" | refer -PS -e | groff -mandoc -T pdf >"$BASE".pdf ;;
+c) cc "$FILE" -o "$BASE" && "$BASE" ;;
+md) if [ -x "$(command -v lowdown)" ] >/dev/null; then
+    lowdown -d nointem -e super "$FILE" -Tms | groff -mpdfmark -ms -kept >"$BASE".pdf
+elif [ -x "$(command -v groffdown)" ] >/dev/null; then
+    groffdown -i "$FILE" | groff >"$BASE.pdf"
 else
-    pandoc "$file" --pdf-engine=xelatex -o "$base".pdf
+    pandoc "$FILE" --pdf-engine=xelatex -o "$BASE".pdf
 fi ;;
-mom) preconv "$file" | refer -PS -e | groff -mom -kept -T pdf >"$base".pdf ;;
-ms) preconv "$file" | refer -PS -e | groff -me -ms -kept -T pdf >"$base".pdf ;;
-py) python "$file" ;;
-[rR]md) Rscript -e "rmarkdown::render('$file', quiet=TRUE)" ;;
+mom) preconv "$FILE" | refer -PS -e | groff -mom -kept -T pdf >"$BASE".pdf ;;
+ms) preconv "$FILE" | refer -PS -e | groff -me -ms -kept -T pdf >"$BASE".pdf ;;
+py) python "$FILE" ;;
 rs) cargo build ;;
-sent) setsid -f sent "$file" 2>/dev/null ;;
-tex) textype "$file" && clean-build "$file" ;;
-*) sed 1q "$file" | grep "^#!/" | sed "s/^#!//" | xargs -r -I % "$file" ;;
+sent) setsid -f sent "$FILE" 2>/dev/null ;;
+tex) textype "$FILE" && clean-build "$FILE" ;;
+*) sed 1q "$FILE" | grep "^#!/" | sed "s/^#!//" | xargs -r -I % "$FILE" ;;
 esac

@@ -1,12 +1,14 @@
 #!/bin/bash
 
+# **
+# dmenu script to easily access configuration files
+# *
+
 declare opts=("alacritty
 aliasrc
-dunst
 functions
 i3
 nvim
-picom
 profile
 spectrwm
 sxhkd
@@ -16,53 +18,47 @@ xresources
 zsh
 this-file")
 
-choice=$(printf '%s' "${opts[@]}" | dmenu -c -i -l 20 -bw 2 -fn "Overpass Mono" -p 'edit config file: ')
-edit="$TERMINAL -e $EDITOR"
+CHOICE=$(printf '%s' "${opts[@]}" | dmenu -c -i -l 20 -bw 2 -fn "Overpass Mono" -p 'edit config file: ')
+EDIT="$TERMINAL -e $EDITOR"
 
-case "$choice" in
+case "$CHOICE" in
 alacritty)
-	$edit "$HOME"/.config/alacritty/alacritty.yml
-	;;
+    $EDIT "$HOME"/.config/alacritty/alacritty.yml
+    ;;
 aliasrc)
-	$edit "$HOME"/.config/sh/aliasrc
-	;;
-dunst)
-	$edit "$HOME"/.config/dunst/dunstrc
-	;;
+    $EDIT "$HOME"/.config/sh/aliasrc
+    ;;
 functions)
-	$edit "$HOME"/.config/sh/functions
-	;;
+    $EDIT "$HOME"/.config/sh/functions
+    ;;
 i3)
-	$edit "$HOME"/.config/i3/config
-	;;
+    $EDIT "$HOME"/.config/i3/config
+    ;;
 nvim)
-	$edit "$HOME"/.config/nvim/init.vim
-	;;
-picom)
-	$edit "$HOME"/.config/picom/picom.conf
-	;;
+    $EDIT "$HOME"/.config/nvim/init.vim
+    ;;
 profile)
-	$edit "$HOME"/.profile
-	;;
+    $EDIT "$HOME"/.profile
+    ;;
 spectrwm)
-	$edit "$HOME"/.config/spectrwm/spectrwm.conf
-	;;
+    $EDIT "$HOME"/.config/spectrwm/spectrwm.conf
+    ;;
 sxhkd)
-	$edit "$HOME"/.config/sxhkd/sxhkdrc
-	;;
+    $EDIT "$HOME"/.config/sxhkd/sxhkdrc
+    ;;
 xinitrc)
-	$edit "$HOME"/.xinitrc
-	;;
+    $EDIT "$HOME"/.xinitrc
+    ;;
 xprofile)
-	$edit "$HOME"/.xprofile
-	;;
+    $EDIT "$HOME"/.xprofile
+    ;;
 xresources)
-	$edit "$HOME"/.Xresources
-	;;
+    $EDIT "$HOME"/.Xresources
+    ;;
 zsh)
-	$edit "$HOME"/.config/zsh/.zshrc
-	;;
+    $EDIT "$HOME"/.config/zsh/.zshrc
+    ;;
 this-file)
-	$edit "$HOME"/.local/bin/edit-cfgs
-	;;
+    $EDIT "$HOME"/.local/bin/edit-cfgs
+    ;;
 esac

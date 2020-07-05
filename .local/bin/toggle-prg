@@ -1,11 +1,16 @@
 #!/bin/sh
 
+# **
 # toggle a program if installed & running
 #
 # useful to toggle on the go;
 # example would be toggling compositor;
 # notifies with `dunst` if installed and `X` is running
+# *
 
+# *****************************************************************************
+# functions
+# *****************************************************************************
 # checks if program is installed
 is_installed() {
     [ -x "$(command -v "$1")" ]
@@ -13,23 +18,26 @@ is_installed() {
 
 # verify if program is running
 is_running() {
-    pidof -s "$1" >/dev/null
+    command pidof -s "$1" >/dev/null
 }
 
 # checks if dunst is installed; receives parameters
-notify() {
+dunst_notify() {
     is_installed notify-send &&
-        pgrep -x Xorg >/dev/null 2>&1 &&
-        notify-send -t "$1" "$2"
+        command pgrep -x Xorg >/dev/null 2>&1 &&
+        command notify-send -t "$1" "$2"
 }
 
+# *****************************************************************************
+# main
+# *****************************************************************************
 if is_installed "$1"; then
     if is_running "$1"; then
-        pkill -9 "$1" && notify 3000 "'$1' terminated"
+        command pkill -9 "$1" && dunst_notify 3000 "'$1' terminated"
     else
         $1 &
-        notify 3000 "'$1' now running"
+        dunst_notify 3000 "'$1' now running"
     fi
 else
-    notify 0 "$1: unknown program"
+    dunst_notify 0 "$1: unknown program"
 fi

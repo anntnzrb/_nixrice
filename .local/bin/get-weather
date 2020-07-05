@@ -1,17 +1,25 @@
 #!/bin/sh
 
+# **
 # retrieves tiny formatted weather info
 #
 # should adjust the varibale `LOCATION` to desired location
+# *
 
 # set-up location
 LOCATION="Guayaquil"
 
+# *****************************************************************************
+# functions
+# *****************************************************************************
 # checks if there's internet connection
 is_net() {
-    ping -q -c 1 1.1.1.1 >/dev/null 2>&1
+    ping -q -c 1 example.com >/dev/null 2>&1
 }
 
+# *****************************************************************************
+# main
+# *****************************************************************************
 if is_net; then
     curl -fs "wttr.in/$LOCATION?format=%c+%t" | tr -d '[:space:]' || exit 1
 else
