@@ -37,7 +37,7 @@ dunst &
 unclutter &
 
 #◦◝◟∘◞◜◦ sources Xresources
-xrdb ~/.Xresources &
+xrdb "$HOME"/.Xresources &
 
 #◦◝◟∘◞◜◦ altgr + letter for (accents, etc) | remaps capslock to escape
 setxkbmap -option caps:super -variant altgr-intl &&
