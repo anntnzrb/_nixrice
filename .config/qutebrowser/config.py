@@ -31,6 +31,9 @@ c.scrolling.smooth = True
 # scrollbar visibility
 c.scrolling.bar = "always"
 
+# allow viewing PDFs
+c.content.pdfjs = True
+
 # enters insert when an insert-element is focused after load
 c.input.insert_mode.auto_load = True
 
