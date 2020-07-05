@@ -129,7 +129,9 @@ c.downloads.remove_finished = 5000
 # search engines
 c.url.searchengines = {
     "DEFAULT": "https://www.duckduckgo.com/?q={}",
-    "aw": "https://www.wiki.archlinux.org/?search={}",
+    "aw": "https://wiki.archlinux.org/index.php?search={}",
+    "aur": "https://aur.archlinux.org/packages/?O=0&K={}",
+    "pacman": "https://www.archlinux.org/packages/?q={}",
     "yt": "https://www.youtube.com/results?search_query={}",
     "redd": "https://reddit.com/r/{}",
     "wiki": "https://www.wikipedia.org/wiki/{}",
