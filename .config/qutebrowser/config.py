@@ -22,6 +22,9 @@ c.url.start_pages = "https://start.duckduckgo.com"
 # disable autoplay
 c.content.autoplay = False
 
+# force dark theme
+c.colors.webpage.darkmode.enabled = True
+
 # smooth scrolling
 c.scrolling.smooth = True
 
@@ -80,7 +83,11 @@ c.content.cookies.accept = "no-3rdparty"
 # i don't know what kind of setting this is
 c.content.mouse_lock = "ask"
 
-# TODO: 'confirm.quit' [Sat, 04 Jul]
+# allow websites to record audio/video
+c.content.media_capture = "ask"
+
+# allow desktop content sharing
+c.content.desktop_capture = "ask"
 
 # *****************************************************************************
 # completion box
