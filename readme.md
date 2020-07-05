@@ -46,6 +46,7 @@ this table displays _most_ of the programs i have configuration files for
 
 | software           | name                                    | :first_quarter_moon: |
 | ------------------ | --------------------------------------- | -------------------- |
+|                    | **shell**                               |                      |
 | terminal emulator  | _st_                                    | :large_blue_circle:  |
 | :arrow_up:         | _alacritty_                             | :red_circle:         |
 | shell              | _zsh_                                   | :large_blue_circle:  |
@@ -54,6 +55,7 @@ this table displays _most_ of the programs i have configuration files for
 | :arrow_up:         | _i3_                                    | :red_circle:         |
 | :arrow_up:         | _spectrwm_                              | :red_circle:         |
 | compositor         | _picom/compton_                         | :large_blue_circle:  |
+| browser            | _qutebrowser_                           | :large_blue_circle:  |
 | notifications      | _dunst_                                 | :large_blue_circle:  |
 |                    | **files/text/docs/editors**             |                      |
 | text editor        | _[n]vi[m]_                              | :large_blue_circle:  |
