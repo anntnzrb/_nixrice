@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/sh
 
 #          ██          ██   ██
 #         ░░          ░░   ░██
@@ -11,7 +11,7 @@
 
 # runs after executing `startx`
 
-[ -f ~/.xprofile ] && . ~/.xprofile
+[ -f "$HOME"/.xprofile ] && . "$HOME"/.xprofile
 
 #◦◝◟∘◞◜◦ window manager
 
@@ -23,5 +23,5 @@
 
 # dwm
 while :; do
-	ssh-agent dwm
+    ssh-agent dwm
 done
