@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# **
+# retrieves some repos i normally use
+# *
+
+# *****************************************************************************
+# functions
+# *****************************************************************************
 # checks if repo is existants, downloads if false
 git_install() {
     for animal in "${REPOS[@]}"; do
@@ -16,6 +23,7 @@ git_install() {
         fi
     done
 }
+
 # python-like array to store url;repo_name
 REPOS=(
     "git@gitlab.com:anntnzrb/_nixrice.git;_nixrice"
@@ -25,5 +33,7 @@ REPOS=(
     "git@gitlab.com:anntnzrb/dwm.git;dwm"
 )
 
-# actual script
+# *****************************************************************************
+# main
+# *****************************************************************************
 git_install

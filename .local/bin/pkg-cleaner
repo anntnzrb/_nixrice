@@ -1,5 +1,13 @@
 #!/bin/sh
 
+# **
+# clean orphans and other cache stuff
+# *
+
+# *****************************************************************************
+# main
+# *****************************************************************************
+
 # arch-based
 if [ -x "$(command -v "pacman")" ]; then
     # display cached packages

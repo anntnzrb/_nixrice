@@ -1,23 +1,35 @@
 #!/bin/sh
 
+# **
 # gets the internet connection speed
 #
 # this script is slow to run;
 # requires having `speedtest-cli` installed
+# *
 
+# *****************************************************************************
+# functions
+# *****************************************************************************
 # checks if there's internet connection
-fnIs_Net() {
-    ping -q -c 1 1.1.1.1 >/dev/null 2>&1
+is_net() {
+    command ping -q -c 1 example.com >/dev/null 2>&1
 }
 
 # checks if program is installed
-fnIs_Installed() {
+is_installed() {
     [ -x "$(command -v "$1")" ]
 }
 
-if fnIs_Net && fnIs_Installed speedtest-cli; then
-    speedtest-cli | awk '/load:/ {print $2$3}' | xargs |
-        awk '{print "⬇ "$1" ↔  ""⬆ "$2}'
-else
-    echo 'N/A'
-fi
+get_net_speed() {
+    if is_net && is_installed speedtest-cli; then
+        command speedtest-cli | awk '/load:/ {print $2$3}' | xargs |
+            awk '{print "⬇ "$1" ↔  ""⬆ "$2}'
+    else
+        echo 'N/A'
+    fi
+}
+
+# *****************************************************************************
+# main
+# *****************************************************************************
+get_net_speed

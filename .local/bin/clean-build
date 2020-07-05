@@ -1,18 +1,17 @@
 #!/bin/bash
 
-# clears the build files of different programs
+# **
+# clears the build file of different programs
 # should be called by editor on close
+# *
 
-file=$(readlink -f "$1")
-dir=$(dirname "$file")
-base="${file%.*}"
+FILE=$(readlink -f "$1")
+DIR=$(DIRname "$FILE")
+BASE="${FILE%.*}"
 
 case "$1" in
-*.java)
-	find "$dir" -type f -iname "*.class" -delete
-	;;
 *.tex)
-	find "$dir" -maxdepth 1 -type f -regextype gnu-awk -regex "^$base\\.(4tc|xref|tmp|pyc|pyo|fls|vrb|fdb_latexmk|bak|swp|aux|log|synctex\\(busy\\)|lof|lot|maf|idx|mtc|mtc0|nav|out|snm|toc|bcf|run\\.xml|synctex\\.gz|blg|bbl)" -delete
-	;;
-*) printf "\ninvalid format\n" ;;
+    find "$DIR" -maxdepth 1 -type f -regextype gnu-awk -regex "^$BASE\\.(4tc|xref|tmp|pyc|pyo|fls|vrb|fdb_latexmk|bak|swp|aux|log|synctex\\(busy\\)|lof|lot|maf|idx|mtc|mtc0|nav|out|snm|toc|bcf|run\\.xml|synctex\\.gz|blg|bbl)" -delete
+    ;;
+*) printf "\n...invalid format...\n" ;;
 esac
