@@ -1,31 +1,39 @@
 #!/bin/sh
 
+# **
 # if transmission-daemon is running, will ask to kill, else will ask to start.
+# *
 
+# *****************************************************************************
+# functions
+# *****************************************************************************
 # checks if program is installed
-fnIs_Installed() {
+is_installed() {
     [ -x "$(command -v "$1")" ]
 }
 
 # verify if program is running
-fnIs_Running() {
-    pidof -s "$1" >/dev/null
+is_running() {
+    command pidof -s "$1" >/dev/null
 }
 
 # checks if dunst is installed; recieves parameters
-fnNotify() {
-    fnIs_Installed notify-send &&
-        pgrep -x Xorg >/dev/null 2>&1 &&
-        notify-send -t "$1" "$2"
+dunst_notify() {
+    is_installed notify-send &&
+        command pgrep -x Xorg >/dev/null 2>&1 &&
+        command notify-send -t "$1" "$2"
 }
 
-if fnIs_Running transmission-daemon; then
+# *****************************************************************************
+# main
+# *****************************************************************************
+if is_running transmission-daemon; then
     [ "$(printf "No\\nYes" | dmenu -i -p "Turn off transmission-daemon?")" = "Yes" ] &&
-        pkill -9 transmission-da &&
-        fnNotify 3 "transmission-daemon disabled."
+        command pkill -9 transmission-da &&
+        dunst_notify 3 "transmission-daemon disabled"
 else
-    fnIs_Installed transmission-cli || exit
+    is_installed transmission-cli || exit
     [ "$(printf "No\\nYes" | dmenu -i -p "Turn on transmission daemon?")" = "Yes" ] &&
-        transmission-daemon && fnNotify 3 "tranmission-daemon enabled."
+        transmission-daemon && dunst_notify 3 "tranmission-daemon enabled"
 fi
 sleep 3

@@ -1,29 +1,35 @@
 #!/bin/sh
 
-# launches torrent
-#
-# launches and enables if inactive
+# **
+# launches and enables torrent if inactive
+# **
 
+# *****************************************************************************
+# functions
+# *****************************************************************************
 # checks if program is installed
-fnIs_Installed() {
+is_installed() {
     [ -x "$(command -v "$1")" ]
 }
 
 # verify if program is running
-fnIs_Running() {
-    pidof -s "$1" >/dev/null
+is_running() {
+    command pidof -s "$1" >/dev/null
 }
 
 # checks if dunst is installed; recieves parameters
-fnNotify() {
-    fnIs_Installed notify-send &&
-        pgrep -x Xorg >/dev/null 2>&1 &&
-        notify-send -t "$1" "$2"
+dunst_notify() {
+    is_installed notify-send &&
+        command pgrep -x Xorg >/dev/null 2>&1 &&
+        command notify-send -t "$1" "$2"
 }
 
-if fnIs_Installed tremc && fnIs_Installed transmission-cli; then
-    ! fnIs_Running transmission-daemon && transmission-daemon &&
-        fnNotify 3 "Starting torrent daemon..."
+# *****************************************************************************
+# main
+# *****************************************************************************
+if is_installed tremc && is_installed transmission-cli; then
+    ! is_running transmission-daemon && transmission-daemon &&
+        dunst_notify 3 "Starting torrent daemon..."
 
     $TERMINAL -e tremc
 else

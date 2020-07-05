@@ -5,29 +5,29 @@
 # currently only working for pulseaudio
 
 # checks if program is installed
-fnIs_Installed() {
+is_installed() {
     [ -x "$(command -v "$1")" ]
 }
 
-if fnIs_Installed pulseaudio; then
+if is_installed pulseaudio; then
     # get pulseaudio info
-    vol_stat="$(pactl list sinks)"
+    VOL_STAT="$(pactl list sinks)"
 
     # get volume value
-    vol="$(echo "$vol_stat" | grep '[0-9]\+%' | sed "s,.* \([0-9]\+\)%.*,\1,;1q")"
+    VOL="$(echo "$VOL_STAT" | grep '[0-9]\+%' | sed "s,.* \([0-9]\+\)%.*,\1,;1q")"
 
     # check if muted
-    echo "$vol_stat" | grep -q "Mute: yes" && printf "🔇\\n" && exit
+    echo "$VOL_STAT" | grep -q "Mute: yes" && printf "🔇\\n" && exit
 
-    if [ "$vol" -gt "70" ]; then
+    if [ "$VOL" -gt "70" ]; then
         icon="🔊"
-    elif [ "$vol" -lt "30" ]; then
+    elif [ "$VOL" -lt "30" ]; then
         icon="🔈"
     else
         icon="🔉"
     fi
 
-    printf "%s %s%%" "$icon" "$vol"
+    printf "%s %s%%" "$icon" "$VOL"
 else
     echo '🔊???'
 fi
