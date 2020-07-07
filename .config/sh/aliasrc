@@ -13,9 +13,9 @@
 alias \
     cp="cp -irv" \
     diff="diff --color=auto" \
-    grep="grep --color=auto" \
-    ll="ls -AFho --color=auto --group-directories-first" \
+    grep="grep -i --color=auto" \
     ls="ls -AFh --color=auto --group-directories-first" \
+    ll="ls -AFho --color=auto --group-directories-first" \
     mkdir="mkdir -pv" \
     mv="mv -iv" \
     rm="rm -v" \
@@ -25,25 +25,12 @@ alias \
 #◦◝◟∘◞◜◦ shortcuts
 alias \
     e='$EDITOR' \
-    kx11="sudo pkill -x Xorg" \
-    rl="source" \
-    sdn="sudo shutdown -h now" \
     se='sudo $EDITOR' \
-    smci="sudo make clean install" \
-    sx11="startx"
-
-#◦◝◟∘◞◜◦ cfgs
-alias \
-    cfgalacritty='$EDITOR ~/.config/alacritty/alacritty.yml' \
-    cfgaliases='$EDITOR ~/.config/zsh/lib/01-aliases' \
-    cfgbinds='$EDITOR ~/.config/sxhkd/sxhkdrc' \
-    cfgi3='$EDITOR ~/.config/i3/config' \
-    cfgspectrwm='$EDITOR ~/.config/spectrwm/spectrwm.conf' \
-    cfgvim='$EDITOR ~/.config/nvim/init.vim' \
-    cfgzsh='$EDITOR ~/.config/zsh/.zshrc'
+    sx11="startx" \
+    kx11="sudo pkill -x Xorg"
 
 #◦◝◟∘◞◜◦ distro-specific aliases
-# arch
+# arch-based
 [ -x "$(command -v pacman)" ] &&
     alias \
         pkgf="pacman -Ss" \
@@ -54,10 +41,10 @@ alias \
 # void
 [ -x "$(command -v xbps-install)" ] &&
     alias \
-        pkgf="xbps-query -s" \
-        pkgi="sudo xbps-install -u xbps && sudo xbps-install -S" \
-        pkgr="sudo xbps-remove" \
-        pkgu="sudo xbps-install -u xbps && sudo xbps-install -Su"
+        pkgf="xbps-query" \
+        pkgi="sudo xbps-install -fu xbps && sudo xbps-install -Sf" \
+        pkgr="sudo xbps-remove -f" \
+        pkgu="sudo xbps-install -fu xbps && sudo xbps-install -Sfu"
 
 #◦◝◟∘◞◜◦ misc
 alias \
@@ -72,7 +59,7 @@ alias \
     ytv="youtube-dl -f best"
 
 sscreenkey() {
-    pkill -9 screenkey >/dev/null 2>&1
+    command pkill -9 screenkey >/dev/null 2>&1
     setsid screenkey --no-systray --vis-shift --bak-mode full \
         --opacity 0.55 -f FiraCodeRetina -t 2 \
         -p bottom -s small >/dev/null 2>&1 &
