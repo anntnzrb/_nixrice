@@ -41,7 +41,7 @@ super + shift + q
     xdotool getactivewindow windowclose
 # end X session
 super + control + alt + Escape
-    pkill -9 Xorg
+    pkill -x Xorg
 
 #******************************************************************************
 # keyboard-specific

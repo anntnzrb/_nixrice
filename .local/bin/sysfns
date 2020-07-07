@@ -33,6 +33,6 @@ shutdown)
     ${sdn:-sudo shutdown -h now}
     ;;
 end-x-session)
-    pkill -9 Xorg
+    pkill -x Xorg
     ;;
 esac
