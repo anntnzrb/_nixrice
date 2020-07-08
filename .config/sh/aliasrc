@@ -42,7 +42,7 @@ alias \
 [ -x "$(command -v xbps-install)" ] &&
     alias \
         pkgf="xbps-query" \
-        pkgi="sudo xbps-install -fu xbps && sudo xbps-install -Sf" \
+        pkgi="sudo xbps-install -fu xbps && sudo xbps-install -S" \
         pkgr="sudo xbps-remove -f" \
         pkgu="sudo xbps-install -fu xbps && sudo xbps-install -Sfu"
 
@@ -53,7 +53,7 @@ alias \
     matrix="unimatrix -a -l GRgors -s 96" \
     rusto="toilet -t -f rusto" \
     rustofat="toilet -t -f rustofat" \
-    tnet="ping 1.1.1.1" \
+    tnet="ping example.com" \
     tnetspeed="speedtest-cli" \
     yta="youtube-dl --extract-audio --audio-format best" \
     ytv="youtube-dl -f best"
