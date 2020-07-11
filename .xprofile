@@ -15,8 +15,9 @@
 xset s off &
 # off-screen time
 xset dpms 0 0 900 &
-# key-press repeat rate
-xset r rate 225 50 &
+
+#◦◝◟∘◞◜◦ keyboard settings
+remaps &
 
 #◦◝◟∘◞◜◦ sets the background with `setbg` script
 setbg &
@@ -38,10 +39,6 @@ unclutter &
 
 #◦◝◟∘◞◜◦ sources Xresources
 xrdb "$HOME"/.Xresources &
-
-#◦◝◟∘◞◜◦ altgr + letter for (accents, etc) | remaps capslock to escape
-setxkbmap -option caps:super -variant altgr-intl &&
-    killall xcape 2>/dev/null && xcape -e 'Super_L=Escape' &
 
 #◦◝◟∘◞◜◦ choose display (should be at last)
 displayselect
