@@ -22,9 +22,6 @@ c.url.start_pages = "https://start.duckduckgo.com"
 # disable autoplay
 c.content.autoplay = False
 
-# force dark theme
-c.colors.webpage.darkmode.enabled = True
-
 # smooth scrolling
 c.scrolling.smooth = True
 
@@ -132,6 +129,7 @@ c.url.searchengines = {
     "aw": "https://wiki.archlinux.org/index.php?search={}",
     "aur": "https://aur.archlinux.org/packages/?O=0&K={}",
     "pacman": "https://www.archlinux.org/packages/?q={}",
+    "lby": "https://lbry.tv/$/search?q={}",
     "yt": "https://www.youtube.com/results?search_query={}",
     "redd": "https://reddit.com/r/{}",
     "wiki": "https://www.wikipedia.org/wiki/{}",
