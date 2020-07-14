@@ -1,15 +1,21 @@
 #!/bin/sh
 
-# This script does the following:
-#	Run by itself, set the wallpaper (at X start).
-#	If given a file, set that as the new wallpaper.
-#	If given a directory, choose random file in it.
+# this script does the following:
+#   run at Xorg launch (via .xprofile)
+#   if file is passed as argument, set it as wallpaper
+#   if directory is passed as argument, choose random image and
+#   set it as wallpaper
+#
+# the wallpaper set is a symlink located @ ~
 
-# Location of link to wallpaper link.
-bgloc="$HOME/lib/imgs/wallpapers/wally.png"
+# wallpaper location
+WP_LOCATION="$HOME/wallpaper.png"
 
-[ -f "$1" ] && ln -sf "$(readlink -f "$1")" "$bgloc" && notify-send -i "$bgloc" "updating wallpaper..."
+[ -f "$1" ] && ln -sf "$(readlink -f "$1")" "$WP_LOCATION" &&
+    notify-send -i "$WP_LOCATION" "wallpaper changed..."
 
-[ -d "$1" ] && ln -sf "$(find "$(readlink -f "$1")" -iregex '.*.\(jpg\|jpeg\|png\|gif\)' -type f | shuf -n 1)" "$bgloc" && notify-send -i "$bgloc" "Random Wallpaper chosen."
+[ -d "$1" ] &&
+    ln -sf "$(find "$(readlink -f "$1")" -iregex '.*.\(jpg\|jpeg\|png\|gif\)' -type f | shuf -n 1)" "$WP_LOCATION" &&
+    notify-send -i "$WP_LOCATION" "random wallpaper chosen"
 
-xwallpaper --zoom "$bgloc"
+xwallpaper --zoom "$WP_LOCATION"
