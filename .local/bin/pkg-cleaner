@@ -41,6 +41,8 @@ elif [ -x "$(command -v "xbps-install")" ]; then
 
     # clear pkg cache
     sudo xbps-remove -Ofoy
+    # clear old kernels
+    sudo vkpurge rm all
 
     # display cached packages after
     printf "amount of cached packages: %s | size: %s\n" \
