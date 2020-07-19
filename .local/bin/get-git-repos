@@ -2,38 +2,54 @@
 
 # **
 # retrieves some repos i normally use
+#
+# non POSIX-compliant
 # *
 
 # *****************************************************************************
 # functions
 # *****************************************************************************
-# checks if repo is existants, downloads if false
-git_install() {
-    for animal in "${REPOS[@]}"; do
-        URL="${animal%%;*}"
-        FILE="${animal##*;}"
-        REPO_DIR="$HOME/lib/repos/$FILE"
 
-        if [ ! -d "$REPO_DIR" ]; then
-            printf "downloading \"%s\"...\n" "$FILE"
-            git clone -q "$URL" "$REPO_DIR"
-            echo "downloaded -> $REPO_DIR"
-        else
-            printf "skipping...\n\"%s\" is already @ %s\n\n" "$FILE" "$REPO_DIR"
-        fi
-    done
+# checks if ssh is set on GitLab first
+check_ssh() {
+    ssh -T git@gitlab.com >/dev/null 2>&1 ||
+        { echo "ssh keys need to be configured to proceed..." && exit 0; }
 }
 
-# python-like array to store url;repo_name
-REPOS=(
-    "git@gitlab.com:anntnzrb/_nixrice.git;_nixrice"
-    "git@gitlab.com:anntnzrb/rerum.git;rerum"
-    "git@gitlab.com:anntnzrb/uarbs.git;uarbs"
-    "git@gitlab.com:anntnzrb/st.git;st"
-    "git@gitlab.com:anntnzrb/dwm.git;dwm"
-)
+download() {
+    git clone -q "$2" "$THIS_DIR"
+}
+
+install_git() {
+    THIS_DIR=$REPO_DIR$1
+    if [ ! -d "$THIS_DIR" ]; then
+        download "$1" "$2" &
+        echo "downloaded -> $THIS_DIR"
+    else
+        echo "$1 is already at $THIS_DIR"
+    fi
+}
 
 # *****************************************************************************
 # main
 # *****************************************************************************
-git_install
+
+# check ssh keys before proceeding to anyhing
+check_ssh
+
+REPO_DIR="${HOME}/lib/test/"
+declare -A REPOS
+REPOS=(
+    ["_nixrice"]="git@gitlab.com:anntnzrb/_nixrice.git"
+    ["rerum"]="git@gitlab.com:anntnzrb/rerum.git"
+    ["uarbs"]="git@gitlab.com:anntnzrb/uarbs.git"
+    ["st"]="git@gitlab.com:anntnzrb/st.git"
+    ["dwm"]="git@gitlab.com:anntnzrb/dwm.git"
+)
+
+# iterate over the array and install each repo
+for repo in "${!REPOS[@]}"; do
+    install_git "$repo" "${REPOS[$repo]}" &
+done
+
+wait
