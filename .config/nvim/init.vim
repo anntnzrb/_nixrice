@@ -174,6 +174,8 @@ let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace']}
 nm <leader><F2> <Plug>(coc-rename)
 nm <leader><F12> <Plug>(coc-definition)
 
+let g:coc_global_extensions = ['coc-json']
+
 "==============================================================================
 " file specific
 "==============================================================================
