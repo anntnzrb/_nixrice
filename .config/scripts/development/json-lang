@@ -1,0 +1,21 @@
+#!/bin/sh
+
+if [ -x "$(command -v "yay")" ]; then
+    # dependencies
+    yay --needed --noconfirm -Syy nodejs
+
+    ## ALE
+    # fixer
+
+    # FIXME: 'UNTESTED' [Sun, 19 Jul @ 19:04]
+    yay --needed --noconfirm -Syy fixjson
+
+elif [ -x "$(command -v "xbps-install")" ]; then
+    # dependencies
+    sudo xbps-install -Sy nodejs
+
+    ## ALE
+    # fixer
+    echo 'installing via npm...'
+    sudo npm install -g fixjson
+fi
