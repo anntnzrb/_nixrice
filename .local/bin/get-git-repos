@@ -37,7 +37,7 @@ install_git() {
 # check ssh keys before proceeding to anyhing
 check_ssh
 
-REPO_DIR="${HOME}/lib/test/"
+REPO_DIR="${HOME}/lib/repos/"
 declare -A REPOS
 REPOS=(
     ["_nixrice"]="git@gitlab.com:anntnzrb/_nixrice.git"
