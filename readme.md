@@ -47,7 +47,7 @@ this table displays _most_ of the programs i have configuration files for
 | software           | name                                    | :first_quarter_moon: |
 | ------------------ | --------------------------------------- | -------------------- |
 |                    | **shell**                               |                      |
-| terminal emulator  | _st_                                    | :large_blue_circle:  |
+| terminal emulator  | _st_ ([external](https://0x0.st/8b4q))  | :large_blue_circle:  |
 | :arrow_up:         | _alacritty_                             | :red_circle:         |
 | shell              | _zsh_                                   | :large_blue_circle:  |
 |                    | **graphical**                           |                      |
@@ -73,10 +73,10 @@ software; package names varies depending on the `GNU/Linux` distribution
 
 - :first_quarter_moon: represents the status of the program
 
-  - :large_blue_circle: the program's _config_ **is** currently being:
+  - :large*blue_circle: the program's \_config* **is** currently being:
     - used
     - updated
-  - :red_circle: the program's _config_ **is not** currently being used:
+  - :red*circle: the program's \_config* **is not** currently being used:
 
     - _may_ be outdated \*
     - _may_ not be installed on my system anymore
