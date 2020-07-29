@@ -73,10 +73,10 @@ software; package names varies depending on the `GNU/Linux` distribution
 
 - :first_quarter_moon: represents the status of the program
 
-  - :large*blue_circle: the program's \_config* **is** currently being:
+  - :large_blue_circle: the program's config **is** currently being:
     - used
     - updated
-  - :red*circle: the program's \_config* **is not** currently being used:
+  - :red_circle: the program's config **is not** currently being used:
 
     - _may_ be outdated \*
     - _may_ not be installed on my system anymore
