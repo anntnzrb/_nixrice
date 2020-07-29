@@ -4,6 +4,7 @@
 # they're in /etc/fstab, they'll be mounted automatically. Otherwise, you'll
 # be prompted to give a mountpoint from already existsing directories. If you
 # input a novel directory, it will prompt you to create that directory.
+# by Luke Smith
 
 getmount() {
     [ -z "$chosen" ] && exit 1
@@ -54,7 +55,7 @@ asktype() {
 }
 
 anddrives=$(simple-mtpfs -l 2>/dev/null)
-usbdrives="$(lsblk -rpo "name,type,size,mountpoint" | awk '$4==""{printf "%s (%s)\n",$1,$3}')"
+usbdrives="$(lsblk -rpo "name,type,size,mountpoint" | grep 'part\|rom' | awk '$4==""{printf "%s (%s)\n",$1,$3}')"
 
 if [ -z "$usbdrives" ]; then
     [ -z "$anddrives" ] && echo "No USB drive or Android device detected" && exit
