@@ -8,20 +8,15 @@
 # functions
 # *****************************************************************************
 # checks if program is installed
-is_installed() {
-    [ -x "$(command -v "$1")" ]
-}
+is_installed() { [ -x "$(command -v "$1")" ]; }
 
 # verify if program is running
-is_running() {
-    command pidof -s "$1" >/dev/null
-}
+is_running() { pgrep -x "$1" >/dev/null; }
 
 # checks if dunst is installed; recieves parameters
 dunst_notify() {
-    is_installed notify-send &&
-        command pgrep -x Xorg >/dev/null 2>&1 &&
-        command notify-send -t "$1" "$2"
+    is_installed notify-send && pgrep -x Xorg >/dev/null 2>&1 &&
+        notify-send -t "$1" "$2"
 }
 
 # *****************************************************************************
@@ -29,11 +24,12 @@ dunst_notify() {
 # *****************************************************************************
 if is_running transmission-daemon; then
     [ "$(printf "No\\nYes" | dmenu -i -p "Turn off transmission-daemon?")" = "Yes" ] &&
-        command pkill -9 transmission-da &&
+        pkill -9 transmission-da &&
         dunst_notify 3 "transmission-daemon disabled"
 else
-    is_installed transmission-cli || exit
+    is_installed transmission-cli || exit 0
     [ "$(printf "No\\nYes" | dmenu -i -p "Turn on transmission daemon?")" = "Yes" ] &&
         transmission-daemon && dunst_notify 3 "tranmission-daemon enabled"
 fi
+
 sleep 3

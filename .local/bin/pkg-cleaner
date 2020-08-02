@@ -7,9 +7,8 @@
 # *****************************************************************************
 # main
 # *****************************************************************************
-
 # arch-based
-if [ -x "$(command -v "pacman")" ]; then
+[ -x "$(command -v "pacman")" ] && {
     # display cached packages
     printf "amount of cached packages: %s | size: %s\n" \
         "$(sudo ls /var/cache/pacman/pkg | wc -l)" \
@@ -29,9 +28,10 @@ if [ -x "$(command -v "pacman")" ]; then
     printf "amount of cached packages: %s | size: %s\n" \
         "$(sudo ls /var/cache/pacman/pkg | wc -l)" \
         "$(sudo du -hs /var/cache/pacman/pkg)"
+}
 
-    # void
-elif [ -x "$(command -v "xbps-install")" ]; then
+# void
+[ -x "$(command -v "xbps-install")" ] && {
     # display cached packages
     printf "amount of cached packages: %s | size: %s\n" \
         "$(sudo ls /var/cache/xbps | wc -l)" "$(sudo du -hs /var/cache/xbps)"
@@ -40,11 +40,11 @@ elif [ -x "$(command -v "xbps-install")" ]; then
     rm -fr "$HOME"/.cache/
 
     # clear pkg cache
-    sudo xbps-remove -Ofoy
+    sudo xbps-remove -FORfovy
     # clear old kernels
     sudo vkpurge rm all
 
     # display cached packages after
     printf "amount of cached packages: %s | size: %s\n" \
         "$(sudo ls /var/cache/xbps | wc -l)" "$(sudo du -hs /var/cache/xbps)"
-fi
+}

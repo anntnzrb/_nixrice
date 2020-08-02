@@ -8,30 +8,21 @@
 # functions
 # *****************************************************************************
 # checks if program is installed
-is_installed() {
-    [ -x "$(command -v "$1")" ]
-}
+is_installed() { [ -x "$(command -v "$1")" ]; }
 
 # verify if program is running
-is_running() {
-    command pidof -s "$1" >/dev/null
-}
+is_running() { pgrep -x "$1" >/dev/null; }
 
 # checks if dunst is installed; recieves parameters
 dunst_notify() {
-    is_installed notify-send &&
-        command pgrep -x Xorg >/dev/null 2>&1 &&
-        command notify-send -t "$1" "$2"
+    is_installed notify-send && is_running Xorg && notify-send -t "$1" "$2"
 }
 
 # *****************************************************************************
 # main
 # *****************************************************************************
-if is_installed tremc && is_installed transmission-cli; then
+is_installed tremc && is_installed transmission-cli && {
     ! is_running transmission-daemon && transmission-daemon &&
         dunst_notify 3 "Starting torrent daemon..."
-
-    $TERMINAL -e tremc
-else
-    exit
-fi
+    setsid "$TERMINAL" -e tremc
+} || exit 0

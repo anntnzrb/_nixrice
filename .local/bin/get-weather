@@ -13,15 +13,11 @@ LOCATION="Guayaquil"
 # functions
 # *****************************************************************************
 # checks if there's internet connection
-is_net() {
-    ping -q -c 1 example.com >/dev/null 2>&1
-}
+is_net() { ping -q -c 1 example.com >/dev/null 2>&1; }
 
 # *****************************************************************************
 # main
 # *****************************************************************************
-if is_net; then
-    curl -fs "wttr.in/$LOCATION?format=%c+%t" | tr -d '[:space:]' || exit 1
-else
-    echo "📡❌"
-fi
+is_net && {
+    curl -fs "wttr.in/$LOCATION?format=%c+%t" | tr -d '[:space:]'
+} || echo "📡❌"
