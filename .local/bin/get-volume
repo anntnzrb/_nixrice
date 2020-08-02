@@ -5,11 +5,9 @@
 # currently only working for pulseaudio
 
 # checks if program is installed
-is_installed() {
-    [ -x "$(command -v "$1")" ]
-}
+is_installed() { [ -x "$(command -v "$1")" ]; }
 
-if is_installed pulseaudio; then
+is_installed pulseaudio && {
     # get pulseaudio info
     VOL_STAT="$(pactl list sinks)"
 
@@ -28,6 +26,4 @@ if is_installed pulseaudio; then
     fi
 
     printf "%s %s%%" "$icon" "$VOL"
-else
-    echo '🔊???'
-fi
+} || echo '🔊???'

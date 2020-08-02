@@ -12,32 +12,26 @@
 # functions
 # *****************************************************************************
 # checks if program is installed
-is_installed() {
-    [ -x "$(command -v "$1")" ]
-}
+is_installed() { [ -x "$(command -v "$1")" ]; }
 
 # verify if program is running
-is_running() {
-    command pidof -s "$1" >/dev/null
-}
+is_running() { pgrep -x "$1" >/dev/null; }
 
 # checks if dunst is installed; receives parameters
 dunst_notify() {
-    is_installed notify-send &&
-        command pgrep -x Xorg >/dev/null 2>&1 &&
-        command notify-send -t "$1" "$2"
+    is_installed notify-send && pgrep -x Xorg >/dev/null 2>&1 &&
+        notify-send -t "$1" "$2"
 }
 
 # *****************************************************************************
 # main
 # *****************************************************************************
 if is_installed "$1"; then
-    if is_running "$1"; then
-        command pkill -9 "$1" && dunst_notify 3000 "'$1' terminated"
-    else
+    { is_running "$1" && pkill -9 "$1" &&
+        dunst_notify 3000 "'$1' terminated"; } || {
         $1 &
         dunst_notify 3000 "'$1' now running"
-    fi
+    }
 else
     dunst_notify 0 "$1: unknown program"
 fi

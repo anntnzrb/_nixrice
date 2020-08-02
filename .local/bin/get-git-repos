@@ -13,12 +13,10 @@
 # checks if ssh is set on GitLab first
 check_ssh() {
     ssh -T git@gitlab.com >/dev/null 2>&1 ||
-        { echo "ssh keys need to be configured to proceed..." && exit 0; }
+        { echo "ssh keys need to be configured to proceed..." && exit 1; }
 }
 
-download() {
-    git clone -q "$2" "$THIS_DIR"
-}
+download() { git clone -q "$2" "$THIS_DIR"; }
 
 install_git() {
     THIS_DIR=$REPO_DIR$1
@@ -52,4 +50,5 @@ for repo in "${!REPOS[@]}"; do
     install_git "$repo" "${REPOS[$repo]}" &
 done
 
+# should be at last
 wait
