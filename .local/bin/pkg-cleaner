@@ -5,46 +5,55 @@
 # *
 
 # *****************************************************************************
+# preamble
+# *****************************************************************************
+# source utility functions
+. ./utils
+
+# check if running with elevated privileges
+check_su
+
+# *****************************************************************************
 # main
 # *****************************************************************************
 # arch-based
 [ -x "$(command -v "pacman")" ] && {
     # display cached packages
     printf "amount of cached packages: %s | size: %s\n" \
-        "$(sudo ls /var/cache/pacman/pkg | wc -l)" \
-        "$(sudo du -hs /var/cache/pacman/pkg)"
+        "$(find /var/cache/pacman/pkg | wc -l)" \
+        "$(du -hs /var/cache/pacman/pkg)"
 
     # clear ~/.cache folder
     rm -fr "$HOME"/.cache/
 
     # clear pkg cache
-    sudo pacman -Scc
-    sudo paccache -r
+    pacman -Scc
+    paccache -r
 
     # clear orphans
-    sudo pacman -Rns --noconfirm $(pacman -Qdqt)
+    pacman -Rns --noconfirm $(pacman -Qdqt)
 
     # display cached packages after
     printf "amount of cached packages: %s | size: %s\n" \
-        "$(sudo ls /var/cache/pacman/pkg | wc -l)" \
-        "$(sudo du -hs /var/cache/pacman/pkg)"
+        "$(find /var/cache/pacman/pkg | wc -l)" \
+        "$(du -hs /var/cache/pacman/pkg)"
 }
 
 # void
 [ -x "$(command -v "xbps-install")" ] && {
     # display cached packages
     printf "amount of cached packages: %s | size: %s\n" \
-        "$(sudo ls /var/cache/xbps | wc -l)" "$(sudo du -hs /var/cache/xbps)"
+        "$(find /var/cache/xbps | wc -l)" "$(du -hs /var/cache/xbps)"
 
     # clear ~/.cache folder
     rm -fr "$HOME"/.cache/
 
     # clear pkg cache
-    sudo xbps-remove -FORfovy
+    xbps-remove -FORfovy
     # clear old kernels
-    sudo vkpurge rm all
+    vkpurge rm all
 
     # display cached packages after
     printf "amount of cached packages: %s | size: %s\n" \
-        "$(sudo ls /var/cache/xbps | wc -l)" "$(sudo du -hs /var/cache/xbps)"
+        "$(find /var/cache/xbps | wc -l)" "$(du -hs /var/cache/xbps)"
 }

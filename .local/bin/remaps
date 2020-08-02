@@ -4,6 +4,6 @@
 xset r rate 225 50 &
 
 #◦◝◟∘◞◜◦ altgr + letter for (accents, etc) | remaps CAPS-LOCK to ESCAPE
-setxkbmap -layout us -variant dvorak-intl -option caps:super &&
+setxkbmap -layout us -variant altgr-intl -option caps:super &&
     pkill -9 xcape 2>/dev/null
 xcape -e 'Super_L=Escape' &

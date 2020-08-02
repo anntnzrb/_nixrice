@@ -8,14 +8,14 @@
 # *
 
 # *****************************************************************************
+# preamble
+# *****************************************************************************
+# source utility functions
+. ./utils
+
+# *****************************************************************************
 # functions
 # *****************************************************************************
-# checks if there's internet connection
-is_net() { ping -q -c 1 example.com >/dev/null 2>&1; }
-
-# checks if program is installed
-is_installed() { [ -x "$(command -v "$1")" ]; }
-
 get_net_speed() {
     { is_net && is_installed speedtest-cli &&
         speedtest-cli | awk '/load:/ {print $2$3}' | xargs |

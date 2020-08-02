@@ -1,11 +1,10 @@
 #!/bin/sh
 
+# **
 # get volume level
 #
 # currently only working for pulseaudio
-
-# checks if program is installed
-is_installed() { [ -x "$(command -v "$1")" ]; }
+# *
 
 is_installed pulseaudio && {
     # get pulseaudio info

@@ -1,19 +1,31 @@
 #!/bin/bash
 
-if [ -x "$(command -v "pacman")" ]; then
-    set -e
-    ##############################################################################
-    # Author	:	Erik Dubois
-    ##############################################################################
+##############################################################################
+# Author  :  Erik Dubois
+##############################################################################
 
+# *****************************************************************************
+# preamble
+# *****************************************************************************
+# source utility functions
+. ./utils
+
+# check if running with elevated privileges
+check_su
+
+# *****************************************************************************
+# main
+# *****************************************************************************
+if is-installed pacman; then
+    set -e
     numberofcores=$(grep -c ^processor /proc/cpuinfo)
 
     if [ "$numberofcores" -gt 1 ]; then
         echo "You have $numberofcores cores"
         echo "Changing the makeflags for $numberofcores cores"
-        sudo sed -i 's/#MAKEFLAGS="-j2"/MAKEFLAGS="-j'$(($numberofcores + 1))'"/g' /etc/makepkg.conf
+        sed -i 's/#MAKEFLAGS="-j2"/MAKEFLAGS="-j'$(($numberofcores + 1))'"/g' /etc/makepkg.conf
         echo "Changing the compression settings for $numberofcores cores"
-        sudo sed -i 's/COMPRESSXZ=(xz -c -z -)/COMPRESSXZ=(xz -c -T '"$numberofcores"' -z -)/g' /etc/makepkg.conf
+        sed -i 's/COMPRESSXZ=(xz -c -z -)/COMPRESSXZ=(xz -c -T '"$numberofcores"' -z -)/g' /etc/makepkg.conf
     else
         echo "No change."
     fi
@@ -22,6 +34,7 @@ if [ -x "$(command -v "pacman")" ]; then
     echo "###  All cores will be used during building and compression ####"
     echo "################################################################"
 fi
+
 #==============================================================================
 # credits
 #==============================================================================
