@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# **
+# set of functions used across multiple scripts
+# *
+
+# *****************************************************************************
+# functions
+# *****************************************************************************
+# check for elevated privileges
+check_su() {
+    [ "$(id -u)" -ne 0 ] && {
+        echo "Elevated privileges are needed to run this"
+        exit 1
+    }
+}
+
+# checks if there is internet connection
+is_net() { ping -q -c 1 example.com >/dev/null 2>&1; }
+
+# checks if program is installed
+is_installed() { [ -x "$(command -v "$1")" ]; }
+
+# check if program is running
+is_running() { pgrep -x "$1" >/dev/null; }

@@ -5,6 +5,15 @@
 # *
 
 # *****************************************************************************
+# preamble
+# *****************************************************************************
+# source utility functions
+. ./utils
+
+# check if running with elevated privileges
+check_su
+
+# *****************************************************************************
 # main
 # *****************************************************************************
 declare opts=("reboot
@@ -15,8 +24,8 @@ end-x-session")
 # non-systemd init systems (OpenRC missing)
 case "$(readlink -f /sbin/init)" in
 *runit*)
-    zzz="sudo zzz"
-    sdn="sudo poweroff"
+    zzz="zzz"
+    sdn="poweroff"
     ;;
 esac
 
@@ -24,13 +33,13 @@ CHOICE=$(printf '%s' "${opts[@]}" | dmenu -c -i -l 20 -bw 6 -fn "Overpass Mono" 
 
 case "$CHOICE" in
 reboot)
-    ${reb:-sudo reboot}
+    ${reb:-reboot}
     ;;
 sleep)
-    ${zzz:-sudo systemctl suspend-then-hibernate}
+    ${zzz:-systemctl suspend-then-hibernate}
     ;;
 shutdown)
-    ${sdn:-sudo shutdown -h now}
+    ${sdn:-shutdown -h now}
     ;;
 end-x-session)
     pkill -x Xorg
