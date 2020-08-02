@@ -5,16 +5,15 @@
 # *
 
 # get location of emoji file
-CHOSEN=$(cut -d ';' -f1 "$HOME"/.local/resources/emoji | dmenu -i -l 30 | sed "s/ .*//")
+CHOSEN=$(cut -d ';' -f1 "$HOME"/.local/resources/emoji | dmenu -i -l 30 |
+    sed "s/ .*//")
 
 # Exit if none chosen.
 [ -z "$CHOSEN" ] && exit 0
 
 # if you run this command with an argument, the character will be inserted;
 # otherwise, show a message that the emoji has been copied.
-if [ -n "$1" ]; then
-    xdotool type "$CHOSEN"
-else
+{ [ -n "$1" ] && xdotool type "$CHOSEN"; } || {
     echo "$CHOSEN" | tr -d '\n' | xclip -selection clipboard
     notify-send "$CHOSEN copied to clipboard"
-fi
+}

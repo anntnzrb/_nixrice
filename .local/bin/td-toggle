@@ -5,14 +5,14 @@
 # *
 
 # *****************************************************************************
+# preamble
+# *****************************************************************************
+# source utility functions
+. ./utils
+
+# *****************************************************************************
 # functions
 # *****************************************************************************
-# checks if program is installed
-is_installed() { [ -x "$(command -v "$1")" ]; }
-
-# verify if program is running
-is_running() { pgrep -x "$1" >/dev/null; }
-
 # checks if dunst is installed; recieves parameters
 dunst_notify() {
     is_installed notify-send && pgrep -x Xorg >/dev/null 2>&1 &&
