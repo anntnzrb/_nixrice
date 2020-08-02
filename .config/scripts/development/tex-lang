@@ -1,16 +1,17 @@
 #!/bin/sh
 
-# arch
-if [ -x "$(command -v "yay")" ]; then
+# arch-based
+[ -x "$(command -v "yay")" ] && {
     # compiler
     yay --needed --noconfirm -S \
         biber \
         pandoc \
         pandoc-citeproc \
         texlive-most
+}
 
 # void
-elif [ -x "$(command -v "xbps-install")" ]; then
+[ -x "$(command -v "xbps-install")" ] && {
     # compiler
     sudo xbps-install -Sy \
         biber \
@@ -27,7 +28,7 @@ elif [ -x "$(command -v "xbps-install")" ]; then
     # update
     sudo tlmgr update --all
     sudo texhash
-fi
+}
 
 #******************************************************************************
 # references

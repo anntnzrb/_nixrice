@@ -15,7 +15,7 @@ is_installed pulseaudio && {
     VOL="$(echo "$VOL_STAT" | grep '[0-9]\+%' | sed "s,.* \([0-9]\+\)%.*,\1,;1q")"
 
     # check if muted
-    echo "$VOL_STAT" | grep -q "Mute: yes" && printf "🔇\\n" && exit
+    echo "$VOL_STAT" | grep -q "Mute: yes" && printf "🔇\\n" && exit 0
 
     if [ "$VOL" -gt "70" ]; then
         icon="🔊"

@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# arch
-if [ -x "$(command -v "yay")" ]; then
+# arch-based
+[ -x "$(command -v "yay")" ] && {
     # compiler (using lts)
     yay --needed --noconfirm -Syy \
         jdk11-openjdk \
@@ -20,9 +20,10 @@ if [ -x "$(command -v "yay")" ]; then
     archlinux-java status
     sudo archlinux-java set java-11-openjdk
     archlinux-java status
+}
 
 # void
-elif [ -x "$(command -v "xbps-install")" ]; then
+[ -x "$(command -v "xbps-install")" ] && {
     # compiler (using lts)
     sudo xbps-install -Sy openjdk11
 
@@ -30,4 +31,4 @@ elif [ -x "$(command -v "xbps-install")" ]; then
     # linter (CoC)
     # fixer
     sudo xbps-install -Sy uncrustify
-fi
+}
