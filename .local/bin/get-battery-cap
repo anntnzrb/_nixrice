@@ -11,7 +11,7 @@ for battery in /sys/class/power_supply/BAT?; do
     STATUS=$(cat "$battery"/status)
 
     if [ "$STATUS" = "Discharging" ] || [ "$STATUS" = "Charging" ] ||
-        [ "$STATUS" = "Unknown" ]; then
+        [ "$STATUS" = "Unknown" ] || [ "$STATUS" = "Not charging" ]; then
         # pick icon depending on the amount of battery
         if [ "$CAPACITY" -ge 80 ]; then
             icon=""
@@ -26,6 +26,7 @@ for battery in /sys/class/power_supply/BAT?; do
         fi
         # if charging, plug icon + %
         [ "$STATUS" = "Charging" ] && icon="🔌"
+        [ "$STATUS" = "Not charging" ] && icon=""
 
         printf '%s%%' "$icon $CAPACITY"
     else
