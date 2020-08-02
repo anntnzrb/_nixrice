@@ -80,7 +80,7 @@ screens=$(echo "$allposs" | awk '/ connected/ {print $1}')
         onescreen "$screens"
         postrun
         notify-send "💻 Only one screen detected." "Using it in its optimal settings..."
-        exit
+        exit 0
     }
 
 # Get user choice including multi-monitor and manual selection:
@@ -88,7 +88,7 @@ chosen=$(printf "%s\\nmulti-monitor\\nmanual selection" "$screens" | dmenu -i -p
     case "$chosen" in
     "manual selection")
         arandr
-        exit
+        exit 0
         ;;
     "multi-monitor") multimon ;;
     *) onescreen "$chosen" ;;

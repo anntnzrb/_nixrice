@@ -10,7 +10,7 @@ DIR=${FILE%/*}
 BASE="${FILE%.*}"
 EXT="${FILE##*.}"
 
-cd "$DIR" || exit
+cd "$DIR" || exit 1
 
 textype() {
     command="xelatex"

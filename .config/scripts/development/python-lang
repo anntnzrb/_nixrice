@@ -1,19 +1,21 @@
 #!/bin/sh
 
-# arch
-if [ -x "$(command -v "yay")" ]; then
+# arch-based
+[ -x "$(command -v "yay")" ] && {
     ## dependencies
     yay --needed --noconfirm -Syy \
         python3 \
-        python-pip
+        python3-pip
+
+}
 
 # void
-elif [ -x "$(command -v "xbps-install")" ]; then
+[ -x "$(command -v "xbps-install")" ] && {
     ## dependencies
     sudo xbps-install -Sy \
         python3 \
-        python-pip
-fi
+        python3-pip
+}
 
 ## ALE
 # linter

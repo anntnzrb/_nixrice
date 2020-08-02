@@ -1,20 +1,21 @@
 #!/bin/sh
 
-# arch
-if [ -x "$(command -v "yay")" ]; then
+# arch-based
+[ -x "$(command -v "yay")" ] && {
     # compiler (alternatively tcc)
     yay --needed --noconfirm -Syy gcc
 
     ## ALE
     # fixer
     yay --needed --noconfirm -Syy uncrustify
+}
 
 # void
-elif [ -x "$(command -v "xbps-install")" ]; then
+[ -x "$(command -v "xbps-install")" ] && {
     # compiler (alternatively tcc)
     sudo xbps-install -Sy gcc
 
     ## ALE
     # fixer
     sudo xbps-install -Sy uncrustify
-fi
+}

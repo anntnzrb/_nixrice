@@ -1,43 +1,48 @@
 #!/bin/sh
 
-vs_install() {
-    if [ -x "$(command -v "codium")" ]; then
+install_vscext() {
+    if [ -x "$(command -v "codium")" ] &&
+        ! [ -x "$(command -v "code-oss")" ]; then
         codium --install-extension "$1"
-    elif [ -x "$(command -v "code-oss")" ]; then
+    elif [ -x "$(command -v "code-oss")" ] &&
+        ! [ -x "$(command -v "codium")" ]; then
         code-oss --install-extension "$1"
+    else
+        echo "VSCode/Codium not installed"
+        exit 1
     fi
 }
 
 # general
-vs_install eamodio.gitlens
-# vs_install formulahendry.code-runner
-vs_install visualstudioexptteam.vscodeintellicode
+install_vscext eamodio.gitlens
+# install_vscext formulahendry.code-runner
+install_vscext visualstudioexptteam.vscodeintellicode
 
 # visual
-vs_install teabyii.ayu
-# vs_install dracula-theme.theme-dracula
-vs_install robbowen.synthwave-vscode
+install_vscext teabyii.ayu
+# install_vscext dracula-theme.theme-dracula
+install_vscext robbowen.synthwave-vscode
 
 # java
-vs_install redhat.java
-vs_install vscjava.vscode-java-debug
-vs_install vscjava.vscode-java-dependency
-vs_install vscjava.vscode-java-pack
-vs_install vscjava.vscode-java-test
+install_vscext redhat.java
+install_vscext vscjava.vscode-java-debug
+install_vscext vscjava.vscode-java-dependency
+install_vscext vscjava.vscode-java-pack
+install_vscext vscjava.vscode-java-test
 
 # shell
-# vs_install foxundermoon.shell-format
+# install_vscext foxundermoon.shell-format
 
 # markdown
-# vs_install yzhang.markdown-all-in-one
-# vs_install davidanson.vscode-markdownlint
+# install_vscext yzhang.markdown-all-in-one
+# install_vscext davidanson.vscode-markdownlint
 
 # python
-# vs_install ms-python.python
+# install_vscext ms-python.python
 
 # uncrustify (formatter/fixer)
-vs_install laurenttreguier.uncrustify
+install_vscext laurenttreguier.uncrustify
 
 # spell
-vs_install streetsidesoftware.code-spell-checker
-vs_install streetsidesoftware.code-spell-checker-spanish
+install_vscext streetsidesoftware.code-spell-checker
+install_vscext streetsidesoftware.code-spell-checker-spanish
