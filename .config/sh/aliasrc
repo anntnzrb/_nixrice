@@ -59,8 +59,8 @@ alias \
     ytv="youtube-dl -f best"
 
 sscreenkey() {
-    command pkill -9 screenkey >/dev/null 2>&1
-    setsid screenkey --no-systray --vis-shift --bak-mode full \
-        --opacity 0.55 -f FiraCodeRetina -t 2 \
-        -p bottom -s small >/dev/null 2>&1 &
+    { pgrep screenkey >/dev/null && pkill -9 screenkey; } ||
+        setsid screenkey --no-systray --vis-shift --bak-mode full \
+            --opacity 0.55 -f FiraCodeRetina -t 2 -p bottom -s small \
+            --show-settings
 }
