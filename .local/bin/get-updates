@@ -7,21 +7,6 @@
 # meaning there needs to be a job that fetches updates
 # *
 
-# checks if there's internet connection
-is_net() {
-    ping -q -c 1 example.com >/dev/null 2>&1
-}
-
-if is_net; then
-    # arch
-    if [ -x "$(command -v "pacman")" ]; then
-        pacman -Qu | grep -Fcv "[ignored]" | sed "s/^/📦 /;s/^📦 0$//g"
-    # void
-    elif [ -x "$(command -v "xbps-install")" ]; then
-        echo '📦?'
-    else
-        echo '📦?'
-    fi
-else
-    echo '📡❌'
-fi
+# arch
+[ -x "$(command -v "pacman")" ] &&
+    pacman -Qu | grep -Fcv "[ignored]" | sed "s/^/📦 /;s/^📦 0$//g"

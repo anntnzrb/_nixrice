@@ -11,22 +11,15 @@
 # functions
 # *****************************************************************************
 # checks if there's internet connection
-is_net() {
-    command ping -q -c 1 example.com >/dev/null 2>&1
-}
+is_net() { ping -q -c 1 example.com >/dev/null 2>&1; }
 
 # checks if program is installed
-is_installed() {
-    [ -x "$(command -v "$1")" ]
-}
+is_installed() { [ -x "$(command -v "$1")" ]; }
 
 get_net_speed() {
-    if is_net && is_installed speedtest-cli; then
-        command speedtest-cli | awk '/load:/ {print $2$3}' | xargs |
-            awk '{print "⬇ "$1" ↔  ""⬆ "$2}'
-    else
-        echo 'N/A'
-    fi
+    { is_net && is_installed speedtest-cli &&
+        speedtest-cli | awk '/load:/ {print $2$3}' | xargs |
+        awk '{print "⬇ "$1" ↔  ""⬆ "$2}'; } || echo 'N/A'
 }
 
 # *****************************************************************************
