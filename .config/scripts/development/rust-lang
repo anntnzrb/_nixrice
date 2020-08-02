@@ -1,18 +1,19 @@
 #!/bin/sh
 
-# arch
-if [ -x "$(command -v "yay")" ]; then
+# arch-based
+[ -x "$(command -v "yay")" ] && {
     # compiler (cargo, cargo-nightly, rust, rustfmt, rust-nightly)
     yay --needed --noconfirm -Syy rustup
+}
 
 # void
-elif [ -x "$(command -v "xbps-install")" ]; then
+[ -x "$(command -v "xbps-install")" ] && {
     # compiler (cargo, cargo-nightly, rust, rustfmt, rust-nightly)
     sudo xbps-install -Sy rustup
-fi
+}
 
 # rustup
-rustup toolchain install stable || exit
-rustup default stable || exit
-rustup component add rls rust-analysis rust-src || exit
-rustup update || exit
+rustup toolchain install stable || exit 1
+rustup default stable || exit 1
+rustup component add rls rust-analysis rust-src || exit 1
+rustup update || exit 1

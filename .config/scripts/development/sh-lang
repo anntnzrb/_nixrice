@@ -1,18 +1,19 @@
 #!/bin/sh
 
-# arch
-if [ -x "$(command -v "yay")" ]; then
+# arch-based
+[ -x "$(command -v "yay")" ] && {
     ## ALE
     # linter
     yay --needed --noconfirm -Syy shellcheck
     # fixer
     yay --needed --noconfirm -Syy shfmt
+}
 
 # void
-elif [ -x "$(command -v "xbps-install")" ]; then
+[ -x "$(command -v "xbps-install")" ] && {
     ## ALE
     # linter
     sudo xbps-install -Sy shellcheck
     # fixed
     sudo xbps-install -Sy shfmt
-fi
+}

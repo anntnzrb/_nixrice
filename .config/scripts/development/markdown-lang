@@ -1,6 +1,7 @@
 #!/bin/sh
 
-if [ -x "$(command -v "yay")" ]; then
+# arch-based
+[ -x "$(command -v "yay")" ] && {
     # dependencies
     yay --needed --noconfirm -Syy \
         nodejs \
@@ -9,8 +10,10 @@ if [ -x "$(command -v "yay")" ]; then
     ## ALE
     # fixer
     yay --needed --noconfirm -Syy prettier
+}
 
-elif [ -x "$(command -v "xbps-install")" ]; then
+# void
+[ -x "$(command -v "xbps-install")" ] && {
     # dependencies
     sudo xbps-install -Sy \
         nodejs \
@@ -20,4 +23,4 @@ elif [ -x "$(command -v "xbps-install")" ]; then
     # fixer
     echo 'installing via npm...'
     sudo npm install --global prettier
-fi
+}

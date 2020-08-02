@@ -8,7 +8,7 @@
 CHOSEN=$(cut -d ';' -f1 "$HOME"/.local/resources/emoji | dmenu -i -l 30 | sed "s/ .*//")
 
 # Exit if none chosen.
-[ -z "$CHOSEN" ] && exit
+[ -z "$CHOSEN" ] && exit 0
 
 # if you run this command with an argument, the character will be inserted;
 # otherwise, show a message that the emoji has been copied.
