@@ -63,7 +63,7 @@ postrun() { # Stuff to run to clean up.
     setbg "$HOME/lib/imgs/wallpapers/"
     remaps # Re-remap keys if keyboard added (for laptop bases)
     {
-        pkill -9 dunst
+        pkill -15 dunst
         setsid -f dunst
     } >/dev/null 2>&1 # Restart dunst to ensure proper location on screen
 }

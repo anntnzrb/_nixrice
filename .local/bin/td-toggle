@@ -24,7 +24,7 @@ dunst_notify() {
 # *****************************************************************************
 if is_running transmission-daemon; then
     [ "$(printf "No\\nYes" | dmenu -i -p "Turn off transmission-daemon?")" = "Yes" ] &&
-        pkill -9 transmission-da &&
+        pkill -15 transmission-da &&
         dunst_notify 3 "transmission-daemon disabled"
 else
     is_installed transmission-cli || exit 0

@@ -27,7 +27,7 @@ alias \
     e='$EDITOR' \
     se='sudo $EDITOR' \
     sx11="startx" \
-    kx11="sudo pkill -x Xorg"
+    kx11="sudo pkill -15 Xorg"
 
 #◦◝◟∘◞◜◦ distro-specific aliases
 # arch-based
@@ -59,7 +59,7 @@ alias \
     ytv="youtube-dl -f best"
 
 sscreenkey() {
-    { pgrep screenkey >/dev/null && pkill -9 screenkey; } ||
+    { pgrep screenkey >/dev/null && pkill -15 screenkey; } ||
         setsid screenkey --no-systray --vis-shift --bak-mode full \
             --opacity 0.55 -f FiraCodeRetina -t 2 -p bottom -s small \
             --show-settings

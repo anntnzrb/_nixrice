@@ -24,7 +24,7 @@ is_installed pacman && {
     pacman --needed --noconfirm -Syy haveged
     systemctl enable haveged --now
     # CRL/OCSP (keyservers daemon)
-    pkill -9 -x dirmngr
+    pkill -15 -x dirmngr
     # remove old (and possibly broken) keys (cache also)
     rm -fr /root/.gnupg/ /etc/pacman.d/gnupg "$HOME"/.gnupg "$HOME"/.cache
     # clear downloaded aborted installation pkgs
