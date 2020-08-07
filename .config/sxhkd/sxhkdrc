@@ -41,7 +41,7 @@ super + shift + q
     xdotool getactivewindow windowclose
 # end X session
 super + control + alt + Escape
-    pkill -x Xorg
+    pkill -15 Xorg
 
 #******************************************************************************
 # keyboard-specific
@@ -52,7 +52,7 @@ super + shift + period
     edit-cfgs
 # suspend/sleep
 super + shift + x
-    sysfns
+    sudo sysfns
 # toggle mute
 XF86AudioMute
     pamixer -t
