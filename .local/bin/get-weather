@@ -10,7 +10,7 @@
 # preamble
 # *****************************************************************************
 # source utility functions
-. ./utils
+. utils
 
 # set-up location
 LOCATION="Guayaquil"
