@@ -27,7 +27,7 @@ dunst_notify() {
 # main
 # *****************************************************************************
 if is_installed "$1"; then
-    { is_running "$1" && pkill -9 "$1" &&
+    { is_running "$1" && pkill -15 "$1" &&
         dunst_notify 3000 "'$1' terminated"; } || {
         $1 &
         dunst_notify 3000 "'$1' now running"
