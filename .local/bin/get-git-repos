@@ -43,6 +43,7 @@ REPOS=(
     ["uarbs"]="git@gitlab.com:anntnzrb/uarbs.git"
     ["st"]="git@gitlab.com:anntnzrb/st.git"
     ["dwm"]="git@gitlab.com:anntnzrb/dwm.git"
+    ["dwmblocks"]="git@gitlab.com:anntnzrb/dwmblocks.git"
 )
 
 # iterate over the array and install each repo
