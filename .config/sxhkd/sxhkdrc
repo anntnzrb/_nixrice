@@ -58,10 +58,10 @@ XF86AudioMute
     pamixer -t
 # decrease/increase volume
 XF86Audio{Lower,Raise}Volume
-    {pamixer -d 5, pamixer -i 5}
+    pamixer {-d 5,-i 5} && pkill -RTMIN+1 dwmblocks
 # decrease/increase screen brightness
 XF86MonBrightness{Down,Up}
-    {xbacklight -dec 10, xbacklight -inc 10}
+    xbacklight {-dec 10,-inc 10} && pkill -RTMIN+2 dwmblocks
 
 #******************************************************************************
 # F* keys
