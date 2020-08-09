@@ -13,9 +13,6 @@
 # -----------------------------------------------------------------------------
 # general
 # -----------------------------------------------------------------------------
-# random quote on launch
-fortune -s | cowsay -f tux
-
 # tab completion
 autoload -U compinit
 zstyle ':completion:*' menu select
@@ -71,7 +68,7 @@ fi
 # miscellaneous
 # -----------------------------------------------------------------------------
 # source aliases, functions, etc
-for f in "$HOME"/.config/sh/*; do
+for f in "$HOME"/.config/sh/lib/*; do
     . "$f"
 done
 
