@@ -78,10 +78,12 @@ done
 # uncrustify config (for some reason this needs to be sourced every time)
 export UNCRUSTIFY_CONFIG="$HOME/.config/uncrustify/uncrustify.cfg"
 
-# source extensions (should be at last)
-for ext in $ZDOTDIR/lib/extensions/*; do
-    . "$ext"
+# source settings/extensions (should be at last)
+# checks if iteration is not a directory first
+for cfg in "$ZDOTDIR"/lib/* "$ZDOTDIR"/lib/extensions/*; do
+    [ ! -d "$cfg" ] && . "$cfg"
 done
+
 # -----------------------------------------------------------------------------
 # references
 # -----------------------------------------------------------------------------
