@@ -34,9 +34,9 @@ export UNCRUSTIFY_CONFIG="$HOME/.config/uncrustify/uncrustify.cfg"
 
 # source functions, aliases, etc
 for f in "$HOME"/.config/sh/*; do
-    [ -f "$f" ] && . "$f"
+    . "$f"
 done
 
 # enable bash completion
-BASH_COMPL_LOC=/usr/share/bash-completion/bash_completion
-[ -f "$BASH_COMPL_LOC" ] && . "$BASH_COMPL_LOC"
+BASH_COMPLETION_PATH=/usr/share/bash-completion/bash_completion
+[ -f "$BASH_COMPLETION_PATH" ] && . "$BASH_COMPLETION_PATH"

@@ -72,17 +72,16 @@ fi
 # -----------------------------------------------------------------------------
 # source aliases, functions, etc
 for f in "$HOME"/.config/sh/*; do
-    [ -f "$f" ] && . "$f"
+    . "$f"
 done
 
 # uncrustify config (for some reason this needs to be sourced every time)
 export UNCRUSTIFY_CONFIG="$HOME/.config/uncrustify/uncrustify.cfg"
 
-# source extensions
-for e in "$ZDOTDIR"/.config/lib/extension/*; do
-    . "$e"
+# source extensions (should be at last)
+for ext in $ZDOTDIR/lib/extensions/*; do
+    . "$ext"
 done
-
 # -----------------------------------------------------------------------------
 # references
 # -----------------------------------------------------------------------------
