@@ -15,13 +15,15 @@
 export PATH="$PATH:$(du "$HOME/.local/bin/" | cut -f2 | paste -sd ':')"
 
 # -----------------------------------------------------------------------------
-# default programs
+# defaults
 # -----------------------------------------------------------------------------
 export TERMINAL="st"
 export EDITOR="nvim"
 export BROWSER="qutebrowser"
 export FILE="pcmanfm"
 export READER="zathura"
+export ALIASES="$HOME/.config/sh/lib/02-aliases"
+export FUNCTIONS="$HOME/.config/sh/lib/03-functions"
 
 # shell(s)
 export ZDOTDIR="$HOME/.config/sh/zsh"
