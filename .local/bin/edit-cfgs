@@ -5,7 +5,7 @@
 # *
 
 declare opts=("alacritty
-aliasrc
+aliases
 functions
 i3
 nvim
@@ -23,42 +23,42 @@ EDIT="$TERMINAL -e $EDITOR"
 
 case "$CHOICE" in
 alacritty)
-    $EDIT "$HOME"/.config/alacritty/alacritty.yml
+    $EDIT "$HOME/.config/alacritty/alacritty.yml"
     ;;
-aliasrc)
-    $EDIT "$HOME"/.config/sh/aliasrc
+aliases)
+    $EDIT "$ALIASES"
     ;;
 functions)
-    $EDIT "$HOME"/.config/sh/functions
+    $EDIT "$FUNCTIONS"
     ;;
 i3)
-    $EDIT "$HOME"/.config/i3/config
+    $EDIT "$HOME/.config/i3/config"
     ;;
 nvim)
-    $EDIT "$HOME"/.config/nvim/init.vim
+    $EDIT "$HOME/.config/nvim/init.vim"
     ;;
 profile)
-    $EDIT "$HOME"/.profile
+    $EDIT "$HOME/.profile"
     ;;
 spectrwm)
-    $EDIT "$HOME"/.config/spectrwm/spectrwm.conf
+    $EDIT "$HOME/.config/spectrwm/spectrwm.conf"
     ;;
 sxhkd)
-    $EDIT "$HOME"/.config/sxhkd/sxhkdrc
+    $EDIT "$HOME/.config/sxhkd/sxhkdrc"
     ;;
 xinitrc)
-    $EDIT "$HOME"/.xinitrc
+    $EDIT "$HOME/.xinitrc"
     ;;
 xprofile)
-    $EDIT "$HOME"/.xprofile
+    $EDIT "$HOME/.xprofile"
     ;;
 xresources)
-    $EDIT "$HOME"/.Xresources
+    $EDIT "$HOME/.Xresources"
     ;;
 zsh)
-    $EDIT "$HOME"/.config/zsh/.zshrc
+    $EDIT "$ZDOTDIR/.zshrc"
     ;;
 this-file)
-    $EDIT "$HOME"/.local/bin/edit-cfgs
+    $EDIT "$HOME/.local/bin/edit-cfgs"
     ;;
 esac
