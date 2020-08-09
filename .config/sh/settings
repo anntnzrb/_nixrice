@@ -1,0 +1,23 @@
+#!/bin/sh
+
+#                    ██     ██   ██
+#                   ░██    ░██  ░░            █████
+#   ██████  █████  ██████ ██████ ██ ███████  ██░░░██  ██████
+#  ██░░░░  ██░░░██░░░██░ ░░░██░ ░██░░██░░░██░██  ░██ ██░░░░
+# ░░█████ ░███████  ░██    ░██  ░██ ░██  ░██░░██████░░█████
+#  ░░░░░██░██░░░░   ░██    ░██  ░██ ░██  ░██ ░░░░░██ ░░░░░██
+#  ██████ ░░██████  ░░██   ░░██ ░██ ███  ░██  █████  ██████
+# ░░░░░░   ░░░░░░    ░░     ░░  ░░ ░░░   ░░  ░░░░░  ░░░░░░
+# settings/configurations for programs using environment variables
+
+# -----------------------------------------------------------------------------
+# pfetch
+# -----------------------------------------------------------------------------
+# information to display
+export PF_INFO="ascii title kernel os host wm de memory pkgs editor shell uptime palette"
+# alignment padding
+export PF_ALIGN="7"
+# color of info data
+export PF_COL2=4
+# color of title data
+export PF_COL3=1
