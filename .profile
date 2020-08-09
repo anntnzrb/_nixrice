@@ -24,7 +24,7 @@ export FILE="pcmanfm"
 export READER="zathura"
 
 # shell(s)
-export ZDOTDIR="$HOME/.config/zsh"
+export ZDOTDIR="$HOME/.config/sh/zsh"
 
 # -----------------------------------------------------------------------------
 # ~ clean-up
@@ -41,6 +41,19 @@ export WGETRC="$HOME/.config/wget/wgetrc"
 # miscellaneous
 # -----------------------------------------------------------------------------
 # settings
+
+# language
+export LANG="en_US.UTF-8"
+export LANGUAGE="en_US.UTF-8"
+export LESSCHARSET="utf-8"
+export LC_ALL="en_US.UTF-8"
+export LC_COLLATE="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
+export LC_MESSAGES="en_US.UTF-8"
+export LC_MONETARY="en_US.UTF-8"
+export LC_NUMERIC="en_US.UTF-8"
+export LC_TIME="en_US.UTF-8"
+
 export FZF_DEFAULT_OPTS="--layout=reverse --height 40%"
 export LESSHISTFILE="-"
 export SUDO_ASKPASS="$HOME/.local/bin/dmenupass"
