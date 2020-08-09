@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 
 #                 ██
 #                ░██
@@ -10,11 +10,11 @@
 # ░░░░░░ ░░░░░░  ░░   ░░ ░░░     ░░░░░
 # useful stuff should be @ ../zsh/lib/
 
-#◦◝◟∘◞◜◦  random quote on zsh launch
-
+# -----------------------------------------------------------------------------
+# general
+# -----------------------------------------------------------------------------
+# random quote on launch
 fortune -s | cowsay -f tux
-
-#◦◝◟∘◞◜◦ settings
 
 # tab completion
 autoload -U compinit
@@ -28,8 +28,7 @@ _comp_options+=(globdots)
 # auto complete case insensitive
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 
-#◦◝◟∘◞◜◦ history
-
+# history
 HISTSIZE=3000
 SAVEHIST=1000
 HISTFILE=$ZDOTDIR/.zsh_history
@@ -38,7 +37,9 @@ setopt EXTENDED_HISTORY
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt SHARE_HISTORY
 
-#◦◝◟∘◞◜◦ keybinds
+# -----------------------------------------------------------------------------
+# keybinds
+# -----------------------------------------------------------------------------
 typeset -g -A key
 
 # declarations
@@ -59,28 +60,31 @@ key[Shift-Tab]="${terminfo[kcbt]}"
 
 # force terminal in application mode
 if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
-	autoload -Uz add-zle-hook-widget
-	function zle_application_mode_start { echoti smkx }
-	function zle_application_mode_stop { echoti rmkx }
-	add-zle-hook-widget -Uz zle-line-init zle_application_mode_start
-	add-zle-hook-widget -Uz zle-line-finish zle_application_mode_stop
+    autoload -Uz add-zle-hook-widget
+    function zle_application_mode_start { echoti smkx }
+    function zle_application_mode_stop { echoti rmkx }
+    add-zle-hook-widget -Uz zle-line-init zle_application_mode_start
+    add-zle-hook-widget -Uz zle-line-finish zle_application_mode_stop
 fi
 
-#◦◝◟∘◞◜◦ file sourcing
-
-# aliases / functions / prompt
-[ -f "$HOME/.config/sh/aliasrc"   ] && source "$HOME/.config/sh/aliasrc"
-[ -f "$HOME/.config/sh/functions" ] && source "$HOME/.config/sh/functions"
-[ -f "$HOME/.config/sh/prompt"    ] && source "$HOME/.config/sh/prompt"
+# -----------------------------------------------------------------------------
+# miscellaneous
+# -----------------------------------------------------------------------------
+# source aliases, functions, etc
+for f in "$HOME"/.config/sh/*; do
+    [ -f "$f" ] && . "$f"
+done
 
 # uncrustify config (for some reason this needs to be sourced every time)
 export UNCRUSTIFY_CONFIG="$HOME/.config/uncrustify/uncrustify.cfg"
 
-# extensions
-for extension ($ZDOTDIR/lib/extensions/*) source $extension
+# source extensions
+for e in "$ZDOTDIR"/.config/lib/extension/*; do
+    . "$e"
+done
 
-#================================================================================
+# -----------------------------------------------------------------------------
 # references
-#================================================================================
+# -----------------------------------------------------------------------------
 
 # https://0x0.st/oCRf
