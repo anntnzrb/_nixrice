@@ -12,12 +12,8 @@
 # -----------------------------------------------------------------------------
 # prompt
 # -----------------------------------------------------------------------------
-
 # PS1
 export PROMPT_COMMAND='__git_ps1 "\e[36m\]║\e[m\] \e[1;33m\]\w\[\e[m\] \e[36m\]║ ━\e[m\]" "\e[94m\] $ \e[m\]"'
-
-# random quote on launch
-fortune -s | cowsay -f tux
 
 # git prompt
 export GIT_PS1_SHOWDIRTYSTATE=1
@@ -33,7 +29,7 @@ export GIT_PS1_SHOWCOLORHINTS=1
 export UNCRUSTIFY_CONFIG="$HOME/.config/uncrustify/uncrustify.cfg"
 
 # source functions, aliases, etc
-for f in "$HOME"/.config/sh/*; do
+for f in "$HOME"/.config/sh/lib/*; do
     . "$f"
 done
 
