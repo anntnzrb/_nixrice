@@ -9,7 +9,9 @@
 # ░░████████ ███░██░░████████ ██████ ░░██████ ██████
 #  ░░░░░░░░ ░░░ ░░  ░░░░░░░░ ░░░░░░   ░░░░░░ ░░░░░░
 
-#◦◝◟∘◞◜◦ colors / settings / verbosity
+# -----------------------------------------------------------------------------
+# general
+# -----------------------------------------------------------------------------
 alias \
     cp="cp -irv" \
     diff="diff --color=auto" \
@@ -22,31 +24,37 @@ alias \
     rmfr="rm -frv" \
     zip="zip -rv"
 
-#◦◝◟∘◞◜◦ shortcuts
+# shortcuts
 alias \
     e='$EDITOR' \
     se='sudo $EDITOR' \
     sx11="startx" \
     kx11="sudo pkill -15 Xorg"
 
-#◦◝◟∘◞◜◦ distro-specific aliases
+# -----------------------------------------------------------------------------
+# system-specific aliases
+# -----------------------------------------------------------------------------
 # arch-based
-[ -x "$(command -v pacman)" ] &&
+[ -x "$(command -v "pacman")" ] && {
     alias \
         pkgf="pacman -Ss" \
         pkgi="sudo pacman -S" \
         pkgr="sudo pacman -R" \
         pkgu="sudo pacman -Suyy"
+}
 
 # void
-[ -x "$(command -v xbps-install)" ] &&
+[ -x "$(command -v "xbps-install")" ] && {
     alias \
         pkgf="xbps-query" \
         pkgi="sudo xbps-install -fu xbps && sudo xbps-install -S" \
         pkgr="sudo xbps-remove -f" \
         pkgu="sudo xbps-install -fu xbps && sudo xbps-install -Sfu"
+}
 
-#◦◝◟∘◞◜◦ misc
+# -----------------------------------------------------------------------------
+# miscellaneous
+# -----------------------------------------------------------------------------
 alias \
     ascii="toilet -t -f 3d" \
     future="toilet -t -f future" \
