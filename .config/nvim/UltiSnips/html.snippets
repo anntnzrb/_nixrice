@@ -1,0 +1,63 @@
+#  ██        ██                ██
+# ░██       ░██               ░██
+# ░██      ██████ ██████████  ░██
+# ░██████ ░░░██░ ░░██░░██░░██ ░██
+# ░██░░░██  ░██   ░██ ░██ ░██ ░██
+# ░██  ░██  ░██   ░██ ░██ ░██ ░██
+# ░██  ░██  ░░██  ███ ░██ ░██ ███
+# ░░   ░░    ░░  ░░░  ░░  ░░ ░░░
+# snippets
+
+# base html structure
+snippet !base
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>
+      ${1:`!p snip.rv = snip.basename.replace('-', ' ').capitalize()`}
+    </title>
+  </head>
+  <body>
+    ${0:body}
+  </body>
+</html>
+endsnippet
+
+# heading
+snippet !h
+<h${1:n}>${0:${VISUAL}}</h$1>
+endsnippet
+
+# paragraph
+snippet !p
+<p>${0:${VISUAL}}</p>
+endsnippet
+
+# italics
+snippet !ita
+<i>${0:${VISUAL}}</i>
+endsnippet
+
+# emphasis
+snippet !em
+<em>${0:${VISUAL}}</em>
+endsnippet
+
+# code block
+snippet !code
+<code>${0:${VISUAL}}</code>
+endsnippet
+
+# ordered list
+snippet !ol
+<ol>
+  <li>${0:${VISUAL}}</li>
+</ol>
+endsnippet
+
+# single item
+snippet !li
+<li>${0:${VISUAL}}</li>
+endsnippet
