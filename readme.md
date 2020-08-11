@@ -81,9 +81,9 @@ software; package names varies depending on the `GNU/Linux` distribution
     - _may_ be outdated \*
     - _may_ not be installed on my system anymore
 
-  - not because i'm not using **_x_** program anymore means the configuration
-    files will not work; if i'm leaving the configuration file is most likely
-    because i may return to use mentioned software
+  - not using **_x_** program anymore doesn't means the configuration files
+    will not work; if i'm leaving the configuration file is most likely because
+    i may return to use mentioned software
 
 ## installation
 
