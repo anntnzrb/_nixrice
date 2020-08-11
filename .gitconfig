@@ -27,4 +27,4 @@
     m = merge
     ps = push
     st = status -sb
-    unstage = reset HEAD --
+    unstage = reset --hard HEAD
