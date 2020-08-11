@@ -6,32 +6,28 @@
 # non POSIX-compliant
 # *
 
-# *****************************************************************************
+# -----------------------------------------------------------------------------
 # functions
-# *****************************************************************************
-
-# checks if ssh is set on GitLab first
+# -----------------------------------------------------------------------------
+# checks if ssh keys are set on GitLab
 check_ssh() {
     ssh -T git@gitlab.com >/dev/null 2>&1 ||
-        { echo "ssh keys need to be configured to proceed..." && exit 1; }
+        { printf "ssh keys need to be configured to proceed...\n" && exit 1; }
 }
 
 download() { git clone -q "$2" "$THIS_DIR"; }
 
 install_git() {
     THIS_DIR=$REPO_DIR$1
-    if [ ! -d "$THIS_DIR" ]; then
+    [ ! -d "$THIS_DIR" ] && {
         download "$1" "$2" &
-        echo "downloaded -> $THIS_DIR"
-    else
-        echo "$1 is already at $THIS_DIR"
-    fi
+        printf "'%s' downloaded -> '%s'\n" "$1" "$THIS_DIR"
+    } || printf "'%s' is already downloaded -> '%s'\n" "$1" "$THIS_DIR"
 }
 
-# *****************************************************************************
+# -----------------------------------------------------------------------------
 # main
 # *****************************************************************************
-
 # check ssh keys before proceeding to anyhing
 check_ssh
 
