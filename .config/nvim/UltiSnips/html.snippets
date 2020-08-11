@@ -27,27 +27,32 @@ endsnippet
 
 # heading
 snippet !h
-<h${1:n}>${0:${VISUAL}}</h$1>
+<h${1:n}>${2:${VISUAL}}</h$1> $0
 endsnippet
 
 # paragraph
 snippet !p
-<p>${0:${VISUAL}}</p>
+<p>${1:${VISUAL}}</p> $0
+endsnippet
+
+# bold
+snippet !b
+<b>${1:${VISUAL}}</b> $0
 endsnippet
 
 # italics
 snippet !ita
-<i>${0:${VISUAL}}</i>
+<i>${1:${VISUAL}}</i> $0
 endsnippet
 
 # emphasis
 snippet !em
-<em>${0:${VISUAL}}</em>
+<em>${1:${VISUAL}}</em> $0
 endsnippet
 
 # code block
 snippet !code
-<code>${0:${VISUAL}}</code>
+<code>${1:${VISUAL}}</code> $0
 endsnippet
 
 # ordered list
