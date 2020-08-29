@@ -1,10 +1,15 @@
 [
     {
-        "key": "alt+f9",
+        "key": "shift+alt+f",
+        "command": "editor.action.formatDocument",
+        "when": "editorHasDocumentFormattingProvider && editorHasDocumentFormattingProvider && editorTextFocus && !editorReadonly && !inCompositeEditor"
+    },
+    {
+        "key": "shift+f10",
         "command": "code-runner.run"
     },
     {
-        "key": "ctrl+alt+n",
-        "command": "-code-runner.run"
+        "key": "ctrl+shift+alt+f5",
+        "command": "workbench.action.reloadWindow"
     }
 ]
