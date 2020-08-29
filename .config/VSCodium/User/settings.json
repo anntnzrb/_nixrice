@@ -26,16 +26,20 @@
     "_comment": "appearance",
     "_comment": "------------------------------------------------------------",
 
-    "workbench.colorTheme": "Noctis Minimus",
+    "workbench.colorTheme": "Remedy - Dark (Tilted)",
+    "workbench.preferredDarkColorTheme": "Remedy - Dark (Tilted)",
+    "workbench.preferredLightColorTheme": "Remedy - Bright (Tilted)",
     "workbench.iconTheme": "ayu",
     "editor.fontFamily": "Fira Code Retina",
     "editor.fontSize": 15,
     "editor.fontLigatures": true,
     "editor.rulers": [80],
     "window.menuBarVisibility": "toggle",
-	"editor.cursorStyle": "line-thin",
-	"editor.cursorBlinking": "phase",
-	"editor.cursorSmoothCaretAnimation": true,
+    "editor.cursorStyle": "line-thin",
+    "editor.cursorBlinking": "phase",
+    "editor.cursorSmoothCaretAnimation": true,
+    "editor.smoothScrolling": true,
+    "workbench.list.smoothScrolling": true,
 
     "_comment": "------------------------------------------------------------",
     "_comment": "Code Runner",
@@ -64,7 +68,7 @@
     "_comment": "------------------------------------------------------------",
 
     "vim.leader": ",",
-	"vim.highlightedyank.enable": true,
+    "vim.highlightedyank.enable": true,
     "vim.highlightedyank.duration": 600,
     "vim.useSystemClipboard": true,
     "vim.normalModeKeyBindings": [
