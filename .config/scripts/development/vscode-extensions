@@ -29,7 +29,8 @@ install_vscext "eamodio.gitlens"
 # -----------------------------------------------------------------------------
 # themes & icons
 install_vscext "teabyii.ayu"
-install_vscext "robbowen.synthwave-vscode"
+install_vscext "robertrossmann.remedy"
+install_vscext "fooxly.themeswitch"
 
 # -----------------------------------------------------------------------------
 # Shell
@@ -45,6 +46,12 @@ install_vscext "ms-vscode.cpptools"
 # Java
 # -----------------------------------------------------------------------------
 install_vscext "vscjava.vscode-java-pack"
+
+# -----------------------------------------------------------------------------
+# Markdown
+# -----------------------------------------------------------------------------
+install_vscext "yzhang.markdown-all-in-one"
+install_vscext "davidanson.vscode-markdownlint"
 
 # -----------------------------------------------------------------------------
 # formatting
