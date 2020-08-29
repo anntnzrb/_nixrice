@@ -11,6 +11,7 @@ _literally my home folder?..._
 ## table of contents
 
 - [\*nixrice](#nixrice)
+  - [table of contents](#table-of-contents)
   - [intro](#intro)
   - [timeline](#timeline)
   - [software](#software)
