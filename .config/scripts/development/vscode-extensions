@@ -1,48 +1,59 @@
 #!/bin/sh
 
 install_vscext() {
-    if [ -x "$(command -v "codium")" ] &&
-        ! [ -x "$(command -v "code-oss")" ]; then
-        codium --install-extension "$1"
-    elif [ -x "$(command -v "code-oss")" ] &&
-        ! [ -x "$(command -v "codium")" ]; then
-        code-oss --install-extension "$1"
-    else
-        echo "VSCode/Codium not installed"
-        exit 1
-    fi
+    [ -x "$(command -v "codium")" ] && [ ! -x "$(command -v "code-oss")" ] &&
+        [ ! -x "$(command -v "code")" ] && codium --install-extension "$1"
+    [ -x "$(command -v "code-oss")" ] && [ ! -x "$(command -v "codium")" ] &&
+        [ ! -x "$(command -v "code")" ] && code-oss --install-extension "$1"
+    [ -x "$(command -v "code")" ] && [ ! -x "$(command -v "codium")" ] &&
+        [ ! -x "$(command -v "code-oss")" ] && code --install-extension "$1"
 }
 
+# -----------------------------------------------------------------------------
 # general
-install_vscext eamodio.gitlens
-# install_vscext formulahendry.code-runner
-install_vscext visualstudioexptteam.vscodeintellicode
+# -----------------------------------------------------------------------------
+# intellisense for various languages
+install_vscext "VisualStudioExptTeam.vscodeintellicode"
 
-# visual
-install_vscext teabyii.ayu
-# install_vscext dracula-theme.theme-dracula
-install_vscext robbowen.synthwave-vscode
+# Code Runner
+install_vscext "formulahendry.code-runner"
 
-# java
-install_vscext redhat.java
-install_vscext vscjava.vscode-java-debug
-install_vscext vscjava.vscode-java-dependency
-install_vscext vscjava.vscode-java-pack
-install_vscext vscjava.vscode-java-test
+# vi key-binds
+install_vscext "vscodevim.vim"
 
-# shell
-# install_vscext foxundermoon.shell-format
+# GitLens (visual git)
+install_vscext "eamodio.gitlens"
 
-# markdown
-# install_vscext yzhang.markdown-all-in-one
-# install_vscext davidanson.vscode-markdownlint
+# -----------------------------------------------------------------------------
+# appearance
+# -----------------------------------------------------------------------------
+# themes & icons
+install_vscext "teabyii.ayu"
+install_vscext "robbowen.synthwave-vscode"
 
-# python
-# install_vscext ms-python.python
+# -----------------------------------------------------------------------------
+# Shell
+# -----------------------------------------------------------------------------
+install_vscext "timonwong.shellcheck"
 
+# -----------------------------------------------------------------------------
+# C/C++
+# -----------------------------------------------------------------------------
+install_vscext "ms-vscode.cpptools"
+
+# -----------------------------------------------------------------------------
+# Java
+# -----------------------------------------------------------------------------
+install_vscext "vscjava.vscode-java-pack"
+
+# -----------------------------------------------------------------------------
+# formatting
+# -----------------------------------------------------------------------------
 # uncrustify (formatter/fixer)
-install_vscext laurenttreguier.uncrustify
+install_vscext "laurenttreguier.uncrustify"
 
-# spell
-install_vscext streetsidesoftware.code-spell-checker
-install_vscext streetsidesoftware.code-spell-checker-spanish
+# -----------------------------------------------------------------------------
+# spell checking
+# -----------------------------------------------------------------------------
+install_vscext "streetsidesoftware.code-spell-checker"
+install_vscext "streetsidesoftware.code-spell-checker-spanish"
