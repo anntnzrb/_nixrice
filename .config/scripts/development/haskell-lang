@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# debian-based
+[ -x "$(command -v "apt")" ] && {
+    # compiler
+    sudo apt-get install haskell-platform haskell-stack -y
+}
+
+## ALE
+# fixer
+sudo stack upgrade
+stack install brittany
