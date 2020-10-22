@@ -4,6 +4,10 @@
 [ -x "$(command -v "apt")" ] && {
     # compiler
     sudo apt-get install haskell-platform haskell-stack -y
+
+    ## ALE
+    # linter
+    sudo apt-get install hlint -y
 }
 
 ## ALE
