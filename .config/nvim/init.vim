@@ -112,6 +112,7 @@ Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 " syntax highlighting
+Plug 'neovimhaskell/haskell-vim'
 Plug 'PotatoesMaster/i3-vim-syntax'
 Plug 'ap/vim-css-color'
 Plug 'kovetskiy/sxhkd-vim'
