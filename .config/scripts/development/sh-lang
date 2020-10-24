@@ -1,5 +1,17 @@
 #!/bin/sh
 
+#          ██
+#         ░██
+#   ██████░██
+#  ██░░░░ ░██████
+# ░░█████ ░██░░░██
+#  ░░░░░██░██  ░██
+#  ██████ ░██  ░██
+# ░░░░░░  ░░   ░░
+
+# run with elevated privileges if not
+[ "$(id -u)" -ne 0 ] && exec sudo "$0" "$@"
+
 # arch-based
 [ -x "$(command -v "yay")" ] && {
     ## ALE
@@ -13,7 +25,13 @@
 [ -x "$(command -v "xbps-install")" ] && {
     ## ALE
     # linter
-    sudo xbps-install -Sy shellcheck
+    xbps-install -Sy shellcheck
     # fixed
-    sudo xbps-install -Sy shfmt
+    xbps-install -Sy shfmt
+}
+
+# debian-based
+[ -x "$(command -v "apt")" ] && {
+    # [vim::ALE] (formatter)
+    apt-get install shellcheck -y
 }

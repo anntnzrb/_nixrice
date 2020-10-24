@@ -1,16 +1,19 @@
 #!/bin/sh
 
-# debian-based
-[ -x "$(command -v "apt")" ] && {
-    # compiler
-    sudo apt-get install haskell-platform haskell-stack -y
+#  ██                        ██              ██  ██
+# ░██                       ░██             ░██ ░██
+# ░██       ██████    ██████░██  ██  █████  ░██ ░██
+# ░██████  ░░░░░░██  ██░░░░ ░██ ██  ██░░░██ ░██ ░██
+# ░██░░░██  ███████ ░░█████ ░████  ░███████ ░██ ░██
+# ░██  ░██ ██░░░░██  ░░░░░██░██░██ ░██░░░░  ░██ ░██
+# ░██  ░██░░████████ ██████ ░██░░██░░██████ ███ ███
+# ░░   ░░  ░░░░░░░░ ░░░░░░  ░░  ░░  ░░░░░░ ░░░ ░░░
 
-    ## ALE
-    # linter
-    sudo apt-get install hlint -y
-}
+
+# == generic install (distro-wide)
+# install ghcup (GHC manager) (similar to rustup)
+curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 
 ## ALE
 # fixer
-sudo stack upgrade
-stack install brittany
+cabal install brittany

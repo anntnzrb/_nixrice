@@ -97,7 +97,7 @@ endif
 
 call plug#begin('~/.config/nvim/plugged')
 Plug 'airblade/vim-gitgutter'
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'majutsushi/tagbar'
@@ -143,10 +143,6 @@ let g:NERDSpaceDelims = 1
 map <leader>/ <Plug>NERDCommenterNested
 map <leader>? <Plug>NERDCommenterUncomment
 
-" markdown
-" live preview
-nm <leader>md <Plug>MarkdownPreviewToggle
-
 "" fzf
 if executable('fzf')
     nn <C-p> :Files<CR>
@@ -179,7 +175,7 @@ nm <leader><F12> <Plug>(coc-definition)
 "==============================================================================
 
 " compile document
-map <leader>c :w! \| !compiler <c-r>%<CR>
+map <leader>c :w! \| :10new \| :term compiler <c-r>%<CR>
 " open preview .pdf/.html
 map <leader>p :!opout <c-r>%<CR><CR>
 
