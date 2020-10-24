@@ -1,5 +1,15 @@
 #!/bin/sh
 
+#   █████
+#  ██░░░██
+# ░██  ░░
+# ░██   ██
+# ░░█████
+#  ░░░░░
+
+# run with elevated privileges if not already
+[ "$(id -u)" -ne 0 ] && exec sudo "$0" "$@"
+
 # arch-based
 [ -x "$(command -v "yay")" ] && {
     # compiler (alternatively tcc)
@@ -13,9 +23,18 @@
 # void
 [ -x "$(command -v "xbps-install")" ] && {
     # compiler (alternatively tcc)
-    sudo xbps-install -Sy gcc
+    xbps-install -Sy gcc
 
     ## ALE
     # fixer
-    sudo xbps-install -Sy uncrustify
+    xbps-install -Sy uncrustify
+}
+
+# debian based
+[ -x "$(command -v "apt")" ] && {
+    # language server
+    apt-get install -y clangd
+
+    # [vim::ALE] (formatter)
+    apt-get install -y uncrustify
 }

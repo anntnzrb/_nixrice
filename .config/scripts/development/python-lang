@@ -1,27 +1,45 @@
 #!/bin/sh
 
+#                     ██   ██
+#  ██████   ██   ██  ░██  ░██
+# ░██░░░██ ░░██ ██  ██████░██       ██████  ███████
+# ░██  ░██  ░░███  ░░░██░ ░██████  ██░░░░██░░██░░░██
+# ░██████    ░██     ░██  ░██░░░██░██   ░██ ░██  ░██
+# ░██░░░     ██      ░██  ░██  ░██░██   ░██ ░██  ░██
+# ░██       ██       ░░██ ░██  ░██░░██████  ███  ░██
+# ░░       ░░         ░░  ░░   ░░  ░░░░░░  ░░░   ░░
+
+# run with elevated privileges if not
+[ "$(id -u)" -ne 0 ] && exec sudo "$0" "$@"
+
 # arch-based
 [ -x "$(command -v "yay")" ] && {
     ## dependencies
     yay --needed --noconfirm -Syy \
         python3 \
         python3-pip
-
 }
 
 # void
 [ -x "$(command -v "xbps-install")" ] && {
     ## dependencies
-    sudo xbps-install -Sy \
+    xbps-install -Sy \
         python3 \
         python3-pip
 }
 
-## ALE
-# linter
-python3 -m pip install -U flake8
+# debian-based
+[ -x "$(command -v "apt")" ] && {
+    ## dependencies
+    apt-get install -y \
+        python3 \
+        python3-pip
+}
 
-# fixer
+# language server
+python3 -m pip install -U setuptools python-language-server
+
+# [vim::ALE] (fixer)
 python3 -m pip install -U black
 
 ## libs
