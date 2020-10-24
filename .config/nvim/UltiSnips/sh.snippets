@@ -22,6 +22,11 @@ snippet #!bash
 $0
 endsnippet
 
+snippet !autoelev
+# run with elevated privileges if not
+[ "$(id -u)" -ne 0 ] && exec sudo "$0" "$@"
+endsnippet
+
 snippet !base
 # *****************************************************************************
 # functions
