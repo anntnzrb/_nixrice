@@ -1,4 +1,3 @@
-
 "          ░░
 "  ██    ██ ██ ██████████
 " ░██   ░██░██░░██░░██░░██
@@ -16,14 +15,14 @@ let mapleader =","
 
 " generals
 let $RTP=split(&runtimepath, ',')[0]
-let $RC="$HOME/.config/nvim/init.vim"
+let $RC="$RTP/init.vim"
 set updatetime=750
 set nocompatible
 set hidden
 set go=a
 set mouse=a
 syntax on
-filetype plugin on
+filetype plugin indent on
 set noswapfile
 set encoding=utf-8
 set nohlsearch
@@ -89,7 +88,7 @@ au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " plugins & settings
 " -----------------------------------------------------------------------------
 
-" if plugins no installed, then install
+" if plugins not installed, install them
 if ! filereadable(expand('$RTP/autoload/plug.vim'))
     echo "downloading vim-plug plugin manager & plugins..."
     sil !mkdir -p $RTP/autoload/
@@ -98,70 +97,72 @@ if ! filereadable(expand('$RTP/autoload/plug.vim'))
 endif
 
 call plug#begin('$RTP/plugged')
+" == syntax highlighting
+Plug 'neovimhaskell/haskell-vim'
+Plug 'ap/vim-css-color'
+Plug 'PotatoesMaster/i3-vim-syntax'
+Plug 'kovetskiy/sxhkd-vim'
+
+" == lsp/intellisense/completion/whatever
+Plug 'dense-analysis/ale'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" == git
+Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
+
+" == tools
+Plug 'SirVer/ultisnips'
+Plug 'bling/vim-airline'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'machakann/vim-highlightedyank'
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdcommenter'
-Plug 'SirVer/ultisnips'
-Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-surround'
 
-" themes
+" == themes
 Plug 'gruvbox-community/gruvbox'
-Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-
-" syntax highlighting
-Plug 'neovimhaskell/haskell-vim'
-Plug 'PotatoesMaster/i3-vim-syntax'
-Plug 'ap/vim-css-color'
-Plug 'kovetskiy/sxhkd-vim'
-
-" LSP
-Plug 'dense-analysis/ale'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
-"" colorscheme
-"" gruvbox
+" == theming/appearance
+" gruvbox
 colorscheme gruvbox
 set background=dark
 let g:gruvbox_contrast_dark = 'hard'
 
-"" airline
+" airline
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme='powerlineish'
 
-"" nerdtree
-map <leader>n :NERDTreeToggle<CR>
-let NERDTreeShowHidden = 1
-let NERDTreeMinimalUI = 1
-au BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-"" nerdcommenter
+" == nerdcommenter
 " add space delimiter
 let g:NERDSpaceDelims = 1
 map <leader>/ <Plug>NERDCommenterNested
 map <leader>? <Plug>NERDCommenterUncomment
 
-"" fzf
-if executable('fzf')
-    nn <C-p> :Files<CR>
-endif
+" == fugitive (git)
+nm <leader>gs  :G<CR>
+nm <leader>gc  :Gcommit<CR>
+nm <leader>gl  :Glog<CR>
+nm <leader>gps :Gpush<CR>
+nm <leader>gpl :Gpull<CR>
 
-"" tagbar
+" == fzf
+nn <C-p> :Files<CR>
+
+" == tagbar
 nm <F7> :TagbarToggle<CR>
 
-"" snippets
+" == UltiSnips
 " <Tab> unavailable if using YCM
 let g:UltiSnipsExpandTrigger="<Tab>"
 let g:UltiSnipsJumpForwardTrigger="<Tab>"
 let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
 let g:UltiSnipsEditSplit="vertical"
 
-"" ALE
+" == ALE
 " only run linters specified at 'ale_linters'
 let g:ale_linters_explicit = 1
 let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace']}
@@ -169,7 +170,7 @@ let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace']}
 " F12 fixes errors
 nm <F9> <Plug>(ale_fix)
 
-"" COC
+" == C.O.C
 nm <leader><F2>  <Plug>(coc-rename)
 nm <leader><F12> <Plug>(coc-definition)
 
@@ -179,6 +180,7 @@ nm <leader><F12> <Plug>(coc-definition)
 
 " compile file
 nn <leader>c :make<CR>
+
 " open preview .pdf/.html
 map <leader>p :!opout <c-r>%<CR><CR>
 
