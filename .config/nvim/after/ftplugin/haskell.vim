@@ -7,6 +7,8 @@
 " ░██  ░██░░████████ ██████ ░██░░██░░██████ ███ ███
 " ░░   ░░  ░░░░░░░░ ░░░░░░  ░░  ░░  ░░░░░░ ░░░ ░░░
 
+" general
+compiler haskell
 
 " [dense-analysis/ale]
 let g:ale_fixers = {'haskell': ['brittany']}

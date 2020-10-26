@@ -1,4 +1,4 @@
-"           ██
+
 "          ░░
 "  ██    ██ ██ ██████████
 " ░██   ░██░██░░██░░██░░██
@@ -10,11 +10,14 @@
 " leader key
 let mapleader =","
 
-"==============================================================================
+" -----------------------------------------------------------------------------
 " general settings
-"==============================================================================
+" -----------------------------------------------------------------------------
 
 " generals
+let $RTP=split(&runtimepath, ',')[0]
+let $RC="$HOME/.config/nvim/init.vim"
+set updatetime=750
 set nocompatible
 set hidden
 set go=a
@@ -24,21 +27,20 @@ filetype plugin on
 set noswapfile
 set encoding=utf-8
 set nohlsearch
-set autoindent
-set backspace=indent,eol,start
+set autoindent smartindent
+set backspace=start,eol,start
+
+" console settings
+set cmdheight=2
 
 ""line settings
-set number
-set relativenumber
+set number relativenumber
 set colorcolumn=80
 set cursorline
-set list
+set list listchars=tab:<->,nbsp:%
 
 " tab settings
-set shiftwidth=4
-set softtabstop=4
-set tabstop=4
-set expandtab
+set expandtab shiftwidth=4 tabstop=4 softtabstop=4
 
 " searching
 set ignorecase
@@ -54,6 +56,9 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 
+" redraw screen
+nn <leader><F5> :sil redraw!\|:mode\|echo "Screen re-drawn..."<CR>
+
 " save
 map <C-s> :w<CR>
 " `ex mode` Q -> gq (probably the most retarded default keybind in vim)
@@ -68,11 +73,8 @@ set clipboard+=unnamedplus
 " spell checking
 map <leader>o :setlocal spell! spelllang=en_us,es<CR>
 
-" this allows to jump thru these: '+===+'
-nn <Space><Space> <Esc>/+===+<CR>"_c5l
-
 " replace all aliased to `S`
-nn S :%s//g<Left><Left>
+map S :%s//g<Left><Left>
 
 " sort in alphabetical order
 vn <leader>S :'<,'>!sort -f<CR>
@@ -83,9 +85,9 @@ command Untilde :%s/á/a/g |:%s/é/e/g |:%s/í/i/g |:%s/ó/o/g |:%s/ú/u/g |
 " disable auto commenting on \n
 au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
-"==============================================================================
+" -----------------------------------------------------------------------------
 " plugins & settings
-"==============================================================================
+" -----------------------------------------------------------------------------
 
 " if plugins no installed, then install
 if ! filereadable(expand('~/.config/nvim/autoload/plug.vim'))
@@ -162,29 +164,26 @@ let g:UltiSnipsEditSplit="vertical"
 "" ALE
 " only run linters specified at 'ale_linters'
 let g:ale_linters_explicit = 1
+let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace']}
 
 " F12 fixes errors
 nm <F9> <Plug>(ale_fix)
-let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace']}
 
 "" COC
-nm <leader><F2> <Plug>(coc-rename)
+nm <leader><F2>  <Plug>(coc-rename)
 nm <leader><F12> <Plug>(coc-definition)
 
-"==============================================================================
+" -----------------------------------------------------------------------------
 " file specific
-"==============================================================================
+" -----------------------------------------------------------------------------
 
-" compile document
-map <leader>c :w! \| :10new \| :term compiler <c-r>%<CR>
+" compile file
+nn <leader>c :make<CR>
 " open preview .pdf/.html
 map <leader>p :!opout <c-r>%<CR><CR>
 
 " save file as sudo
-cno w!! execute 'sil! write !sudo tee % >/dev/null' <bar> edit!
-
-" source xrdb whenever its file is updated
-au BufWritePost *Xresources,*Xdefaults !xrdb %
+cno w!! exe 'sil write !sudo tee % >/dev/null'\|edit!
 
 " source sxhkd whenever Xdefaults / Xresources is updated
 au BufWritePost *sxhkdrc !pkill -USR1 sxhkd
