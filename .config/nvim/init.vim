@@ -90,14 +90,14 @@ au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " -----------------------------------------------------------------------------
 
 " if plugins no installed, then install
-if ! filereadable(expand('~/.config/nvim/autoload/plug.vim'))
+if ! filereadable(expand('$RTP/autoload/plug.vim'))
     echo "downloading vim-plug plugin manager & plugins..."
-    sil !mkdir -p ~/.config/nvim/autoload/
-    sil !curl "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > ~/.config/nvim/autoload/plug.vim
+    sil !mkdir -p $RTP/autoload/
+    sil !curl "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > $RTP/autoload/plug.vim
     au VimEnter * PlugInstall
 endif
 
-call plug#begin('~/.config/nvim/plugged')
+call plug#begin('$RTP/plugged')
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
