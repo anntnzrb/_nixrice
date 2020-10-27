@@ -10,6 +10,41 @@
 let mapleader=","
 
 " -----------------------------------------------------------------------------
+" theme/appearance
+" -----------------------------------------------------------------------------
+
+" == gruvbox
+" set background=dark
+" colorscheme gruvbox
+" let g:gruvbox_contrast_dark='gray'
+" 
+" " enable italic text
+" let g:gruvbox_italic=1
+" 
+" " enable italic for strings
+" let g:gruvbox_italicize_strings=1
+
+" == nord
+" colorscheme nord
+" set background=dark
+" 
+" " active cursor line number background
+" let g:nord_cursor_line_number_background=1
+" 
+" " bold vertical split
+" let g:nord_bold_vertical_split_line=1
+" 
+" " enable italics
+" let g:nord_italic=1
+" 
+" " comments in italics
+" let g:nord_italic_comments=1
+
+" == vulpo
+set background=dark
+colorscheme vulpo
+
+" -----------------------------------------------------------------------------
 " general settings
 " -----------------------------------------------------------------------------
 
@@ -29,6 +64,9 @@ set noswapfile
 set nohlsearch
 set nocompatible
 set backspace=start,eol,start
+
+" disable mapping for 'Ex-mode' (best setting by far)
+map Q <Nop>
 
 " console settings
 set cmdheight=2
@@ -82,7 +120,6 @@ vn <leader>S :'<,'>!sort -f<CR>
 
 " disable auto commenting on \n
 au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-
 " -----------------------------------------------------------------------------
 " plugins & settings
 " -----------------------------------------------------------------------------
@@ -90,8 +127,8 @@ au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " if plugins not installed, install them
 if ! filereadable(expand('$RTP/autoload/plug.vim'))
     echo "downloading vim-plug plugin manager & plugins..."
-    sil !mkdir -p $RTP/autoload/
-    sil !curl "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > $RTP/autoload/plug.vim
+    sil !mkdir -p "$RTP/autoload/"
+    sil !curl "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" > "$RTP/autoload/plug.vim"
     au VimEnter * PlugInstall
 endif
 
@@ -123,15 +160,8 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-surround'
 
 " == themes
-Plug 'gruvbox-community/gruvbox'
 Plug 'vim-airline/vim-airline-themes'
 call plug#end()
-
-" == theming/appearance
-" gruvbox
-colorscheme gruvbox
-set background=dark
-let g:gruvbox_contrast_dark = 'hard'
 
 " == source file configurations
 let $PLUG_CFGS=expand("$RTP/plug-cfgs/")
