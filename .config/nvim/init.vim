@@ -7,7 +7,8 @@
 "    ░░    ░░ ░░░  ░░  ░░
 
 " leader key
-let mapleader =","
+let $LEADER_KEY=","
+let mapleader =$LEADER_KEY
 
 " -----------------------------------------------------------------------------
 " general settings
@@ -60,8 +61,6 @@ nn <leader><F5> :sil redraw!\|:mode\|echo "Screen re-drawn..."<CR>
 
 " save
 map <C-s> :w<CR>
-" `ex mode` Q -> gq (probably the most retarded default keybind in vim)
-map Q gq
 
 " splits open at the bottom and right
 set splitbelow splitright
@@ -70,16 +69,15 @@ set splitbelow splitright
 set clipboard+=unnamedplus
 
 " spell checking
-map <leader>o :setlocal spell! spelllang=en_us,es<CR>
+map <leader>scen :setlocal spell! spelllang=en_us<CR>
+map <leader>sces :setlocal spell! spelllang=es<CR>
+map <leader>sct :setlocal spell! spelllang=<CR>
 
 " replace all aliased to `S`
 map S :%s//g<Left><Left>
 
 " sort in alphabetical order
 vn <leader>S :'<,'>!sort -f<CR>
-
-" un-spanish
-command Untilde :%s/á/a/g |:%s/é/e/g |:%s/í/i/g |:%s/ó/o/g |:%s/ú/u/g |
 
 " disable auto commenting on \n
 au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
@@ -116,6 +114,7 @@ Plug 'SirVer/ultisnips'
 Plug 'bling/vim-airline'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'liuchengxu/vim-which-key'
 Plug 'machakann/vim-highlightedyank'
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdcommenter'
@@ -136,11 +135,30 @@ let g:gruvbox_contrast_dark = 'hard'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme='powerlineish'
 
+" == which key
+nn <silent><leader> :WhichKey $LEADER_KEY<CR>
+nn <silent><Space> :WhichKey ''<CR>
+
+" timeout
+set timeoutlen=200
+
+" separator
+let g:which_key_sep = '::'
+
+" hide statusline
+au! FileType which_key
+au  FileType which_key set laststatus=0 noshowmode noruler
+  \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+
+" no floating window
+let g:which_key_use_floating_win = 0
+
 " == nerdcommenter
 " add space delimiter
 let g:NERDSpaceDelims = 1
-map <leader>/ <Plug>NERDCommenterNested
-map <leader>? <Plug>NERDCommenterUncomment
+
+" keybinds
+map <leader>/ <Plug>NERDCommenterToggle
 
 " == fugitive (git)
 nm <leader>gs  :G<CR>
