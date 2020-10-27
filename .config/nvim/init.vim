@@ -117,6 +117,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'liuchengxu/vim-which-key'
 Plug 'machakann/vim-highlightedyank'
 Plug 'majutsushi/tagbar'
+Plug 'mhinz/vim-startify'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-surround'
 
@@ -166,6 +167,26 @@ nm <leader>gc  :Gcommit<CR>
 nm <leader>gl  :Glog<CR>
 nm <leader>gps :Gpush<CR>
 nm <leader>gpl :Gpull<CR>
+
+" == startify
+" launch startify
+nm <leader>www :bd\|Startify<CR>
+
+" use unicode
+let g:startify_fortune_use_unicode = 1
+
+" lists
+let g:startify_lists = [
+    \ { 'type': 'bookmarks', 'header': ['   Bookmarks']           },
+    \ { 'type': 'files',     'header': ['   Recent']              },
+    \ { 'type': 'dir',       'header': ['   Recent @ '. getcwd()] },
+    \ { 'type': 'commands',  'header': ['   Commands']            },
+    \ ]
+
+" bookmarks
+let g:startify_bookmarks = [
+    \ { 'v': '$RTP' },
+    \ ]
 
 " == fzf
 nn <C-p> :Files<CR>
