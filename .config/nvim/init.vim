@@ -7,8 +7,7 @@
 "    ░░    ░░ ░░░  ░░  ░░
 
 " leader key
-let $LEADER_KEY=","
-let mapleader =$LEADER_KEY
+let mapleader=","
 
 " -----------------------------------------------------------------------------
 " general settings
@@ -16,18 +15,19 @@ let mapleader =$LEADER_KEY
 
 " generals
 let $RTP=split(&runtimepath, ',')[0]
-let $RC="$RTP/init.vim"
+let $RC=expand("$RTP/init.vim")
+set path+=**
 set updatetime=750
-set nocompatible
-set hidden
+set timeoutlen=200
+set encoding=utf-8
 set go=a
 set mouse=a
 syntax on
 filetype plugin indent on
+set hidden
 set noswapfile
-set encoding=utf-8
 set nohlsearch
-set autoindent smartindent
+set nocompatible
 set backspace=start,eol,start
 
 " console settings
@@ -37,9 +37,10 @@ set cmdheight=2
 set number relativenumber
 set colorcolumn=80
 set cursorline
-set list listchars=tab:<->,nbsp:%
+set list listchars="tab:<->,nbsp:%"
 
-" tab settings
+" tab/indent settings
+set autoindent smartindent
 set expandtab shiftwidth=4 tabstop=4 softtabstop=4
 
 " searching
@@ -132,86 +133,11 @@ colorscheme gruvbox
 set background=dark
 let g:gruvbox_contrast_dark = 'hard'
 
-" airline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='powerlineish'
-
-" == which key
-nn <silent><leader> :WhichKey $LEADER_KEY<CR>
-nn <silent><Space> :WhichKey ''<CR>
-
-" timeout
-set timeoutlen=200
-
-" separator
-let g:which_key_sep = '::'
-
-" hide statusline
-au! FileType which_key
-au  FileType which_key set laststatus=0 noshowmode noruler
-  \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
-
-" no floating window
-let g:which_key_use_floating_win = 0
-
-" == nerdcommenter
-" add space delimiter
-let g:NERDSpaceDelims = 1
-
-" keybinds
-map <leader>/ <Plug>NERDCommenterToggle
-
-" == fugitive (git)
-nm <leader>gs  :G<CR>
-nm <leader>gc  :Gcommit<CR>
-nm <leader>gl  :Glog<CR>
-nm <leader>gps :Gpush<CR>
-nm <leader>gpl :Gpull<CR>
-
-" == startify
-" launch startify
-nm <leader>www :bd\|Startify<CR>
-
-" use unicode
-let g:startify_fortune_use_unicode = 1
-
-" lists
-let g:startify_lists = [
-    \ { 'type': 'bookmarks', 'header': ['   Bookmarks']           },
-    \ { 'type': 'files',     'header': ['   Recent']              },
-    \ { 'type': 'dir',       'header': ['   Recent @ '. getcwd()] },
-    \ { 'type': 'commands',  'header': ['   Commands']            },
-    \ ]
-
-" bookmarks
-let g:startify_bookmarks = [
-    \ { 'v': '$RTP' },
-    \ ]
-
-" == fzf
-nn <C-p> :Files<CR>
-
-" == tagbar
-nm <F7> :TagbarToggle<CR>
-
-" == UltiSnips
-" <Tab> unavailable if using YCM
-let g:UltiSnipsExpandTrigger="<Tab>"
-let g:UltiSnipsJumpForwardTrigger="<Tab>"
-let g:UltiSnipsJumpBackwardTrigger="<S-Tab>"
-let g:UltiSnipsEditSplit="vertical"
-
-" == ALE
-" only run linters specified at 'ale_linters'
-let g:ale_linters_explicit = 1
-let g:ale_fixers = {'*': ['remove_trailing_lines', 'trim_whitespace']}
-
-" F12 fixes errors
-nm <F9> <Plug>(ale_fix)
-
-" == C.O.C
-nm <leader><F2>  <Plug>(coc-rename)
-nm <leader><F12> <Plug>(coc-definition)
+" == source file configurations
+let $PLUG_CFGS=expand("$RTP/plug-cfgs/")
+for f in split(expand("$PLUG_CFGS/*"))
+    exe 'source' f
+endfor
 
 " -----------------------------------------------------------------------------
 " file specific
