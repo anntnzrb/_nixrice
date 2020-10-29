@@ -1,12 +1,8 @@
-<!-- markdownlint rules -->
-<!-- markdownlint-disable MD013 -->
-<!-- markdownlint-disable MD037 -->
+<!-- markdownlint-disable MD013 MD037 -->
 
 # \*nixrice
 
-**dotfiles**;
-
-_literally my home folder?..._
+**dotfiles**
 
 ## table of contents
 
@@ -23,18 +19,6 @@ _literally my home folder?..._
 these files are meant to work across multiple
 [\*nix distributions](https://0x0.st/HNfM), therefore most scripts are written
 with the goal of not being [os/distro/software]-dependant
-
-## timeline
-
-**[_Jun-2020_]**
-as of June 2020, i've moved back to [Void](https://0x0.st/HNff), i'm planning
-to stay here as long as the package manager doesn't let me down, still think
-[xbps](https://0x0.st/XZLN) is more intuitive to manage in comparison to
-[pacman](https://0x0.st/XZLZ)
-
-**[_Sep-2019+_]**
-~~i mainly use [Arch](https://0x0.st/oGEz) nowadays, but i've lived in the
-[Void](https://0x0.st/HNff) for a while in the past; i plan on returning tho~~
 
 i tend to re-install my os a lot, this leads me not only to have everything
 pre-configured already but also to have a way of installing all the software
@@ -88,7 +72,7 @@ software; package names varies depending on the `*nix` distribution
 
 ## installation
 
-this _.files_ may be installed using [uarbs](https://0x0.st/X86L), please refer
+these _.files_ may be installed using [uarbs](https://0x0.st/X86L), please refer
 to the linked repo for instructions
 
 you can also `git clone` (alternatively manually download) this repo and
