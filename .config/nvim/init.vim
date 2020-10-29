@@ -14,35 +14,35 @@ let mapleader=","
 " -----------------------------------------------------------------------------
 
 " == gruvbox
-" set background=dark
-" colorscheme gruvbox
-" let g:gruvbox_contrast_dark='gray'
-" 
-" " enable italic text
-" let g:gruvbox_italic=1
-" 
-" " enable italic for strings
-" let g:gruvbox_italicize_strings=1
+set background=dark
+colorscheme gruvbox
+let g:gruvbox_contrast_dark='gray'
+
+" enable italic text
+let g:gruvbox_italic=1
+
+" enable italic for strings
+let g:gruvbox_italicize_strings=1
 
 " == nord
 " colorscheme nord
 " set background=dark
-" 
+"
 " " active cursor line number background
 " let g:nord_cursor_line_number_background=1
-" 
+"
 " " bold vertical split
 " let g:nord_bold_vertical_split_line=1
-" 
+"
 " " enable italics
 " let g:nord_italic=1
-" 
+"
 " " comments in italics
 " let g:nord_italic_comments=1
 
 " == vulpo
-set background=dark
-colorscheme vulpo
+" set background=dark
+" colorscheme vulpo
 
 " -----------------------------------------------------------------------------
 " general settings
@@ -71,15 +71,19 @@ map Q <Nop>
 " console settings
 set cmdheight=2
 
-""line settings
+" line settings
 set number relativenumber
 set colorcolumn=80
 set cursorline
-set list listchars="tab:<->,nbsp:%"
+set list listchars=trail:-,tab:<->,nbsp:%
 
 " tab/indent settings
 set autoindent smartindent
 set expandtab shiftwidth=4 tabstop=4 softtabstop=4
+
+" folding
+set foldmethod=indent
+set foldlevelstart=99
 
 " searching
 set ignorecase
@@ -97,6 +101,9 @@ map <C-l> <C-w>l
 
 " redraw screen
 nn <leader><F5> :sil redraw!\|:mode\|echo "Screen re-drawn..."<CR>
+
+" close current tab
+nm <C-w> :bd\|echo "Tab closed.."<CR>
 
 " save
 map <C-s> :w<CR>
@@ -164,8 +171,8 @@ Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
 " == source file configurations
-let $PLUG_CFGS=expand("$RTP/plug-cfgs/")
-for f in split(expand("$PLUG_CFGS/*"))
+let PLUG_CFGS=globpath($RTP, "plug-cfgs/*vim", 0, 1)
+for f in PLUG_CFGS
     exe 'source' f
 endfor
 
