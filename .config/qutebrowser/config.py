@@ -83,9 +83,6 @@ c.content.cookies.accept = "no-3rdparty"
 # i don't know what kind of setting this is
 c.content.mouse_lock = "ask"
 
-# allow websites to record audio/video
-c.content.media_capture = "ask"
-
 # allow desktop content sharing
 c.content.desktop_capture = "ask"
 

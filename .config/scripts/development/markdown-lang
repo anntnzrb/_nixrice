@@ -1,26 +1,40 @@
 #!/bin/sh
 
+#                               ██          ██
+#                              ░██         ░██
+#  ██████████   ██████   ██████░██  ██     ░██  ██████  ███     ██ ███████
+# ░░██░░██░░██ ░░░░░░██ ░░██░░█░██ ██   ██████ ██░░░░██░░██  █ ░██░░██░░░██
+#  ░██ ░██ ░██  ███████  ░██ ░ ░████   ██░░░██░██   ░██ ░██ ███░██ ░██  ░██
+#  ░██ ░██ ░██ ██░░░░██  ░██   ░██░██ ░██  ░██░██   ░██ ░████░████ ░██  ░██
+#  ███ ░██ ░██░░████████░███   ░██░░██░░██████░░██████  ███░ ░░░██ ███  ░██
+# ░░░  ░░  ░░  ░░░░░░░░ ░░░    ░░  ░░  ░░░░░░  ░░░░░░  ░░░    ░░░ ░░░   ░░
+
+# run with elevated privileges if not already
+elevate_perms() { [ "$(id -u)" -ne 0 ] && exec sudo "$0" "$@"; }
+
 # arch-based
 [ -x "$(command -v "yay")" ] && {
+    PKG_INSTALL="yay --needed --noconfirm -Syy"
+
     # dependencies
-    yay --needed --noconfirm -Syy \
+    $PKG_INSTALL \
         nodejs \
         yarn
 
-    ## ALE
-    # fixer
-    yay --needed --noconfirm -Syy prettier
+    # [vim::ALE] (formatter)
+    $PKG_INSTALL prettier
 }
 
 # void
 [ -x "$(command -v "xbps-install")" ] && {
+    elevate_perms
+
     # dependencies
-    sudo xbps-install -Sy \
+    xbps-install -Sy \
         nodejs \
         yarn
 
-    ## ALE
-    # fixer
+    # [vim::ALE] (formatter)
     echo 'installing via npm...'
     sudo npm install --global prettier
 }
