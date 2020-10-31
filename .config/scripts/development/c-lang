@@ -8,21 +8,29 @@
 #  ░░░░░
 
 # run with elevated privileges if not already
-[ "$(id -u)" -ne 0 ] && exec sudo "$0" "$@"
+elevate_perms() { [ "$(id -u)" -ne 0 ] && exec sudo "$0" "$@"; }
 
 # arch-based
 [ -x "$(command -v "yay")" ] && {
-    # compiler (alternatively tcc)
-    yay --needed --noconfirm -Syy gcc
+    PKG_INSTALL="yay --needed --noconfirm -Syy"
+    # compiler
+    $PKG_INSTALL gcc
 
-    ## ALE
-    # fixer
-    yay --needed --noconfirm -Syy uncrustify
+    # language server
+    $PKG_INSTALL clang
+
+    # ctags
+    $PKG_INSTALL ctags
+
+    # [vim::ALE] (formatter)
+    $PKG_INSTALL uncrustify
 }
 
 # void
 [ -x "$(command -v "xbps-install")" ] && {
-    # compiler (alternatively tcc)
+    elevate_perms
+
+    # compiler
     xbps-install -Sy gcc
 
     ## ALE
@@ -32,6 +40,8 @@
 
 # debian based
 [ -x "$(command -v "apt")" ] && {
+    elevate_perms
+
     # language server
     apt-get install -y clangd
 

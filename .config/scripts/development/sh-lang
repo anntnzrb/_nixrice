@@ -10,28 +10,34 @@
 # ░░░░░░  ░░   ░░
 
 # run with elevated privileges if not
-[ "$(id -u)" -ne 0 ] && exec sudo "$0" "$@"
+elevate_perms() { [ "$(id -u)" -ne 0 ] && exec sudo "$0" "$@"; }
 
 # arch-based
 [ -x "$(command -v "yay")" ] && {
-    ## ALE
-    # linter
-    yay --needed --noconfirm -Syy shellcheck
-    # fixer
-    yay --needed --noconfirm -Syy shfmt
+    PKG_INSTALL="yay --needed --noconfirm -Syy"
+
+    # [vim::ALE] (linter)
+    $PKG_INSTALL shellcheck
+
+    # [vim::ALE] (formatter)
+    $PKG_INSTALL shfmt
 }
 
 # void
 [ -x "$(command -v "xbps-install")" ] && {
-    ## ALE
-    # linter
+    elevate_perms
+
+    # [vim::ALE] (linter)
     xbps-install -Sy shellcheck
-    # fixed
+
+    # [vim::ALE] (formatter)
     xbps-install -Sy shfmt
 }
 
 # debian-based
 [ -x "$(command -v "apt")" ] && {
-    # [vim::ALE] (formatter)
+    elevate_perms
+
+    # [vim::ALE] (linter)
     apt-get install shellcheck -y
 }
