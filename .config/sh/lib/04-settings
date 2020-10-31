@@ -13,6 +13,7 @@
 # -----------------------------------------------------------------------------
 # pfetch
 # -----------------------------------------------------------------------------
+
 # information to display
 export PF_INFO="ascii title kernel os host wm de memory pkgs editor shell uptime palette"
 # alignment padding
