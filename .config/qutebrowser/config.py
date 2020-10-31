@@ -7,9 +7,10 @@
 #     ░███░░██████  ░░██ ░░██████░██████ ░███   ░░██████  ███░ ░░░██ ██████ ░░██████░███
 #     ░░░  ░░░░░░    ░░   ░░░░░░ ░░░░░   ░░░     ░░░░░░  ░░░    ░░░ ░░░░░░   ░░░░░░ ░░░
 
-# *****************************************************************************
+""" """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # general settings
-# *****************************************************************************
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" """
+
 # encoding
 c.editor.encoding = "utf8"
 
@@ -48,9 +49,10 @@ c.hints.chars = "abcdefghijklmnopqrstuvwxyz"
 # hints are uppercased (it's just easier to differentiate)
 c.hints.uppercase = True
 
-# *****************************************************************************
+""" """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # tabs
-# *****************************************************************************
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" """
+
 # window title format
 c.tabs.title.format = "{private}{audio}{index}: {current_title}"
 # tabs position
@@ -70,14 +72,18 @@ c.url.default_page = "https://www.voidlinux.org"
 # spell checking
 #  c.spellcheck.languages = ["en-US", "es-ES"]
 
-# *****************************************************************************
+""" """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # privacy
-# *****************************************************************************
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" """
+
 # allow geo-location
 c.content.geolocation = "ask"
 
 # cookie restriction
 c.content.cookies.accept = "no-3rdparty"
+
+# allow websites to record audio and video
+c.content.media.audio_video_capture = "ask"
 
 # allow websites to lock your mouse pointer?
 # i don't know what kind of setting this is
@@ -86,9 +92,10 @@ c.content.mouse_lock = "ask"
 # allow desktop content sharing
 c.content.desktop_capture = "ask"
 
-# *****************************************************************************
+""" """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # completion box
-# *****************************************************************************
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" """
+
 # completion box height
 c.completion.height = 350
 
@@ -101,18 +108,20 @@ c.completion.shrink = True
 # date format
 c.completion.timestamp_format = "%d-%m-%Y"
 
-# *****************************************************************************
+""" """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # sessions
-# *****************************************************************************
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" """
+
 # auto-save interval
 c.auto_save.interval = 60000
 
 # re-open browser on last session (keep last session)
 c.auto_save.session = True
 
-# *****************************************************************************
+""" """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # downloads
-# *****************************************************************************
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" """
+
 # default download directory
 c.downloads.location.directory = "$HOME/downloads"
 # progress bar download position
@@ -131,3 +140,23 @@ c.url.searchengines = {
     "redd": "https://reddit.com/r/{}",
     "wiki": "https://www.wikipedia.org/wiki/{}",
 }
+
+""" """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+# key-binds
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" """
+
+# switch tabs with <C-n>, where n is number of the tab
+config.bind('<Ctrl-1>', 'tab-focus 1')
+config.bind('<Ctrl-2>', 'tab-focus 2')
+config.bind('<Ctrl-3>', 'tab-focus 3')
+config.bind('<Ctrl-4>', 'tab-focus 4')
+config.bind('<Ctrl-5>', 'tab-focus 5')
+config.bind('<Ctrl-6>', 'tab-focus 6')
+config.bind('<Ctrl-7>', 'tab-focus 7')
+config.bind('<Ctrl-8>', 'tab-focus 8')
+config.bind('<Ctrl-9>', 'tab-focus 9')
+config.bind('<Ctrl-0>', 'tab-focus 10')
+
+# Zen mode
+config.bind('xx', 'config-cycle statusbar.show always never ;;\
+            config-cycle tabs.show always never')
