@@ -12,6 +12,7 @@
 # -----------------------------------------------------------------------------
 # general
 # -----------------------------------------------------------------------------
+
 alias \
     cp="cp -irv" \
     diff="diff --color=auto" \
@@ -34,27 +35,28 @@ alias \
 # -----------------------------------------------------------------------------
 # system-specific aliases
 # -----------------------------------------------------------------------------
+
 # arch-based
-[ -x "$(command -v "pacman")" ] && {
+if [ -x "$(command -v "pacman")" ]; then
     alias \
         pkgf="pacman -Ss" \
         pkgi="sudo pacman -S" \
         pkgr="sudo pacman -R" \
         pkgu="sudo pacman -Suyy"
-}
 
 # void
-[ -x "$(command -v "xbps-install")" ] && {
+elif [ -x "$(command -v "xbps-install")" ]; then
     alias \
         pkgf="xbps-query" \
         pkgi="sudo xbps-install -fu xbps && sudo xbps-install -S" \
         pkgr="sudo xbps-remove -f" \
         pkgu="sudo xbps-install -fu xbps && sudo xbps-install -Sfu"
-}
+fi
 
 # -----------------------------------------------------------------------------
 # miscellaneous
 # -----------------------------------------------------------------------------
+
 alias \
     ascii="toilet -t -f 3d" \
     future="toilet -t -f future" \
@@ -67,8 +69,12 @@ alias \
     ytv="youtube-dl -f best"
 
 sscreenkey() {
-    { pgrep screenkey >/dev/null && pkill -15 screenkey; } ||
+    if ! pgrep "screenkey" >/dev/null; then
         setsid screenkey --no-systray --vis-shift --bak-mode full \
             --opacity 0.55 -f FiraCodeRetina -t 2 -p bottom -s small \
             --show-settings
+    else
+        # kill if already running
+        pkill -15 "screenkey"
+    fi
 }
