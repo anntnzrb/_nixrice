@@ -9,11 +9,12 @@
 # ░██  ░██░░████████ ██████ ░██░░██░░██████ ███ ███
 # ░░   ░░  ░░░░░░░░ ░░░░░░  ░░  ░░  ░░░░░░ ░░░ ░░░
 
-
 # == generic install (distro-wide)
 # install ghcup (GHC manager) (similar to rustup)
 curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 
-## ALE
-# fixer
-cabal install brittany
+# Cabal (Haskell's package manager)
+"$HOME/.ghcup/bin/cabal" update
+
+# [vim::ALE] (formatter)
+"$HOME/.ghcup/bin/cabal" install brittany
