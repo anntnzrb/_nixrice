@@ -26,7 +26,7 @@ for battery in /sys/class/power_supply/BAT?; do
         fi
         # if charging, plug icon + %
         [ "$STATUS" = "Charging" ] && icon="🔌"
-        [ "$STATUS" = "Not charging" ] && icon=""
+        [ "$STATUS" = "Not charging" ] && icon=" "
 
         printf '%s%%' "$icon $CAPACITY"
     else
