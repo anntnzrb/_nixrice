@@ -10,35 +10,38 @@
 # ░ ░░   ░░ ░░      ░░░     ░░░░░░    ░░   ░░ ░░░  ░░░░░░
 # ░░░░ runs on tty / dm login
 
-#◦◝◟∘◞◜◦ Xorg settings
+# == Xorg settings
 # disable screensaver
 xset s off &
 # off-screen time
 xset dpms 0 0 900 &
 
-#◦◝◟∘◞◜◦ keyboard settings
+# light filter
+redshift &
+
+# keyboard settings
 remaps &
 
-#◦◝◟∘◞◜◦ sets the background with `setbg` script
+# sets the background with `setbg` script
 setbg "$HOME/lib/imgs/wallpapers/" &
 
-#◦◝◟∘◞◜◦ compositor
+# compositor
 picom &
 
-#◦◝◟∘◞◜◦ keybindings
+# keybindings
 sxhkd -m 1 &
 
-#◦◝◟∘◞◜◦ statusbar
+# statusbar
 dwmblocks &
 
-#◦◝◟∘◞◜◦ dunst
+# dunst
 dunst &
 
-#◦◝◟∘◞◜◦ remove mouse when idle
+# remove mouse when idle
 unclutter &
 
-#◦◝◟∘◞◜◦ sources Xresources
+# source Xresources
 xrdb "$HOME"/.Xresources &
 
-#◦◝◟∘◞◜◦ choose display (should be at last)
+# choose display (should be at last)
 displayselect
