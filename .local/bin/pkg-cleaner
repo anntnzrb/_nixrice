@@ -4,27 +4,47 @@
 # clean orphans and other cache stuff
 # *
 
-# *****************************************************************************
+# -----------------------------------------------------------------------------
 # preamble
-# *****************************************************************************
+# -----------------------------------------------------------------------------
+
 # source utility functions
 . utils
 
 # check if running with elevated privileges
 check_su
 
-# *****************************************************************************
+# -----------------------------------------------------------------------------
+# functions
+# -----------------------------------------------------------------------------
+
+clear_cache() {
+    CACHE_FOLDER="$HOME/.cache"
+    [ -d "$CACHE_FOLDER" ] && rm -fr "$CACHE_FOLDER"
+}
+
+print_cached_pkgs() {
+    case $1 in
+    arch) CACHED_PKGS_FOLDER="/var/cache/pacman/pkg" ;;
+    void) CACHED_PKGS_FOLDER="/var/cache/xbps" ;;
+    esac
+
+    printf "amount of cached packages: %s | size: %s\n" \
+        "$(find $CACHED_PKGS_FOLDER | wc -l)" \
+        "$(du -hs $CACHED_PKGS_FOLDER)"
+}
+
+# -----------------------------------------------------------------------------
 # main
-# *****************************************************************************
+# -----------------------------------------------------------------------------
+
+# clear ~/.cache folder
+clear_cache
+
 # arch-based
 [ -x "$(command -v "pacman")" ] && {
     # display cached packages
-    printf "amount of cached packages: %s | size: %s\n" \
-        "$(find /var/cache/pacman/pkg | wc -l)" \
-        "$(du -hs /var/cache/pacman/pkg)"
-
-    # clear ~/.cache folder
-    rm -fr "$HOME"/.cache/
+    print_cached_pkgs "arch"
 
     # clear pkg cache
     pacman -Scc
@@ -34,19 +54,13 @@ check_su
     pacman -Rns --noconfirm $(pacman -Qdqt)
 
     # display cached packages after
-    printf "amount of cached packages: %s | size: %s\n" \
-        "$(find /var/cache/pacman/pkg | wc -l)" \
-        "$(du -hs /var/cache/pacman/pkg)"
+    print_cached_pkgs "arch"
 }
 
 # void
 [ -x "$(command -v "xbps-install")" ] && {
     # display cached packages
-    printf "amount of cached packages: %s | size: %s\n" \
-        "$(find /var/cache/xbps | wc -l)" "$(du -hs /var/cache/xbps)"
-
-    # clear ~/.cache folder
-    rm -fr "$HOME"/.cache/
+    print_cached_pkgs "xbps"
 
     # clear pkg cache
     xbps-remove -FORfovy
@@ -54,6 +68,5 @@ check_su
     vkpurge rm all
 
     # display cached packages after
-    printf "amount of cached packages: %s | size: %s\n" \
-        "$(find /var/cache/xbps | wc -l)" "$(du -hs /var/cache/xbps)"
+    print_cached_pkgs "xbps"
 }
