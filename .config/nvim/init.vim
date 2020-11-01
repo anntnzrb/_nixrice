@@ -57,6 +57,7 @@ set timeoutlen=200
 set encoding=utf-8
 set go=a
 set mouse=a
+set scrolljump=-20
 syntax on
 filetype plugin indent on
 set hidden
@@ -90,8 +91,10 @@ set ignorecase
 set smartcase
 set infercase
 
-" accelerated scrolling
-set scrolljump=-20
+" completion
+set complete+=kspell
+set completeopt=menuone,longest
+set shortmess+=c
 
 " split navigation
 map <C-h> <C-w>h
