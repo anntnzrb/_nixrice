@@ -13,6 +13,9 @@
 # -----------------------------------------------------------------------------
 # general
 # -----------------------------------------------------------------------------
+
+autoload -Uz colors && colors
+
 # tab completion
 autoload -U compinit
 zstyle ':completion:*' menu select
@@ -34,9 +37,40 @@ setopt EXTENDED_HISTORY
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt SHARE_HISTORY
 
+# == misc
+# disable keybind to freeze terminal
+stty stop undef
+
 # -----------------------------------------------------------------------------
 # keybinds
 # -----------------------------------------------------------------------------
+
+# vi-mode
+bindkey -v
+export KEYTIMEOUT=1
+
+# vim-like edit '^e'
+autoload edit-command-line; zle -N edit-command-line
+bindkey '^e' edit-command-line
+
+# change cursor shape for different vi modes
+function zle-keymap-select() {
+    if [[ ${KEYMAP} == vicmd ]] ||
+        [[ $1 = 'block' ]]; then
+        echo -ne '\e[1 q'
+    elif [[ ${KEYMAP} == main ]] ||
+        [[ ${KEYMAP} == viins ]] ||
+        [[ ${KEYMAP} = '' ]] ||
+        [[ $1 = 'beam' ]]; then
+        echo -ne '\e[5 q'
+    fi
+} && zle -N zle-keymap-select
+
+zle-line-init() {
+    zle -K viins
+    echo -ne "\e[5 q"
+} && zle -N zle-line-init
+
 typeset -g -A key
 
 # declarations
@@ -67,6 +101,7 @@ fi
 # -----------------------------------------------------------------------------
 # miscellaneous
 # -----------------------------------------------------------------------------
+
 # source aliases, functions, etc
 for f in "$HOME"/.config/sh/lib/*; do
     . "$f"
