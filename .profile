@@ -22,6 +22,7 @@ export EDITOR="nvim"
 export BROWSER="qutebrowser"
 export FILE="pcmanfm"
 export READER="zathura"
+export SYS_MONITOR="btm"
 export ALIASES="$HOME/.config/sh/lib/02-aliases"
 export FUNCTIONS="$HOME/.config/sh/lib/03-functions"
 

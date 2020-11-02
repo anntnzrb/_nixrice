@@ -11,6 +11,7 @@
 # -----------------------------------------------------------------------------
 # basic keybinds
 # -----------------------------------------------------------------------------
+
 # launch terminal emulator
 super + Return
     $TERMINAL
@@ -34,7 +35,7 @@ super + w
     $BROWSER
 # open resource monitor
 super + shift + Escape
-    $TERMINAL -e htop
+    $TERMINAL -e $SYS_MONITOR
 # kill window (not wm-specific)
 # use only as alternative, native window closing functionality should be used
 alt + F4
@@ -46,6 +47,7 @@ super + control + alt + Escape
 # -----------------------------------------------------------------------------
 # keyboard-specific
 # -----------------------------------------------------------------------------
+
 # edit config files
 super + shift + period
     edit-cfgs
@@ -72,7 +74,7 @@ super + F3
     displayselect
 # restart/rescan wifi/eth networks
 super + F5
-    $TERMINAL -e sudo systemctl restart NetworkManager
+   $TERMINAL -e [ -x "$(command -v "systemctl")" ] && sudo systemctl restart NetworkManager
 # enable & launch transmission UI | toggle daemon
 super + {F6, F7}
     {torwrap, td-toggle}
@@ -82,9 +84,11 @@ super + {F9, F10}
 # NetworkManager interface
 super + F12
     $TERMINAL -e sudo nmtui
+
 # -----------------------------------------------------------------------------
 # misc
 # -----------------------------------------------------------------------------
+
 # emoji/unicode list drop-down
 super + grave
     dmenuunicode
