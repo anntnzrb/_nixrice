@@ -43,9 +43,10 @@ sh_script() {
 
     [ ! -f "$NEW_SCRIPT_PATH" ] && {
         printf "#!/bin/sh\n\n" >"$NEW_SCRIPT_PATH"
-        chmod +x "$NEW_SCRIPT_PATH"
-        $EDITOR "$NEW_SCRIPT_PATH"
-    } || printf "file already exists\n" && exit 1
+        chmod 755 "$NEW_SCRIPT_PATH"
+    }
+
+    $EDITOR "$NEW_SCRIPT_PATH"
 }
 
 # loop public ip address
