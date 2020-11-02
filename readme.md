@@ -2,7 +2,7 @@
 
 # \*nixrice
 
-**dotfiles**
+**dotfiles** || **home folder**
 
 ## table of contents
 
@@ -27,53 +27,40 @@ possible. check [installation](#installation) for extra info
 
 ## software
 
-this table displays _most_ of the programs i have configuration files for
+this table displays _most_ of the programs i have configuration files for:
 
-| software           | name                                    | :first_quarter_moon: |
-| ------------------ | --------------------------------------- | -------------------- |
-|                    | **shell**                               |                      |
-| terminal emulator  | _st_ ([external](https://0x0.st/8b4q))  | :large_blue_circle:  |
-| :arrow_up:         | _alacritty_                             | :red_circle:         |
-| shell              | _zsh_                                   | :large_blue_circle:  |
-|                    | **graphical**                           |                      |
-| window manager     | _dwm_ ([external](https://0x0.st/X869)) | :large_blue_circle:  |
-| :arrow_up:         | _i3_                                    | :red_circle:         |
-| :arrow_up:         | _spectrwm_                              | :red_circle:         |
-| compositor         | _picom/compton_                         | :large_blue_circle:  |
-| browser            | _qutebrowser_                           | :large_blue_circle:  |
-| notifications      | _dunst_                                 | :large_blue_circle:  |
-|                    | **files/text/docs/editors**             |                      |
-| text editor        | _[n]vi[m]_                              | :large_blue_circle:  |
-| :arrow_up:         | _vscod[e/ium]_                          | :red_circle:         |
-| file manager       | _PCManFM_                               | :large_blue_circle:  |
-| pdf viewer         | _zathura_                               | :large_blue_circle:  |
-| language formatter | _uncrustify_                            | :large_blue_circle:  |
-|                    | **miscellaneous**                       |                      |
-| key-binds          | _sxhkd_                                 | :large_blue_circle:  |
-| tmux               | _tmux_                                  | :large_blue_circle:  |
-| sys-info tool      | _neofetch_                              | :large_blue_circle:  |
+| software           | name                                    |
+| ------------------ | --------------------------------------- |
+|                    | **shell**                               |
+| terminal emulator  | _st_ ([external](https://0x0.st/8b4q))  |
+| :arrow_up:         | _alacritty_                             |
+| shell              | _zsh_                                   |
+|                    | **graphical**                           |
+| window manager     | _dwm_ ([external](https://0x0.st/X869)) |
+| :arrow_up:         | _i3_                                    |
+| :arrow_up:         | _spectrwm_                              |
+| compositor         | _picom/compton_                         |
+| browser            | _qutebrowser_                           |
+| notifications      | _dunst_                                 |
+|                    | **files/text/docs/editors**             |
+| text editor        | _[n]vi[m]_                              |
+| :arrow_up:         | _vscod[e/ium]_                          |
+| file manager       | _PCManFM_                               |
+| pdf viewer         | _zathura_                               |
+| language formatter | _uncrustify_                            |
+|                    | **miscellaneous**                       |
+| key-binds          | _sxhkd_                                 |
+| tmux               | _tmux_                                  |
+| sys-[monitor/info] | _neofetch_                              |
+| :arrow_up:         | _bottom_                                |
 
 **note**: names described above are just the official given names of the
 software; package names varies depending on the `*nix` distribution
 
-- :first_quarter_moon: represents the status of the program
-
-  - :large_blue_circle: the program's config **is** currently being:
-    - used
-    - updated
-  - :red_circle: the program's config **is not** currently being used:
-
-    - _may_ be outdated \*
-    - _may_ not be installed on my system anymore
-
-  - not using **_x_** program anymore doesn't mean the configuration files
-    will not work; if i'm leaving the configuration file is most likely because
-    i may return to use mentioned software
-
 ## installation
 
-these _.files_ may be installed using [uarbs](https://0x0.st/X86L), please refer
-to the linked repo for instructions
+these _.files_ may be installed using [uarbs](https://0x0.st/X86L), please
+refer to the linked repo for instructions
 
 you can also `git clone` (alternatively manually download) this repo and
 copy the contents you're interested in
@@ -85,4 +72,4 @@ git clone https://github.com/anntnzrb/_nixrice.git
 ## license
 
 this repo is under the [GPL-2.0](https://0x0.st/HNVH) license, i encourage you
-to experiment, _fork_, _modify_, _share_, _etc_ this content
+to _experiment_, _fork_, _modify_ & _share_, this content
