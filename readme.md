@@ -66,7 +66,7 @@ you can also `git clone` (alternatively manually download) this repo and
 copy the contents you're interested in
 
 ```console
-git clone https://github.com/anntnzrb/_nixrice.git
+git clone https://gitlab.com/anntnzrb/_nixrice.git
 ```
 
 ## license
