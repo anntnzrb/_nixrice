@@ -23,17 +23,18 @@ textype() {
 
 case "$EXT" in
 [0-9]) preconv "$FILE" | refer -PS -e | groff -mandoc -T pdf >"$BASE".pdf ;;
-c) cc "$FILE" -o "$BASE" && "$BASE" ;;
-md) if [ -x "$(command -v lowdown)" ] >/dev/null; then
+md) if [ -x "$(command -v lowdown)" ]; then
     lowdown -d nointem -e super "$FILE" -Tms | groff -mpdfmark -ms -kept >"$BASE".pdf
-elif [ -x "$(command -v groffdown)" ] >/dev/null; then
+elif [ -x "$(command -v groffdown)" ]; then
     groffdown -i "$FILE" | groff >"$BASE.pdf"
 else
     pandoc "$FILE" --pdf-engine=xelatex -o "$BASE".pdf
 fi ;;
+c) cc "$FILE" -o "$BASE" && "$BASE" ;;
+cpp) g++ "$FILE" -o "$BASE" && "$BASE" ;;
+hs) ghc -o "$BASE" "$FILE" && "$BASE" ;;
 mom) preconv "$FILE" | refer -PS -e | groff -mom -kept -T pdf >"$BASE".pdf ;;
 ms) preconv "$FILE" | refer -PS -e | groff -me -ms -kept -T pdf >"$BASE".pdf ;;
-hs) ghc -o $BASE $FILE && "$BASE" ;;
 py) python3 "$FILE" ;;
 rs) cargo build ;;
 sent) setsid -f sent "$FILE" 2>/dev/null ;;
