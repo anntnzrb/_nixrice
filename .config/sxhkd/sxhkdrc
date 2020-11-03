@@ -56,7 +56,7 @@ super + shift + x
     sudo sysfns
 # toggle mute
 XF86AudioMute
-    pamixer -t
+    pamixer -t && pkill -RTMIN+1 dwmblocks
 # decrease/increase volume
 XF86Audio{Lower,Raise}Volume
     pamixer {-d 5,-i 5} && pkill -RTMIN+1 dwmblocks
