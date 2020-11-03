@@ -35,6 +35,7 @@ this table displays _most_ of the programs i have configuration files for:
 | terminal emulator  | _st_ ([external](https://0x0.st/8b4q))  |
 | :arrow_up:         | _alacritty_                             |
 | shell              | _zsh_                                   |
+| multiplexer        | _tmux_                                  |
 |                    | **graphical**                           |
 | window manager     | _dwm_ ([external](https://0x0.st/X869)) |
 | :arrow_up:         | _i3_                                    |
@@ -50,7 +51,6 @@ this table displays _most_ of the programs i have configuration files for:
 | language formatter | _uncrustify_                            |
 |                    | **miscellaneous**                       |
 | key-binds          | _sxhkd_                                 |
-| tmux               | _tmux_                                  |
 | sys-[monitor/info] | _neofetch_                              |
 | :arrow_up:         | _bottom_                                |
 
