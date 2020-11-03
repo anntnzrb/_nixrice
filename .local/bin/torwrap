@@ -4,25 +4,31 @@
 # launches and enables torrent if inactive
 # **
 
-# *****************************************************************************
+# -----------------------------------------------------------------------------
 # preamble
-# *****************************************************************************
-# source utility functions
+# -----------------------------------------------------------------------------
+
 . utils
 
-# *****************************************************************************
+# -----------------------------------------------------------------------------
 # functions
-# *****************************************************************************
+# -----------------------------------------------------------------------------
+
 # checks if dunst is installed; recieves parameters
 dunst_notify() {
     is_installed notify-send && is_running Xorg && notify-send -t "$1" "$2"
 }
 
-# *****************************************************************************
+# -----------------------------------------------------------------------------
 # main
-# *****************************************************************************
-is_installed tremc && is_installed transmission-cli && {
-    ! is_running transmission-daemon && transmission-daemon &&
+# -----------------------------------------------------------------------------
+
+if is_installed tremc && is_installed transmission-cli; then
+    if ! is_running transmission-daemon; then
+        transmission-daemon
         dunst_notify 3 "Starting torrent daemon..."
-    setsid "$TERMINAL" -e tremc
-} || exit 0
+        setsid "$TERMINAL" -e tremc
+    fi
+else
+    exit 0
+fi
