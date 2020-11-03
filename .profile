@@ -17,8 +17,10 @@ export PATH="$PATH:$(du "$HOME/.local/bin/" | cut -f2 | paste -sd ':')"
 # -----------------------------------------------------------------------------
 # defaults
 # -----------------------------------------------------------------------------
+
+{ [ -x "$(command -v "nvim")" ] && export EDITOR="nvim"; } ||
+    export EDITOR="vi"
 export TERMINAL="st"
-export EDITOR="nvim"
 export BROWSER="qutebrowser"
 export FILE="pcmanfm"
 export READER="zathura"
@@ -32,6 +34,7 @@ export ZDOTDIR="$HOME/.config/sh/zsh"
 # -----------------------------------------------------------------------------
 # ~ clean-up
 # -----------------------------------------------------------------------------
+
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
