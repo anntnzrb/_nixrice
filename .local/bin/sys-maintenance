@@ -1,7 +1,9 @@
 #!/bin/sh
 
 # **
-# clean orphans and other cache stuff
+# system maintenance script
+#
+# updates, cleans orphans and other cache stuff
 # *
 
 # -----------------------------------------------------------------------------
@@ -42,24 +44,27 @@ print_cached_pkgs() {
 clear_cache
 
 # arch-based
-[ -x "$(command -v "pacman")" ] && {
-    # display cached packages
+if [ -x "$(command -v "pacman")" ]; then
+    # display cached packages (after)
     print_cached_pkgs "arch"
+
+    # update the system
+    pacman -Syyu --noconfirm
 
     # clear pkg cache
-    pacman -Scc
     paccache -r
+    paccache -rk1 -ruk0
+    pacman -Scc
 
     # clear orphans
-    pacman -Rns --noconfirm $(pacman -Qdqt)
+    pacman -Qdqt | pacman -Rns -
 
-    # display cached packages after
+    # display cached packages (after)
     print_cached_pkgs "arch"
-}
 
 # void
-[ -x "$(command -v "xbps-install")" ] && {
-    # display cached packages
+elif [ -x "$(command -v "xbps-install")" ]; then
+    # display cached packages (before)
     print_cached_pkgs "xbps"
 
     # clear pkg cache
@@ -67,6 +72,8 @@ clear_cache
     # clear old kernels
     vkpurge rm all
 
-    # display cached packages after
+    # display cached packages (after)
     print_cached_pkgs "xbps"
-}
+else
+    printf 'no maintenance script for this system\n'
+fi
