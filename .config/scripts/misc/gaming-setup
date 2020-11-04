@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# run with elevated privileges if not already
+elevate_perms() { [ "$(id -u)" -ne 0 ] && exec sudo "$0" "$@"; }
+
+# arch-based
+if [ -x "$(command -v "pacman")" ]; then
+    PKG_INSTALL="yay --needed --noconfirm -Suy"
+
+    # quit if multilib if disabled
+    if grep -q "^#\[multilib\]$" "/etc/pacman.conf"; then
+        printf 'multilib repo is disabled, enable it @ /etc/pacman.conf\n'
+        exit 1
+    fi
+
+    # lutris
+    $PKG_INSTALL "lutris"
+
+    # steam
+    $PKG_INSTALL "steam"
+
+    # wine
+    $PKG_INSTALL "wine" "wine-gecko" "wine-mono"
+fi
