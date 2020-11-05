@@ -9,50 +9,52 @@
 # ░██       ██       ░░██ ░██  ░██░░██████  ███  ░██
 # ░░       ░░         ░░  ░░   ░░  ░░░░░░  ░░░   ░░
 
-# run with elevated privileges if not already
-elevate_perms() { [ "$(id -u)" -ne 0 ] && exec sudo "$0" "$@"; }
+# -----------------------------------------------------------------------------
+# preamble
+# -----------------------------------------------------------------------------
 
-# arch-based
-[ -x "$(command -v "yay")" ] && {
-    PKG_INSTALL="yay --needed --noconfirm -Syy"
+# source utilities
+# shellcheck disable=SC1090
+. "$(dirname "$(dirname "$(readlink -f "$0")")")/utils"
 
-    # dependencies
-    $PKG_INSTALL \
-        python3 \
-        python-pip
-}
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
 
-# void
-[ -x "$(command -v "xbps-install")" ] && {
-    elevate_perms
+case $SYSTEM in
+arch)
+    # tools
+    $PKG_INSTALL "python4" "python-pip"
+    ;;
 
-    # dependencies
-    xbps-install -Sy \
-        python3 \
-        python3-pip
-}
+void)
+    # elevate permissions
+    elevate_perms "$@"
 
-# debian-based
-[ -x "$(command -v "apt")" ] && {
-    elevate_perms
+    # tools
+    $PKG_INSTALL "python3" "python-pip"
+    ;;
 
-    # dependencies
-    apt-get install -y \
-        python3 \
-        python3-pip
-}
+debian)
+    # elevate permissions
+    elevate_perms "$@"
 
+    # tools
+    $PKG_INSTALL "python3" "python-pip"
+    ;;
+esac
+
+# == post-install
 # language server
-python3 -m pip install -U setuptools python-language-server
+python3 -m pip install -U "setuptools" "python-language-server"
 
 # [vim::ALE] (fixer)
-python3 -m pip install -U black
+python3 -m pip install -U "black"
 
 # libs
 python3 -m pip install -U \
-    pylint \
-    pynvim \
-    rope \
-    numpy \
-    matplotlib \
-    --user
+    "pylint" \
+    "pynvim" \
+    "rope" \
+    "numpy" \
+    "matplotlib"

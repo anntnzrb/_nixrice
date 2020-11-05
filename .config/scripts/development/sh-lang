@@ -9,35 +9,43 @@
 #  ██████ ░██  ░██
 # ░░░░░░  ░░   ░░
 
-# run with elevated privileges if not
-elevate_perms() { [ "$(id -u)" -ne 0 ] && exec sudo "$0" "$@"; }
+# -----------------------------------------------------------------------------
+# preamble
+# -----------------------------------------------------------------------------
 
-# arch-based
-[ -x "$(command -v "yay")" ] && {
-    PKG_INSTALL="yay --needed --noconfirm -Syy"
+# source utilities
+# shellcheck disable=SC1090
+. "$(dirname "$(dirname "$(readlink -f "$0")")")/utils"
 
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
+
+case $SYSTEM in
+arch)
     # [vim::ALE] (linter)
-    $PKG_INSTALL shellcheck
+    $PKG_INSTALL "shellcheck"
 
     # [vim::ALE] (formatter)
-    $PKG_INSTALL shfmt
-}
+    $PKG_INSTALL "shfmt"
+    ;;
 
-# void
-[ -x "$(command -v "xbps-install")" ] && {
-    elevate_perms
+void)
+    # elevate permissions
+    elevate_perms "$@"
 
     # [vim::ALE] (linter)
-    xbps-install -Sy shellcheck
+    $PKG_INSTALL "shellcheck"
 
     # [vim::ALE] (formatter)
-    xbps-install -Sy shfmt
-}
+    $PKG_INSTALL "shfmt"
+    ;;
 
-# debian-based
-[ -x "$(command -v "apt")" ] && {
-    elevate_perms
+debian)
+    # elevate permissions
+    elevate_perms "$@"
 
     # [vim::ALE] (linter)
-    apt-get install shellcheck -y
-}
+    $PKG_INSTALL "shellcheck"
+    ;;
+esac

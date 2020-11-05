@@ -1,17 +1,24 @@
 #!/bin/sh
 
-# run with elevated privileges if not already
-elevate_perms() { [ "$(id -u)" -ne 0 ] && exec sudo "$0" "$@"; }
+# -----------------------------------------------------------------------------
+# preamble
+# -----------------------------------------------------------------------------
 
-# arch-based
-if [ -x "$(command -v "pacman")" ]; then
-    PKG_INSTALL="yay --needed --noconfirm -Suy"
+# source utilities
+# shellcheck disable=SC1090
+. "$(dirname "$(dirname "$(readlink -f "$0")")")/utils"
 
-    # quit if multilib if disabled
-    if grep -q "^#\[multilib\]$" "/etc/pacman.conf"; then
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
+
+case $SYSTEM in
+arch)
+    # quit if multilib repo is disabled
+    grep -q "^#\[multilib\]$" "/etc/pacman.conf" && {
         printf 'multilib repo is disabled, enable it @ /etc/pacman.conf\n'
         exit 1
-    fi
+    }
 
     # lutris
     $PKG_INSTALL "lutris"
@@ -21,4 +28,5 @@ if [ -x "$(command -v "pacman")" ]; then
 
     # wine
     $PKG_INSTALL "wine" "wine-gecko" "wine-mono"
-fi
+    ;;
+esac
