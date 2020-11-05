@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# **
+# checks if script was ran as SU, elevates if not
+# *
+elevate_perms() { [ "$(id -u)" -ne 0 ] && exec sudo "$0" "$@"; }
+
+# **
+# sets settings based on detected system
+#
+# NOTE: rolling release distros do not do partial upgrades;
+# full system upgrade for stability
+# *
+# ensure these are not inherited by env
+export SYSTEM=
+export PKG_INSTALL=
+export PKG_INSTALL_ALT=
+
+# arch-based
+if [ -x "$(command -v "yay")" ]; then
+    SYSTEM="arch"
+    PKG_INSTALL="yay --needed --noconfirm -Suy"
+    PKG_INSTALL_ALT="pacman --needed --noconfirm -Suy"
+
+# void
+elif [ -x "$(command -v "xbps-install")" ]; then
+    SYSTEM="void"
+    PKG_INSTALL="xbps-install -Suy"
+
+# debian-based
+elif [ -x "$(command -v "apt-get")" ]; then
+    SYSTEM="debian"
+    PKG_INSTALL="apt-get update && apt-get install -y"
+fi

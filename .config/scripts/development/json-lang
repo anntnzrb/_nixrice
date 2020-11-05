@@ -1,24 +1,44 @@
 #!/bin/sh
 
-# arch-based
-[ -x "$(command -v "yay")" ] && {
+#     ██
+#    ░░
+#     ██  ██████  ██████  ███████
+#    ░██ ██░░░░  ██░░░░██░░██░░░██
+#    ░██░░█████ ░██   ░██ ░██  ░██
+#  ██░██ ░░░░░██░██   ░██ ░██  ░██
+# ░░███  ██████ ░░██████  ███  ░██
+#  ░░░  ░░░░░░   ░░░░░░  ░░░   ░░
+
+# -----------------------------------------------------------------------------
+# preamble
+# -----------------------------------------------------------------------------
+
+# source utilities
+# shellcheck disable=SC1090
+. "$(dirname "$(dirname "$(readlink -f "$0")")")/utils"
+
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
+
+case $SYSTEM in
+arch)
     # dependencies
-    yay --needed --noconfirm -Syy nodejs
+    $PKG_INSTALL "nodejs"
 
-    ## ALE
-    # fixer
+    # [vim::ALE] (formatter)
+    $PKG_INSTALL "fixjson"
+    ;;
 
-    # FIXME: 'UNTESTED' [Sun, 19 Jul @ 19:04]
-    yay --needed --noconfirm -Syy fixjson
-}
+void)
+    # elevate permissions
+    elevate_perms "$@"
 
-# void
-[ -x "$(command -v "xbps-install")" ] && {
     # dependencies
-    sudo xbps-install -Sy nodejs
+    $PKG_INSTALL "nodejs"
 
-    ## ALE
-    # fixer
-    echo 'installing via npm...'
-    sudo npm install -g fixjson
-}
+    # [vim::ALE] (formatter)
+    printf 'installing via npm...\n'
+    npm install -g "fixjson"
+    ;;
+esac

@@ -1,66 +1,103 @@
 #!/bin/sh
 
-install_vscext() {
-    [ -x "$(command -v "codium")" ] && [ ! -x "$(command -v "code-oss")" ] &&
-        [ ! -x "$(command -v "code")" ] && codium --install-extension "$1"
-    [ -x "$(command -v "code-oss")" ] && [ ! -x "$(command -v "codium")" ] &&
-        [ ! -x "$(command -v "code")" ] && code-oss --install-extension "$1"
-    [ -x "$(command -v "code")" ] && [ ! -x "$(command -v "codium")" ] &&
-        [ ! -x "$(command -v "code-oss")" ] && code --install-extension "$1"
+# -----------------------------------------------------------------------------
+# functions
+# -----------------------------------------------------------------------------
+
+# checks if program is installed
+is_installed() { [ -x "$(command -v "$1")" ]; }
+
+detect_vs_ver() {
+    # just quit if none installed
+    ! is_installed "code-oss" && ! is_installed "codium" && {
+        printf 'no version of VSCode found...\n'
+        exit 1
+    }
+
+    # find out which version of VSCode is installed
+    if is_installed "codium"; then
+        VSCODE_VER="codium"
+    elif is_installed "code-oss"; then
+        VSCODE_VER="code-oss"
+    fi
 }
+
+install_vscext() { $VSCODE_VER --install-extension "$1"; }
 
 # -----------------------------------------------------------------------------
 # general
 # -----------------------------------------------------------------------------
+
+# detect which version of VSCode is intalled
+detect_vs_ver
+
+# echo info
+printf "found VSCode with the command '%s'\n" "$VSCODE_VER"
+
 # intellisense for various languages
 install_vscext "VisualStudioExptTeam.vscodeintellicode"
 
-# Code Runner
+# code runner
 install_vscext "formulahendry.code-runner"
 
 # vi key-binds
 install_vscext "vscodevim.vim"
 
-# GitLens (visual git)
+# gitlens (visual git)
 install_vscext "eamodio.gitlens"
 
 # -----------------------------------------------------------------------------
 # appearance
 # -----------------------------------------------------------------------------
+
 # themes & icons
 install_vscext "teabyii.ayu"
 install_vscext "robertrossmann.remedy"
 install_vscext "fooxly.themeswitch"
 
 # -----------------------------------------------------------------------------
-# Shell
+# shell
 # -----------------------------------------------------------------------------
+
 install_vscext "timonwong.shellcheck"
 
 # -----------------------------------------------------------------------------
-# C/C++
+# c/c++
 # -----------------------------------------------------------------------------
+
 install_vscext "ms-vscode.cpptools"
 
 # -----------------------------------------------------------------------------
-# Java
+# java
 # -----------------------------------------------------------------------------
+
 install_vscext "vscjava.vscode-java-pack"
 
 # -----------------------------------------------------------------------------
-# Markdown
+# markdown
 # -----------------------------------------------------------------------------
+
 install_vscext "yzhang.markdown-all-in-one"
 install_vscext "davidanson.vscode-markdownlint"
 
 # -----------------------------------------------------------------------------
 # formatting
 # -----------------------------------------------------------------------------
+
 # uncrustify (formatter/fixer)
 install_vscext "laurenttreguier.uncrustify"
 
 # -----------------------------------------------------------------------------
 # spell checking
 # -----------------------------------------------------------------------------
+
 install_vscext "streetsidesoftware.code-spell-checker"
 install_vscext "streetsidesoftware.code-spell-checker-spanish"
+
+# -----------------------------------------------------------------------------
+# debug
+# -----------------------------------------------------------------------------
+
+# print installed extensions
+printf '\n\n...printing installed extensions...\n'
+$VSCODE_VER --list-extensions
