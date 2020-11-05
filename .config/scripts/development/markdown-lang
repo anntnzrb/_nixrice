@@ -9,32 +9,36 @@
 #  ███ ░██ ░██░░████████░███   ░██░░██░░██████░░██████  ███░ ░░░██ ███  ░██
 # ░░░  ░░  ░░  ░░░░░░░░ ░░░    ░░  ░░  ░░░░░░  ░░░░░░  ░░░    ░░░ ░░░   ░░
 
-# run with elevated privileges if not already
-elevate_perms() { [ "$(id -u)" -ne 0 ] && exec sudo "$0" "$@"; }
+# -----------------------------------------------------------------------------
+# preamble
+# -----------------------------------------------------------------------------
 
-# arch-based
-[ -x "$(command -v "yay")" ] && {
-    PKG_INSTALL="yay --needed --noconfirm -Syy"
+# source utilities
+# shellcheck disable=SC1090
+. "$(dirname "$(dirname "$(readlink -f "$0")")")/utils"
 
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
+
+case $SYSTEM in
+arch)
     # dependencies
-    $PKG_INSTALL \
-        nodejs \
-        yarn
+    $PKG_INSTALL "nodejs" "yarn"
 
     # [vim::ALE] (formatter)
-    $PKG_INSTALL prettier
-}
+    $PKG_INSTALL "prettier"
+    ;;
 
-# void
-[ -x "$(command -v "xbps-install")" ] && {
-    elevate_perms
+void)
+    # elevate permissions
+    elevate_perms "$@"
 
     # dependencies
-    xbps-install -Sy \
-        nodejs \
-        yarn
+    $PKG_INSTALL "nodejs" "yarn"
 
     # [vim::ALE] (formatter)
-    echo 'installing via npm...'
-    sudo npm install --global prettier
-}
+    printf 'installing via npm...\n'
+    npm install -g "prettier"
+    ;;
+esac

@@ -1,7 +1,29 @@
 #!/bin/sh
 
-git clone -q https://github.com/xero/figlet-fonts.git ~/temp/figlet-fonts || exit
-sudo mv -fv ~/temp/figlet-fonts/* /usr/share/figlet/ >/dev/null || exit
-rm -fr ~/temp/figlet-fonts/ >/dev/null
+# -----------------------------------------------------------------------------
+# functions
+# -----------------------------------------------------------------------------
 
-printf '\nfiglet fonts were downloaded and applied...\n'
+# **
+# checks if script was ran as SU, elevates if not
+# *
+
+elevate_perms() { [ "$(id -u)" -ne 0 ] && exec sudo "$0" "$@"; }
+
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
+
+# elevate permissions
+elevate_perms "$@"
+
+# set download folder
+DWNL_FOLDER="/tmp/figlet-fonts"
+
+# download & install
+git clone -q "https://github.com/xero/figlet-fonts.git" "$DWNL_FOLDER" ||
+    exit 1
+cp -Tfr "$DWNL_FOLDER/." "/usr/share/figlet/" || exit 1
+rm -fr "$DWNL_FOLDER"
+
+printf 'figlet fonts were downloaded and applied...\n'
