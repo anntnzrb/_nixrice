@@ -23,6 +23,8 @@ alias \
     mv="mv -iv" \
     rm="rm -v" \
     rmfr="rm -frv" \
+    tree="tree -CFlq --dirsfirst" \
+    treed="tree -CFdlq --dirsfirst" \
     zip="zip -rv"
 
 # shortcuts
