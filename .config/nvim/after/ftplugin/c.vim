@@ -5,8 +5,8 @@
 " ░░█████
 "  ░░░░░
 
-" .h files ac C instead of cpp
-au BufRead,BufNewFile *.h set filetype=c
+" general
+compiler c
 
 " [scrooloose/nerdcommenter]
 let g:NERDCustomDelimiters = { 'c': { 'left': '/*','right': '*/' } }

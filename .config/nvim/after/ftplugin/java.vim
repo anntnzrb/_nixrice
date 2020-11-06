@@ -8,11 +8,9 @@
 "  ░░░   ░░░░░░░░    ░░     ░░░░░░░░
 
 " [scrooloose/nerdcommenter]
-"TODO
 let g:NERDAltDelims_java = 1
 
 " [dense-analysis/ale]
-let g:ale_linters = {'java': []}
 let g:ale_fixers = {'java': ['uncrustify']}
 
 " [neoclide/coc.nvim]
