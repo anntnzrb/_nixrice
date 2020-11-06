@@ -151,6 +151,7 @@ Plug 'kovetskiy/sxhkd-vim'
 
 " == lsp/intellisense/completion/whatever
 Plug 'dense-analysis/ale'
+Plug 'editorconfig/editorconfig-vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " == git
