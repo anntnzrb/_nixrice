@@ -27,7 +27,7 @@ if is_installed tremc && is_installed transmission-cli; then
     if ! is_running transmission-daemon; then
         transmission-daemon
         dunst_notify 3 "Starting torrent daemon..."
-        setsid "$TERMINAL" -e tremc
+        setsid -f "$TERMINAL" -e tremc
     fi
 else
     exit 0
