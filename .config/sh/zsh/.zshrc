@@ -110,10 +110,39 @@ done
 # uncrustify config (for some reason this needs to be sourced every time)
 export UNCRUSTIFY_CONFIG="$HOME/.config/uncrustify/uncrustify.cfg"
 
-# source settings/extensions (should be at last)
-# checks if iteration is not a directory first
-for cfg in "$ZDOTDIR"/lib/* "$ZDOTDIR"/lib/extensions/*; do
-    [ ! -d "$cfg" ] && . "$cfg"
+# -----------------------------------------------------------------------------
+# prompt
+# -----------------------------------------------------------------------------
+
+# directory of prompts
+PROMPT_DIR="$ZDOTDIR/lib/prompt"
+
+# == typewritten
+# theme
+export TYPEWRITTEN_PROMPT_LAYOUT="pure"
+export TYPEWRITTEN_COLOR_MAPPINGS="primary:#9580FF;secondary:#8AFF80;accent:#FFFF80;info_negative:#FA3232;info_positive:#8AFF80;info_neutral_1:#969696;info_neutral_2:#FFFF80;info_special:#80FFEA"
+export TYPEWRITTEN_SYMBOL="◞◜·◦°"
+
+# source the prompt (should be after settings)
+. $PROMPT_DIR/typewritten/typewritten.zsh
+
+# -----------------------------------------------------------------------------
+# extensions (should be at last)
+# -----------------------------------------------------------------------------
+
+# == autosuggestions
+# suggestion strategy
+export ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+
+# disable suggestions for large buffers
+export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+
+# asynchronous mode
+export ZSH_AUTOSUGGEST_USE_ASYNC=1
+
+# source extensions
+for ext in "$ZDOTDIR"/lib/extensions/*/*; do
+    [ ! -d "$ext" ] && . "$ext"
 done
 
 # -----------------------------------------------------------------------------
@@ -121,3 +150,4 @@ done
 # -----------------------------------------------------------------------------
 
 # https://0x0.st/oCRf
+[ -f "/home/eva/.ghcup/env" ] && source "/home/eva/.ghcup/env" # ghcup-env
