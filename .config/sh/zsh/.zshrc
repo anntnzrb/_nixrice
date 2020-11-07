@@ -150,4 +150,3 @@ done
 # -----------------------------------------------------------------------------
 
 # https://0x0.st/oCRf
-[ -f "/home/eva/.ghcup/env" ] && source "/home/eva/.ghcup/env" # ghcup-env
