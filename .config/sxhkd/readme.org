@@ -1,191 +1,192 @@
 #+TITLE: sxhkd
-#+PROPERTY: header-args :comments org
+#+OPTIONS: toc:nil
+#+PROPERTY: header-args :comments org :results silent
 
-* Overview
-[[https://github.com/baskerville/sxhkd][sxhdk]] is a hotkey daemon for /X/. Having my keybinds isolated from my window
+#+TOC: headlines 8 insert TOC here, with eight headline levels
+
+* overview
+[[https://github.com/baskerville/sxhkd][sxhdk]] is a hotkey daemon for /X/. having my keybinds isolated from my window
 manager allow me to transition between graphical environments without
-configuring them individually on each of them. This program allows me to make
+configuring them individually on each of them. this program allows me to make
 them portable.
 
-* Keybinds
+* keybinds
 
-** Applications
+** applications
 
-*** Terminal Emulator
+*** terminal emulator
 
-Set by =$TERMINAL= environment variable
-#+BEGIN_SRC sh :tangle sxhkdrc
+set by =$TERMINAL= environment variable
+#+begin_src sh :tangle sxhkdrc
 super + Return
   $TERMINAL
-#+END_SRC
+#+end_src
 
-*** Text Editor
+*** text editor
 
-/Text editor/, but just as a generic way to call it. This is a terminal-based
+/text editor/, but just as a generic way to call it. this is a terminal-based
 text editor, set by =$EDITOR= variable
-#+BEGIN_SRC sh :tangle sxhkdrc
+#+begin_src sh :tangle sxhkdrc
 super + v
   $TERMINAL -e $EDITOR
-#+END_SRC
+#+end_src
 
-If =$EDITOR= somehow has an emacs script then this will run its GUI version
-#+BEGIN_SRC sh :tangle sxhkdrc
+if =$EDITOR= somehow has an emacs script then this will run its GUI version
+#+begin_src sh :tangle sxhkdrc
 super + shift + v
   $EDITOR
-#+END_SRC
+#+end_src
 
-*** Browser
+*** browser
 
-A graphical browser, set by =$BROWSER=
-#+BEGIN_SRC sh :tangle sxhkdrc
+a graphical browser, set by =$BROWSER=
+#+begin_src sh :tangle sxhkdrc
 super + w
   $BROWSER
-#+END_SRC
+#+end_src
 
-*** Applicaction Launcher
+*** applicaction launcher
 
-A run dialog & app launcher precisely
-#+BEGIN_SRC sh :tangle sxhkdrc
+a run dialog & app launcher precisely
+#+begin_src sh :tangle sxhkdrc
 super + d
   dmenu_run -i -p 'summon:'
-#+END_SRC
+#+end_src
 
-*** File Manager
+*** file manager
 
-A graphical file manager, set by =$FILE=
-#+BEGIN_SRC sh :tangle sxhkdrc
+a graphical file manager, set by =$FILE=
+#+begin_src sh :tangle sxhkdrc
 super + e
   $FILE
-#+END_SRC
+#+end_src
 
-*** RSS Feed
+*** rss feed
 
-CLI RSS feeder
-#+BEGIN_SRC sh :tangle sxhkdrc
+CLI rss feeder
+#+begin_src sh :tangle sxhkdrc
 super + n
   $TERMINAL -e newsboat
-#+END_SRC
+#+end_src
 
-** Controls
+** controls
 
-*** Audio
+*** audio
 
 CLI to control PulseAudio
-#+BEGIN_SRC sh :tangle sxhkdrc
+#+begin_src sh :tangle sxhkdrc
 super + p
   $TERMINAL -e pulsemixer
-#+END_SRC
+#+end_src
 
-Mute
-#+BEGIN_SRC sh :tangle sxhkdrc
+mute
+#+begin_src sh :tangle sxhkdrc
 XF86AudioMute
   pamixer -t && pkill -RTMIN+1 dwmblocks
-#+END_SRC
+#+end_src
 
-Increase/Decrease
-#+BEGIN_SRC sh :tangle sxhkdrc
+increase/decrease
+#+begin_src sh :tangle sxhkdrc
 XF86Audio{Lower,Raise}Volume
   pamixer -{d,i} 5 && pkill -RTMIN+1 dwmblocks
-#+END_SRC
+#+end_src
 
-#+RESULTS:
+*** brightness
 
-*** Brightness
-
-Increase/Decrease
-#+BEGIN_SRC sh :tangle sxhkdrc
+increase/decrease
+#+begin_src sh :tangle sxhkdrc
 XF86MonBrightness{Down,Up}
   xbacklight -{dec,inc} 10 && pkill -RTMIN+2 dwmblocks
-#+END_SRC
+#+end_src
 
-** Tools
+** tools
 
-*** System Monitor
+*** system monitor
 
 CLI system activity monitor
-#+BEGIN_SRC sh :tangle sxhkdrc
+#+begin_src sh :tangle sxhkdrc
 super + shift + Escape
   $TERMINAL -e $SYS_MONITOR
-#+END_SRC
+#+end_src
 
-*** Display Selector Dropdown
+*** display selector dropdown
 
-#+BEGIN_SRC sh :tangle sxhkdrc
+#+begin_src sh :tangle sxhkdrc
 super + F3
   displayselect
-#+END_SRC
+#+end_src
 
-*** Emoji / Unicode List Dropdown
+*** emoji / unicode list dropdown
 
-#+BEGIN_SRC sh :tangle sxhkdrc
+#+begin_src sh :tangle sxhkdrc
 super + grave
   dmenuunicode
-#+END_SRC
+#+end_src
 
-*** Screenshot Utility Dropdown
+*** screenshot utility dropdown
 
-#+BEGIN_SRC sh :tangle sxhkdrc
+#+begin_src sh :tangle sxhkdrc
 Print
   maimpick
-#+END_SRC
+#+end_src
 
-*** Edit Config Files Dropdown
+*** edit config files dropdown
 
-#+BEGIN_SRC sh :tangle sxhkdrc
+#+begin_src sh :tangle sxhkdrc
 super + shift + period
   edit-cfgs
-#+END_SRC
+#+end_src
 
-*** System Options Dropdown
+*** system options dropdown
 
-#+BEGIN_SRC sh :tangle sxhkdrc
+#+begin_src sh :tangle sxhkdrc
 super + shift + x
   sudo sysfns
-#+END_SRC
+#+end_src
 
-*** Network Tools
+*** network tools
 
 CLI for /Network Manager/
-#+BEGIN_SRC sh :tangle sxhkdrc
+#+begin_src sh :tangle sxhkdrc
 super + F12
   $TERMINAL -e sudo nmtui
-#+END_SRC
+#+end_src
 
-*** Transmission Tools
+*** transmission tools
 
-Toggle the /Transmission/ daemon with =F6= and launch the CLI with =F7=
-#+BEGIN_SRC sh :tangle sxhkdrc
+toggle the /transmission/ daemon with =f6= and launch the cli with =f7=
+#+begin_src sh :tangle sxhkdrc
 super + F{6,7}
  {td-toggle,torwrap}
-#+END_SRC
+#+end_src
 
-*** Mouting Tools
+*** mouting tools
 
-#+BEGIN_SRC sh :tangle sxhkdrc
+#+begin_src sh :tangle sxhkdrc
 super + F{9,10}
     {dmenumount,dmenuumount}
-#+END_SRC
+#+end_src
 
-*** Kill Current Window
+*** kill current window
 
-Kills currently focused window, an alternative to window manager's built-in
-window close functionaly. This should be used as last resource
-#+BEGIN_SRC sh :tangle sxhkdrc
+kills currently focused window, an alternative to window manager's built-in
+window close functionaly. this should be used as last resource
+#+begin_src sh :tangle sxhkdrc
 alt + F4
   kill -15 $(xdotool getactivewindow getwindowpid)
-#+END_SRC
+#+end_src
 
-*** Kill Xorg Session
+*** kill xorg session
 
-Meant to kill the X server in an emergency situation
-#+BEGIN_SRC sh :tangle sxhkdrc
+meant to kill the x server in an emergency situation
+#+begin_src sh :tangle sxhkdrc
 super + control + alt + Escape
   pkill -15 "Xorg"
-#+END_SRC
+#+end_src
 
-* Reload configuration
+* reload configuration
 
 =sxhkd= reloads upon receiving signal =USR1=
-#+BEGIN_SRC sh :results none
+#+begin_src sh
 pkill -USR1 "sxhkd"
-#+END_SRC
+#+end_src
