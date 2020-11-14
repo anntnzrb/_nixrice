@@ -333,7 +333,8 @@ create TOCs with different settings
   :after lsp-mode
   :config
   (add-to-list 'eglot-server-programs '((c-mode) "clangd"))
-  (add-hook 'c-mode-hook 'eglot-ensure))
+  :hook
+  (c-mode-hook . eglot-ensure))
 #+end_src
 
 *** Python
@@ -400,8 +401,8 @@ alternative undo system for emacs (enables evil-mode redo)
 (use-package evil-surround
   :requires evil
   :after evil
-  :config
-  (global-evil-surround-mode 1))
+  :custom
+  (global-evil-surround-mode t))
 #+end_src
 
 ** helm
