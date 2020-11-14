@@ -1,8 +1,13 @@
 #+TITLE: sxhkd
-#+OPTIONS: toc:nil
 #+PROPERTY: header-args :comments org :results silent
 
-#+TOC: headlines 8 insert TOC here, with eight headline levels
+* table of contents                                       :TOC_2_gh:noexport:
+- [[#overview][overview]]
+- [[#keybinds][keybinds]]
+  - [[#applications][applications]]
+  - [[#controls][controls]]
+  - [[#tools][tools]]
+- [[#reload-configuration][reload configuration]]
 
 * overview
 [[https://github.com/baskerville/sxhkd][sxhdk]] is a hotkey daemon for /X/. having my keybinds isolated from my window
