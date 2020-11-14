@@ -132,10 +132,15 @@ c.downloads.remove_finished = 5000
 # search engines
 c.url.searchengines = {
     "DEFAULT": "https://www.duckduckgo.com/?q={}",
+    # linux
     "aw": "https://wiki.archlinux.org/index.php?search={}",
     "aur": "https://aur.archlinux.org/packages/?O=0&K={}",
     "pacman": "https://www.archlinux.org/packages/?q={}",
-    "lby": "https://lbry.tv/$/search?q={}",
+    # emacs
+    "melpa": "https://melpa.org/#/?q={}",
+    "emwiki": "https://duckduckgo.com/?q={}+site%3Aemacswiki.org",
+    # misc
+    "lbry": "https://lbry.tv/$/search?q={}",
     "yt": "https://www.youtube.com/results?search_query={}",
     "redd": "https://reddit.com/r/{}",
     "wiki": "https://www.wikipedia.org/wiki/{}",
