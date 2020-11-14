@@ -1,0 +1,501 @@
+#+TITLE: GNU Emacs configuration file
+#+AUTHOR: anntnzrb
+#+EMAIL: anntnzrb@protonmail.com
+#+OPTIONS: toc:nil
+#+PROPERTY: header-args :results silent
+#+MACRO: export-date (eval (format-time-string "%F" (current-time)))
+
+#+TOC: headlines 8 insert TOC here, with eight headline levels
+
++ created: 2020-11-07
++ updated: *{{{export-date}}}*
+
+* preamble
+
+** myself
+
+#+begin_src emacs-lisp
+(setq user-full-name "anntnzrb"
+      user-mail-address "anntnzrb@protonmail.com")
+#+end_src
+
+** repos
+
+#+begin_src emacs-lisp
+(require 'package)
+(setq package-archives '(("elpa"  . "https://elpa.gnu.org/packages/")
+                         ("melpa" . "https://melpa.org/packages/")
+                         ("org"   . "https://orgmode.org/elpa/")))
+(package-initialize)
+#+end_src
+
+only update if necessary
+
+#+begin_src emacs-lisp
+(unless package-archive-contents
+   (package-refresh-contents))
+#+end_src
+
+** use-package
+
+use =use-package= & =use-package-always-ensure= is enabled to prevent spamming
+on each package
+
+#+begin_src emacs-lisp
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+;; configure prior loading
+(eval-and-compile
+  (setq use-package-always-ensure t)
+  ;; special setting
+  (setq use-package-hook-name-suffix nil))
+
+(eval-when-compile
+  (require 'use-package))
+#+end_src
+
+* formatting
+
++ spaces over tabs
++ tab width set to =4=
++ max lenght =80=
+
+#+begin_src emacs-lisp
+(setq-default indent-tabs-mode nil
+              tab-width 4
+              fill-column 80)
+#+end_src
+
+white-spaces
+
+show trailing whitespace on the buffer and automatically delete them before
+save.
+
+#+begin_src emacs-lisp
+(setq-default show-trailing-whitespace nil)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+end_src
+
+* general settings
+
+** system
+
+*** garbage collector
+
+garbage collector emacs
+
+#+begin_src emacs-lisp
+(setq gc-cons-threshold 50000000)
+(setq large-file-warning-threshold 100000000)
+#+end_src
+
+*** prompts
+
+replace =yes-no= prompts with simpler =y/n=
+
+#+begin_src emacs-lisp
+(fset 'yes-or-no-p 'y-or-n-p)
+#+end_src
+
+*** misc
+
+reload file automatically if edited externally
+
+#+begin_src emacs-lisp
+(global-auto-revert-mode t)
+#+end_src
+
+inmediately kill current buffer
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-x k") 'kill-this-buffer)
+#+end_src
+
+** appearance
+
+*** theme
+
+#+begin_src emacs-lisp
+;; light themes
+(use-package modus-operandi-theme)
+
+;; dark themes
+(use-package modus-vivendi-theme)
+
+;; load theme
+(load-theme 'modus-vivendi t)
+#+end_src
+
+**** mode-line
+
+#+begin_src emacs-lisp
+#+end_src
+
+**** all-the-icons
+
+#+begin_src emacs-lisp
+(use-package all-the-icons)
+#+end_src
+
+**** supress modeline status
+
+#+begin_src emacs-lisp
+(use-package diminish
+  :requires use-package
+  :after use-package)
+#+end_src
+
+*** ui settings
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :init
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  :custom
+  (inhibit-splash-screen t))
+#+end_src
+
+**** lines
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (global-display-line-numbers-mode)
+  (setq display-line-numbers-type 'relative))
+#+end_src
+
+*** font
+
+#+begin_src emacs-lisp
+(set-face-attribute 'default nil :font "Fira Code Retina" :height 128)
+#+end_src
+
+** dired
+
+#+begin_src emacs-lisp
+(use-package dired
+  :ensure nil
+  :custom
+  (dired-recursive-copies 'always)
+  (dired-recursive-deletes 'always)
+  (delete-by-moving-to-trash t)
+  (dired-listing-switches
+     "-AGFhlv --group-directories-first --time-style=long-iso")
+  :hook
+  (dired-mode-hook . dired-hide-details-mode)
+  (dired-mode-hook . hl-line-mode))
+#+end_src
+
+*** appearance
+
+#+begin_src emacs-lisp
+(use-package all-the-icons-dired
+  :after all-the-icons
+  :hook (dired-mode-hook . all-the-icons-dired-mode))
+#+end_src
+
+* org-mode
+
+#+begin_src emacs-lisp
+(use-package org
+  :custom
+  ;; general
+  (org-return-follows-link nil)
+
+  ;; appearance
+  (org-ellipsis " }}}")
+  (org-hide-emphasis-markers t)
+
+  :config
+  ;; code blocks
+  (setq org-confirm-babel-evaluate nil)
+  (org-babel-do-load-languages
+  'org-babel-load-languages
+  '((emacs-lisp . t)
+    (shell      . t)
+    (C          . t)
+    (haskell    . t)
+    (python     . t)
+    (java       . t)))
+  (require 'org-tempo) ;; needed as of org-mode 9.3
+  (setq org-structure-template-alist
+        '(("src"  . "src")
+        ;; languages
+          ("el"   . "src emacs-lisp")
+          ("sh"   . "src sh")
+          ("c"    . "src c")
+          ("hs"   . "src haskell")
+          ("py"   . "src python")
+          ("java" . "src java")
+        ;; misc
+          ("cent" . "center")
+          ("comm" . "comment")
+          ("ex"   . "example")
+          ("quo"  . "quote")
+          ("verb" . "verbatim")
+          ("vers" . "verse"))))
+#+end_src
+
+** appearance
+
+improved version of org-bullets
+
+#+begin_src emacs-lisp
+(use-package org-superstar
+  :hook
+  (org-mode-hook . org-superstar-mode))
+#+end_src
+
+** extras
+
+create TOCs with different settings
+
+   #+begin_src emacs-lisp
+(use-package toc-org
+  :hook
+  (org-mode-hook . toc-org-mode))
+   #+end_src
+
+* development
+
+** LSP
+
+#+begin_src emacs-lisp
+(defun annt/lsp-init()
+  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+  (lsp-headerline-breadcrumb-mode))
+
+(use-package lsp-mode
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :hook
+  (prog-mode-hook . lsp-deferred)
+  (lsp-mode-hook  . lsp-enable-which-key-integration)
+  (lsp-mode-hook  . annt/lsp-init)
+  :commands
+  (lsp lsp-deferred))
+#+end_src
+
+*** LSP extras
+
+#+begin_src emacs-lisp
+(use-package lsp-ui
+  :requires lsp-mode
+  :after lsp-mode
+  :hook
+  (lsp-mode-hook . lsp-ui-mode)
+  :custom
+  (lsp-ui-doc-position 'bottom))
+#+end_src
+
+** Completion
+
+#+begin_src emacs-lisp
+(use-package company
+  :diminish
+  :hook
+  (prog-mode-hook . company-mode)
+  :custom
+  (company-idle-delay 0)
+  (company-minimum-prefix-length 1))
+#+end_src
+
+** Commenting
+
+#+begin_src emacs-lisp
+(use-package evil-nerd-commenter
+  :bind
+  ("M-;" . evilnc-comment-or-uncomment-lines))
+#+end_src
+
+** Snippets
+
+#+begin_src emacs-lisp
+(use-package yasnippet
+  :diminish
+  :hook
+  (prog-mode-hook . yas-minor-mode)
+  :config
+  (yas-reload-all))
+#+end_src
+
+** Languages
+
+*** C
+
+#+begin_src emacs-lisp
+(use-package eglot
+  :requires lsp-mode
+  :after lsp-mode
+  :config
+  (add-to-list 'eglot-server-programs '((c-mode) "clangd"))
+  (add-hook 'c-mode-hook 'eglot-ensure))
+#+end_src
+
+*** Python
+
+#+begin_src emacs-lisp
+(use-package lsp-python-ms
+  :requires lsp-mode
+  :after lsp-mode
+  :init
+  (setq lsp-python-ms-auto-install-server t)
+  :hook
+  (python-mode-hook . (lambda ()
+                                 (require 'lsp-python-ms)
+                                 (lsp-deferred))))
+#+end_src
+
+* packages
+
+** undo-tree
+
+alternative undo system for emacs (enables evil-mode redo)
+
+#+begin_src emacs-lisp
+(use-package undo-tree
+  :diminish)
+(global-undo-tree-mode)
+#+end_src
+
+** rainbow delimiters
+
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters
+  :hook
+  (prog-mode-hook . rainbow-delimiters-mode))
+#+end_src
+
+** evil
+
+#+begin_src emacs-lisp
+(use-package evil
+  :init
+  (setq evil-want-keybinding nil)
+  :custom
+  (evil-undo-system 'undo-tree)
+  :config
+  ;; go to normal mode when "C-g"
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  (evil-mode 1))
+#+end_src
+
+*** evil-collections
+
+#+begin_src emacs-lisp
+(use-package evil-collection
+  :requires evil
+  :after evil
+  :config
+  (evil-collection-init))
+#+end_src
+
+*** evil-surround
+
+#+begin_src emacs-lisp
+(use-package evil-surround
+  :requires evil
+  :after evil
+  :config
+  (global-evil-surround-mode 1))
+#+end_src
+
+** helm
+
+#+begin_src emacs-lisp
+(use-package helm
+  :diminish
+  :bind
+  ("M-x"     . helm-M-x)
+  ("C-c s m" . helm-man-woman)
+  ("C-x b"   . helm-buffers-list)
+  :config
+  (helm-mode 1))
+#+end_src
+
+** which-key
+
+#+begin_src emacs-lisp
+(use-package which-key
+  :diminish
+  :init (which-key-mode)
+  :custom
+  (which-key-idle-delay 0.25))
+#+end_src
+
+* acknowledgements
+
+** Protesilaos Stavrou
+
+*** Vim user's first impressions of GNU Emacs
+
+explains the main differences between the default keybinds both systems offer;
+overall how Emacs and Vim can be similar.
+
+[[https://youtu.be/VlVl_5RyG3M][video link]]
+
+*** Vlog: Emacs mindset and Unix philosophy
+
+talks about how the Emacs mentality of "everything inside of Emacs" shares
+the same goal as the terminal/CLI power user: to create an integrated
+computing environment.
+
+[[https://youtu.be/qTncc2lI6OI][video link]]
+
+*** Vlog: best tiling WM, Emacs vs Vim, etc
+
+talks about why you should be picking =X= software and not copying others only
+to follow trends.
+
+[[https://youtu.be/CxOkhsDfy_4][video link]]
+
+*** Vlog: switching to emacs
+
+discusses whether switching to GNU Emacs is the right thing for you.
+
+[[https://youtu.be/FLjbKuoBlXs][video link]]
+
+*** configs
+
+even tho his configuration =is/was= a bit overwhelming for knowledge at the
+time, he always had different approaches to accomplish the defaults you would
+find copy and pasted everywhere else
+
+[[https://protesilaos.com/dotemacs][link]]
+
+** Cem Keylan
+
+*** configs
+
+Cem's configuration /is/was/ aimed to be minimal, helped a lot since he was
+also experimenting the emacs world at the time
+
+[[https://git.ckyln.com/emacs.d][link]]
+
+** David Wilson
+
+after my 3rd attempt trying emacs, he was putting up an emacs from scratch
+series where he built from ground up a usable IDE-like system
+
+[[https://www.youtube.com/playlist?list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ][Emacs From Scratch YouTube Playlist]]
+
+** Sandeep Nambiar
+
+*** My Minimal Emacs Setup
+
+straight-forward introduction to configuring emacs
+
+[[https://www.sandeepnambiar.com/my-minimal-emacs-setup][link]]
+
+* todo
+
+** packages
+
++ find alternative to helm (ivy)
++ helpful package
++ projectile
++ magit
