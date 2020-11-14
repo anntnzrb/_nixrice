@@ -1,13 +1,13 @@
-# Terminal Emulator
+# terminal emulator
 
-# Set by =$TERMINAL= environment variable
+# set by =$TERMINAL= environment variable
 
 super + Return
   $TERMINAL
 
-# Text Editor
+# text editor
 
-# /Text editor/, but just as a generic way to call it. This is a terminal-based
+# /text editor/, but just as a generic way to call it. this is a terminal-based
 # text editor, set by =$EDITOR= variable
 
 super + v
@@ -15,40 +15,40 @@ super + v
 
 
 
-# If =$EDITOR= somehow has an emacs script then this will run its GUI version
+# if =$EDITOR= somehow has an emacs script then this will run its GUI version
 
 super + shift + v
   $EDITOR
 
-# Browser
+# browser
 
-# A graphical browser, set by =$BROWSER=
+# a graphical browser, set by =$BROWSER=
 
 super + w
   $BROWSER
 
-# Applicaction Launcher
+# applicaction launcher
 
-# A run dialog & app launcher precisely
+# a run dialog & app launcher precisely
 
 super + d
   dmenu_run -i -p 'summon:'
 
-# File Manager
+# file manager
 
-# A graphical file manager, set by =$FILE=
+# a graphical file manager, set by =$FILE=
 
 super + e
   $FILE
 
-# RSS Feed
+# rss feed
 
-# CLI RSS feeder
+# CLI rss feeder
 
 super + n
   $TERMINAL -e newsboat
 
-# Audio
+# audio
 
 # CLI to control PulseAudio
 
@@ -57,93 +57,93 @@ super + p
 
 
 
-# Mute
+# mute
 
 XF86AudioMute
   pamixer -t && pkill -RTMIN+1 dwmblocks
 
 
 
-# Increase/Decrease
+# increase/decrease
 
 XF86Audio{Lower,Raise}Volume
   pamixer -{d,i} 5 && pkill -RTMIN+1 dwmblocks
 
-# Brightness
+# brightness
 
-# Increase/Decrease
+# increase/decrease
 
 XF86MonBrightness{Down,Up}
   xbacklight -{dec,inc} 10 && pkill -RTMIN+2 dwmblocks
 
-# System Monitor
+# system monitor
 
 # CLI system activity monitor
 
 super + shift + Escape
   $TERMINAL -e $SYS_MONITOR
 
-# Display Selector Dropdown
+# display selector dropdown
 
 
 super + F3
   displayselect
 
-# Emoji / Unicode List Dropdown
+# emoji / unicode list dropdown
 
 
 super + grave
   dmenuunicode
 
-# Screenshot Utility Dropdown
+# screenshot utility dropdown
 
 
 Print
   maimpick
 
-# Edit Config Files Dropdown
+# edit config files dropdown
 
 
 super + shift + period
   edit-cfgs
 
-# System Options Dropdown
+# system options dropdown
 
 
 super + shift + x
   sudo sysfns
 
-# Network Tools
+# network tools
 
 # CLI for /Network Manager/
 
 super + F12
   $TERMINAL -e sudo nmtui
 
-# Transmission Tools
+# transmission tools
 
-# Toggle the /Transmission/ daemon with =F6= and launch the CLI with =F7=
+# toggle the /transmission/ daemon with =f6= and launch the cli with =f7=
 
 super + F{6,7}
  {td-toggle,torwrap}
 
-# Mouting Tools
+# mouting tools
 
 
 super + F{9,10}
     {dmenumount,dmenuumount}
 
-# Kill Current Window
+# kill current window
 
-# Kills currently focused window, an alternative to window manager's built-in
-# window close functionaly. This should be used as last resource
+# kills currently focused window, an alternative to window manager's built-in
+# window close functionaly. this should be used as last resource
 
 alt + F4
   kill -15 $(xdotool getactivewindow getwindowpid)
 
-# Kill Xorg Session
+# kill xorg session
 
-# Meant to kill the X server in an emergency situation
+# meant to kill the x server in an emergency situation
 
 super + control + alt + Escape
   pkill -15 "Xorg"
