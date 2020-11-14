@@ -1,5 +1,5 @@
 #+TITLE: sxhkd
-#+PROPERTY: header-args :comments yes
+#+PROPERTY: header-args :comments org
 
 * Overview
 [[https://github.com/baskerville/sxhkd][sxhdk]] is a hotkey daemon for /X/. Having my keybinds isolated from my window
@@ -28,10 +28,10 @@ super + v
   $TERMINAL -e $EDITOR
 #+END_SRC
 
-This is a terminal-based text editor, set by =$VISUAL= variable
+If =$EDITOR= somehow has an emacs script then this will run its GUI version
 #+BEGIN_SRC sh :tangle sxhkdrc
 super + shift + v
-  $VISUAL
+  $EDITOR
 #+END_SRC
 
 *** Browser
@@ -70,7 +70,7 @@ super + n
 
 *** Audio
 
-CLI to control **PulseAudio**
+CLI to control PulseAudio
 #+BEGIN_SRC sh :tangle sxhkdrc
 super + p
   $TERMINAL -e pulsemixer
@@ -84,16 +84,18 @@ XF86AudioMute
 
 Increase/Decrease
 #+BEGIN_SRC sh :tangle sxhkdrc
-XF86Audio{Lower, Raise}Volume
-  pamixer -{d 5, i 5} && pkill -RTMIN+1 dwmblocks
+XF86Audio{Lower,Raise}Volume
+  pamixer -{d,i} 5 && pkill -RTMIN+1 dwmblocks
 #+END_SRC
+
+#+RESULTS:
 
 *** Brightness
 
 Increase/Decrease
 #+BEGIN_SRC sh :tangle sxhkdrc
-XF86MonBrightness{Down, Up}
-  xbacklight -{dec 10, inc 10} && pkill -RTMIN+2 dwmblocks
+XF86MonBrightness{Down,Up}
+  xbacklight -{dec,inc} 10 && pkill -RTMIN+2 dwmblocks
 #+END_SRC
 
 ** Tools
@@ -153,15 +155,15 @@ super + F12
 
 Toggle the /Transmission/ daemon with =F6= and launch the CLI with =F7=
 #+BEGIN_SRC sh :tangle sxhkdrc
-super + F{6, 7}
- {td-toggle, torwrap}
+super + F{6,7}
+ {td-toggle,torwrap}
 #+END_SRC
 
 *** Mouting Tools
 
 #+BEGIN_SRC sh :tangle sxhkdrc
-super + F{9, 10}
-    {dmenumount, dmenuumount}
+super + F{9,10}
+    {dmenumount,dmenuumount}
 #+END_SRC
 
 *** Kill Current Window

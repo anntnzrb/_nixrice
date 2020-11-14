@@ -1,109 +1,149 @@
-# [[file:readme.org::*Terminal Emulator][Terminal Emulator:1]]
+# Terminal Emulator
+
+# Set by =$TERMINAL= environment variable
+
 super + Return
   $TERMINAL
-# Terminal Emulator:1 ends here
 
-# [[file:readme.org::*Text Editor][Text Editor:1]]
+# Text Editor
+
+# /Text editor/, but just as a generic way to call it. This is a terminal-based
+# text editor, set by =$EDITOR= variable
+
 super + v
   $TERMINAL -e $EDITOR
-# Text Editor:1 ends here
 
-# [[file:readme.org::*Text Editor][Text Editor:2]]
+
+
+# If =$EDITOR= somehow has an emacs script then this will run its GUI version
+
 super + shift + v
-  $VISUAL
-# Text Editor:2 ends here
+  $EDITOR
 
-# [[file:readme.org::*Browser][Browser:1]]
+# Browser
+
+# A graphical browser, set by =$BROWSER=
+
 super + w
   $BROWSER
-# Browser:1 ends here
 
-# [[file:readme.org::*Applicaction Launcher][Applicaction Launcher:1]]
+# Applicaction Launcher
+
+# A run dialog & app launcher precisely
+
 super + d
   dmenu_run -i -p 'summon:'
-# Applicaction Launcher:1 ends here
 
-# [[file:readme.org::*File Manager][File Manager:1]]
+# File Manager
+
+# A graphical file manager, set by =$FILE=
+
 super + e
   $FILE
-# File Manager:1 ends here
 
-# [[file:readme.org::*RSS Feed][RSS Feed:1]]
+# RSS Feed
+
+# CLI RSS feeder
+
 super + n
   $TERMINAL -e newsboat
-# RSS Feed:1 ends here
 
-# [[file:readme.org::*Audio][Audio:1]]
+# Audio
+
+# CLI to control PulseAudio
+
 super + p
   $TERMINAL -e pulsemixer
-# Audio:1 ends here
 
-# [[file:readme.org::*Audio][Audio:2]]
+
+
+# Mute
+
 XF86AudioMute
   pamixer -t && pkill -RTMIN+1 dwmblocks
-# Audio:2 ends here
 
-# [[file:readme.org::*Audio][Audio:3]]
-XF86Audio{Lower, Raise}Volume
-  pamixer -{d 5, i 5} && pkill -RTMIN+1 dwmblocks
-# Audio:3 ends here
 
-# [[file:readme.org::*Brightness][Brightness:1]]
-XF86MonBrightness{Down, Up}
-  xbacklight -{dec 10, inc 10} && pkill -RTMIN+2 dwmblocks
-# Brightness:1 ends here
 
-# [[file:readme.org::*System Monitor][System Monitor:1]]
+# Increase/Decrease
+
+XF86Audio{Lower,Raise}Volume
+  pamixer -{d,i} 5 && pkill -RTMIN+1 dwmblocks
+
+# Brightness
+
+# Increase/Decrease
+
+XF86MonBrightness{Down,Up}
+  xbacklight -{dec,inc} 10 && pkill -RTMIN+2 dwmblocks
+
+# System Monitor
+
+# CLI system activity monitor
+
 super + shift + Escape
   $TERMINAL -e $SYS_MONITOR
-# System Monitor:1 ends here
 
-# [[file:readme.org::*Display Selector Dropdown][Display Selector Dropdown:1]]
+# Display Selector Dropdown
+
+
 super + F3
   displayselect
-# Display Selector Dropdown:1 ends here
 
-# [[file:readme.org::*Emoji / Unicode List Dropdown][Emoji / Unicode List Dropdown:1]]
+# Emoji / Unicode List Dropdown
+
+
 super + grave
   dmenuunicode
-# Emoji / Unicode List Dropdown:1 ends here
 
-# [[file:readme.org::*Screenshot Utility Dropdown][Screenshot Utility Dropdown:1]]
+# Screenshot Utility Dropdown
+
+
 Print
   maimpick
-# Screenshot Utility Dropdown:1 ends here
 
-# [[file:readme.org::*Edit Config Files Dropdown][Edit Config Files Dropdown:1]]
+# Edit Config Files Dropdown
+
+
 super + shift + period
   edit-cfgs
-# Edit Config Files Dropdown:1 ends here
 
-# [[file:readme.org::*System Options Dropdown][System Options Dropdown:1]]
+# System Options Dropdown
+
+
 super + shift + x
   sudo sysfns
-# System Options Dropdown:1 ends here
 
-# [[file:readme.org::*Network Tools][Network Tools:1]]
+# Network Tools
+
+# CLI for /Network Manager/
+
 super + F12
   $TERMINAL -e sudo nmtui
-# Network Tools:1 ends here
 
-# [[file:readme.org::*Transmission Tools][Transmission Tools:1]]
-super + F{6, 7}
- {td-toggle, torwrap}
-# Transmission Tools:1 ends here
+# Transmission Tools
 
-# [[file:readme.org::*Mouting Tools][Mouting Tools:1]]
-super + F{9, 10}
-    {dmenumount, dmenuumount}
-# Mouting Tools:1 ends here
+# Toggle the /Transmission/ daemon with =F6= and launch the CLI with =F7=
 
-# [[file:readme.org::*Kill Current Window][Kill Current Window:1]]
+super + F{6,7}
+ {td-toggle,torwrap}
+
+# Mouting Tools
+
+
+super + F{9,10}
+    {dmenumount,dmenuumount}
+
+# Kill Current Window
+
+# Kills currently focused window, an alternative to window manager's built-in
+# window close functionaly. This should be used as last resource
+
 alt + F4
   kill -15 $(xdotool getactivewindow getwindowpid)
-# Kill Current Window:1 ends here
 
-# [[file:readme.org::*Kill Xorg Session][Kill Xorg Session:1]]
+# Kill Xorg Session
+
+# Meant to kill the X server in an emergency situation
+
 super + control + alt + Escape
   pkill -15 "Xorg"
-# Kill Xorg Session:1 ends here
