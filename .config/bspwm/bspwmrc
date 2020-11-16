@@ -8,6 +8,29 @@
 
 # annt's bspwm's
 
+# environment
+
+# declaration of variables to be used
+
+
+# window manager
+BSPWM_PATH="$HOME/.config/bspwm"
+BSPWM_CFG="$BSPWM_PATH/bspwmrc"
+
+# keybinds
+BSPWM_BINDS="$BSPWM_PATH/sxhkdrc_bspc"
+
+# autostart
+
+# these applications are meant to be ran in the background in order to complement
+# the window manager; in order to make configurations generic, it is best to place
+# all =Xorg= related stuff at =~/.xinitrc= & =~/.xprofile=, but in this case the hotkeys
+# and bar are strictly for =bspwm=, so it is fine to leave them here
+
+
+# keybinds
+sxhkd -c "$BSPWM_BINDS" &
+
 # screens
 
 # i dislike sharing workspaces between monitors, meaning i prefer =n= amount of
