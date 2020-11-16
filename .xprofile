@@ -31,9 +31,6 @@ picom &
 # keybindings
 sxhkd &
 
-# statusbar
-dwmblocks &
-
 # dunst
 dunst &
 
