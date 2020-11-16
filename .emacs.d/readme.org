@@ -240,6 +240,8 @@ inmediately kill current buffer
 
 #+begin_src emacs-lisp
 (use-package org
+  :hook
+  (org-mode-hook . org-indent-mode)
   :custom
   ;; general
   (org-return-follows-link nil)
@@ -363,10 +365,19 @@ create TOCs with different settings
 
 ** Languages
 
+*** Shell
+
+#+begin_src emacs-lisp
+(use-package flycheck
+  :hook
+  (sh-mode-hook . flycheck-mode))
+#+end_src
+
 *** C
 
 #+begin_src emacs-lisp
 (use-package eglot
+  :if (executable-find "clangd")
   :requires lsp-mode
   :after lsp-mode
   :config
