@@ -29,7 +29,7 @@ setbg "$HOME/lib/imgs/wallpapers/" &
 picom &
 
 # keybindings
-sxhkd -m 1 &
+sxhkd &
 
 # statusbar
 dwmblocks &
