@@ -1,0 +1,148 @@
+# monitors
+
+# cycle thru monitors
+
+
+super + ctrl + bracket{left,right}
+  bspc monitor {prev,next} -f
+
+# workspaces
+
+# some environments have different names for this, =tags=, =desktops= or just
+# =workspaces=, even tho they are not exactly the same, they accomplish the same
+# behaviour most of the time
+
+
+super + {1-9}
+  bspc desktop -f 'focused:^{1-9}'
+
+# nodes
+
+# focus between nodes using =vi= keybinds
+
+
+super + {h,j,k,l}
+  bspc node -f {west,south,north,east}
+
+# moving nodes
+
+# swap position of nodes
+
+
+super + shift + {h,j,k,l}
+  bspc node -s {west,south,north,east}
+
+
+
+# move node to =n= monitor
+
+# + ={1-9}= is conveniently set (/i don't have that many monitors/), it may be =n= amount of monitors
+
+
+super + alt + {1-9}
+  bspc node -m '^{1-9}'
+
+
+
+# move nodes to =n= workspace
+
+# + =n= is locked to the amout of workspaces (/desktops/) declared at [[preamble]]
+
+
+super + shift + {1-9}
+  bspc node -d 'focused:^{1-9}'
+
+# resizing nodes
+
+# expand/contract outwards/inwards
+
+# + after the =super + shift + r= chord, hold any of these keys to expand a node by moving one of its side outwards:
+#  + =h= :: left outwards
+#  + =j= :: down outwards
+#  + =k= :: up outwards
+#  + =l= :: right outwards
+
+
+super + shift + r : {h,j,k,l}
+  bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+
+
+
+# + after the =super + shift + r= chord, hold any of these keys to contract a node by moving one of its side inwards:
+#  + =h= :: left inwards
+#  + =j= :: down inwards
+#  + =k= :: up inwards
+#  + =l= :: right inwards
+
+
+super + shift + alt + r : {h,j,k,l}
+  bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+# resizing gaps
+
+# gap presets
+
+# + after the =super + shift + g= chord, hold either:
+#  + =\= :: set gaps to =0=
+#  + =-= :: set gaps to =5=
+#  + === :: set gaps to =75=
+
+# defaults can be found at [[borders & gaps]]
+
+
+super + shift + g : {backslash,minus,equal}
+  bspc config window_gap {0,5,75}
+
+
+
+# dynamic increase & decrease gaps
+
+# + after the =super + shift + g= chord, hold either:
+#  + ={= :: to decrease gaps
+#  + =}= :: to increase gaps
+
+
+super + shift + g : bracket{left,right}
+  bspc config window_gap "$(($(bspc config -d focused window_gap) {-,+} 5 ))"
+
+# layouts
+
+
+super + shift + t ; {m,t}
+  bspc desktop -l {monocle,tiled}
+
+# closing nodes
+
+# + =-c= correctly closes the focused frame
+# + =-k= forces killing the frame (unsafe, but sometimes required)
+
+
+super + shift + q ; {q,k}
+  bspc node -{c,k}
+
+# restarting bspwm
+
+# alternatively, the =Xorg= server may be terminated to end a =bspwm= session
+
+
+super + shift + q ; r
+  bspc wm -r
+
+# states
+
+# + =f= - full-screen
+# + =space= - floating
+
+
+super + shift + s ; {f,space}
+  bspc node -t '~{fullscreen,floating}'
+
+# flags
+
+# + =x= - cannot be closed
+# + =s= - stays focused across workspaces
+# + =p= - keeps the same tiling position/size
+
+
+super + shift + f ; {x,s,p}
+  bspc node -g {locked,sticky,private}

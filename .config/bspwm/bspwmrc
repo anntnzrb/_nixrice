@@ -1,0 +1,57 @@
+#!/bin/sh
+
+# preamble
+
+# =bspwm='s configuration file (=bspwmrc=) must be an executable file; this comment
+# will be appended in order to create the file itself
+
+
+# annt's bspwm's
+
+# screens
+
+# i dislike sharing workspaces between monitors, meaning i prefer =n= amount of
+# workspaces /per monitor/; this =for= loop creates =9= workspaces for each monitor
+# found
+
+
+for mon in $(bspc query -M --names); do
+    bspc monitor "$mon" -d $(seq -ws ' ' 1 9)
+done
+
+# general settings
+
+# these are the most general settings, they do not correspond to any specific
+# section
+
+
+# nodes/windows
+bspc config pointer_modifier      "mod4"
+bspc config focus_follows_pointer true
+bspc config pointer_follows_focus true
+
+# monitors
+bspc config remove_disabled_monitors  true
+bspc config remove_unplugged_monitors true
+
+# colors
+
+
+bspc config normal_border_color  "#696969"
+bspc config active_border_color  "#696969"
+bspc config focused_border_color "#800000"
+
+# borders & gaps
+
+# how nodes are presented
+
+
+# borders
+bspc config border_width   3
+bspc config top_padding    32
+bspc config bottom_padding 0
+bspc config left_padding   0
+bspc config right_padding  0
+
+# gaps
+bspc config window_gap 30
