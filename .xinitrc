@@ -25,9 +25,13 @@ spectrwm)
 bspwm)
     # keybinds
     sxhkd -c "$HOME/.config/bspwm/sxhkdrc_bspc" &
+
     exec bspwm
     ;;
 dwm)
+    # statusbar
+    dwmblocks &
+
     while :; do
         ssh-agent dwm
     done
