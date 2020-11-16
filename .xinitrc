@@ -23,9 +23,6 @@ spectrwm)
     exec spectrwm
     ;;
 bspwm)
-    # keybinds
-    sxhkd -c "$HOME/.config/bspwm/sxhkdrc_bspc" &
-
     exec bspwm
     ;;
 dwm)

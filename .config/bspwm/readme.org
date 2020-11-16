@@ -4,6 +4,7 @@
 * table of contents                                          :TOC_2:noexport:
 - [[#window-manager][window manager]]
   - [[#preamble][preamble]]
+  - [[#autostart][autostart]]
   - [[#screens][screens]]
   - [[#general-settings][general settings]]
   - [[#appearance][appearance]]
@@ -30,6 +31,31 @@ will be appended in order to create the file itself
 
 #+begin_src sh :tangle bspwmrc :shebang "#!/bin/sh\n"
 # annt's bspwm's
+#+end_src
+
+*** environment
+
+declaration of variables to be used
+
+#+begin_src sh :tangle bspwmrc
+# window manager
+BSPWM_PATH="$HOME/.config/bspwm"
+BSPWM_CFG="$BSPWM_PATH/bspwmrc"
+
+# keybinds
+BSPWM_BINDS="$BSPWM_PATH/sxhkdrc_bspc"
+#+end_src
+
+** autostart
+
+these applications are meant to be ran in the background in order to complement
+the window manager; in order to make configurations generic, it is best to place
+all =Xorg= related stuff at =~/.xinitrc= & =~/.xprofile=, but in this case the hotkeys
+and bar are strictly for =bspwm=, so it is fine to leave them here
+
+#+begin_src sh :tangle bspwmrc
+# keybinds
+sxhkd -c "$BSPWM_BINDS" &
 #+end_src
 
 ** screens
@@ -103,7 +129,7 @@ super + ctrl + bracket{left,right}
 
 some environments have different names for this, =tags=, =desktops= or just
 =workspaces=, even tho they are not exactly the same, they accomplish the same
-behaviour most of the time
+behavior most of the time
 
 #+begin_src sh :tangle sxhkdrc_bspc
 super + {1-9}
@@ -131,7 +157,7 @@ super + shift + {h,j,k,l}
 
 move node to =n= monitor
 
-+ ={1-9}= is conveniently set (/i don't have that many monitors/), it may be =n= amount of monitors
++ ={1-9}= is arbitrary set (/i don't have that many monitors/), it may be =n= amount of monitors
 
 #+begin_src sh :tangle sxhkdrc_bspc
 super + alt + {1-9}
@@ -140,7 +166,7 @@ super + alt + {1-9}
 
 move nodes to =n= workspace
 
-+ =n= is locked to the amout of workspaces (/desktops/) declared at [[preamble]]
++ =n= is locked to the amount of workspaces (/desktops/) declared at [[preamble]]
 
 #+begin_src sh :tangle sxhkdrc_bspc
 super + shift + {1-9}
