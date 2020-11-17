@@ -29,10 +29,10 @@ alias \
 
 # shortcuts
 alias \
-    e='$EDITOR' \
-    se='sudo $EDITOR' \
+    ee='$EDITOR' \
+    see='sudo $EDITOR' \
     sx11="startx" \
-    kx11="sudo pkill -15 Xorg"
+    kx11="pkill -15 Xorg"
 
 # -----------------------------------------------------------------------------
 # system-specific aliases

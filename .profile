@@ -9,7 +9,7 @@
 # ░██     ░███   ░░██████   ░██  ░██ ███░░██████
 # ░░      ░░░     ░░░░░░    ░░   ░░ ░░░  ░░░░░░
 # runs on login
-# environmental variables are set here
+# environment variables are set here
 
 # adds `~/.local/bin` to $PATH
 export PATH="$PATH:$(du "$HOME/.local/bin/" | cut -f2 | paste -sd ':')"
@@ -18,30 +18,31 @@ export PATH="$PATH:$(du "$HOME/.local/bin/" | cut -f2 | paste -sd ':')"
 # defaults
 # -----------------------------------------------------------------------------
 
-{ [ -x "$(command -v "nvim")" ] && export EDITOR="nvim"; } ||
-    export EDITOR="vi"
+export EDITOR="editor"
 export TERMINAL="st"
 export BROWSER="qutebrowser"
 export FILE="pcmanfm"
 export READER="zathura"
 export SYS_MONITOR="btm"
-export ALIASES="$HOME/.config/sh/lib/02-aliases"
-export FUNCTIONS="$HOME/.config/sh/lib/03-functions"
+export CFGS="$HOME/.config"
+export SH_CFGS="$CFGS/sh"
+export ALIASES="$SH_CFGS/lib/02-aliases"
+export FUNCTIONS="$SH_CFGS/lib/03-functions"
 
 # shell(s)
-export ZDOTDIR="$HOME/.config/sh/zsh"
+export ZDOTDIR="$SH_CFGS/zsh"
 
 # -----------------------------------------------------------------------------
 # ~ clean-up
 # -----------------------------------------------------------------------------
 
+export XDG_CONFIG_HOME="$CFGS"
 export XDG_CACHE_HOME="$HOME/.cache"
-export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
-export ANDROID_SDK_HOME="$HOME/.config/android"
-export GTK2_RC_FILES="$HOME/.config/gtk-2.0/gtkrc-2.0"
+export ANDROID_SDK_HOME="$CFGS/android"
+export GTK2_RC_FILES="$CFGS/gtk-2.0/gtkrc-2.0"
 export HISTFILE="$HOME/.local/share/history"
-export WGETRC="$HOME/.config/wget/wgetrc"
+export WGETRC="$CFGS/wget/wgetrc"
 
 # -----------------------------------------------------------------------------
 # miscellaneous
