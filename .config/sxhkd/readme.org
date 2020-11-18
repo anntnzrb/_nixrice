@@ -80,7 +80,7 @@ super + n
 
 CLI to control PulseAudio
 #+begin_src sh :tangle sxhkdrc
-super + p
+super + a
   $TERMINAL -e pulsemixer
 #+end_src
 
@@ -112,6 +112,13 @@ CLI system activity monitor
 #+begin_src sh :tangle sxhkdrc
 super + shift + Escape
   $TERMINAL -e $SYS_MONITOR
+#+end_src
+
+*** password selector dropdown
+
+#+begin_src sh :tangle sxhkdrc
+super + p
+  passmenu
 #+end_src
 
 *** display selector dropdown
@@ -157,9 +164,9 @@ super + F12
   $TERMINAL -e sudo nmtui
 #+end_src
 
-*** transmission tools
+**** torrent tools
 
-toggle the /transmission/ daemon with =f6= and launch the cli with =f7=
+toggle the /transmission/ daemon with =F6= and launch the cli with =F7=
 #+begin_src sh :tangle sxhkdrc
 super + F{6,7}
  {td-toggle,torwrap}
@@ -181,7 +188,7 @@ alt + F4
   kill -15 $(xdotool getactivewindow getwindowpid)
 #+end_src
 
-*** kill xorg session
+*** kill Xorg session
 
 meant to kill the x server in an emergency situation
 #+begin_src sh :tangle sxhkdrc
@@ -192,6 +199,7 @@ super + control + alt + Escape
 * reload configuration
 
 =sxhkd= reloads upon receiving signal =USR1=
+
 #+begin_src sh
 pkill -USR1 "sxhkd"
 #+end_src
