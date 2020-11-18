@@ -52,7 +52,7 @@ super + n
 
 # CLI to control PulseAudio
 
-super + p
+super + a
   $TERMINAL -e pulsemixer
 
 
@@ -82,6 +82,12 @@ XF86MonBrightness{Down,Up}
 
 super + shift + Escape
   $TERMINAL -e $SYS_MONITOR
+
+# password selector dropdown
+
+
+super + p
+  passmenu
 
 # display selector dropdown
 
@@ -120,9 +126,9 @@ super + shift + x
 super + F12
   $TERMINAL -e sudo nmtui
 
-# transmission tools
+# torrent tools
 
-# toggle the /transmission/ daemon with =f6= and launch the cli with =f7=
+# toggle the /transmission/ daemon with =F6= and launch the cli with =F7=
 
 super + F{6,7}
  {td-toggle,torwrap}
@@ -141,7 +147,7 @@ super + F{9,10}
 alt + F4
   kill -15 $(xdotool getactivewindow getwindowpid)
 
-# kill xorg session
+# kill Xorg session
 
 # meant to kill the x server in an emergency situation
 
