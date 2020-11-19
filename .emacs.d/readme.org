@@ -24,18 +24,18 @@
   - [[#appearance-1][appearance]]
   - [[#extras][extras]]
 - [[#development][development]]
+  - [[#git][Git]]
   - [[#lsp][LSP]]
-  - [[#completion][Completion]]
-  - [[#commenting][Commenting]]
-  - [[#snippets][Snippets]]
-  - [[#languages][Languages]]
+  - [[#completion][completion]]
+  - [[#snippets][snippets]]
+  - [[#languages][languages]]
   - [[#spell-checking][spell checking]]
 - [[#packages][packages]]
   - [[#undo-tree][undo-tree]]
   - [[#rainbow-delimiters][rainbow delimiters]]
   - [[#evil][evil]]
-  - [[#helm][helm]]
   - [[#which-key][which-key]]
+  - [[#ivy][ivy]]
 - [[#acknowledgements][acknowledgements]]
   - [[#protesilaos-stavrou][Protesilaos Stavrou]]
   - [[#cem-keylan][Cem Keylan]]
@@ -95,25 +95,19 @@ on each package
 + spaces over tabs
 + tab width set to =4=
 + max lenght =80=
++ show trailing whitespaces and delete them on save
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :config
-  (setq-default indent-tabs-mode nil
-                tab-always-indent 'complete
-                tab-width 4
-                fill-column 80)
-  :hook (after-init-hook . column-number-mode))
-#+end_src
-
-white-spaces
-
-show trailing whitespace on the buffer and automatically delete them before
-save.
-
-#+begin_src emacs-lisp
-(setq-default show-trailing-whitespace nil)
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+  :custom
+  (indent-tabs-mode nil)
+  (tab-always-indent 'complete)
+  (tab-width 4)
+  (fill-column 80)
+  (show-trailing-whitespace t)
+  :hook
+  (after-init-hook  . column-number-mode)
+  (before-save-hook . delete-trailing-whitespace))
 #+end_src
 
 * general settings
@@ -190,9 +184,9 @@ inmediately kill current buffer
 #+begin_src emacs-lisp
 (use-package emacs
   :init
-  (menu-bar-mode -1)
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
+  (menu-bar-mode   0)
+  (tool-bar-mode   0)
+  (scroll-bar-mode 0)
   :custom
   (inhibit-splash-screen t))
 #+end_src
@@ -209,7 +203,7 @@ inmediately kill current buffer
 *** font
 
 #+begin_src emacs-lisp
-(set-face-attribute 'default nil :font "Fira Code Retina" :height 128)
+(set-face-attribute 'default nil :height 128 :font "VictorMono Nerd Font Mono")
 #+end_src
 
 ** dired
@@ -302,6 +296,21 @@ create TOCs with different settings
 
 * development
 
+** Git
+
+*** Magit
+
+an interface for git
+
+#+begin_src emacs-lisp
+(use-package magit)
+
+;; vi binds for magit
+(use-package evil-magit
+  :requires magit
+  :after magit)
+#+end_src
+
 ** LSP
 
 #+begin_src emacs-lisp
@@ -332,7 +341,7 @@ create TOCs with different settings
   (lsp-ui-doc-position 'bottom))
 #+end_src
 
-** Completion
+** completion
 
 #+begin_src emacs-lisp
 (use-package company
@@ -344,15 +353,7 @@ create TOCs with different settings
   (company-minimum-prefix-length 1))
 #+end_src
 
-** Commenting
-
-#+begin_src emacs-lisp
-(use-package evil-nerd-commenter
-  :bind
-  ("M-;" . evilnc-comment-or-uncomment-lines))
-#+end_src
-
-** Snippets
+** snippets
 
 #+begin_src emacs-lisp
 (use-package yasnippet
@@ -363,7 +364,7 @@ create TOCs with different settings
   (yas-reload-all))
 #+end_src
 
-** Languages
+** languages
 
 *** Shell
 
@@ -447,7 +448,7 @@ alternative undo system for emacs (enables evil-mode redo)
   :config
   ;; go to normal mode when "C-g"
   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  (evil-mode 1))
+  (evil-mode t))
 #+end_src
 
 *** evil-collections
@@ -470,19 +471,6 @@ alternative undo system for emacs (enables evil-mode redo)
   (global-evil-surround-mode t))
 #+end_src
 
-** helm
-
-#+begin_src emacs-lisp
-(use-package helm
-  :diminish
-  :bind
-  ("M-x"     . helm-M-x)
-  ("C-c s m" . helm-man-woman)
-  ("C-x b"   . helm-buffers-list)
-  :config
-  (helm-mode 1))
-#+end_src
-
 ** which-key
 
 #+begin_src emacs-lisp
@@ -491,6 +479,18 @@ alternative undo system for emacs (enables evil-mode redo)
   :init (which-key-mode)
   :custom
   (which-key-idle-delay 0.25))
+#+end_src
+
+** ivy
+
+#+begin_src emacs-lisp
+(use-package ivy
+  :diminish
+  :custom
+  (ivy-use-virtual-buffers t)
+  (enable-recursive-minibuffers t)
+  :config
+  (ivy-mode t))
 #+end_src
 
 * acknowledgements
@@ -564,4 +564,3 @@ straight-forward introduction to configuring emacs
 + find alternative to helm (ivy)
 + helpful package
 + projectile
-+ magit
