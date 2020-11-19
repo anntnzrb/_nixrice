@@ -441,24 +441,13 @@ alternative undo system for emacs (enables evil-mode redo)
 
 #+begin_src emacs-lisp
 (use-package evil
-  :init
-  (setq evil-want-keybinding nil)
   :custom
   (evil-undo-system 'undo-tree)
   :config
   ;; go to normal mode when "C-g"
   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  (evil-mode t))
-#+end_src
-
-*** evil-collections
-
-#+begin_src emacs-lisp
-(use-package evil-collection
-  :requires evil
-  :after evil
-  :config
-  (evil-collection-init))
+  :hook
+  (after-init-hook . evil-mode))
 #+end_src
 
 *** evil-surround
