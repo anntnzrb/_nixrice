@@ -44,6 +44,9 @@ BSPWM_CFG="$BSPWM_PATH/bspwmrc"
 
 # keybinds
 BSPWM_BINDS="$BSPWM_PATH/sxhkdrc_bspc"
+
+# bar
+BSPWM_BAR="$BSPWM_PATH/succaderc_bspwm"
 #+end_src
 
 ** autostart
@@ -56,6 +59,9 @@ and bar are strictly for =bspwm=, so it is fine to leave them here
 #+begin_src sh :tangle bspwmrc
 # keybinds
 sxhkd -c "$BSPWM_BINDS" &
+
+#bar
+succade -c "$BSPWM_BAR" &
 #+end_src
 
 ** screens
