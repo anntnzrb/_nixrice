@@ -20,6 +20,9 @@ BSPWM_CFG="$BSPWM_PATH/bspwmrc"
 # keybinds
 BSPWM_BINDS="$BSPWM_PATH/sxhkdrc_bspc"
 
+# bar
+BSPWM_BAR="$BSPWM_PATH/succaderc_bspwm"
+
 # autostart
 
 # these applications are meant to be ran in the background in order to complement
@@ -30,6 +33,9 @@ BSPWM_BINDS="$BSPWM_PATH/sxhkdrc_bspc"
 
 # keybinds
 sxhkd -c "$BSPWM_BINDS" &
+
+#bar
+succade -c "$BSPWM_BAR" &
 
 # screens
 
