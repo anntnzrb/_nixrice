@@ -391,6 +391,15 @@ actual snippets, extra packages are needed for them
 
 ** languages
 
+*** global
+
+a formatter for pretty much every languages
+
+#+begin_src emacs-lisp
+(use-package format-all
+  :bind ("C-c f" . format-all-buffer))
+#+end_src
+
 *** Shell
 
 #+begin_src emacs-lisp
@@ -401,15 +410,27 @@ actual snippets, extra packages are needed for them
 
 *** C
 
+**** defaults
+
+#+begin_src emacs-lisp
+(use-package cc-mode
+  :init
+  (defun annt/c-prog-settings ()
+    "personal settings for C programming"
+    (setq c-indent-level  4
+          c-default-style "linux"))
+  :hook (c-mode-hook . annt/c-prog-settings))
+#+end_src
+
+**** LSP server
+
 #+begin_src emacs-lisp
 (use-package eglot
-  :if (executable-find "clangd")
+  :if       (executable-find "clangd")
   :requires lsp-mode
-  :after lsp-mode
-  :config
-  (add-to-list 'eglot-server-programs '((c-mode) "clangd"))
-  :hook
-  (c-mode-hook . eglot-ensure))
+  :after    lsp-mode
+  :config   (add-to-list 'eglot-server-programs '((c-mode) "clangd"))
+  :hook     (c-mode-hook . eglot-ensure))
 #+end_src
 
 *** Python
