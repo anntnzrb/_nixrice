@@ -106,16 +106,17 @@ on each package
 * formatting
 
 + spaces over tabs
-+ tab width set to =4=
-+ max lenght =80=
++ tab width =4=
++ max line lenght =80=
++ show column number in modeline
 + show trailing whitespaces and delete them on save
 
 #+begin_src emacs-lisp
 (use-package emacs
   :custom
-  (indent-tabs-mode nil)
+  (tab-width         4)
+  (indent-tabs-mode  nil)
   (tab-always-indent 'complete)
-  (tab-width 4)
   (fill-column 80)
   (show-trailing-whitespace t)
   :hook
@@ -278,26 +279,29 @@ it is needed to do some work when working with =emacsclient=
 
   :config
   ;; code blocks
-  (setq org-confirm-babel-evaluate nil)
+  (setq org-edit-src-content-indentation 0
+        org-src-fontify-natively         t
+        org-src-tab-acts-natively        t
+        org-confirm-babel-evaluate       nil)
   (org-babel-do-load-languages
-  'org-babel-load-languages
-  '((emacs-lisp . t)
-    (shell      . t)
-    (C          . t)
-    (haskell    . t)
-    (python     . t)
-    (java       . t)))
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (shell      . t)
+     (C          . t)
+     (haskell    . t)
+     (python     . t)
+     (java       . t)))
   (require 'org-tempo) ;; needed as of org-mode 9.3
   (setq org-structure-template-alist
         '(("src"  . "src")
-        ;; languages
+          ;; languages
           ("el"   . "src emacs-lisp")
           ("sh"   . "src sh")
           ("c"    . "src c")
           ("hs"   . "src haskell")
           ("py"   . "src python")
           ("java" . "src java")
-        ;; misc
+          ;; misc
           ("cent" . "center")
           ("comm" . "comment")
           ("ex"   . "example")
