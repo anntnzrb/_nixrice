@@ -217,11 +217,12 @@ inmediately kill current buffer
 it is needed to do some work when working with =emacsclient=
 
 #+begin_src emacs-lisp
-(if (daemonp)
-      (add-hook 'after-make-frame-functions
-                (lambda (frame)
-                  (with-selected-frame frame
-                    (annt/set-default-font)))))
+(use-package frame
+  :ensure nil
+  :if (daemonp)
+  :hook
+  (after-make-frame-functions . (lambda (frame)
+                                                (with-selected-frame frame (annt/set-default-font)))))
 #+end_src
 
 ** dired
