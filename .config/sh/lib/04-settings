@@ -11,6 +11,14 @@
 # settings/configurations for programs using environment variables
 
 # -----------------------------------------------------------------------------
+# miscellaneous
+# -----------------------------------------------------------------------------
+
+export FZF_DEFAULT_OPTS="--layout=reverse --height 40%"
+export LESSHISTFILE="-"
+export SUDO_ASKPASS="$XDG_DESKTOP_DIR/.local/bin/dmenupass"
+
+# -----------------------------------------------------------------------------
 # pfetch
 # -----------------------------------------------------------------------------
 
