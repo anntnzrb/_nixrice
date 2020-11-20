@@ -306,11 +306,11 @@ improved version of org-bullets
 
 create TOCs with different settings
 
-   #+begin_src emacs-lisp
+#+begin_src emacs-lisp
 (use-package toc-org
-  :hook
-  (org-mode-hook . toc-org-mode))
-   #+end_src
+   :hook
+   (org-mode-hook . toc-org-mode))
+#+end_src
 
 * development
 
