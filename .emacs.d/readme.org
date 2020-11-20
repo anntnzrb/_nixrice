@@ -477,6 +477,20 @@ a formatter for pretty much every languages
                                  (lsp-deferred))))
 #+end_src
 
+*** Markdown
+
+#+begin_src emacs-lisp
+  (use-package markdown-mode
+    :mode (("README\\.md\\'" . gfm-mode)
+           ("readme\\.md\\'" . gfm-mode)
+           ("\\.md\\'"       . markdown-mode)
+           ("\\.markdown\\'" . markdown-mode))
+    :config
+    ;; enables "org-edit-src-code"-like code blocks [C-c ']
+    (use-package edit-indirect)
+    (setq markdown-fontify-code-blocks-natively t))
+#+end_src
+
 ** spell checking
 #+begin_src emacs-lisp
 (use-package flyspell
