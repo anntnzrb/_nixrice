@@ -38,7 +38,7 @@ dunst &
 unclutter &
 
 # source Xresources
-xrdb "$HOME"/.Xresources &
+xrdb "$XDG_CONFIG_HOME/X11/.Xresources" &
 
 # choose display (should be at last)
 displayselect

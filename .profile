@@ -24,8 +24,7 @@ export BROWSER="qutebrowser"
 export FILE="pcmanfm"
 export READER="zathura"
 export SYS_MONITOR="btm"
-export CFGS="$HOME/.config"
-export SH_CFGS="$CFGS/sh"
+export SH_CFGS="$XDG_CONFIG_HOME/sh"
 export ALIASES="$SH_CFGS/lib/02-aliases"
 export FUNCTIONS="$SH_CFGS/lib/03-functions"
 
@@ -36,13 +35,22 @@ export ZDOTDIR="$SH_CFGS/zsh"
 # ~ clean-up
 # -----------------------------------------------------------------------------
 
-export XDG_CONFIG_HOME="$CFGS"
-export XDG_CACHE_HOME="$HOME/.cache"
-export XDG_DATA_HOME="$HOME/.local/share"
-export ANDROID_SDK_HOME="$CFGS/android"
-export GTK2_RC_FILES="$CFGS/gtk-2.0/gtkrc-2.0"
-export HISTFILE="$HOME/.local/share/history"
-export WGETRC="$CFGS/wget/wgetrc"
+# == languages
+export CARGO_HOME="$XDG_DATA_HOME/cargo"
+
+# == Android
+export ANDROID_SDK_HOME="$XDG_CONFIG_HOME/android"
+export ANDROID_AVD_HOME="$XDG_DATA_HOME/android"
+export ANDROID_EMULATOR_HOME="$XDG_DATA_HOME/android"
+export ADB_VENDOR_KEY="$XDG_CONFIG_HOME/android"
+
+# == GTK
+export GTK_RC_FILES="$XDG_CONFIG_HOME/gtk-1.0/gtkrc"
+export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
+
+# == misc
+export HISTFILE="$XDG_DATA_HOME/history"
+export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
 
 # -----------------------------------------------------------------------------
 # miscellaneous
@@ -61,14 +69,12 @@ export LC_MONETARY="en_US.UTF-8"
 export LC_NUMERIC="en_US.UTF-8"
 export LC_TIME="en_US.UTF-8"
 
-export FZF_DEFAULT_OPTS="--layout=reverse --height 40%"
-export LESSHISTFILE="-"
-export SUDO_ASKPASS="$HOME/.local/bin/dmenupass"
-export _JAVA_AWT_WM_NONREPARENTING=1 # Java apps fix for dwm
+# Java apps fix for dwm
+export _JAVA_AWT_WM_NONREPARENTING=1
 
 # Java
 export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/bin/java::") &&
     export PATH=$JAVA_HOME/bin:$PATH
 
-# start graphical server on tty1 if not already running.
-#[ "$(tty)" = "/dev/tty1" ] && ! pidof Xorg >/dev/null 2>&1 && exec startx
+# start graphical automatically
+#[ "$(tty)" = "/dev/tty1" ] && ! pidof -s Xorg >/dev/null 2>&1 && exec startx
