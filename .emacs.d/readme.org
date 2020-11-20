@@ -12,6 +12,7 @@
 
 * table of contents                                                :TOC_2_gh:
 - [[#preamble][preamble]]
+  - [[#lexical-binding][lexical-binding]]
   - [[#myself][myself]]
   - [[#repos][repos]]
   - [[#use-package][use-package]]
@@ -45,6 +46,18 @@
   - [[#packages-1][packages]]
 
 * preamble
+
+** lexical-binding
+
+enable lexical binding for this file
+
+#+begin_src emacs-lisp
+;;; -*- lexical-binding: t -*-
+#+end_src
+
+#+begin_src emacs-lisp
+
+#+end_src
 
 ** myself
 
