@@ -80,7 +80,7 @@ only update if necessary
 
 #+begin_src emacs-lisp
 (unless package-archive-contents
-   (package-refresh-contents))
+  (package-refresh-contents))
 #+end_src
 
 ** use-package
@@ -262,7 +262,7 @@ it is needed to do some work when working with =emacsclient=
   (dired-recursive-deletes 'always)
   (delete-by-moving-to-trash t)
   (dired-listing-switches
-     "-AGFhlv --group-directories-first --time-style=long-iso")
+   "-AFGhlv --group-directories-first --time-style=long-iso")
   :hook
   (dired-mode-hook . dired-hide-details-mode)
   (dired-mode-hook . hl-line-mode))
@@ -339,8 +339,8 @@ create TOCs with different settings
 
 #+begin_src emacs-lisp
 (use-package toc-org
-   :hook
-   (org-mode-hook . toc-org-mode))
+  :hook
+  (org-mode-hook . toc-org-mode))
 #+end_src
 
 * development
@@ -473,22 +473,22 @@ a formatter for pretty much every languages
   (setq lsp-python-ms-auto-install-server t)
   :hook
   (python-mode-hook . (lambda ()
-                                 (require 'lsp-python-ms)
-                                 (lsp-deferred))))
+                        (require 'lsp-python-ms)
+                        (lsp-deferred))))
 #+end_src
 
 *** Markdown
 
 #+begin_src emacs-lisp
-  (use-package markdown-mode
-    :mode (("README\\.md\\'" . gfm-mode)
-           ("readme\\.md\\'" . gfm-mode)
-           ("\\.md\\'"       . markdown-mode)
-           ("\\.markdown\\'" . markdown-mode))
-    :config
-    ;; enables "org-edit-src-code"-like code blocks [C-c ']
-    (use-package edit-indirect)
-    (setq markdown-fontify-code-blocks-natively t))
+(use-package markdown-mode
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("readme\\.md\\'" . gfm-mode)
+         ("\\.md\\'"       . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :config
+  ;; enables "org-edit-src-code"-like code blocks [C-c ']
+  (use-package edit-indirect)
+  (setq markdown-fontify-code-blocks-natively t))
 #+end_src
 
 ** spell checking
@@ -640,6 +640,5 @@ straight-forward introduction to configuring emacs
 
 ** packages
 
-+ find alternative to helm (ivy)
 + helpful package
 + projectile
