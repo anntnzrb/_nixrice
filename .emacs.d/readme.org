@@ -355,6 +355,9 @@ an interface for git
 
 ** snippets
 
+[[https://github.com/joaotavora/yasnippet][YASnippet]] is a template system, snippets for short. it does not ship with the
+actual snippets, extra packages are needed for them
+
 #+begin_src emacs-lisp
 (use-package yasnippet
   :diminish
@@ -362,6 +365,9 @@ an interface for git
   (prog-mode-hook . yas-minor-mode)
   :config
   (yas-reload-all))
+
+;; snippets
+(use-package yasnippet-snippets)
 #+end_src
 
 ** languages
