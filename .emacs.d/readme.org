@@ -159,6 +159,19 @@ inmediately kill current buffer
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 #+end_src
 
+*** clipboard
+
+emacs does not have =xclip= support on the terminal by default, enable it
+
+#+begin_src emacs-lisp
+(use-package xclip
+  :if (executable-find "xclip")
+  :if (getenv "DISPLAY")
+  :unless (eq system-type 'windows-nt)
+  :straight t
+  :config (xclip-mode))
+#+end_src
+
 ** appearance
 
 *** theme
