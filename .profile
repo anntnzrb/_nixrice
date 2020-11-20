@@ -15,6 +15,23 @@
 export PATH="$PATH:$(du "$HOME/.local/bin/" | cut -f2 | paste -sd ':')"
 
 # -----------------------------------------------------------------------------
+# preamble
+# -----------------------------------------------------------------------------
+
+# == Xorg stuff
+export XDG_DESKTOP_DIR="$HOME"
+export XDG_DOCUMENTS_DIR="$HOME/lib/docs/"
+export XDG_PICTURES_DIR="$HOME/lib/imgs/"
+export XDG_VIDEOS_DIR="$HOME/lib/vids/"
+export XDG_MUSIC_DIR="$HOME/lib/audio/"
+export XDG_DOWNLOAD_DIR="$HOME/downloads"
+export XDG_TEMPLATES_DIR="$HOME/lib"
+export XDG_PUBLICSHARE_DIR="$HOME/lib"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+
+# -----------------------------------------------------------------------------
 # defaults
 # -----------------------------------------------------------------------------
 
