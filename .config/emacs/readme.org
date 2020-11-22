@@ -168,7 +168,6 @@ emacs does not have =xclip= support on the terminal by default, enable it
   :if (executable-find "xclip")
   :if (getenv "DISPLAY")
   :unless (eq system-type 'windows-nt)
-  :straight t
   :config (xclip-mode))
 #+end_src
 
