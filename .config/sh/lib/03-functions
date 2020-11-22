@@ -73,6 +73,26 @@ loop_vpn() {
 }
 
 # -----------------------------------------------------------------------------
+# miscellaneous
+# -----------------------------------------------------------------------------
+
+gpg_export_pub_key() {
+    gpg --output "$HOME/temp/pub_key.pgp" --armor --export "$1" &&
+        printf 'public key exported\n'
+}
+
+gpg_export_sec_key() {
+    gpg --output "$HOME/temp/sec_key.pgp" --armor --export-secret-key "$1" &&
+        printf 'public key exported\n'
+}
+
+gpg_import_key() {
+    gpg --import "$1"
+    printf "\nkeys: %s\n\nuse 'gpg --edit-keys <mail>' to set trust level\n" \
+        "$(gpg --list-keys)"
+}
+
+# -----------------------------------------------------------------------------
 # distro-especific
 # -----------------------------------------------------------------------------
 
