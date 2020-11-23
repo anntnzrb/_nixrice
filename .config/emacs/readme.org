@@ -5,12 +5,10 @@
 #+PROPERTY: header-args :results silent
 #+MACRO: export-date (eval (format-time-string "%F" (current-time)))
 
-#+TOC: headlines 8 insert TOC here, with eight headline levels
-
 + created: 2020-11-07
 + updated: *{{{export-date}}}*
 
-* table of contents                                                :TOC_2_gh:
+* table of contents                                       :TOC_2_gh:noexport:
 - [[#preamble][preamble]]
   - [[#lexical-binding][lexical-binding]]
   - [[#myself][myself]]
@@ -53,10 +51,6 @@ enable lexical binding for this file
 
 #+begin_src emacs-lisp
 ;;; -*- lexical-binding: t -*-
-#+end_src
-
-#+begin_src emacs-lisp
-
 #+end_src
 
 ** myself
