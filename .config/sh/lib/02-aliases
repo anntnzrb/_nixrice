@@ -50,9 +50,9 @@ if [ -x "$(command -v "pacman")" ]; then
 elif [ -x "$(command -v "xbps-install")" ]; then
     alias \
         pkgf="xbps-query" \
-        pkgi="sudo xbps-install -fu xbps && sudo xbps-install -S" \
-        pkgr="sudo xbps-remove -f" \
-        pkgu="sudo xbps-install -fu xbps && sudo xbps-install -Sfu"
+        pkgi="sudo xbps-install -S xbps && sudo xbps-install -S" \
+        pkgr="sudo xbps-remove -Rf" \
+        pkgu="sudo xbps-install -S xbps && sudo xbps-install -Su"
 fi
 
 # -----------------------------------------------------------------------------
