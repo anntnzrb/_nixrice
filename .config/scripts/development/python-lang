@@ -24,7 +24,7 @@
 case $SYSTEM in
 arch)
     # tools
-    $PKG_INSTALL "python4" "python-pip"
+    $PKG_INSTALL "python3" "python-pip"
     ;;
 
 void)
@@ -32,7 +32,7 @@ void)
     elevate_perms "$@"
 
     # tools
-    $PKG_INSTALL "python3" "python-pip"
+    $PKG_INSTALL "python3" "python3-pip"
     ;;
 
 debian)
@@ -40,21 +40,23 @@ debian)
     elevate_perms "$@"
 
     # tools
-    $PKG_INSTALL "python3" "python-pip"
+    $PKG_INSTALL "python3" "python3-pip"
     ;;
 esac
 
 # == post-install
-# language server
-python3 -m pip install -U "setuptools" "python-language-server"
+# dependencies
+python3 -m pip install -U "setuptools"
+python3 -m pip install -U "pip"
 
-# [vim::ALE] (fixer)
+# language server
+python3 -m pip install -U "python-language-server"
+
+# code formatter (preferred over autopep8 & YAPF)
 python3 -m pip install -U "black"
 
 # libs
 python3 -m pip install -U \
-    "pylint" \
-    "pynvim" \
-    "rope" \
     "numpy" \
-    "matplotlib"
+    "pynvim" \
+    "rope"

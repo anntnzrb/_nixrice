@@ -38,11 +38,16 @@ void)
     # gnupg is required to install via tlmgr
     $PKG_INSTALL "gnupg"
 
+    # update
+    tlmgr update --all
+
     tlmgr install biblatex
     tlmgr install biblatex-apa
     tlmgr install biblatex-ieee
+    tlmgr install capt-of
+    tlmgr install wrapfig
 
-    # update
+    # cleanup
     tlmgr update --all
     texhash
     ;;
