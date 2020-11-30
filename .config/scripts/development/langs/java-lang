@@ -1,0 +1,42 @@
+#!/bin/sh
+
+# -----------------------------------------------------------------------------
+# preamble
+# -----------------------------------------------------------------------------
+
+# source utilities
+# shellcheck disable=SC1090
+. "$(dirname "$(dirname "$(readlink -f "$0")")")/utils"
+
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
+
+case $SYSTEM in
+arch)
+    # compiler
+    $PKG_INSTALL "jdk11-openjdk" "jre11-openjdk"
+
+    # [vim::ALE] (formatter)
+    $PKG_INSTALL "uncrustify"
+
+    # elevate permissions
+    elevate_perms "$@"
+
+    # change environment
+    archlinux-java status
+    archlinux-java set java-11-openjdk
+    archlinux-java status
+    ;;
+
+void)
+    # elevate permissions
+    elevate_perms "$@"
+
+    # compiler
+    $PKG_INSTALL "openjdk11"
+
+    # [vim::ALE] (formatter)
+    $PKG_INSTALL "uncrustify"
+    ;;
+esac

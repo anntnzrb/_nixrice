@@ -1,0 +1,36 @@
+#!/bin/sh
+
+#          ██                          ██
+#         ░██                         ░██
+#   █████ ░██       █████   ██████   ██████
+#  ██░░░██░██████  ██░░░██ ░░░░░░██ ░░░██░  █████
+# ░██  ░░ ░██░░░██░███████  ███████   ░██  ░░░░░
+# ░██   ██░██  ░██░██░░░░  ██░░░░██   ░██
+# ░░█████ ░██  ░██░░██████░░████████  ░░██
+#  ░░░░░  ░░   ░░  ░░░░░░  ░░░░░░░░    ░░
+#               ██                        ██
+#              ░██                       ░██
+#        ██████░██       █████   █████  ██████  ██████
+# █████ ██░░░░ ░██████  ██░░░██ ██░░░██░░░██░  ██░░░░
+# ░░░░ ░░█████ ░██░░░██░███████░███████  ░██  ░░█████
+#       ░░░░░██░██  ░██░██░░░░ ░██░░░░   ░██   ░░░░░██
+#       ██████ ░██  ░██░░██████░░██████  ░░██  ██████
+#      ░░░░░░  ░░   ░░  ░░░░░░  ░░░░░░    ░░  ░░░░░░
+
+# elevate priviledges if not already
+[ "$(id -u)" -ne 0 ] && exec sudo -E "$0" "$@"
+
+# install `cheat.sh` if not installed already
+if [ ! -f "/usr/local/bin/cht.sh" ]; then
+	CHEAT_INSTALL_DIR="/usr/local/bin/cht.sh"
+
+	printf 'downloading & installing cheat.sh\n'
+
+	{ curl -Ss "https://cht.sh/:cht.sh" |
+		sudo tee "$CHEAT_INSTALL_DIR"; } >/dev/null
+	chmod 755 "$CHEAT_INSTALL_DIR"
+
+	printf 'cheat.sh was installed...\n'
+else
+    printf 'cheat.sh is already installed\n'
+fi
