@@ -61,7 +61,6 @@ fi
 
 alias \
     ascii="toilet -t -f 3d" \
-    cheat="cht.sh" \
     future="toilet -t -f future" \
     matrix="unimatrix -a -l GRgors -s 96" \
     rusto="toilet -t -f rusto" \
