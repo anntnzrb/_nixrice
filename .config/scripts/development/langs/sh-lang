@@ -1,0 +1,51 @@
+#!/bin/sh
+
+#          ██
+#         ░██
+#   ██████░██
+#  ██░░░░ ░██████
+# ░░█████ ░██░░░██
+#  ░░░░░██░██  ░██
+#  ██████ ░██  ░██
+# ░░░░░░  ░░   ░░
+
+# -----------------------------------------------------------------------------
+# preamble
+# -----------------------------------------------------------------------------
+
+# source utilities
+# shellcheck disable=SC1090
+. "$(dirname "$(dirname "$(readlink -f "$0")")")/utils"
+
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
+
+case $SYSTEM in
+arch)
+    # [vim::ALE] (linter)
+    $PKG_INSTALL "shellcheck"
+
+    # [vim::ALE] (formatter)
+    $PKG_INSTALL "shfmt"
+    ;;
+
+void)
+    # elevate permissions
+    elevate_perms "$@"
+
+    # [vim::ALE] (linter)
+    $PKG_INSTALL "shellcheck"
+
+    # [vim::ALE] (formatter)
+    $PKG_INSTALL "shfmt"
+    ;;
+
+debian)
+    # elevate permissions
+    elevate_perms "$@"
+
+    # [vim::ALE] (linter)
+    $PKG_INSTALL "shellcheck"
+    ;;
+esac

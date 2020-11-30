@@ -1,0 +1,58 @@
+#!/bin/sh
+
+#   █████
+#  ██░░░██
+# ░██  ░░
+# ░██   ██
+# ░░█████
+#  ░░░░░
+
+# -----------------------------------------------------------------------------
+# preamble
+# -----------------------------------------------------------------------------
+
+# source utilities
+# shellcheck disable=SC1090
+. "$(dirname "$(dirname "$(readlink -f "$0")")")/utils"
+
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
+
+case $SYSTEM in
+arch)
+    # compiler
+    $PKG_INSTALL "gcc"
+
+    # language server
+    $PKG_INSTALL "clang"
+
+    # ctags
+    $PKG_INSTALL "ctags"
+
+    # [vim::ALE] (formatter)
+    $PKG_INSTALL "uncrustify"
+    ;;
+
+void)
+    # elevate permissions
+    elevate_perms "$@"
+
+    # compiler
+    $PKG_INSTALL "gcc"
+
+    # [vim::ALE] (formatter)
+    $PKG_INSTALL "uncrustify"
+    ;;
+
+debian)
+    # elevate permissions
+    elevate_perms "$@"
+
+    # language server
+    $PKG_INSTALL "clangd"
+
+    # [vim::ALE] (formatter)
+    $PKG_INSTALL "uncrustify"
+    ;;
+esac

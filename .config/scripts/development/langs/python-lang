@@ -1,0 +1,62 @@
+#!/bin/sh
+
+#                     ██   ██
+#  ██████   ██   ██  ░██  ░██
+# ░██░░░██ ░░██ ██  ██████░██       ██████  ███████
+# ░██  ░██  ░░███  ░░░██░ ░██████  ██░░░░██░░██░░░██
+# ░██████    ░██     ░██  ░██░░░██░██   ░██ ░██  ░██
+# ░██░░░     ██      ░██  ░██  ░██░██   ░██ ░██  ░██
+# ░██       ██       ░░██ ░██  ░██░░██████  ███  ░██
+# ░░       ░░         ░░  ░░   ░░  ░░░░░░  ░░░   ░░
+
+# -----------------------------------------------------------------------------
+# preamble
+# -----------------------------------------------------------------------------
+
+# source utilities
+# shellcheck disable=SC1090
+. "$(dirname "$(dirname "$(readlink -f "$0")")")/utils"
+
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
+
+case $SYSTEM in
+arch)
+    # tools
+    $PKG_INSTALL "python3" "python-pip"
+    ;;
+
+void)
+    # elevate permissions
+    elevate_perms "$@"
+
+    # tools
+    $PKG_INSTALL "python3" "python3-pip"
+    ;;
+
+debian)
+    # elevate permissions
+    elevate_perms "$@"
+
+    # tools
+    $PKG_INSTALL "python3" "python3-pip"
+    ;;
+esac
+
+# == post-install
+# dependencies
+python3 -m pip install -U "setuptools"
+python3 -m pip install -U "pip"
+
+# language server
+python3 -m pip install -U "python-language-server"
+
+# code formatter (preferred over autopep8 & YAPF)
+python3 -m pip install -U "black"
+
+# libs
+python3 -m pip install -U \
+    "numpy" \
+    "pynvim" \
+    "rope"
