@@ -45,7 +45,6 @@ void)
     tlmgr install biblatex-apa
     tlmgr install biblatex-ieee
     tlmgr install capt-of
-    tlmgr install hf-tikz
     tlmgr install wrapfig
 
     # cleanup
