@@ -30,4 +30,4 @@ is_running transmission-daemon &&
                 s/L/🔼/g;
                 s/M/🔽/g;
                 s/N/✅/g;
-                s/Z/🌱/g" | awk '{print $2, $1}' | paste -sd ' '
+                s/Z/🌱/g" | awk '{print $2, $1}' | paste -sd ' ' -
