@@ -7,6 +7,7 @@
   - [[#autostart][autostart]]
   - [[#screens][screens]]
   - [[#general-settings][general settings]]
+  - [[#rules][rules]]
   - [[#appearance][appearance]]
 - [[#keybinds][keybinds]]
   - [[#focusing][focusing]]
@@ -90,6 +91,19 @@ bspc config pointer_follows_focus true
 # monitors
 bspc config remove_disabled_monitors  true
 bspc config remove_unplugged_monitors true
+#+end_src
+
+** rules
+
+rules for the behaviour of applications
+
+#+begin_src sh :tangle bspwmrc
+# reset configuration
+bspc rule -r "*"
+
+# app rules
+bspc rule -a "Lutris:*:*" state=floating
+bspc rule -a "MultiMC5:*:*" state=floating rectangle=960x600+500+250
 #+end_src
 
 ** appearance
