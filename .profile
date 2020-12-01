@@ -12,7 +12,7 @@
 # environment variables are set here
 
 # adds `~/.local/bin` to $PATH
-export PATH="$PATH:$(du "$HOME/.local/bin/" | cut -f2 | paste -sd ':')"
+export PATH="$PATH:$(du "$HOME/.local/bin/" | cut -f2 | paste -sd ':' -)"
 
 # -----------------------------------------------------------------------------
 # preamble
