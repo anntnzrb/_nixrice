@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# **
+# script for installing games/launchers/etc
+#
+# note: this script depends heavily on hardware-specific packages
+# *
+
 # -----------------------------------------------------------------------------
 # preamble
 # -----------------------------------------------------------------------------
@@ -25,6 +31,25 @@ arch)
 
     # steam
     $PKG_INSTALL "steam"
+
+    # wine
+    $PKG_INSTALL "wine" "wine-gecko" "wine-mono"
+    ;;
+
+void)
+    # elevate permissions
+    elevate_perms "$@"
+
+    # install extra repos if not already
+    ! xbps-query "void-repo-multilib" >/dev/null 2>&1 && {
+        $PKG_INSTALL \
+            "void-repo-nonfree" \
+            "void-repo-multilib" \
+            "void-repo-multilib-nonfree"
+    }
+
+    # lutris
+    $PKG_INSTALL "lutris"
 
     # wine
     $PKG_INSTALL "wine" "wine-gecko" "wine-mono"
