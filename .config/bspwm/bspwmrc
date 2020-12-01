@@ -63,6 +63,18 @@ bspc config pointer_follows_focus true
 bspc config remove_disabled_monitors  true
 bspc config remove_unplugged_monitors true
 
+# rules
+
+# rules for the behaviour of applications
+
+
+# reset configuration
+bspc rule -r "*"
+
+# app rules
+bspc rule -a "Lutris:*:*" state=floating
+bspc rule -a "MultiMC5:*:*" state=floating rectangle=960x600+500+250
+
 # colors
 
 
