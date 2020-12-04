@@ -11,11 +11,11 @@
 # wallpaper location
 WP_LOCATION="$HOME/wallpaper.png"
 
-[ -f "$1" ] && ln -sf "$(readlink -f "$1")" "$WP_LOCATION" &&
+[ -f "$1" ] && ln -fs "$(readlink -f "$1")" "$WP_LOCATION" &&
     notify-send -i "$WP_LOCATION" "wallpaper changed..."
 
 [ -d "$1" ] &&
-    ln -sf "$(find "$(readlink -f "$1")" -iregex '.*.\(jpg\|jpeg\|png\|gif\)' -type f | shuf -n 1)" "$WP_LOCATION" &&
+    ln -fs "$(find "$(readlink -f "$1")" -iregex '.*.\(jpg\|jpeg\|png\|gif\)' -type f | shuf -n 1)" "$WP_LOCATION" &&
     notify-send -i "$WP_LOCATION" "random wallpaper chosen"
 
 xwallpaper --zoom "$WP_LOCATION"

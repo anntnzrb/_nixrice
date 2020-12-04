@@ -1,9 +1,10 @@
 #!/bin/sh
 
-#◦◝◟∘◞◜◦ key-press repeat rate
+# key-press repeat rate
 xset r rate 225 50 &
 
-#◦◝◟∘◞◜◦ altgr + letter for (accents, etc) | remaps CAPS-LOCK to ESCAPE
-setxkbmap -layout us -variant altgr-intl -option caps:super &&
-    pkill -15 xcape 2>/dev/null
+# altgr + letter for (accents, etc)
+setxkbmap -layout us -variant altgr-intl && pkill -15 "xcape"
+
+# remaps CAPS-LOCK to ESCAPE
 xcape -e 'Super_L=Escape' &
