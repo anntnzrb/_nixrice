@@ -38,6 +38,6 @@ ms) preconv "$FILE" | refer -PS -e | groff -me -ms -kept -T pdf >"$BASE".pdf ;;
 py) python3 "$FILE" ;;
 rs) cargo build ;;
 sent) setsid -f sent "$FILE" 2>/dev/null ;;
-tex) textype "$FILE" && clean-build "$FILE" ;;
+tex) textype "$FILE" ;;
 *) sed 1q "$FILE" | grep "^#!/" | sed "s/^#!//" | xargs -r -I % "$FILE" ;;
 esac
