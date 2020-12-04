@@ -107,12 +107,6 @@ super + grave
 Print
   maimpick
 
-# edit config files dropdown
-
-
-super + shift + period
-  edit-cfgs
-
 # system options dropdown
 
 

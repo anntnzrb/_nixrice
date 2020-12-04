@@ -142,13 +142,6 @@ Print
   maimpick
 #+end_src
 
-*** edit config files dropdown
-
-#+begin_src sh :tangle sxhkdrc
-super + shift + period
-  edit-cfgs
-#+end_src
-
 *** system options dropdown
 
 #+begin_src sh :tangle sxhkdrc
