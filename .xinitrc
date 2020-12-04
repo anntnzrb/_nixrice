@@ -14,15 +14,13 @@
 # shellcheck disable=1090
 [ -f "$HOME"/.xprofile ] && . "$HOME"/.xprofile
 
-WM="dwm"
+SESSION="dwm"
 
-case $WM in
-i3)
-    exec i3
-    ;;
-bspwm)
-    exec bspwm
-    ;;
+case $SESSION in
+i3 | i3wm) exec i3 ;;
+
+bspwm) exec bspwm ;;
+
 dwm)
     # statusbar
     dwmblocks &
@@ -30,14 +28,11 @@ dwm)
     # keybinds
     sxhkd -c "$HOME/.config/dwm/sxhkdrc_dwm" &
 
-    while :; do
-        ssh-agent dwm
-    done
+    # run dwm as a loop in order to restart, also log errors if any
+    while :; do dwm 2>"$HOME/.dwm.log"; done
     ;;
-spectrwm)
-    exec spectrwm
-    ;;
-*)
-    exit 1
-    ;;
+
+spectrwm) exec spectrwm ;;
+
+*) exit 1 ;;
 esac
