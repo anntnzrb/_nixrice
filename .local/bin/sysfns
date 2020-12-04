@@ -1,47 +1,56 @@
-#!/bin/bash
+#!/bin/sh
 
 # **
 # dmenu dropdown with some system options
+#
+# systemd commands by default
 # *
 
-# *****************************************************************************
+# -----------------------------------------------------------------------------
 # preamble
-# *****************************************************************************
+# -----------------------------------------------------------------------------
+
 # source utility functions
 . utils
 
 # check if running with elevated privileges
 check_su
 
-# *****************************************************************************
+# -----------------------------------------------------------------------------
 # main
-# *****************************************************************************
-declare opts=("reboot
-sleep
-shutdown
-end-x-session")
+# -----------------------------------------------------------------------------
 
-# non-systemd init systems (OpenRC missing)
+# non-systemd systems
 case "$(readlink -f /sbin/init)" in
 *runit*)
     zzz="zzz"
     sdn="poweroff"
     ;;
+*openrc*)
+    reb="openrc-shutdown -r"
+    sdn="openrc-shutdown -p"
+    ;;
 esac
 
-CHOICE=$(printf '%s' "${opts[@]}" | dmenu -c -i -l 20 -bw 6 -fn "Overpass Mono" -p 'command: ')
+# list of options
+opts="reboot sleep shutdown kill-x"
 
-case "$CHOICE" in
+# menu
+# shellcheck disable=2086
+case "$(printf "%s\n" $opts | dmenu -c -i -l 20 -bw 6 -p 'command: ')" in
 reboot)
     ${reb:-reboot}
     ;;
+
 sleep)
     ${zzz:-systemctl suspend-then-hibernate}
     ;;
+
 shutdown)
     ${sdn:-shutdown -h now}
     ;;
-end-x-session)
-    pkill -15 Xorg
+
+kill-x)
+    pkill -15 'Xorg'
     ;;
 esac
