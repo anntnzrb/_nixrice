@@ -1,0 +1,141 @@
+#+TITLE: dwm keybinds
+#+PROPERTY: header-args :comments org :results silent :tangle sxhkdrc_dwm
+
+* table of contents                                          :TOC_2:noexport:
+- [[#preample][preample]]
+  - [[#terminology][terminology]]
+- [[#tags][tags]]
+- [[#nodes][nodes]]
+  - [[#states-and-layouts][states and layouts]]
+  - [[#gaps][gaps]]
+- [[#controls][controls]]
+
+* preample
+
+this file *does not* contain any configuration for =dwm=, it only provides its
+keybinds
+
+by using [[https://dwm.suckless.org/patches/dwmc/][dwmc]], =sxhkd= is now able to communicate with =dwm= thru commands, similar
+to the =bspc= command on [[https://github.com/baskerville/bspwm][bspwm]]
+
+this allows me to:
+
++ stay in =dwm=
+  + has a built-in bar, /some might disagree/
+  + does not have anything extra i do not use
+    + if i need anything else, patches are available
++ isolate my window manager's configuration from its keybinds
+  + just like =bspwm=
++ take advantage of =sxhkd=
+  + straight-forward syntax
+  + /chords/
+
+** terminology
+
++ =dwm= uses /tags/, not /workspaces/
++ /node/ is refered as a /window/
+ + some other window managers also call them /clients/
++ some /signals/ start at index =0=
+  + *e.g*: =dwmc viewex {0-8}=
+
+* tags
+
++ focus specific /tag/ (=1..9=)
+
+#+begin_src sh
+super + {1-9}
+ dwmc viewex {0-8}
+#+end_src
+
++ view all /nodes/ across all /tags/
+  + basically focus all /tags/
+
+#+begin_src sh
+super + 0
+ dwmc viewall
+#+end_src
+
+* nodes
+
++ focus thru /nodes/
+
+#+begin_src sh
+super + {k,j}
+ dwmc focusstack {-,+}1
+#+end_src
+
++ send a /node/ to a specific /tag/ (=1..9=)
+
+#+begin_src sh
+super + shift + {1-9}
+ dwmc tagex {0-8}
+#+end_src
+
++ swap currently focused /node/ to the /master node/
+
+#+begin_src sh
+super + shift + Tab
+ dwmc zoom
+#+end_src
+
++ resize a /node/
+  + more specifically, *[increase/decrease]* the size of the /master node/
+
+#+begin_src sh
+super + {h,l}
+ dwmc setmfact {-,+}0.05
+#+end_src
+
+** states and layouts
+
++ *state* chord
+  + =f= toggles fullscreen
+  + =space= togles floating mode
+
+#+begin_src sh
+super + shift + s ; {f,space}
+  dwmc {togglefullscr,togglefloating}
+#+end_src
+
++ *layout* chord
+  + =[= switch to layout =0= (/tiling/)
+  + =]= switch to layout =1= (/floating/)
+
+#+begin_src sh
+super + shift + l ; bracket{left,right}
+ dwmc setlayoutex {0,1}
+#+end_src
+
+** gaps
+
++ toggle gaps
+
+  #+begin_src sh
+super + shift + backslash
+ dwmc togglegaps
+  #+end_src
+
++ decrease & increase gaps
+
+  #+begin_src sh
+super + shift + {minus,equal}
+ dwmc incrgaps {-,+}1
+  #+end_src
+
+* controls
+
++ *controller* chord
+  + =q= correctly closes the focused node
+  + =r= terminates =dwm=
+
+#+begin_src sh
+super + shift + q ; {q,r}
+ dwmc {killclient,quit}
+#+end_src
+
++ toggle bar
+
+#+begin_src sh
+super + shift + b
+ dwmc togglebar
+#+end_src
