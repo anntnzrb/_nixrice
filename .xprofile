@@ -35,7 +35,7 @@ picom -b &
 pulseaudio -D &
 
 # keybindings
-sxhkd &
+sxhkd -t 5 &
 
 # dunst
 dunst &
