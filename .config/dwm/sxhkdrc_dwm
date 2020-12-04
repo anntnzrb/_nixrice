@@ -1,0 +1,103 @@
+# tags
+
+# + focus specific /tag/ (=1..9=)
+
+
+super + {1-9}
+ dwmc viewex {0-8}
+
+
+
+# + view all /nodes/ across all /tags/
+#   + basically focus all /tags/
+
+
+super + 0
+ dwmc viewall
+
+# nodes
+
+# + focus thru /nodes/
+
+
+super + {k,j}
+ dwmc focusstack {-,+}1
+
+
+
+# + send a /node/ to a specific /tag/ (=1..9=)
+
+
+super + shift + {1-9}
+ dwmc tagex {0-8}
+
+
+
+# + swap currently focused /node/ to the /master node/
+
+
+super + shift + Tab
+ dwmc zoom
+
+
+
+# + resize a /node/
+#   + more specifically, *[increase/decrease]* the size of the /master node/
+
+
+super + {h,l}
+ dwmc setmfact {-,+}0.05
+
+# states and layouts
+
+# + *state* chord
+#   + =f= toggles fullscreen
+#   + =space= togles floating mode
+
+
+super + shift + s ; {f,space}
+  dwmc {togglefullscr,togglefloating}
+
+
+
+# + *layout* chord
+#   + =[= switch to layout =0= (/tiling/)
+#   + =]= switch to layout =1= (/floating/)
+
+
+super + shift + l ; bracket{left,right}
+ dwmc setlayoutex {0,1}
+
+# gaps
+
+# + toggle gaps
+
+
+super + shift + backslash
+ dwmc togglegaps
+
+
+
+# + decrease & increase gaps
+
+
+super + shift + {minus,equal}
+ dwmc incrgaps {-,+}1
+
+# controls
+
+# + *controller* chord
+#   + =q= correctly closes the focused node
+#   + =r= terminates =dwm=
+
+
+super + shift + q ; {q,r}
+ dwmc {killclient,quit}
+
+
+
+# + toggle bar
+
+
+super + shift + b
+ dwmc togglebar
