@@ -8,7 +8,9 @@
 # preamble
 # -----------------------------------------------------------------------------
 
-. utils
+# load utilities
+# shellcheck disable=1090
+. "$LIBSHUTILS"
 
 # -----------------------------------------------------------------------------
 # functions
@@ -16,15 +18,15 @@
 
 # checks if dunst is installed; recieves parameters
 dunst_notify() {
-    is_installed notify-send && is_running Xorg && notify-send -t "$1" "$2"
+    is_installed 'notify-send' && is_running 'Xorg' && notify-send -t "$1" "$2"
 }
 
 # -----------------------------------------------------------------------------
 # main
 # -----------------------------------------------------------------------------
 
-if is_installed tremc && is_installed transmission-cli; then
-    if ! is_running transmission-daemon; then
+if is_installed 'tremc' && is_installed 'transmission-cli'; then
+    if ! is_running 'transmission-daemon'; then
         transmission-daemon
         dunst_notify 3 "Starting torrent daemon..."
         setsid -f "$TERMINAL" -e tremc

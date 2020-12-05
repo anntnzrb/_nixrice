@@ -10,11 +10,12 @@
 # preamble
 # -----------------------------------------------------------------------------
 
-# source utility functions
-. utils
+# load utilities
+# shellcheck disable=1090
+. "$LIBSHUTILS"
 
-# check if running with elevated privileges
-check_su
+# check if running with elevated priviledges; elevate if not
+! is_su && elevate_privs "$0" "$0"
 
 # -----------------------------------------------------------------------------
 # main

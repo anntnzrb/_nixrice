@@ -4,30 +4,33 @@
 # if transmission-daemon is running, will ask to kill, else will ask to start.
 # *
 
-# *****************************************************************************
+# -----------------------------------------------------------------------------
 # preamble
-# *****************************************************************************
-# source utility functions
-. utils
+# -----------------------------------------------------------------------------
 
-# *****************************************************************************
+# load utilities
+# shellcheck disable=1090
+. "$LIBSHUTILS"
+
+# -----------------------------------------------------------------------------
 # functions
-# *****************************************************************************
+# -----------------------------------------------------------------------------
+
 # checks if dunst is installed; recieves parameters
 dunst_notify() {
-    is_installed notify-send && pgrep -x Xorg >/dev/null 2>&1 &&
-        notify-send -t "$1" "$2"
+    is_installed 'notify-send' && is_running 'Xorg' && notify-send -t "$1" "$2"
 }
 
-# *****************************************************************************
+# -----------------------------------------------------------------------------
 # main
-# *****************************************************************************
-if is_running transmission-daemon; then
+# -----------------------------------------------------------------------------
+
+if is_running 'transmission-daemon'; then
     [ "$(printf "No\\nYes" | dmenu -i -p "Turn off transmission-daemon?")" = "Yes" ] &&
         pkill -15 transmission-da &&
         dunst_notify 3 "transmission-daemon disabled"
 else
-    is_installed transmission-cli || exit 0
+    is_installed 'transmission-cli' || exit 0
     [ "$(printf "No\\nYes" | dmenu -i -p "Turn on transmission daemon?")" = "Yes" ] &&
         transmission-daemon && dunst_notify 3 "tranmission-daemon enabled"
 fi

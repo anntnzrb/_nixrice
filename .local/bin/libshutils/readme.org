@@ -1,0 +1,80 @@
+#+TITLE: library of shell utilities
+#+PROPERTY: header-args :comments org :results silent
+
+* table of contents                                          :TOC_2:noexport:
+- [[#collection][collection]]
+  - [[#die][die]]
+  - [[#elevate-privs][elevate-privs]]
+  - [[#is-installed][is-installed]]
+  - [[#is-net][is-net]]
+  - [[#is-running][is-running]]
+  - [[#is-su][is-su]]
+
+* collection
+
+the list of utility scripts are ordered alphabetically
+
+** die
+
+#!/bin/sh
+
+prints a message to /stderr/ & exits script with non-successful code =1=
+
+#+begin_src sh :shebang "#!/bin/sh\n" :tangle "die"
+printf '%s\n' "$@" >&2
+exit 1
+#+end_src
+
+** elevate-privs
+
+elevates priviledges
+
++ should be used in conjuction with [[is-su]]
++ preserves existing /environment variables/
+
++ *TODO* :: account for =doas=
+
+#+begin_src sh :shebang "#!/bin/sh\n" :tangle "elevate-privs"
+exec sudo -E "$0" "@"
+#+end_src
+
+** is-installed
+
+checks if command =$1= is installed
+
++ verifies if the file is an executable file, this is used to prevent
+
+#+begin_src sh :shebang "#!/bin/sh\n" :tangle "is-installed"
+[ -x "$(command -v "$1")" ]
+#+end_src
+
+** is-net
+
+checks if there is an active internet connection
+
++ *example.com* is preferred (this is the purpose of this website)
+
+#+begin_src sh :shebang "#!/bin/sh\n" :tangle "is-net"
+ping -q -c 1 'example.com' >/dev/null 2>&1
+#+end_src
+
+** is-running
+
+checks if =$1= is currently running
+
++ process name "$1" must be exact
+
+#+begin_src sh :shebang "#!/bin/sh\n" :tangle "is-running"
+pgrep -x "$1" >/dev/null
+#+end_src
+
+** is-su
+
+checks if invoking user is /root/
+
+#+begin_src sh :shebang "#!/bin/sh\n" :tangle "is-su"
+# shellcheck disable=2046
+# comparison between integers is required
+
+[ $(id -u) -eq 0 ]
+#+end_src

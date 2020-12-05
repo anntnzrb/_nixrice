@@ -45,6 +45,9 @@ export SH_CFGS="$XDG_CONFIG_HOME/sh"
 export ALIASES="$SH_CFGS/lib/02-aliases"
 export FUNCTIONS="$SH_CFGS/lib/03-functions"
 
+# load utilities
+export LIBSHUTILS="$HOME/.local/bin/libshutils/libshutils"
+
 # shell(s)
 export ZDOTDIR="$SH_CFGS/zsh"
 
