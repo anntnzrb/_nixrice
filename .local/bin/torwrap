@@ -10,7 +10,7 @@
 
 # load utilities
 # shellcheck disable=1090
-. "$LIBSHUTILS"
+. "$LIBSHUTILS/std-utils"
 
 # -----------------------------------------------------------------------------
 # functions

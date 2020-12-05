@@ -12,7 +12,7 @@
 
 # load utilities
 # shellcheck disable=1090
-. "$LIBSHUTILS"
+. "$LIBSHUTILS/std-utils"
 
 # check if running with elevated priviledges; elevate if not
 ! is_su && elevate_privs "$0" "$@"
