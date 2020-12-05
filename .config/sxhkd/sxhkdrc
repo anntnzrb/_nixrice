@@ -111,7 +111,7 @@ Print
 
 
 super + shift + x
-  sudo sysfns
+  sysfns
 
 # network tools
 
