@@ -17,20 +17,32 @@
 #       ██████ ░██  ░██░░██████░░██████  ░░██  ██████
 #      ░░░░░░  ░░   ░░  ░░░░░░  ░░░░░░    ░░  ░░░░░░
 
-# elevate priviledges if not already
-[ "$(id -u)" -ne 0 ] && exec sudo -E "$0" "$@"
+# -----------------------------------------------------------------------------
+# preamble
+# -----------------------------------------------------------------------------
+
+# source utilities
+# shellcheck disable=SC1090
+. "$LIBSHUTILS/sys-utils"
+
+# check if running with elevated priviledges; elevate if not
+! is_su && elevate_privs "$0" "$@"
+
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
 
 # install `cheat.sh` if not installed already
-if [ ! -f "/usr/local/bin/cht.sh" ]; then
-	CHEAT_INSTALL_DIR="/usr/local/bin/cht.sh"
+if [ ! -f '/usr/local/bin/cht.sh' ]; then
+    CHEAT_INSTALL_DIR="/usr/local/bin/cht.sh"
 
-	printf 'downloading & installing cheat.sh\n'
+    printf 'downloading & installing cheat.sh\n'
 
-	{ curl -Ss "https://cht.sh/:cht.sh" |
-		sudo tee "$CHEAT_INSTALL_DIR"; } >/dev/null
-	chmod 755 "$CHEAT_INSTALL_DIR"
+    { curl -Ss "https://cht.sh/:cht.sh" |
+        tee "$CHEAT_INSTALL_DIR"; } >/dev/null
+    chmod 755 "$CHEAT_INSTALL_DIR"
 
-	printf 'cheat.sh was installed...\n'
+    printf 'cheat.sh was installed...\n'
 else
     printf 'cheat.sh is already installed\n'
 fi

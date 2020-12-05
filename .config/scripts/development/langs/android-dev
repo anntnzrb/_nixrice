@@ -15,7 +15,7 @@
 
 # source utilities
 # shellcheck disable=SC1090
-. "$(dirname "$(dirname "$(readlink -f "$0")")")/utils"
+. "$LIBSHUTILS/sys-utils"
 
 # -----------------------------------------------------------------------------
 # main
@@ -29,7 +29,7 @@ arch)
 
 void)
     # elevate permissions
-    elevate_perms "$@"
+    ! is_su && elevate_privs "$0" "$@"
 
     # adb
     $PKG_INSTALL "android-tools"

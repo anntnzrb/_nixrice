@@ -15,7 +15,7 @@
 
 # source utilities
 # shellcheck disable=SC1090
-. "$(dirname "$(dirname "$(readlink -f "$0")")")/utils"
+. "$LIBSHUTILS/sys-utils"
 
 # -----------------------------------------------------------------------------
 # main
@@ -31,8 +31,8 @@ arch)
     ;;
 
 void)
-    # elevate permissions
-    elevate_perms "$@"
+    # check if running with elevated priviledges; elevate if not
+    ! is_su && elevate_privs "$0" "$@"
 
     # dependencies
     $PKG_INSTALL "nodejs"
