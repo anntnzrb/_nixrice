@@ -5,10 +5,23 @@
 #
 # *
 
+# -----------------------------------------------------------------------------
+# preamble
+# -----------------------------------------------------------------------------
+
+# load utilities
+# shellcheck disable=1090
+. "$LIBSHUTILS"
+
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
+
+# editor of choice
 ED="emacs"
 
 case $ED in
-emacs)
+gnu | emacs)
     # if the script is ran via terminal, emacs is launched in terminal mode,
     # launches GUI version otherwise;
     # the script will start the emacs daemon if not up already and call the
@@ -16,22 +29,20 @@ emacs)
     #
     # credits to Cem Keylan
 
-    is_running "emacs" && {
+    is_running 'emacs' && {
         tty >/dev/null 2>&1 && set -- -nw "$@"
         exec emacsclient --alternate-editor='' -c "$@"
     } || emacs --daemon >/dev/null 2>&1 && exec "$0" "$@"
     ;;
 
-[n]vi[m]) exec nvim ;;
+nvim) exec nvim ;;
 
 # fallback editor
 *)
-    if is_installed "vi"; then
-        exec vi
-    elif is_installed "nano"; then
-        exec nano
-    else
-        printf 'no editor was found\n'
-    fi
+    is_installed 'vi' && exec vi
+    is_installed 'nano' && exec nano
+
+    # this line will only be reached if those above fail
+    die 'no editor was found'
     ;;
 esac

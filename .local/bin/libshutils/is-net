@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# is-net
+
+# checks if there is an active internet connection
+
+# + *example.com* is preferred (this is the purpose of this website)
+
+
+ping -q -c 1 'example.com' >/dev/null 2>&1
