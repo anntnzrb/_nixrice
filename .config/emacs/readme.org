@@ -141,16 +141,22 @@ replace =yes-no= prompts with simpler =y/n=
 
 *** misc
 
-reload file automatically if edited externally
++ reload file automatically if edited externally
 
 #+begin_src emacs-lisp
 (global-auto-revert-mode t)
 #+end_src
 
-inmediately kill current buffer
++ inmediately kill current buffer
 
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
+#+end_src
+
++ back-up files location
+
+#+begin_src emacs-lisp
+(setq backup-directory-alist `(("." . "~/.saves")))
 #+end_src
 
 *** clipboard
@@ -454,6 +460,17 @@ a formatter for pretty much every languages
 *** Python
 
 #+begin_src emacs-lisp
+;; Python interpreter to use
+(setq py-ver "python3")
+
+(use-package python
+  :ensure nil
+  :custom (python-shell-interpreter py-ver))
+#+end_src
+
++ [[LSP]] for Python
+
+#+begin_src emacs-lisp
 (use-package lsp-python-ms
   :requires lsp-mode
   :after lsp-mode
@@ -521,6 +538,7 @@ alternative undo system for emacs (enables evil-mode redo)
 (use-package evil
   :custom
   (evil-undo-system 'undo-tree)
+  (evil-want-C-i-jump nil)
   :config
   ;; go to normal mode when "C-g"
   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
