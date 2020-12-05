@@ -3,4 +3,4 @@
 # this script is the SUDO_ASKPASS variable, will be used as helper program to
 # read the password if no terminal is available
 
-dmenu -fn 'Monospace-21' -sb '#d79921' -p "$1" <&- && echo
+dmenu -P -fn 'Monospace-21' -sb '#d79921' -p "$1" <&-
