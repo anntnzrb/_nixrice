@@ -1,23 +1,28 @@
 #!/bin/sh
 
 # -----------------------------------------------------------------------------
+# preamble
+# -----------------------------------------------------------------------------
+
+# source utilities
+# shellcheck disable=SC1090
+. "$LIBSHUTILS/sys-utils"
+
+# -----------------------------------------------------------------------------
 # functions
 # -----------------------------------------------------------------------------
 
-# checks if program is installed
-is_installed() { [ -x "$(command -v "$1")" ]; }
-
 detect_vs_ver() {
     # just quit if none installed
-    ! is_installed "code-oss" && ! is_installed "codium" && {
+    ! is_installed 'code-oss' && ! is_installed 'codium' && {
         printf 'no version of VSCode found...\n'
         exit 1
     }
 
     # find out which version of VSCode is installed
-    if is_installed "codium"; then
+    if is_installed 'codium'; then
         VSCODE_VER="codium"
-    elif is_installed "code-oss"; then
+    elif is_installed 'code-oss'; then
         VSCODE_VER="code-oss"
     fi
 }
@@ -32,67 +37,67 @@ install_vscext() { $VSCODE_VER --install-extension "$1"; }
 detect_vs_ver
 
 # echo info
-printf "found VSCode with the command '%s'\n" "$VSCODE_VER"
+printf 'found VSCode with the command '%s'\n' "$VSCODE_VER"
 
 # intellisense for various languages
-install_vscext "VisualStudioExptTeam.vscodeintellicode"
+install_vscext 'VisualStudioExptTeam.vscodeintellicode'
 
 # code runner
-install_vscext "formulahendry.code-runner"
+install_vscext 'formulahendry.code-runner'
 
 # vi key-binds
-install_vscext "vscodevim.vim"
+install_vscext 'vscodevim.vim'
 
 # gitlens (visual git)
-install_vscext "eamodio.gitlens"
+install_vscext 'eamodio.gitlens'
 
 # -----------------------------------------------------------------------------
 # appearance
 # -----------------------------------------------------------------------------
 
 # themes & icons
-install_vscext "teabyii.ayu"
-install_vscext "robertrossmann.remedy"
-install_vscext "fooxly.themeswitch"
+install_vscext 'teabyii.ayu'
+install_vscext 'robertrossmann.remedy'
+install_vscext 'fooxly.themeswitch'
 
 # -----------------------------------------------------------------------------
 # shell
 # -----------------------------------------------------------------------------
 
-install_vscext "timonwong.shellcheck"
+install_vscext 'timonwong.shellcheck'
 
 # -----------------------------------------------------------------------------
 # c/c++
 # -----------------------------------------------------------------------------
 
-install_vscext "ms-vscode.cpptools"
+install_vscext 'ms-vscode.cpptools'
 
 # -----------------------------------------------------------------------------
 # java
 # -----------------------------------------------------------------------------
 
-install_vscext "vscjava.vscode-java-pack"
+install_vscext 'vscjava.vscode-java-pack'
 
 # -----------------------------------------------------------------------------
 # markdown
 # -----------------------------------------------------------------------------
 
-install_vscext "yzhang.markdown-all-in-one"
-install_vscext "davidanson.vscode-markdownlint"
+install_vscext 'yzhang.markdown-all-in-one'
+install_vscext 'davidanson.vscode-markdownlint'
 
 # -----------------------------------------------------------------------------
 # formatting
 # -----------------------------------------------------------------------------
 
 # uncrustify (formatter/fixer)
-install_vscext "laurenttreguier.uncrustify"
+install_vscext 'laurenttreguier.uncrustify'
 
 # -----------------------------------------------------------------------------
 # spell checking
 # -----------------------------------------------------------------------------
 
-install_vscext "streetsidesoftware.code-spell-checker"
-install_vscext "streetsidesoftware.code-spell-checker-spanish"
+install_vscext 'streetsidesoftware.code-spell-checker'
+install_vscext 'streetsidesoftware.code-spell-checker-spanish'
 
 # -----------------------------------------------------------------------------
 # debug

@@ -1,0 +1,49 @@
+#!/bin/sh
+
+# sys-utils
+
+# system-specific utilities
+
+# append this line to create & set the file as /executable/
+
+
+# sys-utils
+
+# preamble
+
+# load [[std-utils]] first
+
+
+# load utilities
+# shellcheck disable=1090
+. "$LIBSHUTILS/std-utils"
+
+# package manager
+
+# detects system and sets package-manager settings
+
+# *NOTE*: rolling release distros do not do partial upgrades; full system upgrade
+# for stability
+
+
+# ensure these are not inherited by env
+export SYSTEM=
+export PKG_INSTALL=
+export PKG_INSTALL_ALT=
+
+# arch-based
+if is_installed 'yay'; then
+    SYSTEM="arch"
+    PKG_INSTALL="yay --needed --noconfirm -Suy"
+    PKG_INSTALL_ALT="pacman --needed --noconfirm -Suy"
+
+# void
+elif is_installed 'xbps-install'; then
+    SYSTEM="void"
+    PKG_INSTALL="xbps-install -Sy"
+
+# debian-based
+elif is_installed 'apt-get'; then
+    SYSTEM="debian"
+    PKG_INSTALL="apt-get update && apt-get install -y"
+fi
