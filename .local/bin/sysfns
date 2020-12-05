@@ -15,7 +15,7 @@
 . "$LIBSHUTILS"
 
 # check if running with elevated priviledges; elevate if not
-! is_su && elevate_privs "$0" "$0"
+! is_su && elevate_privs "$0" "$@"
 
 # -----------------------------------------------------------------------------
 # main
