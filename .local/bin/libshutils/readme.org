@@ -2,17 +2,39 @@
 #+PROPERTY: header-args :comments org :results silent
 
 * table of contents                                          :TOC_2:noexport:
-- [[#collection][collection]]
+- [[#std-utils][std-utils]]
+  - [[#elevate_privs][elevate_privs]]
   - [[#die][die]]
-  - [[#elevate-privs][elevate-privs]]
-  - [[#is-installed][is-installed]]
-  - [[#is-net][is-net]]
-  - [[#is-running][is-running]]
-  - [[#is-su][is-su]]
+  - [[#is_installed][is_installed]]
+  - [[#is_net][is_net]]
+  - [[#is_running][is_running]]
+  - [[#is_su][is_su]]
+- [[#sys-utils][sys-utils]]
+  - [[#preamble][preamble]]
+  - [[#package-manager][package manager]]
 
-* collection
+* std-utils
 
-the list of utility scripts are ordered alphabetically
+general utility functions
+
+append this line to create & set the file as /executable/
+
+#+begin_src sh :shebang "#!/bin/sh\n" :tangle "std-utils"
+# std-utils
+#+end_src
+
+** elevate_privs
+
+elevates priviledges
+
++ should be used in conjuction with [[is_su]]
++ preserves existing /environment variables/
+
++ *TODO* :: account for =doas=
+
+#+begin_src sh :tangle "std-utils"
+elevate_privs() { exec sudo -E "$0" "@"; }
+#+end_src
 
 ** die
 
@@ -20,61 +42,101 @@ the list of utility scripts are ordered alphabetically
 
 prints a message to /stderr/ & exits script with non-successful code =1=
 
-#+begin_src sh :shebang "#!/bin/sh\n" :tangle "die"
-printf '%s\n' "$@" >&2
-exit 1
+#+begin_src sh :tangle "std-utils"
+die() {
+    printf '%s\n' "$@" >&2
+    exit 1
+}
 #+end_src
 
-** elevate-privs
-
-elevates priviledges
-
-+ should be used in conjuction with [[is-su]]
-+ preserves existing /environment variables/
-
-+ *TODO* :: account for =doas=
-
-#+begin_src sh :shebang "#!/bin/sh\n" :tangle "elevate-privs"
-exec sudo -E "$0" "@"
-#+end_src
-
-** is-installed
+** is_installed
 
 checks if command =$1= is installed
 
 + verifies if the file is an executable file, this is used to prevent
 
-#+begin_src sh :shebang "#!/bin/sh\n" :tangle "is-installed"
-[ -x "$(command -v "$1")" ]
+#+begin_src sh :tangle "std-utils"
+is_installed() { [ -x "$(command -v "$1")" ]; }
 #+end_src
 
-** is-net
+** is_net
 
 checks if there is an active internet connection
 
 + *example.com* is preferred (this is the purpose of this website)
 
-#+begin_src sh :shebang "#!/bin/sh\n" :tangle "is-net"
-ping -q -c 1 'example.com' >/dev/null 2>&1
+#+begin_src sh :tangle "std-utils"
+is_net() { ping -q -c 1 'example.com' >/dev/null 2>&1; }
 #+end_src
 
-** is-running
+** is_running
 
 checks if =$1= is currently running
 
 + process name "$1" must be exact
 
-#+begin_src sh :shebang "#!/bin/sh\n" :tangle "is-running"
-pgrep -x "$1" >/dev/null
+#+begin_src sh :tangle "std-utils"
+is_running() { pgrep -x "$1" >/dev/null; }
 #+end_src
 
-** is-su
+** is_su
 
 checks if invoking user is /root/
 
-#+begin_src sh :shebang "#!/bin/sh\n" :tangle "is-su"
+#+begin_src sh :tangle "std-utils"
 # shellcheck disable=2046
 # comparison between integers is required
 
-[ $(id -u) -eq 0 ]
+is_su() { [ $(id -u) -eq 0 ]; }
+#+end_src
+
+* sys-utils
+
+system-specific utilities
+
+append this line to create & set the file as /executable/
+
+#+begin_src sh :shebang "#!/bin/sh\n" :tangle "sys-utils"
+# sys-utils
+#+end_src
+
+** preamble
+
+load [[std-utils]] first
+
+#+begin_src sh :tangle "sys-utils"
+# load utilities
+# shellcheck disable=1090
+. "$LIBSHUTILS/std-utils"
+#+end_src
+
+** package manager
+
+detects system and sets package-manager settings
+
+*NOTE*: rolling release distros do not do partial upgrades; full system upgrade
+for stability
+
+#+begin_src sh :tangle "sys-utils"
+# ensure these are not inherited by env
+export SYSTEM=
+export PKG_INSTALL=
+export PKG_INSTALL_ALT=
+
+# arch-based
+if is_installed 'yay'; then
+    SYSTEM="arch"
+    PKG_INSTALL="yay --needed --noconfirm -Suy"
+    PKG_INSTALL_ALT="pacman --needed --noconfirm -Suy"
+
+# void
+elif is_installed 'xbps-install'; then
+    SYSTEM="void"
+    PKG_INSTALL="xbps-install -Sy"
+
+# debian-based
+elif is_installed 'apt-get'; then
+    SYSTEM="debian"
+    PKG_INSTALL="apt-get update && apt-get install -y"
+fi
 #+end_src

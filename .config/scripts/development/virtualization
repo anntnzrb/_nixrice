@@ -12,16 +12,21 @@
 # main
 # -----------------------------------------------------------------------------
 
-# check if running with elevated priviledges; elevate if not
-! is_su && elevate_privs "$0" "$@"
+case $SYSTEM in
+void)
+    # check if running with elevated priviledges; elevate if not
+    ! is_su && elevate_privs "$0" "$@"
 
-# set download folder
-DWNL_FOLDER="/tmp/figlet-fonts"
+    # pkgs
+    $PKG_INSTALL "virtualbox-ose"
 
-# download & install
-git clone -q 'https://github.com/xero/figlet-fonts.git' "$DWNL_FOLDER" ||
-    exit 1
-cp -Tfr "$DWNL_FOLDER/." '/usr/share/figlet/' || exit 1
-rm -fr "$DWNL_FOLDER"
+    # load modules
+    modules-load
 
-printf 'figlet fonts were downloaded and applied...\n'
+    # force reconfig just in case
+    xbps-reconfigure -f "virtualbox-ose-dkms"
+    ;;
+esac
+
+# after
+printf '\n...it is recommended to reboot system\n'

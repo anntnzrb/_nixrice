@@ -1,0 +1,71 @@
+#!/bin/sh
+
+# std-utils
+
+# general utility functions
+
+# append this line to create & set the file as /executable/
+
+
+# std-utils
+
+# elevate_privs
+
+# elevates priviledges
+
+# + should be used in conjuction with [[is_su]]
+# + preserves existing /environment variables/
+
+# + *TODO* :: account for =doas=
+
+
+elevate_privs() { exec sudo -E "$0" "@"; }
+
+# die
+
+# #!/bin/sh
+
+# prints a message to /stderr/ & exits script with non-successful code =1=
+
+
+die() {
+    printf '%s\n' "$@" >&2
+    exit 1
+}
+
+# is_installed
+
+# checks if command =$1= is installed
+
+# + verifies if the file is an executable file, this is used to prevent
+
+
+is_installed() { [ -x "$(command -v "$1")" ]; }
+
+# is_net
+
+# checks if there is an active internet connection
+
+# + *example.com* is preferred (this is the purpose of this website)
+
+
+is_net() { ping -q -c 1 'example.com' >/dev/null 2>&1; }
+
+# is_running
+
+# checks if =$1= is currently running
+
+# + process name "$1" must be exact
+
+
+is_running() { pgrep -x "$1" >/dev/null; }
+
+# is_su
+
+# checks if invoking user is /root/
+
+
+# shellcheck disable=2046
+# comparison between integers is required
+
+is_su() { [ $(id -u) -eq 0 ]; }
