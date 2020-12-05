@@ -11,19 +11,21 @@
 # preamble
 # -----------------------------------------------------------------------------
 
-. utils
+# load utilities
+# shellcheck disable=1090
+. "$LIBSHUTILS"
 
 # -----------------------------------------------------------------------------
 # main
 # -----------------------------------------------------------------------------
 
 # arch-based
-if is_installed "pacman"; then
+if is_installed 'pacman'; then
     # check if there are updates first
     pacman -Qu &&
         pacman -Qu | grep -Fcv "[ignored]" | sed "s/^/📦 /;s/^📦 0$//g"
 
 # void
-elif is_installed "xbps-install"; then
+elif is_installed 'xbps-install'; then
     return 1
 fi

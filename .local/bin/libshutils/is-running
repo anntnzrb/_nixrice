@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# is-running
+
+# checks if =$1= is currently running
+
+# + process name "$1" must be exact
+
+
+pgrep -x "$1" >/dev/null
