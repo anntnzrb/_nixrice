@@ -146,7 +146,7 @@ Print
 
 #+begin_src sh :tangle sxhkdrc
 super + shift + x
-  sudo sysfns
+  sysfns
 #+end_src
 
 *** network tools
