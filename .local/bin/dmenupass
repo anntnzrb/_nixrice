@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# This script is the SUDO_ASKPASS variable, meaning that it will be used as a
-# password prompt if needed.
+# this script is the SUDO_ASKPASS variable, will be used as helper program to
+# read the password if no terminal is available
 
-dmenu -fn Monospace-18 -sb "#d79921" -sf "#1d2021" -nf "#000000" -nb "#000000" -p "$1" <&- && echo
+dmenu -fn 'Monospace-21' -sb '#d79921' -p "$1" <&- && echo
