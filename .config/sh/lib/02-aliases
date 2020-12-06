@@ -21,8 +21,8 @@ alias \
     ll="ls -AFhlq --color=auto --group-directories-first" \
     mkdir="mkdir -pv" \
     mv="mv -iv" \
-    rm="rm -iv" \
-    rmfr="rm -Rfiv" \
+    rm="rm -v" \
+    rmfr="rm -Rfv" \
     tree="tree -CFlq --dirsfirst" \
     treed="tree -CFdlq --dirsfirst" \
     zip="zip -rv"
