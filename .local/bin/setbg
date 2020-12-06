@@ -1,21 +1,25 @@
 #!/bin/sh
 
-# this script does the following:
-#   run at Xorg launch (via .xprofile)
-#   if file is passed as argument, set it as wallpaper
-#   if directory is passed as argument, choose random image and
-#   set it as wallpaper
+# **
+# simple script to set a background/wallpaper
 #
-# the wallpaper set is a symlink located @ ~
+# dependencies :: feh
 
-# wallpaper location
-WP_LOCATION="$HOME/wallpaper.png"
+# wallpapers location
+WP_PATH="$HOME/lib/imgs/wallpapers"
 
-[ -f "$1" ] && ln -fs "$(readlink -f "$1")" "$WP_LOCATION" &&
-    notify-send -i "$WP_LOCATION" "wallpaper changed..."
+# use defaults if argv[1] is null
+[ -z "$1" ] && {
+    feh --no-fehbg --recursive --bg-scale --randomize "$WP_PATH"
+}
 
-[ -d "$1" ] &&
-    ln -fs "$(find "$(readlink -f "$1")" -iregex '.*.\(jpg\|jpeg\|png\|gif\)' -type f | shuf -n 1)" "$WP_LOCATION" &&
-    notify-send -i "$WP_LOCATION" "random wallpaper chosen"
+# if argv[1] is a file, set it as wallpaper
+[ -f "$1" ] && { feh --no-fehbg --bg-scale "$1"; }
 
-xwallpaper --zoom "$WP_LOCATION"
+# if argv[1] is a directory, randomly pick a file from that directory and
+# set is as wallpaper
+[ -d "$1" ] && { feh --no-fehbg --recursive --bg-scale --randomize "$1"; }
+
+# notify & exit
+notify-send 'wallpaper updated...'
+exit 0

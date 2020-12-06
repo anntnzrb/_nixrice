@@ -26,13 +26,13 @@ xrdb "$XDG_CONFIG_HOME/X11/.Xresources" &
 remaps &
 
 # sets the background with `setbg` script
-setbg "$HOME/lib/imgs/wallpapers/" &
+setbg &
 
 # compositor
 picom -b &
 
 # audio
-pulseaudio -D &
+pulseaudio -k ; pulseaudio --start --exit-idle-time=-1 >/dev/null 2>&1 &
 
 # keybindings
 sxhkd -t 5 &
