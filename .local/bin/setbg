@@ -10,7 +10,7 @@ WP_PATH="$HOME/lib/imgs/wallpapers"
 
 # use defaults if argv[1] is null
 [ -z "$1" ] && {
-    feh --no-fehbg --recursive --bg-scale --randomize "$WP_PATH"
+    feh -rz --no-fehbg --bg-scale "$WP_PATH"
 }
 
 # if argv[1] is a file, set it as wallpaper
@@ -18,7 +18,7 @@ WP_PATH="$HOME/lib/imgs/wallpapers"
 
 # if argv[1] is a directory, randomly pick a file from that directory and
 # set is as wallpaper
-[ -d "$1" ] && { feh --no-fehbg --recursive --bg-scale --randomize "$1"; }
+[ -d "$1" ] && { feh -rz --no-fehbg --bg-scale "$1"; }
 
 # notify & exit
 notify-send 'wallpaper updated...'
