@@ -14,32 +14,32 @@
 # -----------------------------------------------------------------------------
 
 alias \
-    cp="cp -irv" \
+    cp="cp -aiv" \
     diff="diff --color=auto" \
     grep="grep -i --color=auto" \
-    ls="ls -AFh --color=auto --group-directories-first" \
-    ll="ls -AFho --color=auto --group-directories-first" \
+    ls="ls -AFhq --color=auto --group-directories-first" \
+    ll="ls -AFhlq --color=auto --group-directories-first" \
     mkdir="mkdir -pv" \
     mv="mv -iv" \
-    rm="rm -v" \
-    rmfr="rm -frv" \
+    rm="rm -iv" \
+    rmfr="rm -Rfiv" \
     tree="tree -CFlq --dirsfirst" \
     treed="tree -CFdlq --dirsfirst" \
     zip="zip -rv"
 
 # shortcuts
 alias \
-    ee='$EDITOR' \
-    see='sudo $EDITOR' \
+    eed='$EDITOR' \
+    seed='sudo $EDITOR' \
     sx11="startx" \
-    kx11="pkill -15 Xorg"
+    kx11="pkill -15 'Xorg'"
 
 # -----------------------------------------------------------------------------
 # system-specific aliases
 # -----------------------------------------------------------------------------
 
 # arch-based
-if [ -x "$(command -v "pacman")" ]; then
+if [ -x "$(command -v 'pacman')" ]; then
     alias \
         pkgf="pacman -Ss" \
         pkgi="sudo pacman -S" \
@@ -47,7 +47,7 @@ if [ -x "$(command -v "pacman")" ]; then
         pkgu="sudo pacman -Suyy"
 
 # void
-elif [ -x "$(command -v "xbps-install")" ]; then
+elif [ -x "$(command -v 'xbps-install')" ]; then
     alias \
         pkgf="xbps-query" \
         pkgi="sudo xbps-install -S xbps && sudo xbps-install -S" \
@@ -60,24 +60,24 @@ fi
 # -----------------------------------------------------------------------------
 
 alias \
-    ascii="toilet -t -f 3d" \
+    ascii="toilet -t -f '3d'" \
     cheat="cht.sh" \
-    future="toilet -t -f future" \
+    future="toilet -t -f 'future'" \
     matrix="unimatrix -a -l GRgors -s 96" \
-    rusto="toilet -t -f rusto" \
-    rustofat="toilet -t -f rustofat" \
+    rusto="toilet -t -f 'rusto'" \
+    rustofat="toilet -t -f 'rustofat'" \
     tnet="ping example.com" \
     tnetspeed="speedtest-cli" \
     yta="youtube-dl --extract-audio --audio-format best" \
     ytv="youtube-dl -f best"
 
 sscreenkey() {
-    if ! { pgrep "screenkey" >/dev/null; }; then
+    if ! { pgrep 'screenkey' >/dev/null; }; then
         setsid -f screenkey --no-systray --vis-shift --bak-mode full \
             --opacity 0.55 -f FiraCodeRetina -t 2 -p bottom -s small \
             --show-settings
     else
         # kill if already running
-        pkill -15 "screenkey"
+        pkill -15 'screenkey'
     fi
 }
