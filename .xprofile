@@ -47,6 +47,9 @@ unclutter &
 # other applications
 # -----------------------------------------------------------------------------
 
+# music player daemon
+mpd &
+
 # light filter
 redshift &
 
