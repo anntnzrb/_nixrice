@@ -68,16 +68,8 @@ alias \
     rustofat="toilet -t -f 'rustofat'" \
     tnet="ping example.com" \
     tnetspeed="speedtest-cli" \
-    yta="youtube-dl --extract-audio --audio-format best" \
-    ytv="youtube-dl -f best"
-
-sscreenkey() {
-    if ! { pgrep 'screenkey' >/dev/null; }; then
-        setsid -f screenkey --no-systray --vis-shift --bak-mode full \
-            --opacity 0.55 -f FiraCodeRetina -t 2 -p bottom -s small \
-            --show-settings
-    else
-        # kill if already running
-        pkill -15 'screenkey'
-    fi
-}
+    yt="youtube-dl --restrict-filenames" \
+    ytf="youtube-dl -F" \
+    ytt="youtube-dl --restrict-filenames --skip-download --write-thumbnail" \
+    yta="youtube-dl --restrict-filenames --prefer-ffmpeg --audio-format 'best' -x" \
+    ytv="youtube-dl --restrict-filenames -f 'best'"

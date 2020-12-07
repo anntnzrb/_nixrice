@@ -23,18 +23,18 @@ _is_net() { ping -q -c 1 "example.com" >/dev/null 2>&1; }
 # shorten given url
 shorten_url() {
     curl -Ss -F "shorten=$*" https://0x0.st | xclip -sel clip || return 1
-    printf "link copied to clipboard\n"
+    printf 'link copied to clipboard\n'
 }
 
 # uploads given file
 upl_file() {
     curl -Ss -F "file=@$*" https://0x0.st | xclip -sel clip || return 1
-    printf "link copied to clipboard\n"
+    printf 'link copied to clipboard\n'
 }
 
 dddd() {
     sudo dd if="$1" of="$2" bs=1M status=progress && sync || return 1
-    printf "dd finished copying %s\n" "$2"
+    printf "dd finished copying '%s'\n" "$2"
 }
 
 # verify and create new script
@@ -42,7 +42,7 @@ sh_script() {
     NEW_SCRIPT_PATH="$HOME/.local/bin/$1"
 
     [ ! -f "$NEW_SCRIPT_PATH" ] && {
-        printf "#!/bin/sh\n\n" >"$NEW_SCRIPT_PATH"
+        printf '#!/bin/sh\n' >"$NEW_SCRIPT_PATH"
         chmod 755 "$NEW_SCRIPT_PATH"
     }
 
@@ -51,7 +51,7 @@ sh_script() {
 
 # loop public ip address
 loop_ip() {
-    _is_net && {
+    is_net && {
         while :; do
             curl "ifconfig.me"
             echo
@@ -76,17 +76,52 @@ loop_vpn() {
 # miscellaneous
 # -----------------------------------------------------------------------------
 
+sscreenkey() {
+    # **
+    # toggles screenkey, with some defaults
+    # *
+
+    if ! { pgrep -x 'screenkey' >/dev/null; }; then
+        setsid -f screenkey --no-systray --vis-shift --bak-mode full \
+            --opacity 0.55 -f FiraCodeRetina -t 2 -p bottom -s small \
+            --show-settings
+    else
+        # kill if already running
+        pkill -15 'screenkey'
+    fi
+}
+
+bitrate() {
+    # **
+    # retrieves the bitrate of a file (audio)
+    # *
+
+    ffprobe "$1" 2>&1 | grep 'rate'
+}
+
 gpg_export_pub_key() {
+    # **
+    # import public GPG key
+    # *
+
     gpg --output "$HOME/temp/pub_key.pgp" --armor --export "$1" &&
         printf 'public key exported\n'
 }
 
 gpg_export_sec_key() {
+    # **
+    # import secret GPG key
+    # *
+
     gpg --output "$HOME/temp/sec_key.pgp" --armor --export-secret-key "$1" &&
         printf 'public key exported\n'
 }
 
 gpg_import_key() {
+    # **
+    # import GPG key :: public/private
+    # *
+
     gpg --import "$1"
     printf "\nkeys: %s\n\nuse 'gpg --edit-keys <mail>' to set trust level\n" \
         "$(gpg --list-keys)"
