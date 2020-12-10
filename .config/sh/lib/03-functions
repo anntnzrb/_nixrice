@@ -10,66 +10,83 @@
 #   ░░    ░░░░░░ ░░░   ░░  ░░░░░     ░░  ░░  ░░░░░░  ░░░   ░░ ░░░░░░
 
 # -----------------------------------------------------------------------------
-# tools
-# -----------------------------------------------------------------------------
-
-# check if there's internet connection
-_is_net() { ping -q -c 1 "example.com" >/dev/null 2>&1; }
-
-# -----------------------------------------------------------------------------
 # miscellaneous
 # -----------------------------------------------------------------------------
 
-# shorten given url
 shorten_url() {
-    curl -Ss -F "shorten=$*" https://0x0.st | xclip -sel clip || return 1
-    printf 'link copied to clipboard\n'
+    # **
+    # shorten URLs with 0x0.st
+    # *
+
+    curl -Ss -F "shorten=$*" 'https://0x0.st' | xclip -sel clip || return 1
+    printf 'link(s) copied to clipboard\n'
 }
 
-# uploads given file
 upl_file() {
-    curl -Ss -F "file=@$*" https://0x0.st | xclip -sel clip || return 1
-    printf 'link copied to clipboard\n'
+    # **
+    # upload files to 0x0.st (expire)
+    # *
+
+    curl -Ss -F "file=@$*" 'https://0x0.st' | xclip -sel clip || return 1
+    printf 'link(s) copied to clipboard\n'
 }
 
 dddd() {
-    sudo dd if="$1" of="$2" bs=1M status=progress && sync || return 1
+    # **
+    # alias for dd, flags i normally use
+    # *
+
+    sudo -E dd if="$1" of="$2" bs='1M' status='progress' && sync || return 1
     printf "dd finished copying '%s'\n" "$2"
 }
 
-# verify and create new script
 sh_script() {
+    # **
+    # create a new script if it does not exist already
+    # located at ~/.local/bin and made executable
+    # *
+
     NEW_SCRIPT_PATH="$HOME/.local/bin/$1"
 
     [ ! -f "$NEW_SCRIPT_PATH" ] && {
-        printf '#!/bin/sh\n' >"$NEW_SCRIPT_PATH"
+        printf '!#/bin/sh\n' | tee "$NEW_SCRIPT_PATH" >/dev/null
         chmod 755 "$NEW_SCRIPT_PATH"
     }
 
     $EDITOR "$NEW_SCRIPT_PATH"
 }
 
-# loop public ip address
 loop_ip() {
-    is_net && {
-        while :; do
-            curl "ifconfig.me"
-            echo
-            sleep "${1:-3}"
-        done
-    } || printf "N/A\n" && return 1
+    # **
+    # loop thru public IP address
+    # *
+
+    # quit if no internet connection
+    ! ping -q -c 1 'example.com' >/dev/null 2>&1 && return 1
+
+    while :; do
+        printf '%s\n' "$(curl --limit-rate '1' -Ss 'ifconfig.me')"
+        sleep "${1:-3}"
+    done
 }
 
-# loop vpn
+# loop VPN
 loop_vpn() {
-    [ -x "$(command -v vyprvpn)" ] && _is_net && {
-        while :; do
-            vyprvpn disconnect
-            sleep 3
-            vyprvpn connect
-            sleep "${1:-600}"
-        done
-    } || printf "N/A\n" && return 1
+    # **
+    # constantly disconnect and connect VPN to refresh sessions
+    # should be used along with a kill-switch
+    # *
+
+    # quit if no internet connection or vpn not installed
+    ! ping -q -c 1 'example.com' >/dev/null 2>&1 && return 1
+    [ ! -x "$(command -v 'protonvpn')" ] && return 1
+
+    # sudo timeout is 300s by default
+    while :; do
+        sudo -v
+        protonvpn s | grep -q 'Disconnected' && sudo -E protonvpn r
+        sleep "${1:-290}"
+    done
 }
 
 # -----------------------------------------------------------------------------
@@ -131,9 +148,13 @@ gpg_import_key() {
 # distro-especific
 # -----------------------------------------------------------------------------
 
-# add pacman key
-[ -x "$(command -v pacman)" ] && {
+[ -x "$(command -v 'pacman')" ] && {
     add_key() {
+        # **
+        # adds a pacman key
+        # TODO: fix multiple use of sudo
+        # *
+
         sudo pacman-key --recv-keys "$1" &&
             sudo pacman-key --finger "$1" &&
             sudo pacman-key --lsign-key "$1" &&
