@@ -227,7 +227,7 @@ emacs does not have =xclip= support on the terminal by default, enable it
 (defun annt/set-default-font()
   "set font defaults"
   (dolist (face '(default fixed-pitch variable-pitch))
-    (set-face-attribute `,face nil :font "VictorMono Nerd Font Mono 14")))
+    (set-face-attribute `,face nil :font "Victor Mono 14")))
 
 ;; load the font
 (annt/set-default-font)
