@@ -6,31 +6,34 @@
 # *
 
 # loop through all batteries
-for battery in /sys/class/power_supply/BAT?; do
-    CAPACITY=$(cat "$battery"/capacity)
-    STATUS=$(cat "$battery"/status)
+for batt in /sys/class/power_supply/BAT?; do
+    CAPACITY=$(cat "$batt"/capacity)
+    STATUS=$(cat "$batt"/status)
 
     if [ "$STATUS" = "Discharging" ] || [ "$STATUS" = "Charging" ] ||
         [ "$STATUS" = "Unknown" ] || [ "$STATUS" = "Not charging" ]; then
         # pick icon depending on the amount of battery
-        if [ "$CAPACITY" -ge 80 ]; then
+        # shellcheck disable=2086
+        # comparing between integers
+        if [ $CAPACITY -ge 80 ]; then
             icon=""
-        elif [ "$CAPACITY" -ge 60 ]; then
+        elif [ $CAPACITY -ge 60 ]; then
             icon=""
-        elif [ "$CAPACITY" -ge 30 ]; then
+        elif [ $CAPACITY -ge 30 ]; then
             icon=""
-        elif [ "$CAPACITY" -ge 15 ]; then
+        elif [ $CAPACITY -ge 15 ]; then
             icon=""
-        elif [ "$CAPACITY" -lt 15 ]; then
+        elif [ $CAPACITY -lt 15 ]; then
             icon=""
         fi
+
         # if charging, plug icon + %
         [ "$STATUS" = "Charging" ] && icon="🔌"
-        [ "$STATUS" = "Not charging" ] && icon=" "
+        [ "$STATUS" = "Not charging" ] && icon=""
 
-        printf '%s%%' "$icon $CAPACITY"
+        printf '%s %s%%' "$icon" "$CAPACITY"
     else
         icon="🔌"
-        printf '%s' "🟢$icon"
+        printf '🟢%s' "$icon"
     fi
 done
