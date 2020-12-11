@@ -83,7 +83,7 @@ loop_vpn() {
 
     # sudo timeout is 300s by default
     while :; do
-        sudo -v
+        sudo -v || return 1
         protonvpn s | grep -q 'Disconnected' && sudo -E protonvpn r
         sleep "${1:-290}"
     done
