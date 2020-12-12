@@ -17,24 +17,20 @@
 . "$LIBSHUTILS/std-utils"
 
 # -----------------------------------------------------------------------------
-# functions
-# -----------------------------------------------------------------------------
-
-# checks if dunst is installed; receives parameters
-dunst_notify() {
-    is_installed 'notify-send' && is_running 'Xorg' && notify-send -t "$1" "$2"
-}
-
-# -----------------------------------------------------------------------------
 # main
 # -----------------------------------------------------------------------------
 
 if is_installed "$1"; then
-    { is_running "$1" && pkill -15 "$1" &&
-        dunst_notify 3000 "'$1' terminated"; } || {
-        $1 &
-        dunst_notify 3000 "'$1' now running"
-    }
+    # if running, kill
+    if is_running "$1"; then
+        pkill -15 "$1"
+        notify-send "'$1' terminated"
+    else
+        # if not running, start
+        "$1" &
+        notify-send "'$1' now running"
+    fi
 else
-    dunst_notify 0 "$1: unknown program"
+    notify-send "$1: unknown program"
+    exit 1
 fi
