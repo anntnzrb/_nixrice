@@ -13,26 +13,20 @@
 . "$LIBSHUTILS/std-utils"
 
 # -----------------------------------------------------------------------------
-# functions
-# -----------------------------------------------------------------------------
-
-# checks if dunst is installed; recieves parameters
-dunst_notify() {
-    is_installed 'notify-send' && is_running 'Xorg' && notify-send -t "$1" "$2"
-}
-
-# -----------------------------------------------------------------------------
 # main
 # -----------------------------------------------------------------------------
 
-if is_running 'transmission-daemon'; then
+# just quit if neccesary programs are not installed
+! is_installed 'transmission-cli' &&
+    printf 'transmission-cli not installed\n' && exit 1
+
+if is_running 'transmission-da'; then
     [ "$(printf "No\\nYes" | dmenu -i -p "Turn off transmission-daemon?")" = "Yes" ] &&
-        pkill -15 transmission-da &&
-        dunst_notify 3 "transmission-daemon disabled"
+        pkill -15 'transmission-da' &&
+        notify-send 'transmission-daemon disabled'
 else
-    is_installed 'transmission-cli' || exit 0
     [ "$(printf "No\\nYes" | dmenu -i -p "Turn on transmission daemon?")" = "Yes" ] &&
-        transmission-daemon && dunst_notify 3 "tranmission-daemon enabled"
+        transmission-daemon && notify-send 'tranmission-daemon enabled'
 fi
 
 sleep 3

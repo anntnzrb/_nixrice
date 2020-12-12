@@ -13,24 +13,12 @@
 . "$LIBSHUTILS/std-utils"
 
 # -----------------------------------------------------------------------------
-# functions
-# -----------------------------------------------------------------------------
-
-# checks if dunst is installed; recieves parameters
-dunst_notify() {
-    is_installed 'notify-send' && is_running 'Xorg' && notify-send -t "$1" "$2"
-}
-
-# -----------------------------------------------------------------------------
 # main
 # -----------------------------------------------------------------------------
 
-if is_installed 'tremc' && is_installed 'transmission-cli'; then
-    if ! is_running 'transmission-daemon'; then
-        transmission-daemon
-        dunst_notify 3 "Starting torrent daemon..."
-        setsid -f "$TERMINAL" -e tremc
-    fi
-else
-    exit 0
-fi
+is_installed 'tremc' && is_installed 'transmission-cli' && {
+    # enable transmission if not running already
+    ! is_running 'transmission-daemon' && transmission-daemon &&
+        notify-send 'Starting torrent daemon...'
+    $TERMINAL -e 'tremc' &
+} || exit 1
