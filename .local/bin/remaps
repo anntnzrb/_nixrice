@@ -4,7 +4,7 @@
 xset r rate 225 50 &
 
 # altgr + letter for (accents, etc)
-setxkbmap -layout us -variant altgr-intl && pkill -15 "xcape"
+setxkbmap -layout 'us' -variant 'altgr-intl' &
 
-# remaps CAPS-LOCK to ESCAPE
-xcape -e 'Super_L=Escape' &
+# map the CAPS-LOCK key to SUPER
+setxkbmap -option 'caps:escape' &
