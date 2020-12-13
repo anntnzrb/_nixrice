@@ -4,20 +4,8 @@
 # gets brightness level of your screen
 # *
 
-# -----------------------------------------------------------------------------
-# functions
-# -----------------------------------------------------------------------------
-
-brightness() {
-    # loop through displays
-    for display in /sys/class/backlight/*; do
-        read -r ACTUAL_BRIGHTNESS <"$display/actual_brightness"
-    done
-    printf '☀ %s%%' "$ACTUAL_BRIGHTNESS"
-}
-
-# -----------------------------------------------------------------------------
-# main
-# -----------------------------------------------------------------------------
-
-brightness
+# loop through displays
+for display in /sys/class/backlight/*; do
+	read -r ACTUAL_BRIGHTNESS <"$display/actual_brightness"
+done
+printf '☀ %s%%\n' "$ACTUAL_BRIGHTNESS"

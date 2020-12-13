@@ -37,4 +37,4 @@ is_installed 'pulseaudio' && {
     fi
 
     printf "%s %s%%" "$icon" "$VOL"
-} || echo '🔊???'
+} || printf '🔊???\n'

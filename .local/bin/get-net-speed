@@ -15,18 +15,7 @@
 # shellcheck disable=1090
 . "$LIBSHUTILS/std-utils"
 
-# -----------------------------------------------------------------------------
-# functions
-# -----------------------------------------------------------------------------
-
-get_net_speed() {
-    { is_net && is_installed speedtest-cli &&
-        speedtest-cli | awk '/load:/ {print $2$3}' | xargs |
-        awk '{print "⬇ "$1" ↔  ""⬆ "$2}'; } || echo 'N/A'
-}
-
-# -----------------------------------------------------------------------------
-# main
-# -----------------------------------------------------------------------------
-
-get_net_speed
+is_net && is_installed 'speedtest-cli' && {
+	speedtest-cli | awk '/load:/ {print $2$3}' | xargs |
+		awk '{print "⬇ "$1" ↔  ""⬆ "$2}'
+} || printf 'N/A\n'
