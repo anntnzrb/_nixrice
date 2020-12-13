@@ -23,4 +23,4 @@ LOCATION="Guayaquil"
 
 is_net && {
     curl -fs "wttr.in/$LOCATION?format=%c+%t" | tr -d '[:space:]'
-} || echo "📡❌"
+} || printf '📡❌\n'
