@@ -10,77 +10,104 @@
 
 * table of contents                                       :TOC_2_gh:noexport:
 - [[#preamble][preamble]]
-  - [[#lexical-binding][lexical-binding]]
-  - [[#myself][myself]]
-  - [[#repos][repos]]
-  - [[#use-package][use-package]]
-- [[#formatting][formatting]]
-- [[#general-settings][general settings]]
-  - [[#system][system]]
+- [[#general][general]]
+  - [[#mouse][mouse]]
   - [[#appearance][appearance]]
+  - [[#package-management][package management]]
   - [[#dired][dired]]
-- [[#org-mode][org-mode]]
-  - [[#appearance-1][appearance]]
-  - [[#extras][extras]]
+  - [[#formatting][formatting]]
+  - [[#misc][misc]]
 - [[#development][development]]
   - [[#git][Git]]
   - [[#lsp][LSP]]
   - [[#completion][completion]]
   - [[#snippets][snippets]]
   - [[#languages][languages]]
-  - [[#spell-checking][spell checking]]
+- [[#org-mode][org-mode]]
+  - [[#appearance-1][appearance]]
+  - [[#org-toc][org-toc]]
 - [[#packages][packages]]
-  - [[#undo-tree][undo-tree]]
-  - [[#rainbow-delimiters][rainbow delimiters]]
-  - [[#evil][evil]]
-  - [[#which-key][which-key]]
+  - [[#misc-1][misc]]
   - [[#ivy][ivy]]
+  - [[#which-key][which-key]]
+  - [[#vi-keybinds][vi-keybinds]]
+- [[#keybinds][keybinds]]
 - [[#acknowledgements][acknowledgements]]
   - [[#protesilaos-stavrou][Protesilaos Stavrou]]
   - [[#cem-keylan][Cem Keylan]]
   - [[#david-wilson][David Wilson]]
   - [[#sandeep-nambiar][Sandeep Nambiar]]
-- [[#todo][todo]]
-  - [[#packages-1][packages]]
 
 * preamble
 
-** lexical-binding
-
-enable lexical binding for this file
+use =lexical-binding=
 
 #+begin_src emacs-lisp
-;;; -*- lexical-binding: t -*-
+;; -*- lexical-binding: t -*-
 #+end_src
 
-** myself
+garbage collector settings
 
 #+begin_src emacs-lisp
-(setq user-full-name "anntnzrb"
-      user-mail-address "anntnzrb@protonmail.com")
+(setq-default gc-cons-threshold (* 8 1024 1024))
 #+end_src
 
-** repos
+disable emacs settings up custom variables
+
+#+begin_src emacs-lisp
+(setq-default custom-file null-device)
+#+end_src
+
+* general
+
+basic settings
+
+** mouse
+
+even tho we are on the *no-mouse* master-race, having some tiny stuff there should
+be handy
+
+#+begin_src emacs-lisp
+(xterm-mouse-mode t)
+#+end_src
+
+** appearance
+
+the looks
+
+#+begin_src emacs-lisp
+(menu-bar-mode 0)
+#+end_src
+
+lines
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :ensure nil
+  :config (global-display-line-numbers-mode)
+  :custom (display-line-numbers-type 'relative))
+#+end_src
+
+** package management
+
+*** repositories
 
 #+begin_src emacs-lisp
 (require 'package)
-(setq package-archives '(("elpa"  . "https://elpa.gnu.org/packages/")
-                         ("melpa" . "https://melpa.org/packages/")
-                         ("org"   . "https://orgmode.org/elpa/")))
+(setq-default package-archives '(("elpa"  . "https://elpa.gnu.org/packages/")
+                                 ("melpa" . "https://melpa.org/packages/")
+                                 ("org"   . "https://orgmode.org/elpa/")))
 (package-initialize)
-#+end_src
 
-only update if necessary
-
-#+begin_src emacs-lisp
+;; only update if needed
 (unless package-archive-contents
   (package-refresh-contents))
 #+end_src
 
-** use-package
+*** use-package
 
-use =use-package= & =use-package-always-ensure= is enabled to prevent spamming
-on each package
+=use-packages= is a handy tool, i use it mostly to groups things up and reduce
+syntax verbosity
 
 #+begin_src emacs-lisp
 (unless (package-installed-p 'use-package)
@@ -89,161 +116,11 @@ on each package
 
 ;; configure prior loading
 (eval-and-compile
-  (setq use-package-always-ensure t)
-  ;; special setting
-  (setq use-package-hook-name-suffix nil))
+  (setq-default use-package-always-ensure t
+                use-package-hook-name-suffix nil))
 
 (eval-when-compile
   (require 'use-package))
-#+end_src
-
-* formatting
-
-+ spaces over tabs
-+ tab width =4=
-+ max line lenght =80=
-+ show column number in modeline
-+ show trailing whitespaces and delete them on save
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :custom
-  (tab-width         4)
-  (indent-tabs-mode  nil)
-  (tab-always-indent 'complete)
-  (fill-column 80)
-  (show-trailing-whitespace t)
-  :hook
-  (after-init-hook  . column-number-mode)
-  (before-save-hook . delete-trailing-whitespace))
-#+end_src
-
-* general settings
-
-** system
-
-*** garbage collector
-
-garbage collector emacs
-
-#+begin_src emacs-lisp
-(setq gc-cons-threshold 50000000)
-(setq large-file-warning-threshold 100000000)
-#+end_src
-
-*** prompts
-
-replace =yes-no= prompts with simpler =y/n=
-
-#+begin_src emacs-lisp
-(fset 'yes-or-no-p 'y-or-n-p)
-#+end_src
-
-*** misc
-
-+ reload file automatically if edited externally
-
-#+begin_src emacs-lisp
-(global-auto-revert-mode t)
-#+end_src
-
-+ inmediately kill current buffer
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-x k") 'kill-this-buffer)
-#+end_src
-
-+ back-up files location
-
-#+begin_src emacs-lisp
-(setq backup-directory-alist `(("." . "~/.saves")))
-#+end_src
-
-*** clipboard
-
-emacs does not have =xclip= support on the terminal by default, enable it
-
-#+begin_src emacs-lisp
-(use-package xclip
-  :if (executable-find "xclip")
-  :if (getenv "DISPLAY")
-  :unless (eq system-type 'windows-nt)
-  :config (xclip-mode))
-#+end_src
-
-** appearance
-
-*** theme
-
-#+begin_src emacs-lisp
-;; light themes
-(use-package modus-operandi-theme)
-
-;; dark themes
-(use-package modus-vivendi-theme)
-
-;; load theme
-(load-theme 'modus-vivendi t)
-#+end_src
-
-**** all-the-icons
-
-#+begin_src emacs-lisp
-(use-package all-the-icons)
-#+end_src
-
-**** supress modeline status
-
-#+begin_src emacs-lisp
-(use-package diminish
-  :requires use-package
-  :after use-package)
-#+end_src
-
-*** ui settings
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :init
-  (menu-bar-mode   0)
-  (tool-bar-mode   0)
-  (scroll-bar-mode 0)
-  :custom
-  (inhibit-splash-screen t))
-#+end_src
-
-**** lines
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :config
-  (global-display-line-numbers-mode)
-  (setq display-line-numbers-type 'relative))
-#+end_src
-
-*** font
-
-#+begin_src emacs-lisp
-(defun annt/set-default-font()
-  "set font defaults"
-  (dolist (face '(default fixed-pitch variable-pitch))
-    (set-face-attribute `,face nil :font "Victor Mono 14")))
-
-;; load the font
-(annt/set-default-font)
-#+end_src
-
-**** daemon frames
-
-it is needed to do some work when working with =emacsclient=
-
-#+begin_src emacs-lisp
-(use-package frame
-  :ensure nil
-  :if (daemonp)
-  :hook
-  (after-make-frame-functions . (lambda (frame)
-                                                (with-selected-frame frame (annt/set-default-font)))))
 #+end_src
 
 ** dired
@@ -258,156 +135,150 @@ it is needed to do some work when working with =emacsclient=
   (dired-listing-switches
    "-AFGhlv --group-directories-first --time-style=long-iso")
   :hook
-  (dired-mode-hook . dired-hide-details-mode)
   (dired-mode-hook . hl-line-mode))
 #+end_src
 
-*** appearance
+** formatting
+
++ spaces over tabs
++ tab width 4
++ max line lenght 80 & auto-wrap
++ show column number in modeline
++ show trailing whitespaces and delete them on save
 
 #+begin_src emacs-lisp
-(use-package all-the-icons-dired
-  :after all-the-icons
-  :hook (dired-mode-hook . all-the-icons-dired-mode))
-#+end_src
-
-* org-mode
-
-#+begin_src emacs-lisp
-(use-package org
-  :hook
-  (org-mode-hook . org-indent-mode)
+(use-package emacs
+  :ensure nil
   :custom
-  ;; general
-  (org-return-follows-link nil)
+  (tab-width                4)
+  (indent-tabs-mode         nil)
+  (tab-always-indent        'complete)
+  (fill-column              80)
+  (show-trailing-whitespace t)
+  :hook
+  (after-init-hook  . column-number-mode)
+  (before-save-hook . delete-trailing-whitespace))
 
-  ;; appearance
-  (org-ellipsis " }}}")
-  (org-hide-emphasis-markers t)
-
-  :config
-  ;; code blocks
-  (setq org-edit-src-content-indentation 0
-        org-src-fontify-natively         t
-        org-src-tab-acts-natively        t
-        org-confirm-babel-evaluate       nil)
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (shell      . t)
-     (C          . t)
-     (haskell    . t)
-     (python     . t)
-     (java       . t)))
-  (require 'org-tempo) ;; needed as of org-mode 9.3
-  (setq org-structure-template-alist
-        '(("src"  . "src")
-          ;; languages
-          ("el"   . "src emacs-lisp")
-          ("sh"   . "src sh")
-          ("c"    . "src c")
-          ("hs"   . "src haskell")
-          ("py"   . "src python")
-          ("java" . "src java")
-          ;; misc
-          ("cent" . "center")
-          ("comm" . "comment")
-          ("ex"   . "example")
-          ("quo"  . "quote")
-          ("verb" . "verbatim")
-          ("vers" . "verse"))))
+(use-package simple
+  :requires diminish
+  :after    diminish
+  :diminish
+  :ensure nil
+  :hook
+  (org-mode-hook  . auto-fill-mode)
+  (prog-mode-hook . auto-fill-mode)
+  (text-mode-hook . auto-fill-mode))
 #+end_src
 
-** appearance
+** misc
 
-improved version of org-bullets
+replace =yes/no= prompts with shorter =y/n=
 
 #+begin_src emacs-lisp
-(use-package org-superstar
-  :hook
-  (org-mode-hook . org-superstar-mode))
+(fset 'yes-or-no-p 'y-or-n-p)
 #+end_src
 
-** extras
-
-create TOCs with different settings
+reload file automatically if edited externally
 
 #+begin_src emacs-lisp
-(use-package toc-org
-  :hook
-  (org-mode-hook . toc-org-mode))
+(global-auto-revert-mode t)
+#+end_src
+
+/annoying/ backups
+
+#+begin_src emacs-lisp
+(setq-default
+ backup-directory-alist `(("." . ,(expand-file-name "~/.cache/emacs_backups"))))
+#+end_src
+
+inmediatly kill buffer without confirmation
+
+#+begin_src emacs-lisp
+(global-set-key [remap kill-buffer] #'kill-this-buffer)
 #+end_src
 
 * development
+
+#+begin_src emacs-lisp
+(use-package prog-mode
+  :ensure nil
+  :bind
+  (("C-c c p" . previous-error)
+   ("C-c c n" . next-error)
+   ("C-c c c" . compile)
+   ("C-c c r" . recompile)))
+#+end_src
 
 ** Git
 
 *** Magit
 
-an interface for git
+an interface for Git
 
 #+begin_src emacs-lisp
 (use-package magit)
+#+end_src
 
-;; vi binds for magit
+**** Evil-Magit
+
+vi-keybinds for Magit
+
+#+begin_src emacs-lisp
 (use-package evil-magit
   :requires magit
-  :after magit)
+  :after    magit)
 #+end_src
 
 ** LSP
 
+the language-protocol-server
+
 #+begin_src emacs-lisp
 (defun annt/lsp-init()
-  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+  (setq-default
+   lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-headerline-breadcrumb-mode))
 
 (use-package lsp-mode
-  :init
-  (setq lsp-keymap-prefix "C-c l")
+  :init     (setq-default lsp-keymap-prefix "C-c l")
+  :commands (lsp lsp-deferred)
   :hook
-  (prog-mode-hook . lsp-deferred)
+  ;; languages to enable LSP
+  (c-mode-hook      . lsp-deferred)
+  (python-mode-hook . lsp-deferred)
+
+  ;; misc
   (lsp-mode-hook  . lsp-enable-which-key-integration)
-  (lsp-mode-hook  . annt/lsp-init)
-  :commands
-  (lsp lsp-deferred))
-#+end_src
-
-*** LSP extras
-
-#+begin_src emacs-lisp
-(use-package lsp-ui
-  :requires lsp-mode
-  :after lsp-mode
-  :hook
-  (lsp-mode-hook . lsp-ui-mode)
-  :custom
-  (lsp-ui-doc-position 'bottom))
+  (lsp-mode-hook  . annt/lsp-init))
 #+end_src
 
 ** completion
 
+text completion framework
+
 #+begin_src emacs-lisp
 (use-package company
   :diminish
-  :hook
-  (prog-mode-hook . company-mode)
+  :after lsp-mode
+  :hook (prog-mode-hook . company-mode)
+  :bind
+  (:map company-active-map ("<tab>" . company-complete-selection))
+  (:map lsp-mode-map       ("<tab>" . company-indent-or-complete-common))
   :custom
-  (company-idle-delay 0)
+  (company-idle-delay            0)
   (company-minimum-prefix-length 1))
 #+end_src
 
 ** snippets
 
-[[https://github.com/joaotavora/yasnippet][YASnippet]] is a template system, snippets for short. it does not ship with the
-actual snippets, extra packages are needed for them
+[[https://github.com/joaotavora/yasnippet][YASnippet]] is a template system, snippets for short. it does not ship
+with the actual snippets, extra packages are needed for them
 
 #+begin_src emacs-lisp
 (use-package yasnippet
   :diminish
-  :hook
-  (prog-mode-hook . yas-minor-mode)
-  :config
-  (yas-reload-all))
+  :hook (prog-mode-hook . yas-minor-mode)
+  :config (yas-reload-all))
 
 ;; snippets
 (use-package yasnippet-snippets)
@@ -415,38 +286,32 @@ actual snippets, extra packages are needed for them
 
 ** languages
 
-*** global
-
-a formatter for pretty much every languages
+formatter for pretty much every languages
 
 #+begin_src emacs-lisp
-(use-package format-all
-  :bind ("C-c f" . format-all-buffer))
+(use-package format-all :bind ("C-c f" . format-all-buffer))
 #+end_src
 
 *** Shell
 
 #+begin_src emacs-lisp
-(use-package flycheck
-  :hook
-  (sh-mode-hook . flycheck-mode))
+(use-package flycheck :hook (sh-mode-hook . flycheck-mode))
 #+end_src
 
-*** C
 
-**** defaults
+*** C
 
 #+begin_src emacs-lisp
 (use-package cc-mode
   :init
   (defun annt/c-prog-settings ()
     "personal settings for C programming"
-    (setq c-indent-level  4
-          c-default-style "linux"))
+    (setq-default c-basic-offset  4
+                  c-default-style "bsd"))
   :hook (c-mode-hook . annt/c-prog-settings))
 #+end_src
 
-**** LSP server
+**** LSP for C
 
 #+begin_src emacs-lisp
 (use-package eglot
@@ -457,25 +322,25 @@ a formatter for pretty much every languages
   :hook     (c-mode-hook . eglot-ensure))
 #+end_src
 
+
 *** Python
 
 #+begin_src emacs-lisp
 ;; Python interpreter to use
-(setq py-ver "python3")
+(setq-default py-ver "python3")
 
 (use-package python
   :ensure nil
   :custom (python-shell-interpreter py-ver))
 #+end_src
 
-+ [[LSP]] for Python
+**** LSP for Python
 
 #+begin_src emacs-lisp
 (use-package lsp-python-ms
   :requires lsp-mode
-  :after lsp-mode
-  :init
-  (setq lsp-python-ms-auto-install-server t)
+  :after    lsp-mode
+  :init     (setq-default lsp-python-ms-auto-install-server t)
   :hook
   (python-mode-hook . (lambda ()
                         (require 'lsp-python-ms)
@@ -493,80 +358,124 @@ a formatter for pretty much every languages
   :config
   ;; enables "org-edit-src-code"-like code blocks [C-c ']
   (use-package edit-indirect)
-  (setq markdown-fontify-code-blocks-natively t))
+  (setq-default markdown-fontify-code-blocks-natively t))
 #+end_src
 
-** spell checking
+* org-mode
+
+this little (big) thing is one of the main reasons why i switch to this
+environment in the first place
+
 #+begin_src emacs-lisp
-(use-package flyspell
-  :if (executable-find "aspell")
-  :bind (("C-c i r" . flyspell-region)
-         ("C-c i b" . flyspell-buffer)
-         ("C-c i m" . flyspell-mode))
-  :hook (text-mode . flyspell-mode))
-
-(use-package ispell
-  :if (executable-find "aspell")
-  :bind ("C-c i c" . ispell-change-dictionary)
+(use-package org
+  :hook (org-mode-hook . org-indent-mode)
   :custom
-  (ispell-program-name (executable-find "aspell"))
-  (ispell-list-command "--list"))
+  ;; general
+  (org-return-follows-link nil)
+
+  ;; appearance
+  (org-ellipsis " }}}")
+  (org-hide-emphasis-markers t)
+
+  :config
+  ;; code blocks
+  (setq-default org-edit-src-content-indentation 0
+                org-src-fontify-natively         t
+                org-src-tab-acts-natively        t
+                org-confirm-babel-evaluate       nil)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (shell      . t)
+     (C          . t)
+     (haskell    . t)
+     (python     . t)
+     (java       . t)))
+  (require 'org-tempo) ;; needed as of org-mode 9.3
+  (setq-default org-structure-template-alist
+                '(("src"  . "src")
+                  ;; languages
+                  ("el"   . "src emacs-lisp")
+                  ("sh"   . "src sh")
+                  ("c"    . "src c")
+                  ("hs"   . "src haskell")
+                  ("py"   . "src python")
+                  ("java" . "src java")
+                  ;; misc
+                  ("cent" . "center")
+                  ("comm" . "comment")
+                  ("ex"   . "example")
+                  ("quo"  . "quote")
+                  ("verb" . "verbatim")
+                  ("vers" . "verse"))))
 #+end_src
+
+** appearance
+
+improved version of org-bullets
+
+#+begin_src emacs-lisp
+(use-package org-superstar :hook (org-mode-hook . org-superstar-mode))
+#+end_src
+
+** org-toc
+
+handy /Table of Contents/ package
+
+#+begin_src emacs-lisp
+(use-package toc-org :hook (org-mode-hook . toc-org-mode))
+#+end_src
+
 * packages
 
-** undo-tree
+the goal here is and will be to always have the least amount of packages as
+possible, only use what is really neccesary
 
-alternative undo system for emacs (enables evil-mode redo)
+** misc
+
+some stuff that does not belong anywhere specific
+
++ i would personally prefer this to be at last, but the config works as
+intended by leaving this before any other package
+
+*** diminish
+
+supress modeline status
 
 #+begin_src emacs-lisp
-(use-package undo-tree
-  :diminish)
+(use-package diminish
+  :requires use-package
+  :after    use-package)
+#+end_src
+
+*** undo-tree
+
+alternative undo system for GNU/Emacs (enables evil-mode redo)
+
++ this enables {un,re}-doing for [[evil]]
++ *TODO*: use native undo system on future GNU/Emacs `28`
+
+#+begin_src emacs-lisp
+(use-package undo-tree :diminish)
+
+;; enable
 (global-undo-tree-mode)
 #+end_src
 
-** rainbow delimiters
+*** clipboard support for the terminal
+
+emacs does not have =xclip= support on the terminal, add it
 
 #+begin_src emacs-lisp
-(use-package rainbow-delimiters
-  :hook
-  (prog-mode-hook . rainbow-delimiters-mode))
-#+end_src
-
-** evil
-
-#+begin_src emacs-lisp
-(use-package evil
-  :custom
-  (evil-undo-system 'undo-tree)
-  (evil-want-C-i-jump nil)
-  :config
-  ;; go to normal mode when "C-g"
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  :hook
-  (after-init-hook . evil-mode))
-#+end_src
-
-*** evil-surround
-
-#+begin_src emacs-lisp
-(use-package evil-surround
-  :requires evil
-  :after evil
-  :custom
-  (global-evil-surround-mode t))
-#+end_src
-
-** which-key
-
-#+begin_src emacs-lisp
-(use-package which-key
-  :diminish
-  :init (which-key-mode)
-  :custom
-  (which-key-idle-delay 0.25))
+(use-package xclip
+  :if (executable-find "xclip")
+  :unless (eq system-type 'windows-nt)
+  :config (xclip-mode))
 #+end_src
 
 ** ivy
+
+mini-buffer completion mechanism
 
 #+begin_src emacs-lisp
 (use-package ivy
@@ -574,8 +483,63 @@ alternative undo system for emacs (enables evil-mode redo)
   :custom
   (ivy-use-virtual-buffers t)
   (enable-recursive-minibuffers t)
+  :config (ivy-mode t))
+#+end_src
+
+** which-key
+
+minor mode that displays bindings following your currently entered incomplete
+command in a popup
+
+#+begin_src emacs-lisp
+(use-package which-key
+  :diminish
+  :init     (which-key-mode)
+  :custom   (which-key-idle-delay 0.25))
+#+end_src
+
+** vi-keybinds
+
+i am used to vi-like keybinds and modes, evil reproduces them very well
+
+*** evil
+
+#+begin_src emacs-lisp
+(use-package evil
+  :custom
+  (evil-undo-system   'undo-tree)
+  (evil-want-C-i-jump nil)
   :config
-  (ivy-mode t))
+  ;; go to normal mode when "C-g"
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  :hook (after-init-hook . evil-mode))
+#+end_src
+
+* keybinds
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :ensure nil
+  :bind
+  ("C-s" . save-buffer))
+#+end_src
+
+window movement using [[https://github.com/deb0ch/emacs-winum/][winum]]
+
+#+begin_src emacs-lisp
+(use-package winum
+  :bind
+  ("M-1" . winum-select-window-1)
+  ("M-2" . winum-select-window-2)
+  ("M-3" . winum-select-window-3)
+  ("M-4" . winum-select-window-4)
+  ("M-5" . winum-select-window-5)
+  ("M-6" . winum-select-window-6)
+  ("M-7" . winum-select-window-7)
+  ("M-8" . winum-select-window-8)
+  ("M-9" . winum-select-window-9)
+  ("M-0" . winum-select-window-by-number)
+  :config (winum-mode))
 #+end_src
 
 * acknowledgements
@@ -606,7 +570,7 @@ to follow trends.
 
 *** Vlog: switching to emacs
 
-discusses whether switching to GNU Emacs is the right thing for you.
+discusses whether switching to GNU/Emacs is the right thing for you.
 
 [[https://youtu.be/FLjbKuoBlXs][video link]]
 
@@ -614,13 +578,11 @@ discusses whether switching to GNU Emacs is the right thing for you.
 
 even tho his configuration =is/was= a bit overwhelming for knowledge at the
 time, he always had different approaches to accomplish the defaults you would
-find copy and pasted everywhere else
+find copy and pasted everywhere else.
 
 [[https://protesilaos.com/dotemacs][link]]
 
 ** Cem Keylan
-
-*** configs
 
 Cem's configuration /is/was/ aimed to be minimal, helped a lot since he was
 also experimenting the emacs world at the time
@@ -636,15 +598,6 @@ series where he built from ground up a usable IDE-like system
 
 ** Sandeep Nambiar
 
-*** My Minimal Emacs Setup
-
 straight-forward introduction to configuring emacs
 
 [[https://www.sandeepnambiar.com/my-minimal-emacs-setup][link]]
-
-* todo
-
-** packages
-
-+ helpful package
-+ projectile
