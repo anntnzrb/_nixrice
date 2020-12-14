@@ -12,37 +12,37 @@
 #env:
   #TERM: xterm-256color
 
-#=================================================================================
+# -----------------------------------------------------------------------------
 # colors / transparency
-#=================================================================================
+# -----------------------------------------------------------------------------
 
-#◦◝◟∘◞◜◦ transparency
+# transparency
 # `0.0` to `1.0`.
 background_opacity: 0.85
 
-#◦◝◟∘◞◜◦ font configuration
+# font configuration
 font:
 # default - (Linux/BSD): monospace
     normal:
-        family: Overpass Mono
+        family: Victor Mono
         style: Regular
 
     bold:
-        family: Overpass Mono
+        family: Victor Mono
         style: Bold
 
     italic:
-        family: Overpass Mono
+        family: Victor Mono
         style: Italic
 
     bold_italic:
-        family: Overpass Mono
+        family: Victor Mono
         style: Bold Italic
 
-#◦◝◟∘◞◜◦ point size
-    size: 11.0
+# point size
+    size: 14.0
 
-#◦◝◟∘◞◜◦ offset is the extra space around each character
+# offset is the extra space around each character
     offset:
         x: 0
         y: 0
@@ -58,7 +58,7 @@ font:
     draw_bold_text_with_bright_colors: false
 
 
-#◦◝◟∘◞◜◦ colors (Dracula)
+# colors (Dracula)
 colors:
     primary:
         background: '0x282a36'
@@ -102,23 +102,23 @@ colors:
         cyan:    '0x59dffc'
         white:   '0xe6e6d1'
 
-#◦◝◟∘◞◜◦ indexed colors
+# indexed colors
 # the indexed colors include all colors from 16 to 256.
 # when these are not set, they're filled with sensible defaults.
     indexed_colors: []
 
-#=================================================================================
+# -----------------------------------------------------------------------------
 # window settings
-#=================================================================================
+# -----------------------------------------------------------------------------
 
 window:
-#◦◝◟∘◞◜◦ dimensions
+# dimensions
 # specified in number of columns/lines, not pixels. `0` to ignore
     dimensions:
         columns: 75
         lines: 18
 
-#◦◝◟∘◞◜◦ padding
+# padding
 # blank space added around the window in pixels.
     padding:
         x: 12
@@ -127,39 +127,39 @@ window:
 # spread additional padding evenly around the terminal content.
     dynamic_padding: true
 
-#◦◝◟∘◞◜◦ decorations
+# decorations
 # values for `decorations`:
 #     - full: Borders and title bar
 #     - none: Neither borders nor title bar
     decorations: full
 
-#◦◝◟∘◞◜◦ startup mode
+# startup mode
 # values for `startup_mode`:
 #   - Windowed
 #   - Maximized
 #   - Fullscreen
     startup_mode: Windowed
 
-#=================================================================================
+# -----------------------------------------------------------------------------
 # misc settings
-#=================================================================================
+# -----------------------------------------------------------------------------
 
-#◦◝◟∘◞◜◦ window title
+# window title
 title: Alacritty
 
-#◦◝◟∘◞◜◦ window class
+# window class
 class:
 # application instance name
     instance: Alacritty
 # general application class
     general: Alacritty
 
-#◦◝◟∘◞◜◦ GTK theme variant (Linux/BSD only)
+# GTK theme variant (Linux/BSD only)
 # override the variant of the gtk theme. supported values are `dark` and `light`.
 # `none` to use the default theme variant.
 gtk_theme_variant: None
 
-#◦◝◟∘◞◜◦ scrolling
+# scrolling
 # maximum number of lines in the scrollback buffer. '0' will disable scrolling.
 history: 10000
 
@@ -173,12 +173,12 @@ cursor:
 #   - ▇ Block
 #   - _ Underline
 #   - | Beam
-    style: Underline
+    style: Beam
 
 # window is not focused.
     unfocused_hollow: true
 
-#◦◝◟∘◞◜◦ URL launcher
+# URL launcher
 url:
 ## when set to `None`, URL launching will be disabled completely
 #   - (Linux/BSD) xdg-open
@@ -187,24 +187,24 @@ url:
         args: []
         modifiers: Control
 
-#=================================================================================
+# -----------------------------------------------------------------------------
 # key bindings
-#=================================================================================
+# -----------------------------------------------------------------------------
 
 # to unset a default binding, it can be mapped to the `ReceiveChar` action.
 # alternatively, you can use `None` for a no-op if you do not wish to receive
 # input characters for that binding
 
 key_bindings:
-  - { key: C,        mods: Alt,           action: Copy             }
-  - { key: V,        mods: Alt,           action: Paste            }
-  - { key: Insert,   mods: Alt,           action: PasteSelection   }
-  - { key: Key0,     mods: Control,       action: ResetFontSize    }
-  - { key: Equals,   mods: Control,       action: IncreaseFontSize }
-  - { key: Add,      mods: Control,       action: IncreaseFontSize }
-  - { key: Subtract, mods: Control,       action: DecreaseFontSize }
-  - { key: Minus,    mods: Control,       action: DecreaseFontSize }
-  - { key: PageUp,   mods: Alt,           action: ScrollPageUp,   mode: ~Alt       }
-  - { key: PageDown, mods: Alt,           action: ScrollPageDown, mode: ~Alt       }
-  - { key: Home,     mods: Alt,           action: ScrollToTop,    mode: ~Alt       }
-  - { key: End,      mods: Alt,           action: ScrollToBottom, mode: ~Alt       }
+  - { key: C,              mods: Alt,                 action: Copy             }
+  - { key: V,              mods: Alt,                 action: Paste            }
+  - { key: Insert,         mods: Alt,                 action: PasteSelection   }
+  - { key: Key0,           mods: Control,             action: ResetFontSize    }
+  - { key: Equals,         mods: Control,             action: IncreaseFontSize }
+  - { key: Minus,          mods: Control,             action: DecreaseFontSize }
+  - { key: NumpadSubtract, mods: Control,             action: DecreaseFontSize }
+  - { key: Minus,          mods: Control,             action: DecreaseFontSize }
+  - { key: PageUp,         mods: Shift,   mode: ~Alt, action: ScrollPageUp,    }
+  - { key: PageDown,       mods: Shift,   mode: ~Alt, action: ScrollPageDown   }
+  - { key: Home,           mods: Shift,   mode: ~Alt, action: ScrollToTop,     }
+  - { key: End,            mods: Shift,   mode: ~Alt, action: ScrollToBottom   }
