@@ -40,15 +40,15 @@ opts="reboot sleep shutdown kill-x"
 # shellcheck disable=2086
 case "$(printf "%s\n" $opts | dmenu -c -i -l 20 -bw 6 -p 'command: ')" in
 reboot)
-    ${reb:-reboot}
+    ${reb:-systemctl reboot}
     ;;
 
 sleep)
-    ${zzz:-systemctl suspend-then-hibernate}
+    ${zzz:-systemctl suspend}
     ;;
 
 shutdown)
-    ${sdn:-shutdown -h now}
+    ${sdn:-systemctl poweroff}
     ;;
 
 kill-x)
