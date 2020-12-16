@@ -136,8 +136,14 @@ export PKG_INSTALL_ALT=
 # arch-based
 if is_installed 'yay'; then
     SYSTEM="arch"
+
+    # install
     PKG_INSTALL="yay --needed --noconfirm -Suy"
     PKG_INSTALL_ALT="pacman --needed --noconfirm -Suy"
+
+    # remote
+    PKG_REMOVE="yay --noconfirm -Rns"
+    PKG_REMOVE_ALT="pacman --noconfirm -Rns"
 
 # void
 elif is_installed 'xbps-install'; then
