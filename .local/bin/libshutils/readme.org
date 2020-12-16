@@ -44,8 +44,13 @@ prints a message to /stderr/ & exits script with non-successful code =1=
 
 #+begin_src sh :tangle "std-utils"
 die() {
-    printf '%s\n' "$@" >&2
-    exit 1
+	case $# in
+	0) exit 1 ;;
+	*)
+		printf '%s\n' "$@" >&2
+		exit 1
+		;;
+	esac
 }
 #+end_src
 
@@ -55,8 +60,13 @@ checks if command =$1= is installed
 
 + verifies if the file is an executable file, this is used to prevent
 
++ *TODO* :: =-x= is not /POSIX/
+
 #+begin_src sh :tangle "std-utils"
-is_installed() { [ -x "$(command -v "$1")" ]; }
+# shellcheck disable=2006
+# backtick notation is portable
+
+is_installed() { test -x "`command -v "$1"`"; }
 #+end_src
 
 ** is_net
@@ -85,9 +95,9 @@ checks if invoking user is /root/
 
 #+begin_src sh :tangle "std-utils"
 # shellcheck disable=2046
-# comparison between integers is required
+# cannot quote as we are comparing integers
 
-is_su() { [ $(id -u) -eq 0 ]; }
+is_su() { test `id -u` -eq 0; }
 #+end_src
 
 * sys-utils
