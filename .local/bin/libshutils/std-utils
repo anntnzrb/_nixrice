@@ -29,8 +29,13 @@ elevate_privs() { exec sudo -E "$0" "@"; }
 
 
 die() {
-    printf '%s\n' "$@" >&2
-    exit 1
+	case $# in
+	0) exit 1 ;;
+	*)
+		printf '%s\n' "$@" >&2
+		exit 1
+		;;
+	esac
 }
 
 # is_installed
@@ -39,8 +44,13 @@ die() {
 
 # + verifies if the file is an executable file, this is used to prevent
 
+# + *TODO* :: =-x= is not /POSIX/
 
-is_installed() { [ -x "$(command -v "$1")" ]; }
+
+# shellcheck disable=2006
+# backtick notation is portable
+
+is_installed() { test -x "`command -v "$1"`"; }
 
 # is_net
 
@@ -66,6 +76,6 @@ is_running() { pgrep -x "$1" >/dev/null; }
 
 
 # shellcheck disable=2046
-# comparison between integers is required
+# cannot quote as we are comparing integers
 
-is_su() { [ $(id -u) -eq 0 ]; }
+is_su() { test `id -u` -eq 0; }
