@@ -10,10 +10,10 @@
 
 * table of contents                                       :TOC_2_gh:noexport:
 - [[#preamble][preamble]]
+  - [[#package-management][package management]]
 - [[#general][general]]
   - [[#mouse][mouse]]
   - [[#appearance][appearance]]
-  - [[#package-management][package management]]
   - [[#dired][dired]]
   - [[#formatting][formatting]]
   - [[#misc][misc]]
@@ -31,6 +31,8 @@
   - [[#ivy][ivy]]
   - [[#which-key][which-key]]
   - [[#vi-keybinds][vi-keybinds]]
+- [[#applications][applications]]
+  - [[#terminals][terminals]]
 - [[#keybinds][keybinds]]
 - [[#acknowledgements][acknowledgements]]
   - [[#protesilaos-stavrou][Protesilaos Stavrou]]
@@ -58,35 +60,7 @@ disable emacs settings up custom variables
 (setq-default custom-file null-device)
 #+end_src
 
-* general
-
-basic settings
-
-** mouse
-
-even tho we are on the *no-mouse* master-race, having some tiny stuff there should
-be handy
-
-#+begin_src emacs-lisp
-(xterm-mouse-mode t)
-#+end_src
-
-** appearance
-
-the looks
-
-#+begin_src emacs-lisp
-(menu-bar-mode 0)
-#+end_src
-
-lines
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :ensure nil
-  :config (global-display-line-numbers-mode)
-  :custom (display-line-numbers-type 'relative))
-#+end_src
+this is set-up here first in order to take advantage of =use-package=
 
 ** package management
 
@@ -121,6 +95,70 @@ syntax verbosity
 
 (eval-when-compile
   (require 'use-package))
+#+end_src
+
+* general
+
+basic settings
+
+** mouse
+
+even tho we are on the *no-mouse* master-race, having some tiny stuff there should
+be handy
+
+#+begin_src emacs-lisp
+(xterm-mouse-mode t)
+#+end_src
+
+** appearance
+
+user interface
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :ensure nil
+  :custom
+  (menu-bar-mode   nil)
+  (tool-bar-mode   nil)
+  (scroll-bar-mode nil)
+  (inhibit-splash-screen t))
+#+end_src
+
+lines
+
+#+begin_src emacs-lisp
+(global-display-line-numbers-mode)
+(setq-default display-line-numbers-type 'relative)
+#+end_src
+
+font & size
+
+#+begin_src emacs-lisp
+;; set default font
+(defun annt/set-default-font()
+  "set font defaults"
+  (dolist (face '(default fixed-pitch variable-pitch))
+    (set-face-attribute `,face nil :font "Victor Mono 14")))
+
+;; needed when working with emacs as a daemon
+(use-package frame
+  :ensure nil
+  :if (daemonp)
+  :hook
+  (after-make-frame-functions . (lambda (frame)
+                                  (with-selected-frame frame (annt/set-default-font)))))
+#+end_src
+
+theme
+
+#+begin_src emacs-lisp
+(use-package modus-operandi-theme)
+
+;; dark themes
+(use-package modus-vivendi-theme)
+
+;; load theme
+(load-theme 'modus-vivendi t)
 #+end_src
 
 ** dired
@@ -202,6 +240,8 @@ inmediatly kill buffer without confirmation
 #+begin_src emacs-lisp
 (use-package prog-mode
   :ensure nil
+  :custom
+  (show-paren-mode t)
   :bind
   (("C-c c p" . previous-error)
    ("C-c c n" . next-error)
@@ -248,8 +288,8 @@ the language-protocol-server
   (python-mode-hook . lsp-deferred)
 
   ;; misc
-  (lsp-mode-hook  . lsp-enable-which-key-integration)
-  (lsp-mode-hook  . annt/lsp-init))
+  (lsp-mode-hook . lsp-enable-which-key-integration)
+  (lsp-mode-hook . annt/lsp-init))
 #+end_src
 
 ** completion
@@ -259,11 +299,9 @@ text completion framework
 #+begin_src emacs-lisp
 (use-package company
   :diminish
-  :after lsp-mode
-  :hook (prog-mode-hook . company-mode)
-  :bind
-  (:map company-active-map ("<tab>" . company-complete-selection))
-  (:map lsp-mode-map       ("<tab>" . company-indent-or-complete-common))
+  :hook
+  ;; languages to enable company
+  (prog-mode-hook . company-mode)
   :custom
   (company-idle-delay            0)
   (company-minimum-prefix-length 1))
