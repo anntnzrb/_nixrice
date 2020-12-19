@@ -31,8 +31,6 @@
   - [[#ivy][ivy]]
   - [[#which-key][which-key]]
   - [[#vi-keybinds][vi-keybinds]]
-- [[#applications][applications]]
-  - [[#terminals][terminals]]
 - [[#keybinds][keybinds]]
 - [[#acknowledgements][acknowledgements]]
   - [[#protesilaos-stavrou][Protesilaos Stavrou]]
@@ -238,8 +236,21 @@ inmediatly kill buffer without confirmation
 * development
 
 #+begin_src emacs-lisp
+
 (use-package prog-mode
   :ensure nil
+  :config
+  (defun annt/set-compiler (&optional cmd-args)
+    "changes the compiler command; if a `Makefile` file is found, do nothing, if
+       an arg is passed and a `Makefile` does not exist, then set that arg as the
+       compiler command, else just use default command behavior."
+
+    (unless (or (file-exists-p "makefile")
+                (file-exists-p "Makefile"))
+      (set (make-local-variable 'compile-command)
+           (if cmd-args
+               (concat cmd-args " " (expand-file-name buffer-file-truename))
+             (concat "make -k " (expand-file-name buffer-file-truename))))))
   :custom
   (show-paren-mode t)
   :bind
@@ -332,10 +343,20 @@ formatter for pretty much every languages
 
 *** Shell
 
++ general settings
+
+#+begin_src emacs-lisp
+(use-package shell
+  :ensure nil
+  :hook
+  (sh-mode-hook . (lambda () (annt/set-compiler "/bin/sh"))))
+#+end_src
+
++ syntax checking
+
 #+begin_src emacs-lisp
 (use-package flycheck :hook (sh-mode-hook . flycheck-mode))
 #+end_src
-
 
 *** C
 
@@ -360,7 +381,6 @@ formatter for pretty much every languages
   :hook     (c-mode-hook . eglot-ensure))
 #+end_src
 
-
 *** Python
 
 #+begin_src emacs-lisp
@@ -383,6 +403,26 @@ formatter for pretty much every languages
   (python-mode-hook . (lambda ()
                         (require 'lsp-python-ms)
                         (lsp-deferred))))
+#+end_src
+
+*** Perl
+
++ general settings
+
+#+begin_src emacs-lisp
+(use-package perl-mode
+  :ensure nil
+  :hook
+  (perl-mode-hook . (lambda () (annt/set-compiler "perl -TWt"))))
+#+end_src
+
++ syntax checking
+
+#+begin_src emacs-lisp
+(use-package flycheck
+  :custom
+  (flycheck-perlcritic-severity 1)
+  :hook (perl-mode-hook . flycheck-mode))
 #+end_src
 
 *** Markdown
