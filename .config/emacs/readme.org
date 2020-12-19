@@ -381,6 +381,14 @@ formatter for pretty much every languages
   :hook     (c-mode-hook . eglot-ensure))
 #+end_src
 
+*** Emacs Lisp
+
++ syntax checking
+
+#+begin_src emacs-lisp
+(use-package flycheck :hook (emacs-lisp-mode-hook . flycheck-mode))
+#+end_src
+
 *** Python
 
 #+begin_src emacs-lisp
@@ -420,23 +428,33 @@ formatter for pretty much every languages
 
 #+begin_src emacs-lisp
 (use-package flycheck
-  :custom
-  (flycheck-perlcritic-severity 1)
-  :hook (perl-mode-hook . flycheck-mode))
+  :custom (flycheck-perlcritic-severity 1)
+  :hook   (perl-mode-hook . flycheck-mode))
 #+end_src
 
 *** Markdown
 
++ general settings
+
 #+begin_src emacs-lisp
 (use-package markdown-mode
+  :ensure nil
   :mode (("README\\.md\\'" . gfm-mode)
          ("readme\\.md\\'" . gfm-mode)
          ("\\.md\\'"       . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
-  :config
-  ;; enables "org-edit-src-code"-like code blocks [C-c ']
-  (use-package edit-indirect)
-  (setq-default markdown-fontify-code-blocks-natively t))
+  :custom
+  ;; enables 'org-edit-src-code'-like code blocks [C-c ']
+  (markdown-fontify-code-blocks-natively t))
+#+end_src
+
+
++ syntax checking
+
+#+begin_src emacs-lisp
+(use-package flycheck
+  :if   (executable-find      "markdownlint")
+  :hook (markdown-mode-hook . flycheck-mode))
 #+end_src
 
 * org-mode
