@@ -239,7 +239,7 @@ inmediatly kill buffer without confirmation
 
 (use-package prog-mode
   :ensure nil
-  :config
+  :init
   (defun annt/set-compiler (&optional cmd-args)
     "changes the compiler command; if a `Makefile` file is found, do nothing, if
        an arg is passed and a `Makefile` does not exist, then set that arg as the
@@ -346,7 +346,7 @@ formatter for pretty much every languages
 + general settings
 
 #+begin_src emacs-lisp
-(use-package shell
+(use-package sh-script
   :ensure nil
   :hook
   (sh-mode-hook . (lambda () (annt/set-compiler "/bin/sh"))))
