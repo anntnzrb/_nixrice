@@ -24,21 +24,15 @@
 case $SYSTEM in
 arch)
     # dependencies
-    $PKG_INSTALL "nodejs" "yarn"
+    $PKG_INSTALL 'npm'
 
-    # [vim::ALE] (formatter)
-    $PKG_INSTALL "prettier"
-    ;;
-
-void)
     # check if running with elevated priviledges; elevate if not
     ! is_su && elevate_privs "$0" "$@"
 
-    # dependencies
-    $PKG_INSTALL "nodejs" "yarn"
+    # linter
+    npm install -g 'markdownlint-cli'
 
-    # [vim::ALE] (formatter)
-    printf 'installing via npm...\n'
-    npm install -g "prettier"
+    # formatter
+    npm install -g 'prettier'
     ;;
 esac
