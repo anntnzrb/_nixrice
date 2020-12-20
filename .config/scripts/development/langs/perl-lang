@@ -1,0 +1,29 @@
+#!/bin/sh
+
+# -----------------------------------------------------------------------------
+# preamble
+# -----------------------------------------------------------------------------
+
+# source utilities
+# shellcheck disable=SC1090
+. "$LIBSHUTILS/sys-utils"
+
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
+
+case $SYSTEM in
+arch)
+    # check if running with elevated priviledges; elevate if not
+    ! is_su && elevate_privs "$0" "$@"
+
+    # first time set-up
+    printf | cpan
+
+    # linting
+    cpan 'Perl::Critic'
+
+    # formatter
+    cpan 'Perl::Tidy'
+    ;;
+esac
