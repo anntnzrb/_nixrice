@@ -14,24 +14,24 @@
 # -----------------------------------------------------------------------------
 
 alias \
-    cp="cp -aiv" \
-    diff="diff --color=auto" \
-    grep="grep -i --color=auto" \
-    ls="ls -AFhq --color=auto --group-directories-first" \
-    ll="ls -AFhlq --color=auto --group-directories-first" \
-    mkdir="mkdir -pv" \
-    mv="mv -iv" \
-    rm="rm -v" \
-    rmfr="rm -Rfv" \
-    tree="tree -CFlq --dirsfirst" \
-    treed="tree -CFdlq --dirsfirst" \
-    zip="zip -rv"
+    cp='cp -Riv' \
+    diff='diff --color=auto' \
+    grep='grep -i --color=auto' \
+    ls='ls -AFhq --color=auto --group-directories-first' \
+    ll='ls -AFhlq --color=auto --group-directories-first' \
+    mkdir='mkdir -pv' \
+    mv='mv -iv' \
+    rm='rm -v' \
+    rmfr='rm -Rfv' \
+    tree='tree -CFlq --dirsfirst' \
+    treed='tree -CFdlq --dirsfirst' \
+    zip='zip -rv'
 
 # shortcuts
 alias \
-    eed='$EDITOR' \
-    seed='sudo $EDITOR' \
-    sx11="startx" \
+    eed='${EDITOR:?}' \
+    seed='sudo ${EDITOR:?}' \
+    sx11='startx' \
     kx11="pkill -15 'Xorg'"
 
 # -----------------------------------------------------------------------------
@@ -39,20 +39,20 @@ alias \
 # -----------------------------------------------------------------------------
 
 # arch-based
-if [ -x "$(command -v 'pacman')" ]; then
+if test -x "`command -v 'pacman'`"; then
     alias \
-        pkgf="pacman -Ss" \
-        pkgi="sudo pacman -S" \
-        pkgr="sudo pacman -R" \
-        pkgu="sudo pacman -Suyy"
+        pkgf='pacman -Ss' \
+        pkgi="sudo pacman --needed -Suy 'pacman' && sudo pacman -S" \
+        pkgr='sudo pacman -Rns' \
+        pkgu="sudo pacman --needed -Suy 'pacman' && sudo pacman -Suyy"
 
 # void
-elif [ -x "$(command -v 'xbps-install')" ]; then
+elif test -x "`command -v 'xbps-install'`"; then
     alias \
-        pkgf="xbps-query" \
-        pkgi="sudo xbps-install -S xbps && sudo xbps-install -S" \
-        pkgr="sudo xbps-remove -Rf" \
-        pkgu="sudo xbps-install -S xbps && sudo xbps-install -Su"
+        pkgf='xbps-query' \
+        pkgi="sudo xbps-install -S 'xbps' && sudo xbps-install -S" \
+        pkgr='sudo xbps-remove -Rf' \
+        pkgu="sudo xbps-install -S 'xbps' && sudo xbps-install -Su"
 fi
 
 # -----------------------------------------------------------------------------
@@ -61,15 +61,14 @@ fi
 
 alias \
     ascii="toilet -t -f '3d'" \
-    cheat="cht.sh" \
+    cheat='cht.sh' \
     future="toilet -t -f 'future'" \
-    matrix="unimatrix -a -l GRgors -s 96" \
     rusto="toilet -t -f 'rusto'" \
     rustofat="toilet -t -f 'rustofat'" \
-    tnet="ping example.com" \
-    tnetspeed="speedtest-cli" \
-    yt="youtube-dl --restrict-filenames" \
-    ytf="youtube-dl -F" \
-    ytt="youtube-dl --restrict-filenames --skip-download --write-thumbnail" \
+    tnet="ping 'example.com'" \
+    tnetspeed='speedtest-cli' \
+    yt='youtube-dl --restrict-filenames' \
+    ytf='youtube-dl -F' \
+    ytt='youtube-dl --restrict-filenames --skip-download --write-thumbnail' \
     yta="youtube-dl --restrict-filenames --prefer-ffmpeg --audio-format 'best' -x" \
     ytv="youtube-dl --restrict-filenames -f 'best'"
