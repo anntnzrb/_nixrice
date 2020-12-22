@@ -10,21 +10,15 @@
 # ░░      ░░░     ░░░░░░  ░░░  ░░  ░░ ░░         ░░
 
 # -----------------------------------------------------------------------------
-# functions
-# -----------------------------------------------------------------------------
-
-_cowsay() { fortune -s | cowsay -f tux; }
-
-_sysfetch() { pfetch; }
-
-# -----------------------------------------------------------------------------
 # main
 # -----------------------------------------------------------------------------
 
 # generate a random number from a range
-_RAND=$(shuf -i 1-2 -n 1)
+# this is slower than shuf, but portable
+rnd_n=`awk -v min=1 -v max=2 'BEGIN { srand(); print int(min + rand() * (max - min + 1))}'`
 
-case $_RAND in
-1) _cowsay ;;
-2) _sysfetch ;;
+case ${rnd_n} in
+1) fortune -s | cowsay -f tux ;;
+2) pfetch ;;
+*) return 1 ;;
 esac

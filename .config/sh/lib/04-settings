@@ -14,19 +14,19 @@
 # miscellaneous
 # -----------------------------------------------------------------------------
 
-export FZF_DEFAULT_OPTS="--layout=reverse --height 40%"
-export LESSKEY="$XDG_CONFIG_HOME/less/lesskey"
-export LESSHISTFILE="-"
-export SUDO_ASKPASS="$XDG_DESKTOP_DIR/.local/bin/dmenupass"
+export FZF_DEFAULT_OPTS='--layout=reverse --height 40%'
+export LESSKEY="${XDG_CONFIG_HOME:?}/less/lesskey"
+export LESSHISTFILE='-'
+export SUDO_ASKPASS="${XDG_DESKTOP_DIR:?}/.local/bin/dmenupass"
 
 # -----------------------------------------------------------------------------
 # pfetch
 # -----------------------------------------------------------------------------
 
 # information to display
-export PF_INFO="ascii title kernel os host wm de memory pkgs editor shell uptime palette"
+export PF_INFO='ascii title kernel os host wm de memory pkgs editor shell uptime palette'
 # alignment padding
-export PF_ALIGN="7"
+export PF_ALIGN='7'
 # color of info data
 export PF_COL2=4
 # color of title data

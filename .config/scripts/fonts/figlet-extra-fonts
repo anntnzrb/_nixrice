@@ -6,7 +6,7 @@
 
 # source utilities
 # shellcheck disable=SC1090
-. "$LIBSHUTILS/sys-utils"
+. "${LIBSHUTILS:?}/sys-utils"
 
 # -----------------------------------------------------------------------------
 # main
@@ -16,12 +16,12 @@
 ! is_su && elevate_privs "$0" "$@"
 
 # set download folder
-DWNL_FOLDER="/tmp/figlet-fonts"
+dwnld_folder='/tmp/figlet-fonts'
 
 # download & install
-git clone -q 'https://github.com/xero/figlet-fonts.git' "$DWNL_FOLDER" ||
-    exit 1
-cp -Tfr "$DWNL_FOLDER/." '/usr/share/figlet/' || exit 1
-rm -fr "$DWNL_FOLDER"
+git clone -q 'https://github.com/xero/figlet-fonts.git' "${dwnld_folder}" \
+    || exit 1
+cp -Rf "${dwnld_folder}/." '/usr/share/figlet/' || exit 1
+rm -Rf "${dwnld_folder}"
 
 printf 'figlet fonts were downloaded and applied...\n'
