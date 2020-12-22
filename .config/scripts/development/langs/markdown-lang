@@ -30,7 +30,7 @@ arch)
     ! is_su && elevate_privs "$0" "$@"
 
     # linter
-    npm install -g 'markdownlint-cli'
+    npm install -g 'markdownlint'
 
     # formatter
     npm install -g 'prettier'

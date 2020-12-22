@@ -6,7 +6,7 @@
 
 # source utilities
 # shellcheck disable=SC1090
-. "$LIBSHUTILS/sys-utils"
+. "${LIBSHUTILS:?}/sys-utils"
 
 # -----------------------------------------------------------------------------
 # functions
@@ -21,13 +21,13 @@ detect_vs_ver() {
 
     # find out which version of VSCode is installed
     if is_installed 'codium'; then
-        VSCODE_VER="codium"
+        VSCODE_VER='codium'
     elif is_installed 'code-oss'; then
-        VSCODE_VER="code-oss"
+        VSCODE_VER='code-oss'
     fi
 }
 
-install_vscext() { $VSCODE_VER --install-extension "$1"; }
+install_vscext() { ${VSCODE_VER} --install-extension "$1"; }
 
 # -----------------------------------------------------------------------------
 # general
@@ -37,7 +37,7 @@ install_vscext() { $VSCODE_VER --install-extension "$1"; }
 detect_vs_ver
 
 # echo info
-printf 'found VSCode with the command '%s'\n' "$VSCODE_VER"
+printf 'found VSCode with the command '%s'\n' "${VSCODE_VER}"
 
 # intellisense for various languages
 install_vscext 'VisualStudioExptTeam.vscodeintellicode'
@@ -105,4 +105,4 @@ install_vscext 'streetsidesoftware.code-spell-checker-spanish'
 
 # print installed extensions
 printf '\n\n...printing installed extensions...\n'
-$VSCODE_VER --list-extensions
+${VSCODE_VER} --list-extensions
