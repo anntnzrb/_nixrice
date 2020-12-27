@@ -1,0 +1,409 @@
+#+TITLE: GNU Emacs configurations
+#+AUTHOR: anntnzrb
+#+EMAIL: anntnzrb@protonmail.com
+#+PROPERTY: header-args :results silent
+#+MACRO: export-date (eval (format-time-string "%F" (current-time)))
+
++ created: 2020-11-07
++ updated: *{{{export-date}}}*
+
+* Table of Contents                                       :TOC_2_gh:noexport:
+- [[#early-init-file][Early Init File]]
+- [[#init-file][Init File]]
+- [[#settings][Settings]]
+  - [[#custom][Custom]]
+  - [[#package-management][Package Management]]
+  - [[#editing][Editing]]
+  - [[#modeline][Modeline]]
+  - [[#appearance][Appearance]]
+  - [[#dired][Dired]]
+  - [[#utilities][Utilities]]
+  - [[#miscellaneous][Miscellaneous]]
+- [[#org-mode][Org-Mode]]
+- [[#programming][Programming]]
+  - [[#version-control][Version Control]]
+  - [[#linting][Linting]]
+  - [[#completion][Completion]]
+  - [[#snippets][Snippets]]
+  - [[#generic-formatter][Generic Formatter]]
+  - [[#shell][Shell]]
+  - [[#c][C]]
+  - [[#emacs-lisp-elisp][Emacs Lisp (elisp)]]
+
+* Early Init File
+
+Emacs =27.1= offers new file called =early-init.el= which allows customizations
+that take effect during Emacs startup earlier than the normal init file. This
+file is loaded before the package system and GUI is initialized.
+
+*References*: [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.html][The Early Init File]]
+
+#+begin_src emacs-lisp :tangle "early-init.el"
+;;; early-init.el --- GNU Emacs >= 27.1 pre-initialization file
+
+;;; Commentary:
+
+;; This file gets loaded before the 'init.el' file.
+;; Should not have more than a few files.
+
+;;; Code:
+
+;; Package tweaks
+(setq-default package-enable-at-startup t
+              package-quickstart        t)
+
+(provide 'early-init)
+
+;;; early-init.el ends here
+#+end_src
+
+* Init File
+
+#+begin_src emacs-lisp :tangle "init.el"
+;;; init.el --- Initialization file of GNU Emacs
+
+;;; Commentary:
+;; This file gets loaded after the 'early-init.el' file.
+
+;;; Code:
+
+(org-babel-load-file (expand-file-name "readme.org" user-emacs-directory))
+
+(provide 'init)
+;;; init.el ends here
+#+end_src
+
+* Settings
+
+#+begin_src emacs-lisp
+(setq-default inhibit-startup-screen  t
+              initial-scratch-message nil
+              initial-buffer-choice   (expand-file-name "~"))
+
+(setq-default custom-file (expand-file-name "custom.el" user-emacs-directory))
+
+(fset 'yes-or-no-p 'y-or-n-p)
+#+end_src
+
+** Custom
+
+Section where I place my own functions/definitions that do not belog anywhere
+specific.
+
+#+begin_src emacs-lisp
+(defun annt/add-multi-hook (fun hooks)
+  "Adds FUN to multiple HOOKS."
+  (mapc (lambda (hook)
+          (add-hook hook fun))
+        hooks))
+#+end_src
+
+** Package Management
+
+#+begin_src emacs-lisp
+(require 'package)
+
+(add-to-list 'package-archives
+             '("MELPA Stable" . "https://stable.melpa.org/packages/") t)
+
+(package-initialize)
+
+; only refresh if needed
+(unless package-archive-contents (package-refresh-contents))
+
+(defun annt/install-pkg(pkg)
+  "Checks if 'PKG' is installed and if not, installs it."
+  (unless (package-installed-p pkg)
+    (unless package-archive-contents (package-refresh-contents))
+    (package-install pkg)))
+#+end_src
+
+** Editing
+
+#+begin_src emacs-lisp
+(setq-default mode-require-final-newline t
+              show-trailing-whitespace   t
+              indent-tabs-mode           nil
+              tab-width   4
+              fill-column 79
+              display-fill-column-indicator-column (+ fill-column 1))
+
+;; delete trailing whitespaces prior save
+(add-hook 'before-save-hook #'delete-trailing-whitespace)
+
+;; display vertical column at line limit
+(annt/add-multi-hook #'display-fill-column-indicator-mode
+                     '(prog-mode-hook
+                       text-mode-hook))
+#+end_src
+
+** Modeline
+
+#+begin_src emacs-lisp
+(setq-default column-number-mode   t
+              size-indication-mode t
+              column-number-indicator-zero-based nil)
+#+end_src
+
+** Appearance
+
+#+begin_src emacs-lisp
+(menu-bar-mode   0)
+(tool-bar-mode   0)
+(scroll-bar-mode 0)
+
+(defconst annt/FONT_NAME "VictorMono")
+(defconst annt/FONT_SIZE           13)
+(defconst annt/FULL_FONT (format "%s-%s" annt/FONT_NAME annt/FONT_SIZE))
+
+(set-face-attribute 'default nil :font annt/FULL_FONT)
+(set-frame-font     annt/FULL_FONT nil t)
+
+;; Theme
+;; only enable if running Emacs as an X window
+(when (display-graphic-p) (load-theme 'misterioso t))
+#+end_src
+
+** Dired
+
+#+begin_src emacs-lisp
+(setq-default dired-listing-switches  "-Fahlq --group-directories-first"
+              dired-recursive-copies  'always
+              dired-recursive-deletes 'always
+              dired-use-ls-dired      'unspecified)
+#+end_src
+
+** Utilities
+
+*** Which-Key
+
+#+begin_src emacs-lisp
+(annt/install-pkg 'which-key) ;; PKG installation
+
+;; Settings
+(setq-default which-key-side-window-location 'right
+              which-key-idle-delay 0.5
+              which-key-lighter ""
+              which-key-is-verbose t)
+
+(which-key-mode) ;; Enable mode
+#+end_src
+
+*** Helpful
+
+#+begin_src emacs-lisp
+(annt/install-pkg 'helpful) ;; PKG installation
+
+;; Keybinds
+(global-set-key [remap describe-command]  #'helpful-command)
+(global-set-key [remap describe-function] #'helpful-function)
+(global-set-key [remap describe-key]      #'helpful-key)
+(global-set-key [remap describe-symbol]   #'helpful-symbol)
+(global-set-key [remap describe-variable] #'helpful-variable)
+#+end_src
+
+*** Vi Emulation
+
+**** Evil
+
+#+begin_src emacs-lisp
+(annt/install-pkg 'evil) ;; PKG installation
+
+;; Settings
+(setq-default evil-want-minibuffer t
+              evil-want-keybinding nil)
+
+(evil-mode 1) ;; Enable mode
+#+end_src
+
+**** Evil Surround
+
+#+begin_src emacs-lisp
+(annt/install-pkg 'evil-surround) ;; PKG installation
+
+;; Enable mode
+(global-evil-surround-mode)
+#+end_src
+
+*** Aggressive-indent
+
+#+begin_src emacs-lisp
+(annt/install-pkg 'aggressive-indent) ;; PKG installation
+
+;; Settings
+(setq-default aggressive-indent-comments-too t
+              aggressive-indent-sit-for-time 0.5)
+;; Hooks
+(add-hook 'prog-mode-hook #'aggressive-indent-mode)
+#+end_src
+
+** Miscellaneous
+
+*** Backups
+
+#+begin_src emacs-lisp
+(global-set-key [remap kill-buffer] #'kill-this-buffer)
+#+end_src
+
+#+begin_src emacs-lisp
+(setq-default create-lockfiles    nil
+              backup-by-copying   t
+              delete-old-versions t
+              backup-directory-alist
+              '(("." . (expand-file-name "backup/" user-emacs-directory))))
+#+end_src
+* Org-Mode
+
+#+begin_src emacs-lisp
+(annt/install-pkg 'org) ;; PKG installation
+
+;; Backends for Org Exportation
+(setq-default org-export-backends '(html latex man md odt))
+
+
+;; General Org settings
+(setq-default org-export-with-email t
+              org-edit-src-content-indentation 0
+              org-confirm-babel-evaluate       nil)
+
+;; Languages to work with Babel
+(setq-default org-babel-load-languages
+              '((emacs-lisp . t)
+                (shell      . t)
+                (C          . t)
+                (python     . t)))
+
+;; Templates
+(setq-default org-structure-template-alist
+              '(("src" . "src")
+                ;; languages
+                ("el"  . "src emacs-lisp")
+                ("sh"  . "src sh")
+                ("c"   . "src c")
+                ("py"  . "src python")
+                ;; misc
+                ("comm" . "comment")
+                ("ex"   . "example")
+                ("quo"  . "quote")))
+
+(add-hook 'org-mode-hook #'org-indent-mode)
+#+end_src
+
+*** Table of Contents for Org
+
+#+begin_src emacs-lisp
+(annt/install-pkg 'toc-org) ;; PKG installation
+
+(add-hook 'org-mode-hook #'toc-org-mode)
+#+end_src
+
+* Programming
+
+** Version Control
+
+#+begin_src emacs-lisp
+;; Follow some good git practices
+(defconst annt/GIT_MSG_MAX_SIZE 50)
+
+(setq-default git-commit-summary-max-length annt/GIT_MSG_MAX_SIZE
+              git-commit-style-convention-checks
+              '(non-empty-second-line overlong-summary-line))
+#+end_src
+
+*** Magit
+
+Interactive Git
+
+#+begin_src emacs-lisp
+(annt/install-pkg 'magit) ;; PKG install
+
+;; Keybinds
+(global-set-key (kbd "C-c g") 'magit-status)
+#+end_src
+
+** Linting
+
+#+begin_src emacs-lisp
+(annt/install-pkg 'flycheck) ;; PKG install
+
+;; Settings
+(setq-default flycheck-mode-line-prefix "FlyCheck"
+              flycheck-checker-error-threshold 100
+              flycheck-display-errors-delay 1
+              flycheck-idle-change-delay    1)
+
+; hooks & settings should be setup on each language respectively
+#+end_src
+
+** Completion
+
+#+begin_src emacs-lisp
+(annt/install-pkg 'company) ;; PKG installation
+
+;; Settings
+(setq-default company-minimum-prefix-length 2
+              company-idle-delay 0.25
+              company-show-numbers ''t)
+
+(add-hook 'prog-mode-hook #'company-mode)
+#+end_src
+
+** Snippets
+
+#+begin_src emacs-lisp
+;; Settings
+(annt/install-pkg 'yasnippet)          ;; PKG Installation
+(annt/install-pkg 'yasnippet-snippets) ;; PKG Installation
+(add-hook 'prog-mode-hook #'yas-minor-mode)
+#+end_src
+
+#+end_src
+** Generic Formatter
+
+#+begin_src emacs-lisp
+(annt/install-pkg 'reformatter) ;; PKG installation
+#+end_src
+
+** Shell
+
+#+begin_src emacs-lisp
+(setq-default sh-backslash-column fill-column
+              sh-indent-after-case 0)
+
+;; Linting
+(add-hook 'sh-mode-hook #'flycheck-mode)
+#+end_src
+
+** C
+
+#+begin_src emacs-lisp
+;; GNU-styled with a few tweaks
+(setq-default c-set-style "gnu"
+              c-basic-offset 4)
+
+;; Formatter
+(defcustom c-fmt-command "uncrustify"
+  "Command used to format C files."
+  :group 'c
+  :type  'file
+  :safe  'stringp)
+
+(reformatter-define c-fmt-command
+  :group   'c
+  :program "uncrustify"
+  :args    '("--no-backup"))
+
+;; keybind assignment for the formatter
+(add-hook 'c-mode-hook (lambda ()
+                         (local-set-key (kbd "C-c c f") 'c-fmt-command)))
+#+end_src
+
+** Emacs Lisp (elisp)
+
+#+begin_src emacs-lisp
+;; Checkdoc
+(setq-default checkdoc-verb-check-experimental-flag nil)
+
+;; Linting
+(add-hook 'emacs-lisp-mode-hook #'flycheck-mode)
+#+end_src
