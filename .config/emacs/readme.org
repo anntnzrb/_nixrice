@@ -83,8 +83,13 @@ file is loaded before the package system and GUI is initialized.
               initial-scratch-message nil
               initial-buffer-choice   (expand-file-name "~"))
 
+;; Others
+(setq-default global-auto-revert-mode t)
+
+;; Custom(ize) file
 (setq-default custom-file (expand-file-name "custom.el" user-emacs-directory))
 
+;; Shorter prompts
 (fset 'yes-or-no-p 'y-or-n-p)
 #+end_src
 
@@ -138,6 +143,11 @@ specific.
 (annt/add-multi-hook #'display-fill-column-indicator-mode
                      '(prog-mode-hook
                        text-mode-hook))
+
+;; auto-wrapping
+(annt/add-multi-hook #'auto-fill-mode
+                     '(prog-mode-hook
+                       text-mode-hook))
 #+end_src
 
 ** Modeline
@@ -184,10 +194,9 @@ specific.
 (annt/install-pkg 'which-key) ;; PKG installation
 
 ;; Settings
-(setq-default which-key-side-window-location 'right
+(setq-default which-key-is-verbose t
               which-key-idle-delay 0.5
-              which-key-lighter ""
-              which-key-is-verbose t)
+              which-key-lighter "")
 
 (which-key-mode) ;; Enable mode
 #+end_src
@@ -216,7 +225,7 @@ specific.
 (setq-default evil-want-minibuffer t
               evil-want-keybinding nil)
 
-(evil-mode 1) ;; Enable mode
+(evil-mode) ;; Init
 #+end_src
 
 **** Evil Surround
@@ -224,8 +233,12 @@ specific.
 #+begin_src emacs-lisp
 (annt/install-pkg 'evil-surround) ;; PKG installation
 
-;; Enable mode
-(global-evil-surround-mode)
+;; Hooks
+(annt/add-multi-hook #'evil-surround-mode
+                     '(prog-mode-hook
+                       text-mode-hook))
+
+(global-evil-surround-mode) ;; Init
 #+end_src
 
 *** Aggressive-indent
@@ -242,18 +255,23 @@ specific.
 
 ** Miscellaneous
 
-*** Backups
++ Enable Emacs server on initialization
+
+#+begin_src emacs-lisp
+(add-hook 'after-init-hook #'server-start)
+#+end_src
+
++ Don't prompt when killing buffer
 
 #+begin_src emacs-lisp
 (global-set-key [remap kill-buffer] #'kill-this-buffer)
 #+end_src
 
+*** Backups
+
 #+begin_src emacs-lisp
-(setq-default create-lockfiles    nil
-              backup-by-copying   t
-              delete-old-versions t
-              backup-directory-alist
-              '(("." . (expand-file-name "backup/" user-emacs-directory))))
+(setq-default create-lockfiles  nil
+              make-backup-files nil)
 #+end_src
 * Org-Mode
 
@@ -277,6 +295,8 @@ specific.
                 (python     . t)))
 
 ;; Templates
+(require 'org-tempo) ;; needed for templates to work
+
 (setq-default org-structure-template-alist
               '(("src" . "src")
                 ;; languages
@@ -289,6 +309,7 @@ specific.
                 ("ex"   . "example")
                 ("quo"  . "quote")))
 
+;; Hooks
 (add-hook 'org-mode-hook #'org-indent-mode)
 #+end_src
 
@@ -343,8 +364,6 @@ Interactive Git
               flycheck-checker-error-threshold 100
               flycheck-display-errors-delay 1
               flycheck-idle-change-delay    1)
-
-; hooks & settings should be setup on each language respectively
 #+end_src
 
 ** Completion
@@ -356,8 +375,6 @@ Interactive Git
 (setq-default company-minimum-prefix-length 2
               company-idle-delay 0.25
               company-show-numbers ''t)
-
-(add-hook 'prog-mode-hook #'company-mode)
 #+end_src
 
 ** Snippets
@@ -384,6 +401,9 @@ Interactive Git
 
 ;; Linting
 (add-hook 'sh-mode-hook #'flycheck-mode)
+
+;; Completion
+(add-hook 'sh-mode-hook #'company-mode)
 #+end_src
 
 ** C
