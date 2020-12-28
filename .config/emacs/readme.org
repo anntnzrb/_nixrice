@@ -22,13 +22,16 @@
 - [[#org-mode][Org-Mode]]
 - [[#programming][Programming]]
   - [[#version-control][Version Control]]
+  - [[#language-server-protocol-lsp][Language Server Protocol (LSP)]]
   - [[#linting][Linting]]
   - [[#completion][Completion]]
   - [[#snippets][Snippets]]
   - [[#generic-formatter][Generic Formatter]]
   - [[#shell][Shell]]
   - [[#c][C]]
+  - [[#rust][Rust]]
   - [[#emacs-lisp-elisp][Emacs Lisp (elisp)]]
+  - [[#python][Python]]
 
 * Early Init File
 
@@ -321,6 +324,15 @@ Interactive Git
 (global-set-key (kbd "C-c g") 'magit-status)
 #+end_src
 
+** Language Server Protocol (LSP)
+
+#+begin_src emacs-lisp
+(annt/install-pkg 'lsp-mode)
+
+;; Settings
+(setq lsp-keymap-prefix "C-c l")
+#+end_src
+
 ** Linting
 
 #+begin_src emacs-lisp
@@ -398,6 +410,36 @@ Interactive Git
                          (local-set-key (kbd "C-c c f") 'c-fmt-command)))
 #+end_src
 
+** Rust
+
+Rust programming is not part of Emacs, there's not even a hook for it.
+[[https://github.com/rust-lang/rust-mode][Rust Mode]] accounts for this.
+
+#+begin_src emacs-lisp
+(annt/install-pkg 'rust-mode) ;; PKG install
+
+;; Settings
+(setq-default rust-always-locate-project-on-open t
+              rust-format-on-save t)
+#+end_src
+
+[[Language Server Protocol (LSP) ]]for Rust. Flycheck and Company were not enough
+for this for some reason, I might re-try them in the future. LSP works well for
+now.
+
+#+begin_src emacs-lisp
+(add-hook 'rust-mode-hook #'lsp-deferred)
+#+end_src
+
+*** Package Manager for Rust
+
+#+begin_src emacs-lisp
+(annt/install-pkg 'cargo) ;; PKG install
+
+;; Hooks
+(add-hook 'rust-mode-hook 'cargo-minor-mode)
+#+end_src
+
 ** Emacs Lisp (elisp)
 
 #+begin_src emacs-lisp
@@ -406,4 +448,16 @@ Interactive Git
 
 ;; Linting
 (add-hook 'emacs-lisp-mode-hook #'flycheck-mode)
+
+;; Completion
+(add-hook 'emacs-lisp-mode-hook #'company-mode)
+#+end_src
+** Python
+
+#+begin_src emacs-lisp
+;; Linting
+(add-hook 'python-mode-hook #'flycheck-mode)
+
+;; Completion
+(add-hook 'python-mode-hook #'company-mode)
 #+end_src
