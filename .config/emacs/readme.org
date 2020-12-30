@@ -99,6 +99,14 @@ Section where I place my own functions/definitions that do not belog anywhere
 specific.
 
 #+begin_src emacs-lisp
+(defun annt/net-up-p (&optional host)
+  "Checks if there is an active internet connection.
+By default, the HOST used is 'example.com' because this is a good website for
+testing. If HOST is non-nil, given HOST will be used for testing."
+  (= 0 (call-process "ping" nil nil nil "-q" "-c" "1" (if host
+                                                          host
+                                                       "example.com"))))
+
 (defun annt/add-multi-hook (fun hooks)
   "Adds FUN to multiple HOOKS."
   (mapc (lambda (hook)
@@ -116,14 +124,19 @@ specific.
 
 (package-initialize)
 
-; only refresh if needed
-(unless package-archive-contents (package-refresh-contents))
+;; only refresh if needed
+(if (annt/net-up-p)
+    (unless package-archive-contents (package-refresh-contents))
+  (warn "No active internet connection"))
 
 (defun annt/install-pkg(pkg)
-  "Checks if 'PKG' is installed and if not, installs it."
-  (unless (package-installed-p pkg)
-    (unless package-archive-contents (package-refresh-contents))
-    (package-install pkg)))
+  "Installs PKG if it is not installed already.
+This is only performed if there's an active internet connection."
+  (if (annt/net-up-p)
+      (unless (package-installed-p pkg)
+        (package-refresh-contents)
+        (package-install pkg))
+    (warn "No active internet connection")))
 #+end_src
 
 ** Editing
