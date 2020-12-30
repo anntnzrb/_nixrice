@@ -80,11 +80,10 @@ file is loaded before the package system and GUI is initialized.
 
 #+begin_src emacs-lisp
 (setq-default inhibit-startup-screen  t
-              initial-scratch-message nil
-              initial-buffer-choice   (expand-file-name "~"))
+              initial-scratch-message nil)
 
-;; Others
-(setq-default global-auto-revert-mode t)
+;; Auto-Update the buffer whenever it changes (even externally)
+(global-auto-revert-mode)
 
 ;; Custom(ize) file
 (setq-default custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -238,7 +237,10 @@ This is only performed if there's an active internet connection."
 (setq-default evil-want-minibuffer t
               evil-want-keybinding nil)
 
-(evil-mode) ;; Init
+;; Hooks
+(annt/add-multi-hook #'evil-mode
+                     '(prog-mode-hook
+                       text-mode-hook))
 #+end_src
 
 **** Evil Surround
@@ -250,8 +252,6 @@ This is only performed if there's an active internet connection."
 (annt/add-multi-hook #'evil-surround-mode
                      '(prog-mode-hook
                        text-mode-hook))
-
-(global-evil-surround-mode) ;; Init
 #+end_src
 
 *** Aggressive-indent
@@ -427,7 +427,9 @@ Interactive Git
               c-basic-offset 4)
 
 ;; Formatter
-(defcustom c-fmt-command "uncrustify"
+(defconst annt/c-fmt-bin "uncrustify") ;; name of the of binary
+
+(defcustom c-fmt-command annt/c-fmt-bin
   "Command used to format C files."
   :group 'c
   :type  'file
@@ -435,7 +437,7 @@ Interactive Git
 
 (reformatter-define c-fmt-command
   :group   'c
-  :program "uncrustify"
+  :program annt/c-fmt-bin
   :args    '("--no-backup"))
 
 ;; keybind assignment for the formatter
@@ -485,6 +487,7 @@ now.
 ;; Completion
 (add-hook 'emacs-lisp-mode-hook #'company-mode)
 #+end_src
+
 ** Python
 
 #+begin_src emacs-lisp
