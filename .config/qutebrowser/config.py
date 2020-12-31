@@ -42,9 +42,13 @@ c.backend = "webengine"
 c.hints.auto_follow_timeout = 750
 
 # hint characters
-# normally locked at 9 letters, you can't use any keys at hint mode anyways, so
-# why not enable them all
-c.hints.chars = "abcdefghijklmnopqrstuvwxyz"
+# normally locked at 9 letters, you can't use any keys at hint mode anyways,
+# use home-row keys
+
+# enable this boolean var if using qwerty, disable to use all keys
+kb_qwerty = True
+qwerty_hint_chars = "asdfghjkl"
+c.hints.chars = qwerty_hint_chars if kb_qwerty else "abcdefghijklmnopqrstuvwxyz"
 
 # hints are uppercased (it's just easier to differentiate)
 c.hints.uppercase = True
