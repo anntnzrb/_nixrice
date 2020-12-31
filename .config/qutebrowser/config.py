@@ -133,21 +133,44 @@ c.downloads.position = "bottom"
 # remove finished downloads after...
 c.downloads.remove_finished = 5000
 
+""" """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+# indexing
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" """
+
 # search engines
 c.url.searchengines = {
     "DEFAULT": "https://www.duckduckgo.com/?q={}",
+
+    # search engines
+    "bing": "https://www.bing.com/search?q={}",
+    "google": "https://www.google.com/search?q={}",
+
+    # programming
+    "ghub": "https://github.com/{}",
+    "glab": "https://gitlab.com/{}",
+
+    # unix
+    "manobsd": "http://man.openbsd.org/{}",
+    "manvoid": "https://man.voidlinux.org/{}",
+    "mangnu": "https://www.gnu.org/software/coreutils/{}",
+
     # linux
     "aw": "https://wiki.archlinux.org/index.php?search={}",
-    "aur": "https://aur.archlinux.org/packages/?O=0&K={}",
     "pacman": "https://www.archlinux.org/packages/?q={}",
+    "aur": "https://aur.archlinux.org/packages/?K={}",
+
     # emacs
-    "melpa": "https://melpa.org/#/?q={}",
-    "emwiki": "https://duckduckgo.com/?q={}+site%3Aemacswiki.org",
+    "melpa": "https://melpa.org/?q={}",
+    "wikimacs": "https://duckduckgo.com/?q={}+site%3Aemacswiki.org",
+
     # misc
-    "lbry": "https://lbry.tv/$/search?q={}",
     "yt": "https://www.youtube.com/results?search_query={}",
+    "lbry": "https://lbry.tv/$/search?q={}",
     "redd": "https://reddit.com/r/{}",
     "wiki": "https://www.wikipedia.org/wiki/{}",
+
+    # socials (last, because yes)
+    "twitter": "https://nitter.net/{}",
 }
 
 """ """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
