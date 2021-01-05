@@ -98,9 +98,7 @@ fi
 # -----------------------------------------------------------------------------
 
 # source aliases, functions, etc
-for f in "$HOME"/.config/sh/lib/*; do
-    . "$f"
-done
+for f in "$HOME"/.config/sh/lib/*; do . "$f"; done
 
 # uncrustify config (for some reason this needs to be sourced every time)
 export UNCRUSTIFY_CONFIG="$HOME/.config/uncrustify/uncrustify.cfg"
@@ -137,7 +135,7 @@ export ZSH_AUTOSUGGEST_USE_ASYNC=1
 
 # source extensions
 for ext in "$ZDOTDIR"/lib/extensions/*/*; do
-    [ ! -d "$ext" ] && . "$ext"
+    test ! -d "$ext" && . "$ext"
 done
 
 # -----------------------------------------------------------------------------
