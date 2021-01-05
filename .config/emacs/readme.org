@@ -303,10 +303,28 @@ testing. If HOST is non-nil, given HOST will be used for testing."
 #+begin_src emacs-lisp
 (use-package evil
   :ensure t
-  :init (evil-mode)
-  :config
+  :init
   (setq-default evil-want-minibuffer t
-                evil-want-keybinding nil))
+                evil-want-C-u-scroll t
+                evil-want-C-i-jump   nil
+                evil-want-keybinding nil
+                evil-want-keybinding nil)
+  :config
+  ;; Use ESC as C-g
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  (evil-mode))
+#+end_src
+
+**** Evil Collection
+
+Collection of Vi keybinds for some parts of GNU Emacs which are dealt correctly
+by Evil.
+
+#+begin_src emacs-lisp
+(use-package evil-collection
+  :ensure   t
+  :requires evil
+  :config   (evil-collection-init))
 #+end_src
 
 **** Evil Surround
