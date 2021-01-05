@@ -92,8 +92,8 @@ moment.
 (require 'package)
 
 ;; Repositories
-(add-to-list 'package-archives
-             '("MELPA Stable" . "https://stable.melpa.org/packages/") t)
+(setq-default package-archives '(("GNU" . "https://elpa.gnu.org/packages/")
+                                 ("Melpa" . "https://melpa.org/packages/")))
 
 (package-initialize)
 #+end_src
