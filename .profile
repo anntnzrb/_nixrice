@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# shellcheck disable=1090
+# follow non-constant sources
 # shellcheck disable=SC2155
 # Disable declare and assign separately to avoid masking return values
 # needs further studying
@@ -17,6 +19,9 @@
 
 # adds `~/.local/bin` to $PATH
 export PATH="${PATH}:`du "${HOME}/.local/bin/" | cut -f2 | paste -sd ':' -`"
+
+# source Nix
+test -d "${HOME}/.nix-profile/" && . "${HOME}/.nix-profile/etc/profile.d/nix.sh"
 
 # -----------------------------------------------------------------------------
 # preamble
@@ -52,6 +57,7 @@ export FUNCTIONS="${SH_CFGS}/lib/03-functions"
 export LIBSHUTILS="${HOME}/.local/bin/libshutils"
 
 # shell(s)
+export BASHDIR="${SH_CFGS}/bash"
 export ZDOTDIR="${SH_CFGS}/zsh"
 
 # -----------------------------------------------------------------------------
@@ -79,6 +85,7 @@ test -x "`command -v 'tput'`" && {
 # -----------------------------------------------------------------------------
 
 # == languages
+# Rust
 export CARGO_HOME="${XDG_DATA_HOME}/cargo"
 
 # == Android
@@ -98,19 +105,6 @@ export WGETRC="${XDG_CONFIG_HOME}/wget/wgetrc"
 # -----------------------------------------------------------------------------
 # miscellaneous
 # -----------------------------------------------------------------------------
-# settings
-
-# language
-export LANG='en_US.UTF-8'
-export LANGUAGE='en_US.UTF-8'
-export LESSCHARSET='utf-8'
-export LC_ALL='en_US.UTF-8'
-export LC_COLLATE='en_US.UTF-8'
-export LC_CTYPE='en_US.UTF-8'
-export LC_MESSAGES='en_US.UTF-8'
-export LC_MONETARY='en_US.UTF-8'
-export LC_NUMERIC='en_US.UTF-8'
-export LC_TIME='en_US.UTF-8'
 
 # Java apps fix for dwm
 export _JAVA_AWT_WM_NONREPARENTING=1
