@@ -264,7 +264,13 @@ testing. If HOST is non-nil, given HOST will be used for testing."
 
   ;; Theme
   ;; only enable if running Emacs as an X window
-  (when (display-graphic-p) (load-theme 'misterioso t)))
+  (use-package modus-themes
+    :if (display-graphic-p)
+    :ensure
+    :config
+    ;; Load default theme
+    (modus-themes-load-operandi)
+    :bind ("M-<f5>" . modus-themes-toggle)))
 #+end_src
 
 ** Dired
