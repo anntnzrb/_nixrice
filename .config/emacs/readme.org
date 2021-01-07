@@ -30,6 +30,7 @@
   - [[#c][C]]
   - [[#rust][Rust]]
   - [[#emacs-lisp-elisp][Emacs Lisp (elisp)]]
+  - [[#clojure][Clojure]]
 
 * Early Init File
 
@@ -546,7 +547,40 @@ Rust programming is not part of GNU Emacs...
   ;; Enable auto-parentheses
   (emacs-lisp-mode-hook . (lambda() (electric-pair-mode))))
 #+end_src
+** Clojure
+
++ Depends on:
+  + =JDK=
+  + =Lein= (for REPL)
+  + =clojure-lsp= (for [[https://emacs-lsp.github.io/lsp-mode/page/installation/][LSP]])
+    + The offered auto-installation scripts seems to be working fine, still
+      testing
+
+#+begin_src emacs-lisp
+(use-package clojure-mode
+  :ensure
+  :config
+  ;; Disable native LSP completion to use CIDER's
+  (setq-default lsp-enable-completion-at-point nil)
+  (setq-default lsp-lens-enable t)
+  :hook
+  ;; LSP
+  (clojure-mode-hook       . lsp-deferred)
+  (clojure-mode-hook       . lsp-deferred)
+  (clojurec-mode-hook      . lsp-deferred)
+  (clojurescript-mode-hook . lsp-deferred)
 
   ;; Completion
-  (emacs-lisp-mode-hook . company-mode))
+  (clojure-mode-hook       . company-mode)
+  (clojure-mode-hook       . company-mode)
+  (clojurec-mode-hook      . company-mode)
+  (clojurescript-mode-hook . company-mode)
+
+  ;; Enable auto-parentheses
+  (clojure-mode-hook . (lambda() (electric-pair-mode))))
+
+;; REPL
+(use-package cider
+  :if (executable-find "lein")
+  :ensure)
 #+end_src
