@@ -169,6 +169,20 @@ be disabled with the following packages.
   :init (global-undo-tree-mode))
 #+end_src
 
+*** More icons
+
+#+begin_src emacs-lisp
+(use-package all-the-icons
+  :ensure
+  :hook
+  ;; Install all-the-icons automatically only if missing
+  (after-init-hook . (lambda()
+                       (unless (file-exists-p
+                                (expand-file-name
+                                 "~/.local/share/fonts/all-the-icons.ttf"))
+                         (all-the-icons-install-fonts)))))
+#+end_src
+
 ** Generic configurations
 
 Settings that do not belong anywhere specific.
