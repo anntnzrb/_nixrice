@@ -439,8 +439,9 @@ Interactive Git
 
 #+begin_src emacs-lisp
 (use-package lsp-mode
-  :ensure t
-  :bind ("C-c l" . lsp-keymap-prefix))
+  :ensure
+  :init
+  (setq-default lsp-keymap-prefix "C-c l"))
 #+end_src
 
 ** Linting
