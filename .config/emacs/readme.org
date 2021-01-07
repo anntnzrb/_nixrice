@@ -155,7 +155,7 @@ be disabled with the following packages.
 
 #+begin_src emacs-lisp
 (use-package diminish
-  :ensure t
+  :ensure
   :after use-package)
 #+end_src
 
@@ -275,7 +275,7 @@ testing. If HOST is non-nil, given HOST will be used for testing."
 
 #+begin_src emacs-lisp
 (use-package which-key
-  :ensure t
+  :ensure
   :diminish
   :init (which-key-mode)
   :config
@@ -287,7 +287,7 @@ testing. If HOST is non-nil, given HOST will be used for testing."
 
 #+begin_src emacs-lisp
 (use-package helpful
-  :ensure t
+  :ensure
   :config
   (global-set-key [remap describe-command]  #'helpful-command)
   (global-set-key [remap describe-function] #'helpful-function)
@@ -302,7 +302,7 @@ testing. If HOST is non-nil, given HOST will be used for testing."
 
 #+begin_src emacs-lisp
 (use-package evil
-  :ensure t
+  :ensure
   :init
   (setq-default evil-want-minibuffer t
                 evil-want-C-u-scroll t
@@ -331,7 +331,7 @@ by Evil.
 
 #+begin_src emacs-lisp
 (use-package evil-surround
-  :ensure t
+  :ensure
   :config
   (global-evil-surround-mode 1))
 #+end_src
@@ -340,7 +340,7 @@ by Evil.
 
 #+begin_src emacs-lisp
 (use-package aggressive-indent
-  :ensure t
+  :ensure
   :config
   (setq-default aggressive-indent-comments-too t
                 aggressive-indent-sit-for-time 0.5)
@@ -393,7 +393,7 @@ by Evil.
 
 #+begin_src emacs-lisp
 (use-package toc-org
-  :ensure t
+  :ensure
   :hook
   (org-mode-hook . toc-org-mode))
 #+end_src
@@ -415,7 +415,7 @@ Interactive Git
 
 #+begin_src emacs-lisp
 (use-package magit
-  :ensure t
+  :ensure
   :bind ("C-c g" . magit-status))
 #+end_src
 
@@ -431,7 +431,7 @@ Interactive Git
 
 #+begin_src emacs-lisp
 (use-package flycheck
-  :ensure t
+  :ensure
   :config
   ;; Settings
   (setq-default flycheck-mode-line-prefix "FlyCheck"
@@ -444,7 +444,7 @@ Interactive Git
 
 #+begin_src emacs-lisp
 (use-package company
-  :ensure t
+  :ensure
   :config
   ;; Settings
   (setq-default company-show-numbers ''t
@@ -455,7 +455,7 @@ Interactive Git
 ** Generic Formatter
 
 #+begin_src emacs-lisp
-(use-package reformatter :ensure t)
+(use-package reformatter :ensure)
 #+end_src
 
 ** Shell
@@ -508,7 +508,7 @@ Rust programming is not part of GNU Emacs...
 
 #+begin_src emacs-lisp
 (use-package rust-mode
-  :ensure t
+  :ensure
   :config
   (setq-default rust-always-locate-project-on-open t
                 rust-format-on-save t)
@@ -521,7 +521,6 @@ Rust programming is not part of GNU Emacs...
 (use-package elisp-mode
   :config
   (setq-default checkdoc-verb-check-experimental-flag nil)
-
   :hook
   ;; Linting
   (emacs-lisp-mode-hook . flycheck-mode)
