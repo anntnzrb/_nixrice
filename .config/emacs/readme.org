@@ -541,6 +541,11 @@ Rust programming is not part of GNU Emacs...
   :hook
   ;; Linting
   (emacs-lisp-mode-hook . flycheck-mode)
+  ;; Completion
+  (emacs-lisp-mode-hook . company-mode)
+  ;; Enable auto-parentheses
+  (emacs-lisp-mode-hook . (lambda() (electric-pair-mode))))
+#+end_src
 
   ;; Completion
   (emacs-lisp-mode-hook . company-mode))
