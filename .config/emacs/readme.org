@@ -332,6 +332,7 @@ testing. If HOST is non-nil, given HOST will be used for testing."
 
 #+begin_src emacs-lisp
 (use-package dired
+  :defer
   :config
   (setq-default dired-use-ls-dired      'unspecified
                 dired-recursive-deletes 'always
@@ -346,6 +347,7 @@ testing. If HOST is non-nil, given HOST will be used for testing."
 #+begin_src emacs-lisp
 (use-package ivy
   :ensure
+  :defer
   :diminish
   :init (ivy-mode))
 #+end_src
@@ -356,6 +358,7 @@ testing. If HOST is non-nil, given HOST will be used for testing."
 (use-package which-key
   :ensure
   :diminish
+  :defer
   :init (which-key-mode)
   :config
   (setq-default which-key-is-verbose t
@@ -367,6 +370,7 @@ testing. If HOST is non-nil, given HOST will be used for testing."
 #+begin_src emacs-lisp
 (use-package helpful
   :ensure
+  :defer 5
   :config
   (global-set-key [remap describe-command]  #'helpful-command)
   (global-set-key [remap describe-function] #'helpful-function)
@@ -411,7 +415,9 @@ incorrectly by Evil.
 
 #+begin_src emacs-lisp
 (use-package evil-surround
+  :requires evil
   :ensure
+  :defer
   :init (global-evil-surround-mode))
 #+end_src
 
@@ -431,6 +437,7 @@ incorrectly by Evil.
 
 #+begin_src emacs-lisp
 (use-package org
+  :defer
   :config
   ;; General Org settings
   (setq-default org-export-with-email t
@@ -464,6 +471,7 @@ incorrectly by Evil.
   ;; Table of contents
   (use-package toc-org
     :after org
+    :defer
     :ensure
     :hook (org-mode-hook . toc-org-mode))
   :hook
@@ -477,9 +485,14 @@ incorrectly by Evil.
 
 #+begin_src emacs-lisp
 ;; Follow some good git practices
-(setq-default git-commit-summary-max-length 50
-              git-commit-style-convention-checks
-              '(non-empty-second-line overlong-summary-line))
+(use-package git-commit
+  :defer
+  :after magit
+  :init
+  (setq-default git-commit-summary-max-length 50
+                git-commit-style-convention-checks
+                '(non-empty-second-line overlong-summary-line)))
+
 #+end_src
 
 *** Magit
@@ -489,6 +502,7 @@ Interactive Git
 #+begin_src emacs-lisp
 (use-package magit
   :ensure
+  :defer
   :bind ("C-c g" . magit-status))
 #+end_src
 
@@ -497,6 +511,7 @@ Interactive Git
 #+begin_src emacs-lisp
 (use-package lsp-mode
   :ensure
+  :defer
   :init (setq-default lsp-keymap-prefix "C-c l")
   :config
   (setq-default lsp-lens-enable t
@@ -509,6 +524,7 @@ Interactive Git
 #+begin_src emacs-lisp
 (use-package flycheck
   :ensure
+  :defer
   :config
   (setq-default flycheck-mode-line-prefix "FlyCheck"
                 flycheck-checker-error-threshold 100
@@ -521,6 +537,7 @@ Interactive Git
 #+begin_src emacs-lisp
 (use-package company
   :ensure
+  :defer
   :config
   (setq-default company-show-numbers ''t
                 company-idle-delay   0.25
@@ -530,13 +547,16 @@ Interactive Git
 ** Generic Formatter
 
 #+begin_src emacs-lisp
-(use-package reformatter :ensure)
+(use-package reformatter
+:ensure
+:defer)
 #+end_src
 
 ** Shell
 
 #+begin_src emacs-lisp
 (use-package sh-script
+  :defer
   :config
   (setq-default sh-backslash-column  fill-column
                 sh-indent-after-case 0)
@@ -551,6 +571,7 @@ Interactive Git
 
 #+begin_src emacs-lisp
 (use-package cc-mode
+  :defer
   :config
   ;; GNU-styled with a few tweaks
   (setq-default c-set-style    "gnu"
@@ -585,6 +606,7 @@ Interactive Git
 
 #+begin_src emacs-lisp
 (use-package python
+  :defer
   :config
   ;; Force using Python3
   (setq-default python-shell-interpreter "python3")
@@ -592,6 +614,7 @@ Interactive Git
   ;; LSP
   (use-package lsp-python-ms
     :requires lsp-mode
+    :defer
     :ensure
     :init (setq-default lsp-python-ms-auto-install-server t)
     :hook (python-mode-hook . lsp-deferred)))
@@ -605,6 +628,7 @@ Rust programming is not part of GNU Emacs...
 #+begin_src emacs-lisp
 (use-package rust-mode
   :ensure
+  :defer
   :config
   (setq-default rust-always-locate-project-on-open t
                 rust-format-on-save t)
@@ -635,8 +659,9 @@ Rust programming is not part of GNU Emacs...
 
 #+begin_src emacs-lisp
 (use-package clojure-mode
-  :init (electric-pair-mode)
   :ensure
+  :defer
+  :init (electric-pair-mode)
   :config
   ;; Disable native LSP completion to use CIDER's
   (setq-default lsp-enable-completion-at-point nil)
