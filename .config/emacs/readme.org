@@ -189,8 +189,8 @@ be disabled with the following packages.
 
 #+begin_src emacs-lisp
 (use-package diminish
-  :ensure
-  :after use-package)
+  :after use-package
+  :ensure)
 #+end_src
 
 *** Enable undo-ing system
@@ -228,6 +228,9 @@ Settings that do not belong anywhere specific.
                 inhibit-startup-screen      t
 	            initial-scratch-message     nil
                 inhibit-startup-echo-area-message "annt")
+
+  ;; Keybinds
+  :bind ("<f5>" . revert-buffer)
 
   :config
   ;; Shorter prompts
@@ -315,9 +318,7 @@ testing. If HOST is non-nil, given HOST will be used for testing."
   (use-package modus-themes
     :if (display-graphic-p)
     :ensure
-    :config
-    ;; Load default theme
-    (modus-themes-load-operandi)
+    :init (modus-themes-load-vivendi)
     :bind ("M-<f5>" . modus-themes-toggle)))
 #+end_src
 
@@ -381,8 +382,8 @@ testing. If HOST is non-nil, given HOST will be used for testing."
 
 **** Evil Collection
 
-Collection of Vi keybinds for some parts of GNU Emacs which are dealt correctly
-by Evil.
+Collection of Vi keybinds for some parts of GNU Emacs which are dealt
+incorrectly by Evil.
 
 #+begin_src emacs-lisp
 (use-package evil-collection
@@ -396,8 +397,7 @@ by Evil.
 #+begin_src emacs-lisp
 (use-package evil-surround
   :ensure
-  :config
-  (global-evil-surround-mode 1))
+  :init (global-evil-surround-mode))
 #+end_src
 
 *** Aggressive-indent
@@ -416,7 +416,6 @@ by Evil.
 
 #+begin_src emacs-lisp
 (use-package org
-
   :config
   ;; General Org settings
   (setq-default org-export-with-email t
@@ -435,7 +434,6 @@ by Evil.
 
   ;; Templates
   (require 'org-tempo) ;; needed for templates to work
-
   (setq-default org-structure-template-alist
                 '(("src" . "src")
                   ;; languages
@@ -448,18 +446,14 @@ by Evil.
                   ("ex"   . "example")
                   ("quo"  . "quote")))
 
+  ;; Table of contents
+  (use-package toc-org
+    :after org
+    :ensure
+    :hook (org-mode-hook . toc-org-mode))
   :hook
   ;; Enable visual identation
   (org-mode-hook . org-indent-mode))
-#+end_src
-
-*** Table of Contents for Org
-
-#+begin_src emacs-lisp
-(use-package toc-org
-  :ensure
-  :hook
-  (org-mode-hook . toc-org-mode))
 #+end_src
 
 * Programming
@@ -498,11 +492,10 @@ Interactive Git
 (use-package flycheck
   :ensure
   :config
-  ;; Settings
   (setq-default flycheck-mode-line-prefix "FlyCheck"
                 flycheck-checker-error-threshold 100
-                flycheck-display-errors-delay 1
-                flycheck-idle-change-delay    1))
+                flycheck-display-errors-delay    1
+                flycheck-idle-change-delay       1))
 #+end_src
 
 ** Completion
@@ -511,7 +504,6 @@ Interactive Git
 (use-package company
   :ensure
   :config
-  ;; Settings
   (setq-default company-show-numbers ''t
                 company-idle-delay   0.25
                 company-minimum-prefix-length 2))
@@ -528,9 +520,8 @@ Interactive Git
 #+begin_src emacs-lisp
 (use-package sh-script
   :config
-  (setq-default sh-backslash-column fill-column
+  (setq-default sh-backslash-column  fill-column
                 sh-indent-after-case 0)
-
   :hook
   ;; Linting
   (sh-mode-hook . flycheck-mode)
