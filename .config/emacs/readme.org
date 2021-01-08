@@ -232,28 +232,26 @@ Settings that do not belong anywhere specific.
 (use-package emacs
   :init
   ;; Startup
-  (setq-default inhibit-startup-buffer-menu t
-                inhibit-startup-screen      t
-	            initial-scratch-message     nil
-                inhibit-startup-echo-area-message "annt")
+  (setq initial-scratch-message     nil
+        inhibit-startup-buffer-menu t
+        inhibit-startup-screen      t
+        inhibit-startup-echo-area-message t
+        inhibit-startup-message           t)
 
-  ;; Keybinds
-  :bind ("<f5>" . revert-buffer)
-
-  :config
   ;; Shorter prompts
   (defalias 'yes-or-no-p 'y-or-n-p)
 
   ;; Don't prompt for confirmation when killing buffer
   (global-set-key [remap kill-buffer] #'kill-this-buffer)
 
-  ;; Enable server automatically on GNU Emacs startup
-  :hook (after-init-hook . server-start))
+  ;; Keybinds
+  :bind ("<f5>" . revert-buffer)
 
-;; Auto-Update the buffer whenever it changes
-(use-package autorevert
-  :diminish
-  :hook (after-init-hook . global-auto-revert-mode))
+  :hook
+  ;; Enable server automatically on GNU Emacs startup
+  (after-init-hook . server-start)
+  ;; Auto-Update the buffer whenever it changes
+  (after-init-hook . global-auto-revert-mode))
 #+end_src
 
 ** Custom
@@ -326,7 +324,7 @@ testing. If HOST is non-nil, given HOST will be used for testing."
   (use-package modus-themes
     :if (display-graphic-p)
     :ensure
-    :init (modus-themes-load-vivendi)
+    :init (modus-themes-load-operandi)
     :bind ("M-<f5>" . modus-themes-toggle)))
 #+end_src
 
