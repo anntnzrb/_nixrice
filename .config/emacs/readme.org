@@ -82,6 +82,39 @@ file is loaded before the package system and GUI is initialized.
 This section is present for configurations that /should/ be executed first,
 before anything else.
 
+*** Performance
+
+Behavior modifications as some defaults are not optimal.
+
+**** Garbage Collector
+
++ Resources:
+  +  [[https://emacs.stackexchange.com/a/34367][... setting `gc-cons-threshold` very high and collecting garbage when idle?]]
+
+#+begin_src emacs-lisp
+(setq gc-cons-threshold-orig gc-cons-threshold
+      gc-cons-threshold          (* 1024 1024 100)
+      file-name-handler-alist-orig file-name-handler-alist
+      file-name-handler-alist      nil)
+
+(run-with-idle-timer
+ 5 nil
+ (lambda ()
+   (setq gc-cons-threshold       gc-cons-threshold-orig
+	     file-name-handler-alist file-name-handler-alist-orig)
+   (makunbound 'gc-cons-threshold-orig)
+   (makunbound 'file-name-handler-alist-orig)))
+#+end_src
+
+**** Amount of procesed data
+
++ References:
+  + [[https://emacs-lsp.github.io/lsp-mode/page/performance/][LSP :: Performance Guide]]
+
+#+begin_src emacs-lisp
+(setq read-process-output-max (* 1024 1024))
+#+end_src
+
 *** Package Management
 
 I'm currently fine with =package.el= which is built-in; I do have an eye on
