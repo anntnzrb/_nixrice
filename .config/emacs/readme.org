@@ -575,16 +575,15 @@ Rust programming is not part of GNU Emacs...
 
 #+begin_src emacs-lisp
 (use-package elisp-mode
-  :config
-  (setq-default checkdoc-verb-check-experimental-flag nil)
+  :init   (electric-pair-mode)
+  :config (setq-default checkdoc-verb-check-experimental-flag nil)
   :hook
   ;; Linting
   (emacs-lisp-mode-hook . flycheck-mode)
   ;; Completion
-  (emacs-lisp-mode-hook . company-mode)
-  ;; Enable auto-parentheses
-  (emacs-lisp-mode-hook . (lambda() (electric-pair-mode))))
+  (emacs-lisp-mode-hook . company-mode))
 #+end_src
+
 ** Clojure
 
 + Depends on:
@@ -596,29 +595,17 @@ Rust programming is not part of GNU Emacs...
 
 #+begin_src emacs-lisp
 (use-package clojure-mode
+  :init (electric-pair-mode)
   :ensure
   :config
   ;; Disable native LSP completion to use CIDER's
   (setq-default lsp-enable-completion-at-point nil)
-  (setq-default lsp-lens-enable t)
+  ;; REPL
+  (use-package cider
+    :if (executable-find "lein")
+    :ensure)
   :hook
   ;; LSP
-  (clojure-mode-hook       . lsp-deferred)
-  (clojure-mode-hook       . lsp-deferred)
-  (clojurec-mode-hook      . lsp-deferred)
-  (clojurescript-mode-hook . lsp-deferred)
-
-  ;; Completion
-  (clojure-mode-hook       . company-mode)
-  (clojure-mode-hook       . company-mode)
-  (clojurec-mode-hook      . company-mode)
-  (clojurescript-mode-hook . company-mode)
-
-  ;; Enable auto-parentheses
-  (clojure-mode-hook . (lambda() (electric-pair-mode))))
-
-;; REPL
-(use-package cider
-  :if (executable-find "lein")
-  :ensure)
+  ((clojure-mode-hook clojurec-mode-hook clojurescript-mode-hook) . company-mode)
+  ((clojure-mode-hook clojurec-mode-hook clojurescript-mode-hook) . lsp-deferred))
 #+end_src
