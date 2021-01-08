@@ -116,6 +116,12 @@ Behavior modifications as some defaults are not optimal.
 (setq read-process-output-max (* 1024 1024))
 #+end_src
 
+**** Extra Resources
+
+A list of useful posts regarding GNU Emacs performance.
+
++ [[https://blog.d46.us/advanced-emacs-startup/][Advanced Techniques for Reducing Emacs Startup Time]]
+
 *** Package Management
 
 I'm currently fine with =package.el= which is built-in; I do have an eye on
@@ -183,6 +189,7 @@ to use another file and accomplish this.
 (setq-default create-lockfiles  nil
               make-backup-files nil)
 #+end_src
+
 *** Remove clutter from modeline
 
 Some modes add text to the modeline, this can clutter the screen a bit, but may
