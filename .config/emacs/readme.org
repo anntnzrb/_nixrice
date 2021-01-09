@@ -29,6 +29,7 @@
   - [[#shell][Shell]]
   - [[#c][C]]
   - [[#python][Python]]
+  - [[#yaml][YAML]]
   - [[#lua][Lua]]
   - [[#rust][Rust]]
   - [[#emacs-lisp-elisp][Emacs Lisp (elisp)]]
@@ -619,6 +620,16 @@ Interactive Git
     :ensure
     :init (setq-default lsp-python-ms-auto-install-server t)
     :hook (python-mode-hook . lsp-deferred)))
+#+end_src
+
+** YAML
+
+No native support, [[https://github.com/yoshiki/yaml-mode][yaml-mode]] handles this.
+
+#+begin_src emacs-lisp
+(use-package yaml-mode
+  :ensure
+  :defer)
 #+end_src
 
 ** Lua
