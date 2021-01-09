@@ -381,6 +381,17 @@ testing. If HOST is non-nil, given HOST will be used for testing."
   (global-set-key [remap describe-variable] #'helpful-variable))
 #+end_src
 
+*** Rainbow Delimiters
+
+... aka /Rainbow Parentheses/.
+
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters
+  :ensure
+  :defer 3
+  :hook  (prog-mode-hook . rainbow-delimiters-mode))
+#+end_src
+
 *** Vi Emulation
 
 **** Evil
