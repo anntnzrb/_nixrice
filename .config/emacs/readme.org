@@ -369,6 +369,10 @@ testing. If HOST is non-nil, given HOST will be used for testing."
 
 *** Helpful
 
+Enhanced GNU Emacs' =*help*=.
+
++ *This replaces default =*help*= behavior.*
+
 #+begin_src emacs-lisp
 (use-package helpful
   :ensure
@@ -394,7 +398,14 @@ testing. If HOST is non-nil, given HOST will be used for testing."
 
 *** Vi Emulation
 
+My journey on /*nix/ environments began with /Vi/, it's difficult for me not to
+try looking everywhere for Vi emulation.
+
 **** Evil
+
+/Evil/ is probably the best package for Vi emulation, even tho I'd really
+prefer something simpler... I haven't found anything else other than /Viper/
+(built-in) and well, just no.
 
 #+begin_src emacs-lisp
 (use-package evil
@@ -426,6 +437,8 @@ incorrectly by Evil.
 
 **** Evil Surround
 
+As obvious as it sounds, yes, this is [[https://github.com/tpope/vim-surround][vim-surround]], but for GNU Emacs.
+
 #+begin_src emacs-lisp
 (use-package evil-surround
   :requires evil
@@ -435,6 +448,8 @@ incorrectly by Evil.
 #+end_src
 
 *** Aggressive-indent
+
+Useful for /Lisps/ specially, non-intrusive if configured correctly.
 
 #+begin_src emacs-lisp
 (use-package aggressive-indent
