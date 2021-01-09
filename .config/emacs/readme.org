@@ -29,6 +29,7 @@
   - [[#shell][Shell]]
   - [[#c][C]]
   - [[#python][Python]]
+  - [[#lua][Lua]]
   - [[#rust][Rust]]
   - [[#emacs-lisp-elisp][Emacs Lisp (elisp)]]
   - [[#clojure][Clojure]]
@@ -618,6 +619,16 @@ Interactive Git
     :ensure
     :init (setq-default lsp-python-ms-auto-install-server t)
     :hook (python-mode-hook . lsp-deferred)))
+#+end_src
+
+** Lua
+
+Lua support doesn't ship with Emacs. [[https://github.com/immerrr/lua-mode][lua-mode]] takes care.
+
+#+begin_src emacs-lisp
+(use-package lua-mode
+  :ensure
+  :defer)
 #+end_src
 
 ** Rust
