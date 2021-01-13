@@ -586,9 +586,12 @@ This package /should not/ be =defer='d.
 #+begin_src emacs-lisp
 (use-package sh-script
   :defer
-  :config
-  (setq-default sh-backslash-column  fill-column
-                sh-indent-after-case 0)
+  :init
+  (setq-default sh-backslash-column fill-column
+                sh-indent-after-case     0
+                sh-indent-for-case-alt   0
+                sh-indent-after-switch   0
+                sh-indent-for-case-label 0)
   :hook
   ;; Linting
   (sh-mode-hook . flycheck-mode)
