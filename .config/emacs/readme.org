@@ -29,6 +29,7 @@
   - [[#shell][Shell]]
   - [[#c][C]]
   - [[#python][Python]]
+  - [[#markdown][Markdown]]
   - [[#yaml][YAML]]
   - [[#lua][Lua]]
   - [[#rust][Rust]]
@@ -642,10 +643,37 @@ Interactive Git
   ;; LSP
   (use-package lsp-python-ms
     :requires lsp-mode
-    :defer
     :ensure
     :init (setq-default lsp-python-ms-auto-install-server t)
     :hook (python-mode-hook . lsp-deferred)))
+#+end_src
+
+** Markdown
+
+Unhandled natively... Perhaps exporting /Org/ --> /Markdown/ is not a bad idea.
+Still needed sometimes for =README= files, etc.
+
++ Dependencies:
+  =pandoc= (for Live Preview)
+
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :ensure
+  :defer
+  :init     (setq-default  markdown-command "pandoc")
+  :commands (markdown-mode gfm-mode)
+  :mode     (("README\\.md\\'" . gfm-mode)
+             ("\\.md\\'"       . markdown-mode)))
+
+;; Table of Contents support
+(use-package markdown-toc
+  :requires markdown-mode
+  :ensure
+  :defer
+  :init
+  (setq-default markdown-toc-header-toc-start "<!-- Markdown TOC :: Start -->"
+                markdown-toc-header-toc-end   "<!-- Markdown TOC :: End -->")
+  :hook (markdown-mode-hook . markdown-toc-mode))
 #+end_src
 
 ** YAML
