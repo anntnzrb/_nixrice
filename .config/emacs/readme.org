@@ -469,8 +469,7 @@ Useful for /Lisps/ specially, non-intrusive if configured correctly.
   :defer
   :config
   ;; General Org settings
-  (setq-default org-export-with-email t
-                org-edit-src-content-indentation 0
+  (setq-default org-edit-src-content-indentation 0
                 org-confirm-babel-evaluate       nil)
 
   ;; Backends for Org Exportation
@@ -537,10 +536,11 @@ Interactive Git
 
 ** Language Server Protocol (LSP)
 
+This package /should not/ be =defer='d.
+
 #+begin_src emacs-lisp
 (use-package lsp-mode
   :ensure
-  :defer
   :init (setq-default lsp-keymap-prefix "C-c l")
   :config
   (setq-default lsp-lens-enable t
@@ -726,7 +726,7 @@ Rust programming is not part of GNU Emacs...
 
 ** Clojure
 
-+ Depends on:
++ Dependencies:
   + =JDK=
   + =Lein= (for REPL)
   + =clojure-lsp= (for [[https://emacs-lsp.github.io/lsp-mode/page/installation/][LSP]])
