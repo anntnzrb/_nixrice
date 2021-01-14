@@ -20,6 +20,7 @@
   - [[#dired][Dired]]
   - [[#utilities][Utilities]]
 - [[#org-mode][Org-Mode]]
+  - [[#org-mode-aesthetics][Org Mode Aesthetics]]
 - [[#programming][Programming]]
   - [[#version-control][Version Control]]
   - [[#language-server-protocol-lsp][Language Server Protocol (LSP)]]
@@ -506,6 +507,21 @@ Useful for /Lisps/ specially, non-intrusive if configured correctly.
   :hook
   ;; Enable visual identation
   (org-mode-hook . org-indent-mode))
+#+end_src
+
+** Org Mode Aesthetics
+
+Base /Org/ is usable but its look can be enhanced with some details.
+
+#+begin_src emacs-lisp
+(use-package org-superstar
+  ;; Only if client is being ran graphically
+  :if (display-graphic-p)
+  :after org
+  :ensure
+  :init
+  (setq-default org-superstar-special-todo-items t)
+  :hook (org-mode-hook . org-superstar-mode))
 #+end_src
 
 * Programming
