@@ -21,6 +21,7 @@
   - [[#utilities][Utilities]]
 - [[#org-mode][Org-Mode]]
   - [[#org-mode-aesthetics][Org Mode Aesthetics]]
+  - [[#presentations-with-org-mode][Presentations with Org-Mode]]
 - [[#programming][Programming]]
   - [[#version-control][Version Control]]
   - [[#language-server-protocol-lsp][Language Server Protocol (LSP)]]
@@ -522,6 +523,49 @@ Base /Org/ is usable but its look can be enhanced with some details.
   :init
   (setq-default org-superstar-special-todo-items t)
   :hook (org-mode-hook . org-superstar-mode))
+#+end_src
+
+** Presentations with Org-Mode
+
+[[https://github.com/takaxp/org-tree-slide][org-tree-slide]] is a package that allows creating presentations with /Org-Mode/,
+it can even export to =.pdf= using /Beamer/ (needs /LaTeX/ tools installed).
+
+There are a few things that can be done to extend this packages, a few of them
+being toggling =display-fill-column-indicator-mode= and increasing the font
+size.
+
++ References
+  + [[https://youtu.be/vz9aLmxYJB0][Emacs Tips - How to Give Presentations with Org Mode]]
+
+#+begin_src emacs-lisp
+(use-package org-tree-slide
+  :ensure
+  :defer
+  :init
+  (defun annt/org-present-start ()
+    "Configurations settings for entering presentation mode."
+    (setq text-scale-mode-amount 3)
+    (interactive "P")
+    (org-display-inline-images)
+    (display-fill-column-indicator-mode 0)
+    (text-scale-set text-scale-mode-amount))
+
+  (defun annt/org-present-end ()
+    "Configurations settings for exiting presentation mode, reverting changes
+mostly."
+    (interactive "P")
+    (setq text-scale-mode-amount 0)
+    (text-scale-set text-scale-mode-amount)
+    (display-fill-column-indicator-mode))
+
+  (setq-default org-tree-slide-activate-message "Presentation ON"
+                org-tree-slide-deactivate-message "Presentation OFF"
+                org-image-actual-width nil)
+  :bind (:map org-mode-map
+              ("<f9>" . org-tree-slide-mode))
+  :hook
+  (org-tree-slide-play-hook . annt/org-present-start)
+  (org-tree-slide-stop-hook . annt/org-present-end))
 #+end_src
 
 * Programming
