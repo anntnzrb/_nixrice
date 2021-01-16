@@ -757,7 +757,8 @@ Lua support doesn't ship with Emacs. [[https://github.com/immerrr/lua-mode][lua-
 #+begin_src emacs-lisp
 (use-package lua-mode
   :ensure
-  :defer)
+  :defer
+  :init (setq-default lua-indent-level 2))
 #+end_src
 
 ** Rust
