@@ -478,17 +478,18 @@ Useful for /Lisps/ specially, non-intrusive if configured correctly.
   ;; Backends for Org Exportation
   (setq-default org-export-backends '(html latex man md odt))
 
-  ;; Languages to work with Babel
-  (setq-default org-babel-load-languages
-                '((emacs-lisp . t)
-                  (shell      . t)
-                  (C          . t)
-                  (python     . t)))
+  (use-package ob-C       :defer :commands (org-babel-execute:C))
+  (use-package ob-python  :defer :commands (org-babel-execute:python))
+  (use-package ob-shell   :defer :commands (org-babel-execute:shell))
+  (use-package ob-clojure :defer :commands (org-babel-execute:clojure))
+  (use-package ob-java    :defer :commands (org-babel-execute:java))
 
   ;; Templates
-  (require 'org-tempo) ;; needed for templates to work
+  ;; needed for templates to work
+  (use-package org-tempo)
   (setq-default org-structure-template-alist
-                '(("src" . "src")
+                '(("src"   . "src")
+                  ("conf"  . "conf")
                   ;; languages
                   ("el"  . "src emacs-lisp")
                   ("sh"  . "src sh")
