@@ -349,11 +349,14 @@ testing. If HOST is non-nil, given HOST will be used for testing."
 
 *** Mini-buffer completion
 
+/Ivy/ is a completion mechanism meant to be small and simple.
+
 #+begin_src emacs-lisp
 (use-package ivy
   :ensure
-  :defer
   :diminish
+  :bind ((:map ivy-minibuffer-map
+               ("TAB" . ivy-alt-done)))
   :init (ivy-mode))
 #+end_src
 
