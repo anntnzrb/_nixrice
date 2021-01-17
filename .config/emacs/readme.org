@@ -280,11 +280,12 @@ testing. If HOST is non-nil, given HOST will be used for testing."
 (use-package emacs
   :config
   (setq-default mode-require-final-newline t
-		        show-trailing-whitespace   t
-		        indent-tabs-mode           nil
-		        tab-width   4
-		        fill-column 79
-		        display-fill-column-indicator-column (+ fill-column 1))
+                show-trailing-whitespace   t
+                tab-width 4
+                indent-tabs-mode           nil
+                display-line-numbers 'relative
+                fill-column 79
+                display-fill-column-indicator-column (+ fill-column 1))
   :hook
   ;; delete trailing whitespaces prior saving
   (before-save-hook . delete-trailing-whitespace)
@@ -560,8 +561,13 @@ size.
   :init
   (defun annt/org-present-start ()
     "Configurations settings for entering presentation mode."
-    (setq text-scale-mode-amount 3)
     (interactive "P")
+    ;; Save current settings
+    (setq display-line-numbers-orig display-line-numbers)
+
+    ;; Set new values
+    (setq text-scale-mode-amount 3
+          display-line-numbers nil)
     (org-display-inline-images)
     (display-fill-column-indicator-mode 0)
     (text-scale-set text-scale-mode-amount))
@@ -570,15 +576,16 @@ size.
     "Configurations settings for exiting presentation mode, reverting changes
 mostly."
     (interactive "P")
-    (setq text-scale-mode-amount 0)
+    (setq text-scale-mode-amount 0
+          display-line-numbers display-line-numbers-orig)
     (text-scale-set text-scale-mode-amount)
     (display-fill-column-indicator-mode))
 
   (setq-default org-tree-slide-activate-message "Presentation ON"
                 org-tree-slide-deactivate-message "Presentation OFF"
                 org-image-actual-width nil)
-  :bind (:map org-mode-map
-              ("<f9>" . org-tree-slide-mode))
+  :bind ((:map org-mode-map
+              ("<f9>" . org-tree-slide-mode)))
   :hook
   (org-tree-slide-play-hook . annt/org-present-start)
   (org-tree-slide-stop-hook . annt/org-present-end))
