@@ -360,6 +360,17 @@ testing. If HOST is non-nil, given HOST will be used for testing."
   :init (ivy-mode))
 #+end_src
 
+*** Enhanced Search
+
+Alternative to /I-Search/.
+
+#+begin_src emacs-lisp
+(use-package swiper
+  :requires ivy
+  :ensure
+  :bind ("C-s" . swiper))
+#+end_src
+
 *** Which-Key
 
 #+begin_src emacs-lisp
