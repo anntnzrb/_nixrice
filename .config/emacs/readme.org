@@ -434,10 +434,11 @@ prefer something simpler... I haven't found anything else other than /Viper/
                 evil-want-keybinding nil
                 evil-want-keybinding nil
                 evil-undo-system 'undo-tree)
-  :config
-  ;; Use ESC as C-g
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  (evil-mode))
+  (evil-mode)
+  :bind
+  ((:map evil-insert-state-map
+         ;; Use ESC as C-g
+         ("C-g" . evil-normal-state))))
 #+end_src
 
 **** Evil Collection
