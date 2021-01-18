@@ -1,0 +1,249 @@
+#+TITLE: i3 Configuration
+#+PROPERTY: header-args :comments org :results silent :tangle "config"
+
+* Table of Contents                                          :TOC_2:noexport:
+-  [[#preample][Preample]]
+  - [[#terminology][Terminology]]
+- [[#core-settings][Core Settings]]
+  - [[#variables][Variables]]
+  - [[#appearance][Appearance]]
+  - [[#screens][Screens]]
+- [[#bar][Bar]]
+- [[#workspaces][Workspaces]]
+- [[#clients][Clients]]
+  - [[#controls][Controls]]
+  - [[#states--layouts][States & Layouts]]
+  - [[#rules][Rules]]
+- [[#miscellaneous][Miscellaneous]]
+
+*  Preample
+
+This =i3= setup is meant to be used along with [[https://github.com/baskerville/sxhkd][sxhkd]]. The =i3-msg= command allows
+sending =i3= commands which can be bounded to certain keys with the program
+mentioned earlier.
+
++ [[Reference https://i3wm.org/docs/userguide.html
+][i3 User Guide]]
+
+This line below needs to be part of the configuration file, unsure why, but
+adding it solved many issues.
+
+#+begin_src conf
+# i3 config file (v4)
+#+end_src
+
++ isolate my window manager's configuration from its keybinds
+  + just like =bspwm=
++ take advantage of =sxhkd=
+  + straight-forward syntax
+  + /chords/
+
+** Terminology
+
++ /node/ is refered as a /window/
+ + some other window managers also call them /clients/
+
+* Core Settings
+
+These settings belong to =i3= (=~/.config/i3/config=), the rest (mostly) should be
+keybind related which is handled separetely with =sxhkd=
+(=~/.config/i3/sxhkdrc_i3=).
+
+#+begin_src conf
+focus_follows_mouse yes
+mouse_warping output
+popup_during_fullscreen smart
+workspace_auto_back_and_forth no
+focus_on_window_activation focus
+#+end_src
+
+** Variables
+
+Declaration of variables, some settings may be configured from here so it's
+easier to edit than finding the sections.
+
+The syntax for =set=-ting variables is a bit strange, haven't done much research,
+but I'd prefer quotting instead of having white-spaces.
+
+#+begin_src conf
+set $mod Mod4
+floating_modifier $mod
+set $font Victor Mono 12
+#+end_src
+
+** Appearance
+
+*** Fonts
+
+Name should be exact, find the correct name with =fc-list=.
+
+#+begin_src conf
+font pango:$font
+#+end_src
+
+*** Colors
+
+#+begin_src conf
+# class                 border   bg. text  indicator  child_border
+client.focused          #6C71C4  #6C71C4   #FDF6E3    #6C71C4
+client.focused_inactive #073642  #073642   #EEE8D5    #6C71C4
+client.unfocused        #073642  #073642   #93A1A1    #586E75
+client.urgent           #D33682  #D33682   #FDF6E3    #DC322F
+#+end_src
+
+** Screens
+
+Screens or monitor settings.
+
+#+begin_src conf
+# Always set workspace 1 to primary screen
+workspace 1 output primary
+#+end_src
+
+* Bar
+
+The bar used with this config of =i3= is =i3blocks=, usually the bar has
+its own config under =~/.config/i3blocks.i3blocks.conf= but since the program
+allows the =-c= flag it's possible to have it under the =~/.config/i3/= folder
+along with the other config file.
+
+#+begin_src conf :tangle "i3blocks.conf"
+# Global properties
+separator=true
+separator_block_width=15
+
+[brightness]
+color=#F5AF19
+command=get-brightness
+interval=60
+
+[cpu-temp]
+color=#098F14
+command=get-cpu-temp
+interval=20
+
+[mem-usage]
+color=#E8254F
+command=get-mem-usage
+interval=20
+
+[time]
+command=date '+%a, %d %b @ %H:%M '
+interval=60
+
+[my_info]
+color=#259AE8
+command=/bin/echo "@`cat /etc/hostname`"
+interval=once
+#+end_src
+
+#+begin_src conf
+bar {
+  status_command i3blocks -c "${HOME}/.config/i3/i3blocks.conf"
+  font pango:Victor Mono Bold 14
+  position top
+}
+#+end_src
+
+* Workspaces
+
++ Focus workspace (=1..9=)
+
+#+begin_src sh :tangle "sxhkdrc_i3"
+super + {1-9}
+  i3-msg -q "workspace number {1-9}"
+#+end_src
+
++ Move focused client to workspace
+
+#+begin_src sh :tangle "sxhkdrc_i3"
+super + shift + {1-9}
+  i3-msg -q "move container to workspace number {1-9}"
+#+end_src
+
+* Clients
+
++ Focus thru clients
+
+#+begin_src sh :tangle "sxhkdrc_i3"
+super + {h,j,k,l}
+  i3-msg -q "focus {left,down,up,right}"
+#+end_src
+
++ Move clients
+
+#+begin_src sh :tangle "sxhkdrc_i3"
+super + shift + {h,j,k,l}
+  i3-msg -q "move {left,down,up,right}"
+#+end_src
+
++ =Mod + Shift + r= chord:
+  + =h= shrinks client
+  + =l= grows client
+
+#+begin_src sh :tangle "sxhkdrc_i3"
+super + shift + r : {h,l}
+  i3-msg -q "resize grow {left,right} 10"
+#+end_src
+
+** Controls
+
++ =Mod + Shift + q= chord:
+  + =q= correctly closes the focused node
+  + =r= reloads =i3= config
+  + =R= restarts =i3=
+
+#+begin_src sh :tangle "sxhkdrc_i3"
+super + shift + q ; {q,r,R}
+ i3-msg -q "{kill,reload,restart}"
+#+end_src
+
+** States & Layouts
+
++ =Mod + Shift + s= chord:
+  + =f= toggles fullscreen
+  + =b= toggles the bar
+  + =space= togles floating mode
+
+#+begin_src sh :tangle "sxhkdrc_i3"
+super + shift + s ; {f,b,space}
+  i3-msg -q "{fullscreen,bar mode,floating} toggle"
+#+end_src
+
++ =Mod + Shift + o= chord:
+  + =h= switch to horizontal orientation
+  + =v= switch to vertical orientation
+  + =o= cycle thru all the above
+
+#+begin_src sh :tangle "sxhkdrc_i3"
+super + shift + o ; {h,v,o}
+  i3-msg -q "split {h,v,toggle}"
+#+end_src
+
++ =Mod + Shift + .= chord:
+  + =[= switch to stacking layout
+  + =]= switch to tabbed layout
+  + =.= cycle thru all the above
+
+#+begin_src sh :tangle "sxhkdrc_i3"
+super + shift + period ; {bracketleft,bracketright,period}
+  i3-msg -q "layout {stacking,tabbed,toggle splith splitv tabbed stacking}"
+#+end_src
+
+** Rules
+
+Behaviour for clients.
+
+#+begin_src conf
+# Browsers always on workspace 1
+assign [class="^qutebrowser$"] → 1
+assign [class="^chromium$"] → 1
+#+end_src
+
+* Miscellaneous
+
++ =sxhkd= reloads upon receiving signal =USR1=.
+
+#+begin_src sh :tangle no
+pkill -USR1 'sxhkd'
+#+end_src

@@ -1,0 +1,79 @@
+#  Preample
+
+# This =i3= setup is meant to be used along with [[https://github.com/baskerville/sxhkd][sxhkd]]. The =i3-msg= command allows
+# sending =i3= commands which can be bounded to certain keys with the program
+# mentioned earlier.
+
+# + [[Reference https://i3wm.org/docs/userguide.html
+# ][i3 User Guide]]
+
+# This line below needs to be part of the configuration file, unsure why, but
+# adding it solved many issues.
+
+
+# i3 config file (v4)
+
+# Core Settings
+
+# These settings belong to =i3= (=~/.config/i3/config=), the rest (mostly) should be
+# keybind related which is handled separetely with =sxhkd=
+# (=~/.config/i3/sxhkdrc_i3=).
+
+
+focus_follows_mouse yes
+mouse_warping output
+popup_during_fullscreen smart
+workspace_auto_back_and_forth no
+focus_on_window_activation focus
+
+# Variables
+
+# Declaration of variables, some settings may be configured from here so it's
+# easier to edit than finding the sections.
+
+# The syntax for =set=-ting variables is a bit strange, haven't done much research,
+# but I'd prefer quotting instead of having white-spaces.
+
+
+set $mod Mod4
+floating_modifier $mod
+set $font Victor Mono 12
+
+# Fonts
+
+# Name should be exact, find the correct name with =fc-list=.
+
+
+font pango:$font
+
+# Colors
+
+
+# class                 border   bg. text  indicator  child_border
+client.focused          #6C71C4  #6C71C4   #FDF6E3    #6C71C4
+client.focused_inactive #073642  #073642   #EEE8D5    #6C71C4
+client.unfocused        #073642  #073642   #93A1A1    #586E75
+client.urgent           #D33682  #D33682   #FDF6E3    #DC322F
+
+# Screens
+
+# Screens or monitor settings.
+
+
+# Always set workspace 1 to primary screen
+workspace 1 output primary
+
+bar {
+  status_command i3blocks -c "${HOME}/.config/i3/i3blocks.conf"
+  font pango:Victor Mono Bold 14
+  position top
+}
+
+# Rules
+
+# Behaviour for clients.
+
+
+# Browsers always on workspace 1
+assign [class="^qutebrowser$"] → 1
+assign [class="^chromium$"] → 1
