@@ -4,8 +4,7 @@
 # sending =i3= commands which can be bounded to certain keys with the program
 # mentioned earlier.
 
-# + [[Reference https://i3wm.org/docs/userguide.html
-# ][i3 User Guide]]
+# + [[https://i3wm.org/docs/userguide.html][i3 User Guide]]
 
 # This line below needs to be part of the configuration file, unsure why, but
 # adding it solved many issues.
