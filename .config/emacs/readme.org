@@ -99,7 +99,7 @@ Behavior modifications as some defaults are not optimal.
 
 #+begin_src emacs-lisp
 (setq gc-cons-threshold-orig gc-cons-threshold
-      gc-cons-threshold          (* 1024 1024 100)
+      gc-cons-threshold      (* 1024 1024 100)
       file-name-handler-alist-orig file-name-handler-alist
       file-name-handler-alist      nil)
 
@@ -201,9 +201,7 @@ Some modes add text to the modeline, this can clutter the screen a bit, but may
 be disabled with the following packages.
 
 #+begin_src emacs-lisp
-(use-package diminish
-  :after use-package
-  :ensure)
+(use-package diminish :after use-package :ensure)
 #+end_src
 
 *** Enable undo-ing system
@@ -253,8 +251,6 @@ Settings that do not belong anywhere specific.
   :bind ("<f5>" . revert-buffer)
 
   :hook
-  ;; Enable server automatically on GNU Emacs startup
-  (after-init-hook . server-start)
   ;; Auto-Update the buffer whenever it changes
   (after-init-hook . global-auto-revert-mode))
 #+end_src
@@ -282,7 +278,7 @@ testing. If HOST is non-nil, given HOST will be used for testing."
   (setq-default mode-require-final-newline t
                 show-trailing-whitespace   t
                 tab-width 4
-                indent-tabs-mode           nil
+                indent-tabs-mode nil
                 display-line-numbers 'relative
                 fill-column 79
                 display-fill-column-indicator-column (+ fill-column 1))
@@ -316,7 +312,6 @@ testing. If HOST is non-nil, given HOST will be used for testing."
   (tool-bar-mode   0)
   (scroll-bar-mode 0)
 
-  :config
   ;; Font & size configuration
   (let* ((annt/font-name "VictorMono")
          (annt/font-size 13)
@@ -338,8 +333,7 @@ testing. If HOST is non-nil, given HOST will be used for testing."
 
 #+begin_src emacs-lisp
 (use-package dired
-  :defer
-  :config
+  :init
   (setq-default dired-use-ls-dired      'unspecified
                 dired-recursive-deletes 'always
                 dired-recursive-copies  'always
@@ -410,7 +404,6 @@ Enhanced GNU Emacs' =*help*=.
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
   :ensure
-  :defer 3
   :hook  (prog-mode-hook . rainbow-delimiters-mode))
 #+end_src
 
@@ -449,9 +442,9 @@ incorrectly by Evil.
 
 #+begin_src emacs-lisp
 (use-package evil-collection
-  :ensure   t
   :requires evil
-  :config   (evil-collection-init))
+  :ensure
+  :config (evil-collection-init))
 #+end_src
 
 **** Evil Surround
@@ -462,7 +455,6 @@ As obvious as it sounds, yes, this is [[https://github.com/tpope/vim-surround][v
 (use-package evil-surround
   :requires evil
   :ensure
-  :defer
   :init (global-evil-surround-mode))
 #+end_src
 
@@ -598,8 +590,6 @@ mostly."
 #+begin_src emacs-lisp
 ;; Follow some good git practices
 (use-package git-commit
-  :defer
-  :after magit
   :init
   (setq-default git-commit-summary-max-length 50
                 git-commit-style-convention-checks
@@ -625,9 +615,9 @@ This package /should not/ be =defer='d.
 #+begin_src emacs-lisp
 (use-package lsp-mode
   :ensure
-  :init (setq-default lsp-keymap-prefix "C-c l")
-  :config
-  (setq-default lsp-lens-enable t
+  :init
+  (setq-default lsp-keymap-prefix "C-c l"
+                lsp-lens-enable t
                 lsp-modeline-diagnostics-enable t
                 lsp-headerline-breadcrumb-enable t))
 #+end_src
@@ -660,9 +650,7 @@ This package /should not/ be =defer='d.
 ** Generic Formatter
 
 #+begin_src emacs-lisp
-(use-package reformatter
-:ensure
-:defer)
+(use-package reformatter :ensure :defer)
 #+end_src
 
 ** Shell
@@ -768,9 +756,7 @@ Still needed sometimes for =README= files, etc.
 No native support, [[https://github.com/yoshiki/yaml-mode][yaml-mode]] handles this.
 
 #+begin_src emacs-lisp
-(use-package yaml-mode
-  :ensure
-  :defer)
+(use-package yaml-mode :ensure :defer)
 #+end_src
 
 ** Lua
@@ -803,8 +789,9 @@ Rust programming is not part of GNU Emacs...
 
 #+begin_src emacs-lisp
 (use-package elisp-mode
-  :init   (electric-pair-mode)
-  :config (setq-default checkdoc-verb-check-experimental-flag nil)
+  :config
+  (electric-pair-mode)
+  (setq-default checkdoc-verb-check-experimental-flag nil)
   :hook
   ;; Linting
   (emacs-lisp-mode-hook . flycheck-mode)
@@ -825,14 +812,16 @@ Rust programming is not part of GNU Emacs...
 (use-package clojure-mode
   :ensure
   :defer
-  :init (electric-pair-mode)
   :config
+  (electric-pair-mode)
   ;; Disable native LSP completion to use CIDER's
   (setq-default lsp-enable-completion-at-point nil)
+
   ;; REPL
   (use-package cider
     :if (executable-find "lein")
     :ensure)
+
   :hook
   ;; LSP
   ((clojure-mode-hook clojurec-mode-hook clojurescript-mode-hook) . company-mode)
