@@ -17,7 +17,7 @@ test -f "${HOME}/.xprofile" && . "${HOME}/.xprofile"
 # some dbus patch for systemd systems (keyring-related)
 pgrep -x 'systemd' >/dev/null && . '/etc/X11/xinit/xinitrc.d/50-systemd-user.sh'
 
-SESSION='i3'
+SESSION='dwm'
 
 case ${SESSION} in
 i3)
@@ -41,6 +41,8 @@ while :; do dwm 2>"${HOME}/.dwm.log" >&2; done
 ;;
 
 spectr[wm]) exec spectrwm ;;
+
+qtile) exec qtile ;;
 
 *) exit 1 ;;
 esac
