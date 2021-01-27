@@ -24,19 +24,19 @@ background_opacity: 0.85
 font:
 # default - (Linux/BSD): monospace
     normal:
-        family: Victor Mono
+        family: Fantasque Sans Mono
         style: Regular
 
     bold:
-        family: Victor Mono
+        family: Fantasque Sans Mono
         style: Bold
 
     italic:
-        family: Victor Mono
+        family: Fantasque Sans Mono
         style: Italic
 
     bold_italic:
-        family: Victor Mono
+        family: Fantasque Sans Mono
         style: Bold Italic
 
 # point size

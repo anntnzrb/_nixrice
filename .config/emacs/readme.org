@@ -313,7 +313,7 @@ testing. If HOST is non-nil, given HOST will be used for testing."
   (scroll-bar-mode 0)
 
   ;; Font & size configuration
-  (let* ((annt/font-name "VictorMono")
+  (let* ((annt/font-name "FantasqueSansMono")
          (annt/font-size 13)
          (annt/full-font (format "%s-%s" annt/font-name annt/font-size)))
 
