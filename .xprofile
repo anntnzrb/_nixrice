@@ -41,7 +41,7 @@ sxhkd -t 5 &
 dunst &
 
 # remove mouse when idle
-unclutter &
+unclutter -grab &
 
 # -----------------------------------------------------------------------------
 # other applications
