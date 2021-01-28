@@ -1,0 +1,38 @@
+#+TITLE: *nixrice
+#+PROPERTY: header-args :results "output"
+
+* intro
+
+these files are meant to work across multiple [[https://0x0.st/HNfM][*nix distributions]], therefore
+most scripts are written with the goal of not being
+*[os/distro/software]*-dependant. aka /POSIX/-compliant.
+
+* =~/.config/scripts=
+
+a quick peek of my scripts, used for setting up development environments,
+mostly.
+
+the main scripts can be found at [[./.local/bin][~/.local/bin]].
+
+#+begin_src sh :exports "results"
+command tree -Fq --dirsfirst ./.config/scripts | head -n -2
+#+end_src
+
+* installation
+
+you can =git clone= (alternatively manually download) this repo and copy the
+contents you're interested in.
+
+#+begin_src sh
+git clone 'https://gitlab.com/anntnzrb/_nixrice.git'
+#+end_src
+
+** *nix deployment scripts
+
+[[https://gitlab.com/anntnzrb/nds][nds]] (/*nix deployment scripts/) is used to install the base of my system, a
+collection of scripts created by myself.
+
+* license
+
+this repo is under the [[https://0x0.st/HNVH][GPL-2.0]] license, i encourage you to /experiment, /fork/,
+/modify/ & /share/ this content.
