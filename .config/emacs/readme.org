@@ -675,11 +675,19 @@ This package /should not/ be =defer='d.
 
 #+begin_src emacs-lisp
 (use-package cc-mode
-  :defer
   :config
   ;; GNU-styled with a few tweaks
   (setq-default c-set-style    "gnu"
                 c-basic-offset 4)
+
+  ;; LSP
+  (use-package eglot
+    :defer
+    :ensure
+    :requires lsp-mode
+    :hook
+    (c-mode-hook . lsp-deferred)
+    (c-mode-hook . eglot-ensure))
 
   ;; Formatter
   ;; name of the of binary
