@@ -1,75 +1,78 @@
-<!-- markdownlint-disable MD013 MD037 -->
 
-# \*nixrice
+# Table of Contents
 
-**dotfiles** || **home folder**
+1.  [intro](#orge3c1dc4)
+2.  [`~/.config/scripts`](#orgfcfd07d)
+3.  [installation](#orgaf591a5)
+    1.  [\*nix deployment scripts](#orge47b281)
+4.  [license](#org5d73a81)
 
-## table of contents
 
-- [\*nixrice](#nixrice)
-  - [table of contents](#table-of-contents)
-  - [intro](#intro)
-  - [timeline](#timeline)
-  - [software](#software)
-  - [installation](#installation)
-  - [license](#license)
 
-## intro
+<a id="orge3c1dc4"></a>
 
-these files are meant to work across multiple
-[\*nix distributions](https://0x0.st/HNfM), therefore most scripts are written
-with the goal of not being [os/distro/software]-dependant
+# intro
 
-i tend to re-install my os a lot, this leads me not only to have everything
-pre-configured already but also to have a way of installing all the software
-i normally use with their corresponding configuration files as soon as
-possible. check [installation](#installation) for extra info
+these files are meant to work across multiple [\*nix distributions](https://0x0.st/HNfM), therefore
+most scripts are written with the goal of not being
+**[os/distro/software]**-dependant. aka *POSIX*-compliant.
 
-## software
 
-this table displays _most_ of the programs i have configuration files for:
+<a id="orgfcfd07d"></a>
 
-| software           | name                                    |
-| ------------------ | --------------------------------------- |
-|                    | **shell**                               |
-| terminal emulator  | _st_ ([external](https://0x0.st/8b4q))  |
-| :arrow_up:         | _alacritty_                             |
-| shell              | _zsh_                                   |
-| multiplexer        | _tmux_                                  |
-|                    | **graphical**                           |
-| window manager     | _dwm_ ([external](https://0x0.st/X869)) |
-| :arrow_up:         | _i3_                                    |
-| :arrow_up:         | _spectrwm_                              |
-| compositor         | _picom/compton_                         |
-| browser            | _qutebrowser_                           |
-| notifications      | _dunst_                                 |
-|                    | **files/text/docs/editors**             |
-| text editor        | _[n]vi[m]_                              |
-| :arrow_up:         | _vscod[e/ium]_                          |
-| file manager       | _PCManFM_                               |
-| pdf viewer         | _zathura_                               |
-| language formatter | _uncrustify_                            |
-|                    | **miscellaneous**                       |
-| key-binds          | _sxhkd_                                 |
-| sys-[monitor/info] | _neofetch_                              |
-| :arrow_up:         | _bottom_                                |
+# `~/.config/scripts`
 
-**note**: names described above are just the official given names of the
-software; package names varies depending on the `*nix` distribution
+a quick peek of my scripts, used for setting up development environments,
+mostly.
 
-## installation
+the main scripts can be found at [~/.local/bin](./.local/bin).
 
-these _.files_ may be installed using [uarbs](https://0x0.st/X86L), please
-refer to the linked repo for instructions
+    ./.config/scripts
+    ├── development/
+    │   ├── langs/
+    │   │   ├── android-dev*
+    │   │   ├── c-lang*
+    │   │   ├── haskell-lang*
+    │   │   ├── java-lang*
+    │   │   ├── json-lang*
+    │   │   ├── markdown-lang*
+    │   │   ├── perl-lang*
+    │   │   ├── python-lang*
+    │   │   ├── rust-lang*
+    │   │   ├── sh-lang*
+    │   │   └── tex-lang*
+    │   ├── cheat-sheets*
+    │   ├── nix-setup.sh*
+    │   ├── virtualization*
+    │   └── vscode-extensions*
+    ├── fonts/
+    │   └── figlet-extra-fonts*
+    └── misc/
+        ├── gaming-setup*
+        └── vpn-setup*
 
-you can also `git clone` (alternatively manually download) this repo and
-copy the contents you're interested in
 
-```console
-git clone https://gitlab.com/anntnzrb/_nixrice.git
-```
+<a id="orgaf591a5"></a>
 
-## license
+# installation
 
-this repo is under the [GPL-2.0](https://0x0.st/HNVH) license, i encourage you
-to _experiment_, _fork_, _modify_ & _share_, this content
+you can `git clone` (alternatively manually download) this repo and copy the
+contents you're interested in.
+
+    git clone 'https://gitlab.com/anntnzrb/_nixrice.git'
+
+
+<a id="orge47b281"></a>
+
+## \*nix deployment scripts
+
+[nds](https://gitlab.com/anntnzrb/nds) (*\*nix deployment scripts*) is used to install the base of my system, a
+collection of scripts created by myself.
+
+
+<a id="org5d73a81"></a>
+
+# license
+
+this repo is under the [GPL-2.0](https://0x0.st/HNVH) license, i encourage you to *experiment, /fork*,
+*modify* & *share* this content.
