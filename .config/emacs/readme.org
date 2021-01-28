@@ -317,8 +317,8 @@ testing. If HOST is non-nil, given HOST will be used for testing."
          (annt/font-size 13)
          (annt/full-font (format "%s-%s" annt/font-name annt/font-size)))
 
-    (set-face-attribute 'default nil :font annt/full-font)
-    (set-frame-font     annt/full-font nil t))
+    (dolist (face '(default fixed-pitch variable-pitch))
+      (set-face-attribute `,face nil :font annt/full-font)))
 
   ;; Theme
   ;; only enable if running Emacs as an X window
