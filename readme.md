@@ -1,15 +1,15 @@
 
 # Table of Contents
 
-1.  [intro](#orge3c1dc4)
-2.  [`~/.config/scripts`](#orgfcfd07d)
-3.  [installation](#orgaf591a5)
-    1.  [\*nix deployment scripts](#orge47b281)
-4.  [license](#org5d73a81)
+1.  [intro](#org2dc78c3)
+2.  [`~/.config/scripts`](#org9ac37bb)
+3.  [installation](#org677c04a)
+    1.  [\*nix deployment scripts](#org0cb5814)
+4.  [license](#orgdba45cb)
 
 
 
-<a id="orge3c1dc4"></a>
+<a id="org2dc78c3"></a>
 
 # intro
 
@@ -18,7 +18,7 @@ most scripts are written with the goal of not being
 **[os/distro/software]**-dependant. aka *POSIX*-compliant.
 
 
-<a id="orgfcfd07d"></a>
+<a id="org9ac37bb"></a>
 
 # `~/.config/scripts`
 
@@ -31,18 +31,21 @@ the main scripts can be found at [~/.local/bin](./.local/bin).
     ├── development/
     │   ├── langs/
     │   │   ├── android-dev*
-    │   │   ├── c-lang*
+    │   │   ├── c-lang.sh*
     │   │   ├── haskell-lang*
-    │   │   ├── java-lang*
+    │   │   ├── java-lang.sh*
     │   │   ├── json-lang*
+    │   │   ├── kotlin-lang.sh*
     │   │   ├── markdown-lang*
     │   │   ├── perl-lang*
-    │   │   ├── python-lang*
+    │   │   ├── python-lang.sh*
     │   │   ├── rust-lang*
     │   │   ├── sh-lang*
     │   │   └── tex-lang*
     │   ├── cheat-sheets*
+    │   ├── jetbrains-toolbox-setup.sh*
     │   ├── nix-setup.sh*
+    │   ├── sdkman-setup.sh*
     │   ├── virtualization*
     │   └── vscode-extensions*
     ├── fonts/
@@ -52,7 +55,7 @@ the main scripts can be found at [~/.local/bin](./.local/bin).
         └── vpn-setup*
 
 
-<a id="orgaf591a5"></a>
+<a id="org677c04a"></a>
 
 # installation
 
@@ -62,7 +65,7 @@ contents you're interested in.
     git clone 'https://gitlab.com/anntnzrb/_nixrice.git'
 
 
-<a id="orge47b281"></a>
+<a id="org0cb5814"></a>
 
 ## \*nix deployment scripts
 
@@ -70,7 +73,7 @@ contents you're interested in.
 collection of scripts created by myself.
 
 
-<a id="org5d73a81"></a>
+<a id="orgdba45cb"></a>
 
 # license
 
