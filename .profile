@@ -23,6 +23,9 @@ export PATH="${PATH}:`du "${HOME}/.local/bin/" | cut -f2 | paste -sd ':' -`"
 # source Nix
 test -d "${HOME}/.nix-profile/" && . "${HOME}/.nix-profile/etc/profile.d/nix.sh"
 
+# source SDKman
+test -d "${HOME}/.sdkman/" && . "${HOME}/.sdkman/bin/sdkman-init.sh"
+
 # -----------------------------------------------------------------------------
 # preamble
 # -----------------------------------------------------------------------------

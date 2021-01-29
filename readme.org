@@ -14,7 +14,7 @@ mostly.
 
 the main scripts can be found at [[./.local/bin][~/.local/bin]].
 
-#+begin_src sh :exports "results"
+#+begin_src shell :exports "results"
 command tree -Fq --dirsfirst ./.config/scripts | head -n -2
 #+end_src
 
