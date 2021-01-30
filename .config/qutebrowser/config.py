@@ -150,9 +150,10 @@ c.url.searchengines = {
     "glab": "https://gitlab.com/{}",
 
     # unix
+    "manarch": "https://man.archlinux.org/man/{}",
+    "mangnu": "https://www.gnu.org/software/coreutils/{}",
     "manobsd": "http://man.openbsd.org/{}",
     "manvoid": "https://man.voidlinux.org/{}",
-    "mangnu": "https://www.gnu.org/software/coreutils/{}",
 
     # linux
     "aw": "https://wiki.archlinux.org/index.php?search={}",
@@ -160,7 +161,7 @@ c.url.searchengines = {
     "aur": "https://aur.archlinux.org/packages/?K={}",
 
     # emacs
-    "melpa": "https://melpa.org/?q={}",
+    "melpa": "https://melpa.org/#/?q={}",
     "wikimacs": "https://duckduckgo.com/?q={}+site%3Aemacswiki.org",
 
     # misc
