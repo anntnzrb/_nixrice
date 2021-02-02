@@ -11,6 +11,9 @@
 # general settings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""" """
 
+# do not load setting from the GUI
+config.load_autoconfig(False)
+
 # encoding
 c.editor.encoding = "utf8"
 
