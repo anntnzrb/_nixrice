@@ -227,6 +227,22 @@ be disabled with the following packages.
                          (all-the-icons-install-fonts)))))
 #+end_src
 
+
+*** Debug GNU Emacs initialization time
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (defun annt/debug-init()
+    "Displays information related to GNU Emacs initialization"
+    (interactive)
+    (message "GNU Emacs --> Load time :: [%.2f s] | Garbage Collections :: [%d]"
+             (float-time (time-subtract after-init-time
+                                        before-init-time))
+             gcs-done))
+  :hook (emacs-startup-hook . annt/debug-init))
+#+end_src
+
 ** Generic configurations
 
 Settings that do not belong anywhere specific.
