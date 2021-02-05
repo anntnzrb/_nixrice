@@ -1,5 +1,5 @@
 #+TITLE: sxhkd
-#+PROPERTY: header-args :comments org :results silent
+#+PROPERTY: header-args :comments org :results silent :tangle "sxhkdrc"
 
 * table of contents                                       :TOC_2_gh:noexport:
 - [[#overview][overview]]
@@ -22,7 +22,8 @@ them portable.
 *** terminal emulator
 
 set by =$TERMINAL= environment variable
-#+begin_src sh :tangle sxhkdrc
+
+#+begin_src shell
 super + Return
   $TERMINAL
 #+end_src
@@ -31,13 +32,15 @@ super + Return
 
 /text editor/, but just as a generic way to call it. this is a terminal-based
 text editor, set by =$EDITOR= variable
-#+begin_src sh :tangle sxhkdrc
+
+#+begin_src shell
 super + v
   $TERMINAL -e $EDITOR
 #+end_src
 
 if =$EDITOR= somehow has an emacs script then this will run its GUI version
-#+begin_src sh :tangle sxhkdrc
+
+#+begin_src shell
 super + shift + v
   $EDITOR
 #+end_src
@@ -45,7 +48,7 @@ super + shift + v
 *** browser
 
 a graphical browser, set by =$BROWSER=
-#+begin_src sh :tangle sxhkdrc
+#+begin_src shell
 super + w
   $BROWSER
 #+end_src
@@ -53,7 +56,8 @@ super + w
 *** applicaction launcher
 
 a run dialog & app launcher precisely
-#+begin_src sh :tangle sxhkdrc
+
+#+begin_src shell
 super + d
   dmenu_run -i -p 'summon:'
 #+end_src
@@ -61,7 +65,8 @@ super + d
 *** file manager
 
 a graphical file manager, set by =$FILE=
-#+begin_src sh :tangle sxhkdrc
+
+#+begin_src shell
 super + e
   $FILE
 #+end_src
@@ -69,7 +74,7 @@ super + e
 *** rss feed
 
 CLI rss feeder
-#+begin_src sh :tangle sxhkdrc
+#+begin_src shell
 super + n
   $TERMINAL -e newsboat
 #+end_src
@@ -79,19 +84,22 @@ super + n
 *** audio
 
 CLI to control PulseAudio
-#+begin_src sh :tangle sxhkdrc
+
+#+begin_src shell
 super + a
   $TERMINAL -e pulsemixer
 #+end_src
 
 mute
-#+begin_src sh :tangle sxhkdrc
+
+#+begin_src shell
 XF86AudioMute
   pamixer -t && pkill -RTMIN+1 dwmblocks
 #+end_src
 
 increase/decrease
-#+begin_src sh :tangle sxhkdrc
+
+#+begin_src shell
 XF86Audio{Lower,Raise}Volume
   pamixer -{d,i} 5 && pkill -RTMIN+1 dwmblocks
 #+end_src
@@ -99,7 +107,8 @@ XF86Audio{Lower,Raise}Volume
 *** brightness
 
 increase/decrease
-#+begin_src sh :tangle sxhkdrc
+
+#+begin_src shell
 XF86MonBrightness{Down,Up}
   xbacklight -{dec,inc} 10 && pkill -RTMIN+2 dwmblocks
 #+end_src
@@ -109,42 +118,43 @@ XF86MonBrightness{Down,Up}
 *** system monitor
 
 CLI system activity monitor
-#+begin_src sh :tangle sxhkdrc
+
+#+begin_src shell
 super + shift + Escape
   $TERMINAL -e $SYS_MONITOR
 #+end_src
 
 *** password selector dropdown
 
-#+begin_src sh :tangle sxhkdrc
+#+begin_src shell
 super + p
   passmenu
 #+end_src
 
 *** display selector dropdown
 
-#+begin_src sh :tangle sxhkdrc
+#+begin_src shell
 super + F3
   displayselect
 #+end_src
 
 *** emoji / unicode list dropdown
 
-#+begin_src sh :tangle sxhkdrc
+#+begin_src shell
 super + grave
   dmenuunicode
 #+end_src
 
 *** screenshot utility dropdown
 
-#+begin_src sh :tangle sxhkdrc
+#+begin_src shell
 Print
   maimpick
 #+end_src
 
 *** system options dropdown
 
-#+begin_src sh :tangle sxhkdrc
+#+begin_src shell
 super + shift + x
   sysfns
 #+end_src
@@ -152,7 +162,8 @@ super + shift + x
 *** network tools
 
 CLI for /Network Manager/
-#+begin_src sh :tangle sxhkdrc
+
+#+begin_src shell
 super + F12
   $TERMINAL -e sudo nmtui
 #+end_src
@@ -160,14 +171,15 @@ super + F12
 **** torrent tools
 
 toggle the /transmission/ daemon with =F6= and launch the cli with =F7=
-#+begin_src sh :tangle sxhkdrc
+
+#+begin_src shell
 super + F{6,7}
  {td-toggle,torwrap}
 #+end_src
 
 *** mouting tools
 
-#+begin_src sh :tangle sxhkdrc
+#+begin_src shell
 super + F{9,10}
     {dmenumount,dmenuumount}
 #+end_src
@@ -176,15 +188,27 @@ super + F{9,10}
 
 kills currently focused window, an alternative to window manager's built-in
 window close functionaly. this should be used as last resource
-#+begin_src sh :tangle sxhkdrc
+
+#+begin_src shell
 alt + F4
   kill -15 $(xdotool getactivewindow getwindowpid)
+#+end_src
+
+*** toggle compositor
+
+/Picom/ is the compistor i currently use, i turn it off for games; with this bind
+i'm able to toggle in on the fly
+
+#+begin_src shell
+super + F11
+  toggle-cmd 'picom'
 #+end_src
 
 *** kill Xorg session
 
 meant to kill the x server in an emergency situation
-#+begin_src sh :tangle sxhkdrc
+
+#+begin_src shell
 super + control + alt + Escape
   pkill -15 "Xorg"
 #+end_src
@@ -193,6 +217,6 @@ super + control + alt + Escape
 
 =sxhkd= reloads upon receiving signal =USR1=
 
-#+begin_src sh
+#+begin_src shell :tangle no
 pkill -USR1 "sxhkd"
 #+end_src
