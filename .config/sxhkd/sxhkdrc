@@ -2,6 +2,7 @@
 
 # set by =$TERMINAL= environment variable
 
+
 super + Return
   $TERMINAL
 
@@ -10,12 +11,14 @@ super + Return
 # /text editor/, but just as a generic way to call it. this is a terminal-based
 # text editor, set by =$EDITOR= variable
 
+
 super + v
   $TERMINAL -e $EDITOR
 
 
 
 # if =$EDITOR= somehow has an emacs script then this will run its GUI version
+
 
 super + shift + v
   $EDITOR
@@ -31,12 +34,14 @@ super + w
 
 # a run dialog & app launcher precisely
 
+
 super + d
   dmenu_run -i -p 'summon:'
 
 # file manager
 
 # a graphical file manager, set by =$FILE=
+
 
 super + e
   $FILE
@@ -52,12 +57,14 @@ super + n
 
 # CLI to control PulseAudio
 
+
 super + a
   $TERMINAL -e pulsemixer
 
 
 
 # mute
+
 
 XF86AudioMute
   pamixer -t && pkill -RTMIN+1 dwmblocks
@@ -66,6 +73,7 @@ XF86AudioMute
 
 # increase/decrease
 
+
 XF86Audio{Lower,Raise}Volume
   pamixer -{d,i} 5 && pkill -RTMIN+1 dwmblocks
 
@@ -73,12 +81,14 @@ XF86Audio{Lower,Raise}Volume
 
 # increase/decrease
 
+
 XF86MonBrightness{Down,Up}
   xbacklight -{dec,inc} 10 && pkill -RTMIN+2 dwmblocks
 
 # system monitor
 
 # CLI system activity monitor
+
 
 super + shift + Escape
   $TERMINAL -e $SYS_MONITOR
@@ -117,12 +127,14 @@ super + shift + x
 
 # CLI for /Network Manager/
 
+
 super + F12
   $TERMINAL -e sudo nmtui
 
 # torrent tools
 
 # toggle the /transmission/ daemon with =F6= and launch the cli with =F7=
+
 
 super + F{6,7}
  {td-toggle,torwrap}
@@ -138,12 +150,23 @@ super + F{9,10}
 # kills currently focused window, an alternative to window manager's built-in
 # window close functionaly. this should be used as last resource
 
+
 alt + F4
   kill -15 $(xdotool getactivewindow getwindowpid)
+
+# toggle compositor
+
+# /Picom/ is the compistor i currently use, i turn it off for games; with this bind
+# i'm able to toggle in on the fly
+
+
+super + F11
+  toggle-cmd 'picom'
 
 # kill Xorg session
 
 # meant to kill the x server in an emergency situation
+
 
 super + control + alt + Escape
   pkill -15 "Xorg"
