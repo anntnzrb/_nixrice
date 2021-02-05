@@ -33,8 +33,8 @@ dwm)
 # statusbar
 dwmblocks &
 
-# keybinds
-sxhkd -t 5 -c "${HOME}/.config/dwm/sxhkdrc_dwm" &
+# keybinds (only if using dwmc)
+#sxhkd -t 5 -c "${HOME}/.config/dwm/sxhkdrc_dwm" &
 
 # run dwm as a loop in order to restart, also log
 while :; do dwm 2>"${HOME}/.dwm.log" >&2; done
