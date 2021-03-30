@@ -1,18 +1,11 @@
-"   █████
-"  ██░░░██
-" ░██  ░░
-" ░██   ██
-" ░░█████
-"  ░░░░░
+""" c.vim --- configurations for the C programming language
 
-" general
-compiler c
+let b:LANG = 'c'
 
-" [scrooloose/nerdcommenter]
-let g:NERDCustomDelimiters = { 'c': { 'left': '/*','right': '*/' } }
+" -----------------------------------------------------------------------------
+" ALE
+" -----------------------------------------------------------------------------
 
-" [dense-analysis/ale]
-let g:ale_fixers = {'c': ['uncrustify']}
-
-" [majutsushi/tagbar]
-au BufEnter * TagbarToggle
+let b:ale_linters = { b:LANG : ['cc']}
+let b:ale_fixers  = { b:LANG : ['uncrustify']}
+let g:ale_c_cc_options = '-std=c99 -pedantic -Wall -Wno-deprecated-declarations -Os'
