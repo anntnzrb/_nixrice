@@ -1,5 +1,11 @@
-;;; init.el --- GNU/Emacs Configuration -*- lexical-binding: t; -*-
+;;; init.el --- Initialization file of GNU Emacs
 
-;; literate configuration file
-(require 'org)
-(org-babel-load-file (expand-file-name "~/.config/emacs/readme.org"))
+;;; Commentary:
+;; This file gets loaded after the 'early-init.el' file.
+
+;;; Code:
+
+(org-babel-load-file (expand-file-name "readme.org" user-emacs-directory))
+
+(provide 'init)
+;;; init.el ends here
