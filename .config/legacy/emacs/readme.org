@@ -1,699 +1,853 @@
-#+TITLE: GNU Emacs configuration file
+#+TITLE: GNU Emacs configurations
 #+AUTHOR: anntnzrb
 #+EMAIL: anntnzrb@protonmail.com
-#+OPTIONS: toc:nil
 #+PROPERTY: header-args :results silent
 #+MACRO: export-date (eval (format-time-string "%F" (current-time)))
 
 + created: 2020-11-07
 + updated: *{{{export-date}}}*
 
-* table of contents                                       :TOC_2_gh:noexport:
-- [[#preamble][preamble]]
-  - [[#package-management][package management]]
-- [[#general][general]]
-  - [[#mouse][mouse]]
-  - [[#appearance][appearance]]
-  - [[#dired][dired]]
-  - [[#formatting][formatting]]
-  - [[#misc][misc]]
-- [[#development][development]]
-  - [[#git][Git]]
-  - [[#lsp][LSP]]
-  - [[#completion][completion]]
-  - [[#snippets][snippets]]
-  - [[#languages][languages]]
-- [[#org-mode][org-mode]]
-  - [[#appearance-1][appearance]]
-  - [[#org-toc][org-toc]]
-- [[#packages][packages]]
-  - [[#misc-1][misc]]
-  - [[#ivy][ivy]]
-  - [[#which-key][which-key]]
-  - [[#vi-keybinds][vi-keybinds]]
-- [[#keybinds][keybinds]]
-- [[#acknowledgements][acknowledgements]]
-  - [[#protesilaos-stavrou][Protesilaos Stavrou]]
-  - [[#cem-keylan][Cem Keylan]]
-  - [[#david-wilson][David Wilson]]
-  - [[#sandeep-nambiar][Sandeep Nambiar]]
+* Table of Contents                                       :TOC_2_gh:noexport:
+- [[#early-init-file][Early Init File]]
+- [[#init-file][Init File]]
+- [[#settings][Settings]]
+  - [[#core-settings][Core Settings]]
+  - [[#generic-configurations][Generic configurations]]
+  - [[#custom][Custom]]
+  - [[#editing][Editing]]
+  - [[#modeline][Modeline]]
+  - [[#appearance][Appearance]]
+  - [[#dired][Dired]]
+  - [[#utilities][Utilities]]
+- [[#org-mode][Org-Mode]]
+  - [[#org-mode-aesthetics][Org Mode Aesthetics]]
+  - [[#presentations-with-org-mode][Presentations with Org-Mode]]
+- [[#programming][Programming]]
+  - [[#version-control][Version Control]]
+  - [[#language-server-protocol-lsp][Language Server Protocol (LSP)]]
+  - [[#linting][Linting]]
+  - [[#completion][Completion]]
+  - [[#generic-formatter][Generic Formatter]]
+  - [[#shell][Shell]]
+  - [[#c][C]]
+  - [[#python][Python]]
+  - [[#markdown][Markdown]]
+  - [[#yaml][YAML]]
+  - [[#lua][Lua]]
+  - [[#rust][Rust]]
+  - [[#emacs-lisp-elisp][Emacs Lisp (elisp)]]
+  - [[#clojure][Clojure]]
 
-* preamble
+* Early Init File
 
-use =lexical-binding=
+Emacs =27.1= offers new file called =early-init.el= which allows customizations
+that take effect during Emacs startup earlier than the normal init file. This
+file is loaded before the package system and GUI is initialized.
 
-#+begin_src emacs-lisp
-;; -*- lexical-binding: t -*-
+*References*: [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.html][The Early Init File]]
+
+#+begin_src emacs-lisp :tangle "early-init.el"
+;;; early-init.el --- GNU Emacs >= 27.1 pre-initialization file
+
+;;; Commentary:
+
+;; This file gets loaded before the 'init.el' file.
+;; Should not have more than a few files.
+
+;;; Code:
+
+;; Package tweaks
+(setq-default package-enable-at-startup t
+              package-quickstart        t)
+
+(provide 'early-init)
+
+;;; early-init.el ends here
 #+end_src
 
-garbage collector settings
+* Init File
 
-#+begin_src emacs-lisp
-(setq-default gc-cons-threshold (* 8 1024 1024))
+#+begin_src emacs-lisp :tangle "init.el"
+;;; init.el --- Initialization file of GNU Emacs
+
+;;; Commentary:
+;; This file gets loaded after the 'early-init.el' file.
+
+;;; Code:
+
+(org-babel-load-file (expand-file-name "readme.org" user-emacs-directory))
+
+(provide 'init)
+;;; init.el ends here
 #+end_src
 
-disable emacs settings up custom variables
+* Settings
+
+** Core Settings
+
+This section is present for configurations that /should/ be executed first,
+before anything else.
+
+*** Performance
+
+Behavior modifications as some defaults are not optimal.
+
+**** Garbage Collector
+
++ Resources:
+  +  [[https://emacs.stackexchange.com/a/34367][... setting `gc-cons-threshold` very high and collecting garbage when idle?]]
 
 #+begin_src emacs-lisp
-(setq-default custom-file null-device)
+(setq gc-cons-threshold-orig gc-cons-threshold
+      gc-cons-threshold      (* 1024 1024 100)
+      file-name-handler-alist-orig file-name-handler-alist
+      file-name-handler-alist      nil)
+
+(run-with-idle-timer
+ 5 nil
+ (lambda ()
+   (setq gc-cons-threshold       gc-cons-threshold-orig
+	     file-name-handler-alist file-name-handler-alist-orig)
+   (makunbound 'gc-cons-threshold-orig)
+   (makunbound 'file-name-handler-alist-orig)))
 #+end_src
 
-this is set-up here first in order to take advantage of =use-package=
+**** Amount of procesed data
 
-** package management
++ References:
+  + [[https://emacs-lsp.github.io/lsp-mode/page/performance/][LSP :: Performance Guide]]
 
-*** repositories
+#+begin_src emacs-lisp
+(setq read-process-output-max (* 1024 1024))
+#+end_src
+
+**** Extra Resources
+
+A list of useful posts regarding GNU Emacs performance.
+
++ [[https://blog.d46.us/advanced-emacs-startup/][Advanced Techniques for Reducing Emacs Startup Time]]
+
+*** Package Management
+
+I'm currently fine with =package.el= which is built-in; I do have an eye on
+=straight.el= which I understand it's meant for fine adjusting specific
+versions of packages to install, thing that I'm not really interested at the
+moment.
 
 #+begin_src emacs-lisp
 (require 'package)
-(setq-default package-archives '(("elpa"  . "https://elpa.gnu.org/packages/")
-                                 ("melpa" . "https://melpa.org/packages/")
-                                 ("org"   . "https://orgmode.org/elpa/")))
+
+;; Repositories
+(setq-default package-archives '(("GNU" . "https://elpa.gnu.org/packages/")
+                                 ("Melpa" . "https://melpa.org/packages/")))
+
 (package-initialize)
-
-;; only update if needed
-(unless package-archive-contents
-  (package-refresh-contents))
 #+end_src
 
-*** use-package
+**** =use-package=
 
-=use-packages= is a handy tool, i use it mostly to groups things up and reduce
-syntax verbosity
+[[https://github.com/jwiegley/use-package#installing-use-package][use-package]] is a *macro* that allows to optimize the performance of the GNU
+Emacs configuration file, it also makes everything less verbose.
+
+On my first days of trying GNU Emacs I stepped away from using this specific
+package as the change in the syntax is notorious. I was looking forward to
+learn GNU Emacs & ELisp from the ground up, however what really called my
+attention was the performance tweaks that this project claimed to accomplish.
+
+I was attempting to create different functions that performed some checks
+depending on certain situations, wether the package list was already refreshed
+do =foo=, if not then do =bar=, among others, but at the end, this was already
+=use-package='s job.
+
++ Install & configure =use-package=
+
+  + =use-package-hook-name-suffix= forces to append =-hook= instead of shorter
+    version.
+
+  #+begin_src emacs-lisp
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+
+  (eval-and-compile
+    ;; Settings
+    (setq-default use-package-always-ensure      nil
+                  use-package-compute-statistics nil
+                  use-package-hook-name-suffix   nil))
+
+  (eval-when-compile (require 'use-package))
+  #+end_src
+
+*** Custom custom file
+
+If you adjust settings directly from GNU Emacs (GUI), some ELisp code will be
+appended to the =init.el= file, this can be a bit messy. This can be adjusted
+to use another file and accomplish this.
 
 #+begin_src emacs-lisp
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-;; configure prior loading
-(eval-and-compile
-  (setq-default use-package-always-ensure t
-                use-package-hook-name-suffix nil))
-
-(eval-when-compile
-  (require 'use-package))
+(setq-default custom-file (expand-file-name "custom.el" user-emacs-directory))
 #+end_src
 
-* general
-
-basic settings
-
-** mouse
-
-even tho we are on the *no-mouse* master-race, having some tiny stuff there should
-be handy
+*** Backups
 
 #+begin_src emacs-lisp
-(xterm-mouse-mode t)
+(setq-default create-lockfiles  nil
+              make-backup-files nil)
 #+end_src
 
-** appearance
+*** Remove clutter from modeline
 
-user interface
+Some modes add text to the modeline, this can clutter the screen a bit, but may
+be disabled with the following packages.
+
+#+begin_src emacs-lisp
+(use-package diminish :after use-package :ensure)
+#+end_src
+
+*** Enable undo-ing system
+
+#+begin_src emacs-lisp
+(use-package undo-tree
+  :ensure
+  :diminish
+  :init (global-undo-tree-mode))
+#+end_src
+
+*** More icons
+
+#+begin_src emacs-lisp
+(use-package all-the-icons
+  :ensure
+  :hook
+  ;; Install all-the-icons automatically only if missing
+  (after-init-hook . (lambda()
+                       (unless (file-exists-p
+                                (expand-file-name
+                                 "~/.local/share/fonts/all-the-icons.ttf"))
+                         (all-the-icons-install-fonts)))))
+#+end_src
+
+
+*** Debug GNU Emacs initialization time
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :ensure nil
-  :custom
-  (menu-bar-mode   nil)
-  (tool-bar-mode   nil)
-  (scroll-bar-mode nil)
-  (inhibit-splash-screen t))
+  :config
+  (defun annt/debug-init()
+    "Displays information related to GNU Emacs initialization"
+    (interactive)
+    (message "GNU Emacs --> Load time :: [%.2f s] | Garbage Collections :: [%d]"
+             (float-time (time-subtract after-init-time
+                                        before-init-time))
+             gcs-done))
+  :hook (emacs-startup-hook . annt/debug-init))
 #+end_src
 
-lines
+** Generic configurations
+
+Settings that do not belong anywhere specific.
 
 #+begin_src emacs-lisp
-(global-display-line-numbers-mode)
-(setq-default display-line-numbers-type 'relative)
-#+end_src
+(use-package emacs
+  :init
+  ;; Startup
+  (setq initial-scratch-message     nil
+        inhibit-startup-buffer-menu t
+        inhibit-startup-screen      t
+        inhibit-startup-echo-area-message t
+        inhibit-startup-message           t)
 
-font & size
+  ;; Shorter prompts
+  (defalias 'yes-or-no-p 'y-or-n-p)
 
-#+begin_src emacs-lisp
-;; set default font
-(defun annt/set-default-font()
-  "set font defaults"
-  (dolist (face '(default fixed-pitch variable-pitch))
-    (set-face-attribute `,face nil :font "Victor Mono 14")))
+  ;; Don't prompt for confirmation when killing buffer
+  (global-set-key [remap kill-buffer] #'kill-this-buffer)
 
-;; needed when working with emacs as a daemon
-(use-package frame
-  :ensure nil
-  :if (daemonp)
+  ;; Keybinds
+  :bind ("<f5>" . revert-buffer)
+
   :hook
-  (after-make-frame-functions . (lambda (frame)
-                                  (with-selected-frame frame (annt/set-default-font)))))
+  ;; Auto-Update the buffer whenever it changes
+  (after-init-hook . global-auto-revert-mode))
 #+end_src
 
-theme
+** Custom
+
+Section where I place my own functions/definitions that do not belog anywhere
+specific.
 
 #+begin_src emacs-lisp
-(use-package modus-operandi-theme)
-
-;; dark themes
-(use-package modus-vivendi-theme)
-
-;; load theme
-(load-theme 'modus-vivendi t)
+(defun annt/net-up-p (&optional host)
+  "Checks if there is an active internet connection.
+By default, the HOST used is 'example.com' because this is a good website for
+testing. If HOST is non-nil, given HOST will be used for testing."
+  (= 0 (call-process "ping" nil nil nil "-q" "-c" "1" (if host
+                                                          host
+                                                       "example.com"))))
 #+end_src
 
-** dired
+** Editing
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq-default mode-require-final-newline t
+                show-trailing-whitespace   t
+                tab-width 4
+                indent-tabs-mode nil
+                display-line-numbers 'relative
+                fill-column 79
+                display-fill-column-indicator-column (+ fill-column 1))
+  :hook
+  ;; delete trailing whitespaces prior saving
+  (before-save-hook . delete-trailing-whitespace)
+
+  ;; display vertical column at line limit
+  ((prog-mode-hook text-mode-hook) . display-fill-column-indicator-mode)
+
+  ;; auto-wrapping
+  ((prog-mode-hook text-mode-hook) . auto-fill-mode))
+#+end_src
+
+** Modeline
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :config
+  (setq-default column-number-mode   t
+                size-indication-mode t
+                column-number-indicator-zero-based nil))
+#+end_src
+
+** Appearance
+
+#+begin_src emacs-lisp
+(use-package emacs
+  :init
+  (menu-bar-mode   0)
+  (tool-bar-mode   0)
+  (scroll-bar-mode 0)
+
+  ;; Font & size configuration
+  (let* ((annt/font-name "FantasqueSansMono")
+         (annt/font-size 13)
+         (annt/full-font (format "%s-%s" annt/font-name annt/font-size)))
+
+    (dolist (face '(default fixed-pitch variable-pitch))
+      (set-face-attribute `,face nil :font annt/full-font)))
+
+  ;; Theme
+  ;; only enable if running Emacs as an X window
+  (use-package modus-themes
+    :if (display-graphic-p)
+    :ensure
+    :init (modus-themes-load-operandi)
+    :bind ("M-<f5>" . modus-themes-toggle)))
+#+end_src
+
+** Dired
 
 #+begin_src emacs-lisp
 (use-package dired
-  :ensure nil
-  :custom
-  (dired-recursive-copies 'always)
-  (dired-recursive-deletes 'always)
-  (delete-by-moving-to-trash t)
-  (dired-listing-switches
-   "-AFGhlv --group-directories-first --time-style=long-iso")
-  :hook
-  (dired-mode-hook . hl-line-mode))
-#+end_src
-
-** formatting
-
-+ spaces over tabs
-+ tab width 4
-+ max line lenght 80 & auto-wrap
-+ show column number in modeline
-+ show trailing whitespaces and delete them on save
-
-#+begin_src emacs-lisp
-(use-package emacs
-  :ensure nil
-  :custom
-  (tab-width                4)
-  (indent-tabs-mode         nil)
-  (tab-always-indent        'complete)
-  (fill-column              80)
-  (show-trailing-whitespace t)
-  :hook
-  (after-init-hook  . column-number-mode)
-  (before-save-hook . delete-trailing-whitespace))
-
-(use-package simple
-  :requires diminish
-  :after    diminish
-  :diminish
-  :ensure nil
-  :hook
-  (org-mode-hook  . auto-fill-mode)
-  (prog-mode-hook . auto-fill-mode)
-  (text-mode-hook . auto-fill-mode))
-#+end_src
-
-** misc
-
-replace =yes/no= prompts with shorter =y/n=
-
-#+begin_src emacs-lisp
-(fset 'yes-or-no-p 'y-or-n-p)
-#+end_src
-
-reload file automatically if edited externally
-
-#+begin_src emacs-lisp
-(global-auto-revert-mode t)
-#+end_src
-
-/annoying/ backups
-
-#+begin_src emacs-lisp
-(setq-default
- backup-directory-alist `(("." . ,(expand-file-name "~/.cache/emacs_backups"))))
-#+end_src
-
-inmediatly kill buffer without confirmation
-
-#+begin_src emacs-lisp
-(global-set-key [remap kill-buffer] #'kill-this-buffer)
-#+end_src
-
-* development
-
-#+begin_src emacs-lisp
-
-(use-package prog-mode
-  :ensure nil
   :init
-  (defun annt/set-compiler (&optional cmd-args)
-    "changes the compiler command; if a `Makefile` file is found, do nothing, if
-       an arg is passed and a `Makefile` does not exist, then set that arg as the
-       compiler command, else just use default command behavior."
-
-    (unless (or (file-exists-p "makefile")
-                (file-exists-p "Makefile"))
-      (set (make-local-variable 'compile-command)
-           (if cmd-args
-               (concat cmd-args " " (expand-file-name buffer-file-truename))
-             (concat "make -k " (expand-file-name buffer-file-truename))))))
-  :custom
-  (show-paren-mode t)
-  :bind
-  (("C-c c p" . previous-error)
-   ("C-c c n" . next-error)
-   ("C-c c c" . compile)
-   ("C-c c r" . recompile)))
+  (setq-default dired-use-ls-dired      'unspecified
+                dired-recursive-deletes 'always
+                dired-recursive-copies  'always
+                dired-listing-switches  "-Fahlq --group-directories-first"))
 #+end_src
 
-** Git
+** Utilities
 
-*** Magit
+*** Mini-buffer completion
 
-an interface for Git
-
-#+begin_src emacs-lisp
-(use-package magit)
-#+end_src
-
-**** Evil-Magit
-
-vi-keybinds for Magit
-
-#+begin_src emacs-lisp
-(use-package evil-magit
-  :requires magit
-  :after    magit)
-#+end_src
-
-** LSP
-
-the language-protocol-server
-
-#+begin_src emacs-lisp
-(defun annt/lsp-init()
-  (setq-default
-   lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-  (lsp-headerline-breadcrumb-mode))
-
-(use-package lsp-mode
-  :init     (setq-default lsp-keymap-prefix "C-c l")
-  :commands (lsp lsp-deferred)
-  :hook
-  ;; languages to enable LSP
-  (c-mode-hook      . lsp-deferred)
-  (python-mode-hook . lsp-deferred)
-
-  ;; misc
-  (lsp-mode-hook . lsp-enable-which-key-integration)
-  (lsp-mode-hook . annt/lsp-init))
-#+end_src
-
-** completion
-
-text completion framework
-
-#+begin_src emacs-lisp
-(use-package company
-  :diminish
-  :hook
-  ;; languages to enable company
-  (prog-mode-hook . company-mode)
-  :custom
-  (company-idle-delay            0)
-  (company-minimum-prefix-length 1))
-#+end_src
-
-** snippets
-
-[[https://github.com/joaotavora/yasnippet][YASnippet]] is a template system, snippets for short. it does not ship
-with the actual snippets, extra packages are needed for them
-
-#+begin_src emacs-lisp
-(use-package yasnippet
-  :diminish
-  :hook (prog-mode-hook . yas-minor-mode)
-  :config (yas-reload-all))
-
-;; snippets
-(use-package yasnippet-snippets)
-#+end_src
-
-** languages
-
-formatter for pretty much every languages
-
-#+begin_src emacs-lisp
-(use-package format-all :bind ("C-c f" . format-all-buffer))
-#+end_src
-
-*** Shell
-
-+ general settings
-
-#+begin_src emacs-lisp
-(use-package sh-script
-  :ensure nil
-  :hook
-  (sh-mode-hook . (lambda () (annt/set-compiler "/bin/sh"))))
-#+end_src
-
-+ syntax checking
-
-#+begin_src emacs-lisp
-(use-package flycheck :hook (sh-mode-hook . flycheck-mode))
-#+end_src
-
-*** C
-
-#+begin_src emacs-lisp
-(use-package cc-mode
-  :init
-  (defun annt/c-prog-settings ()
-    "personal settings for C programming"
-    (setq-default c-basic-offset  4
-                  c-default-style "bsd"))
-  :hook (c-mode-hook . annt/c-prog-settings))
-#+end_src
-
-**** LSP for C
-
-#+begin_src emacs-lisp
-(use-package eglot
-  :if       (executable-find "clangd")
-  :requires lsp-mode
-  :after    lsp-mode
-  :config   (add-to-list 'eglot-server-programs '((c-mode) "clangd"))
-  :hook     (c-mode-hook . eglot-ensure))
-#+end_src
-
-*** Emacs Lisp
-
-+ syntax checking
-
-#+begin_src emacs-lisp
-(use-package flycheck :hook (emacs-lisp-mode-hook . flycheck-mode))
-#+end_src
-
-*** Python
-
-#+begin_src emacs-lisp
-;; Python interpreter to use
-(setq-default py-ver "python3")
-
-(use-package python
-  :ensure nil
-  :custom (python-shell-interpreter py-ver))
-#+end_src
-
-**** LSP for Python
-
-#+begin_src emacs-lisp
-(use-package lsp-python-ms
-  :requires lsp-mode
-  :after    lsp-mode
-  :init     (setq-default lsp-python-ms-auto-install-server t)
-  :hook
-  (python-mode-hook . (lambda ()
-                        (require 'lsp-python-ms)
-                        (lsp-deferred))))
-#+end_src
-
-*** Perl
-
-+ general settings
-
-#+begin_src emacs-lisp
-(use-package perl-mode
-  :ensure nil
-  :hook
-  (perl-mode-hook . (lambda () (annt/set-compiler "perl -TWt"))))
-#+end_src
-
-+ syntax checking
-
-#+begin_src emacs-lisp
-(use-package flycheck
-  :custom (flycheck-perlcritic-severity 1)
-  :hook   (perl-mode-hook . flycheck-mode))
-#+end_src
-
-*** Markdown
-
-+ general settings
-
-#+begin_src emacs-lisp
-(use-package markdown-mode
-  :ensure nil
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("readme\\.md\\'" . gfm-mode)
-         ("\\.md\\'"       . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
-  :custom
-  ;; enables 'org-edit-src-code'-like code blocks [C-c ']
-  (markdown-fontify-code-blocks-natively t))
-#+end_src
-
-
-+ syntax checking
-
-#+begin_src emacs-lisp
-(use-package flycheck
-  :if   (executable-find      "markdownlint")
-  :hook (markdown-mode-hook . flycheck-mode))
-#+end_src
-
-* org-mode
-
-this little (big) thing is one of the main reasons why i switch to this
-environment in the first place
-
-#+begin_src emacs-lisp
-(use-package org
-  :hook (org-mode-hook . org-indent-mode)
-  :custom
-  ;; general
-  (org-return-follows-link nil)
-
-  ;; appearance
-  (org-ellipsis " }}}")
-  (org-hide-emphasis-markers t)
-
-  :config
-  ;; code blocks
-  (setq-default org-edit-src-content-indentation 0
-                org-src-fontify-natively         t
-                org-src-tab-acts-natively        t
-                org-confirm-babel-evaluate       nil)
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (shell      . t)
-     (C          . t)
-     (haskell    . t)
-     (python     . t)
-     (java       . t)))
-  (require 'org-tempo) ;; needed as of org-mode 9.3
-  (setq-default org-structure-template-alist
-                '(("src"  . "src")
-                  ;; languages
-                  ("el"   . "src emacs-lisp")
-                  ("sh"   . "src sh")
-                  ("c"    . "src c")
-                  ("hs"   . "src haskell")
-                  ("py"   . "src python")
-                  ("java" . "src java")
-                  ;; misc
-                  ("cent" . "center")
-                  ("comm" . "comment")
-                  ("ex"   . "example")
-                  ("quo"  . "quote")
-                  ("verb" . "verbatim")
-                  ("vers" . "verse"))))
-#+end_src
-
-** appearance
-
-improved version of org-bullets
-
-#+begin_src emacs-lisp
-(use-package org-superstar :hook (org-mode-hook . org-superstar-mode))
-#+end_src
-
-** org-toc
-
-handy /Table of Contents/ package
-
-#+begin_src emacs-lisp
-(use-package toc-org :hook (org-mode-hook . toc-org-mode))
-#+end_src
-
-* packages
-
-the goal here is and will be to always have the least amount of packages as
-possible, only use what is really neccesary
-
-** misc
-
-some stuff that does not belong anywhere specific
-
-+ i would personally prefer this to be at last, but the config works as
-intended by leaving this before any other package
-
-*** diminish
-
-supress modeline status
-
-#+begin_src emacs-lisp
-(use-package diminish
-  :requires use-package
-  :after    use-package)
-#+end_src
-
-*** undo-tree
-
-alternative undo system for GNU/Emacs (enables evil-mode redo)
-
-+ this enables {un,re}-doing for [[evil]]
-+ *TODO*: use native undo system on future GNU/Emacs `28`
-
-#+begin_src emacs-lisp
-(use-package undo-tree :diminish)
-
-;; enable
-(global-undo-tree-mode)
-#+end_src
-
-*** clipboard support for the terminal
-
-emacs does not have =xclip= support on the terminal, add it
-
-#+begin_src emacs-lisp
-(use-package xclip
-  :if (executable-find "xclip")
-  :unless (eq system-type 'windows-nt)
-  :config (xclip-mode))
-#+end_src
-
-** ivy
-
-mini-buffer completion mechanism
+/Ivy/ is a completion mechanism meant to be small and simple.
 
 #+begin_src emacs-lisp
 (use-package ivy
+  :ensure
   :diminish
-  :custom
-  (ivy-use-virtual-buffers t)
-  (enable-recursive-minibuffers t)
-  :config (ivy-mode t))
+  :bind ((:map ivy-minibuffer-map
+               ("TAB" . ivy-alt-done)))
+  :init (ivy-mode))
 #+end_src
 
-** which-key
+*** Enhanced Search
 
-minor mode that displays bindings following your currently entered incomplete
-command in a popup
+Alternative to /I-Search/.
+
+#+begin_src emacs-lisp
+(use-package swiper
+  :requires ivy
+  :ensure
+  :bind ("C-s" . swiper))
+#+end_src
+
+*** Which-Key
 
 #+begin_src emacs-lisp
 (use-package which-key
+  :ensure
   :diminish
-  :init     (which-key-mode)
-  :custom   (which-key-idle-delay 0.25))
+  :defer
+  :init (which-key-mode)
+  :config
+  (setq-default which-key-is-verbose t
+                which-key-idle-delay 0.5))
 #+end_src
 
-** vi-keybinds
+*** Helpful
 
-i am used to vi-like keybinds and modes, evil reproduces them very well
+Enhanced GNU Emacs' =*help*=.
 
-*** evil
++ *This replaces default =*help*= behavior.*
+
+#+begin_src emacs-lisp
+(use-package helpful
+  :ensure
+  :defer 5
+  :config
+  (global-set-key [remap describe-command]  #'helpful-command)
+  (global-set-key [remap describe-function] #'helpful-function)
+  (global-set-key [remap describe-key]      #'helpful-key)
+  (global-set-key [remap describe-symbol]   #'helpful-symbol)
+  (global-set-key [remap describe-variable] #'helpful-variable))
+#+end_src
+
+*** Rainbow Delimiters
+
+... aka /Rainbow Parentheses/.
+
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters
+  :ensure
+  :hook  (prog-mode-hook . rainbow-delimiters-mode))
+#+end_src
+
+*** Vi Emulation
+
+My journey on /*nix/ environments began with /Vi/, it's difficult for me not to
+try looking everywhere for Vi emulation.
+
+**** Evil
+
+/Evil/ is probably the best package for Vi emulation, even tho I'd really
+prefer something simpler... I haven't found anything else other than /Viper/
+(built-in) and well, just no.
 
 #+begin_src emacs-lisp
 (use-package evil
-  :custom
-  (evil-undo-system   'undo-tree)
-  (evil-want-C-i-jump nil)
+  :ensure
+  :init
+  (setq-default evil-want-minibuffer t
+                evil-want-C-u-scroll t
+                evil-want-C-i-jump   nil
+                evil-want-keybinding nil
+                evil-want-keybinding nil
+                evil-undo-system 'undo-tree)
+  (evil-mode)
+  :bind
+  ((:map evil-insert-state-map
+         ;; Use ESC as C-g
+         ("C-g" . evil-normal-state))))
+#+end_src
+
+**** Evil Collection
+
+Collection of Vi keybinds for some parts of GNU Emacs which are dealt
+incorrectly by Evil.
+
+#+begin_src emacs-lisp
+(use-package evil-collection
+  :requires evil
+  :ensure
+  :config (evil-collection-init))
+#+end_src
+
+**** Evil Surround
+
+As obvious as it sounds, yes, this is [[https://github.com/tpope/vim-surround][vim-surround]], but for GNU Emacs.
+
+#+begin_src emacs-lisp
+(use-package evil-surround
+  :requires evil
+  :ensure
+  :init (global-evil-surround-mode))
+#+end_src
+
+*** Aggressive-indent
+
+Useful for /Lisps/ specially, non-intrusive if configured correctly.
+
+#+begin_src emacs-lisp
+(use-package aggressive-indent
+  :ensure
   :config
-  ;; go to normal mode when "C-g"
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  :hook (after-init-hook . evil-mode))
+  (setq-default aggressive-indent-comments-too t
+                aggressive-indent-sit-for-time 0.5)
+  :hook
+  (prog-mode-hook . aggressive-indent-mode))
 #+end_src
 
-* keybinds
+* Org-Mode
 
 #+begin_src emacs-lisp
-(use-package emacs
-  :ensure nil
-  :bind
-  ("C-s" . save-buffer))
+(use-package org
+  :defer
+  :config
+  ;; General Org settings
+  (setq-default org-hide-emphasis-markers t
+                org-edit-src-content-indentation 0
+                org-confirm-babel-evaluate       nil)
+
+  ;; Backends for Org Exportation
+  (setq-default org-export-backends '(html latex man md odt))
+
+  (use-package ob-C       :defer :commands (org-babel-execute:C))
+  (use-package ob-python  :defer :commands (org-babel-execute:python))
+  (use-package ob-shell   :defer :commands (org-babel-execute:shell))
+  (use-package ob-clojure :defer :commands (org-babel-execute:clojure))
+  (use-package ob-java    :defer :commands (org-babel-execute:java))
+
+  ;; Templates
+  ;; needed for templates to work
+  (use-package org-tempo)
+  (setq-default org-structure-template-alist
+                '(("src"   . "src")
+                  ("conf"  . "conf")
+                  ;; languages
+                  ("el"  . "src emacs-lisp")
+                  ("sh"  . "src sh")
+                  ("c"   . "src c")
+                  ("py"  . "src python")
+                  ;; misc
+                  ("comm" . "comment")
+                  ("ex"   . "example")
+                  ("quo"  . "quote")))
+
+  ;; Table of contents
+  (use-package toc-org
+    :after org
+    :defer
+    :ensure
+    :hook (org-mode-hook . toc-org-mode))
+  :hook
+  ;; Enable visual identation
+  (org-mode-hook . org-indent-mode))
 #+end_src
 
-window movement using [[https://github.com/deb0ch/emacs-winum/][winum]]
+** Org Mode Aesthetics
+
+Base /Org/ is usable but its look can be enhanced with some details.
 
 #+begin_src emacs-lisp
-(use-package winum
-  :bind
-  ("M-1" . winum-select-window-1)
-  ("M-2" . winum-select-window-2)
-  ("M-3" . winum-select-window-3)
-  ("M-4" . winum-select-window-4)
-  ("M-5" . winum-select-window-5)
-  ("M-6" . winum-select-window-6)
-  ("M-7" . winum-select-window-7)
-  ("M-8" . winum-select-window-8)
-  ("M-9" . winum-select-window-9)
-  ("M-0" . winum-select-window-by-number)
-  :config (winum-mode))
+(use-package org-superstar
+  ;; Only if client is being ran graphically
+  :if (display-graphic-p)
+  :after org
+  :ensure
+  :init
+  (setq-default org-superstar-special-todo-items t)
+  :hook (org-mode-hook . org-superstar-mode))
 #+end_src
 
-* acknowledgements
+** Presentations with Org-Mode
 
-** Protesilaos Stavrou
+[[https://github.com/takaxp/org-tree-slide][org-tree-slide]] is a package that allows creating presentations with /Org-Mode/,
+it can even export to =.pdf= using /Beamer/ (needs /LaTeX/ tools installed).
 
-*** Vim user's first impressions of GNU Emacs
+There are a few things that can be done to extend this packages, a few of them
+being toggling =display-fill-column-indicator-mode= and increasing the font
+size.
 
-explains the main differences between the default keybinds both systems offer;
-overall how Emacs and Vim can be similar.
++ References
+  + [[https://youtu.be/vz9aLmxYJB0][Emacs Tips - How to Give Presentations with Org Mode]]
 
-[[https://youtu.be/VlVl_5RyG3M][video link]]
+#+begin_src emacs-lisp
+(use-package org-tree-slide
+  :ensure
+  :defer
+  :init
+  (defun annt/org-present-start ()
+    "Configurations settings for entering presentation mode."
+    (interactive "P")
+    ;; Save current settings
+    (setq display-line-numbers-orig display-line-numbers)
 
-*** Vlog: Emacs mindset and Unix philosophy
+    ;; Set new values
+    (setq text-scale-mode-amount 3
+          display-line-numbers nil)
+    (org-display-inline-images)
+    (display-fill-column-indicator-mode 0)
+    (text-scale-set text-scale-mode-amount))
 
-talks about how the Emacs mentality of "everything inside of Emacs" shares
-the same goal as the terminal/CLI power user: to create an integrated
-computing environment.
+  (defun annt/org-present-end ()
+    "Configurations settings for exiting presentation mode, reverting changes
+mostly."
+    (interactive "P")
+    (setq text-scale-mode-amount 0
+          display-line-numbers display-line-numbers-orig)
+    (text-scale-set text-scale-mode-amount)
+    (display-fill-column-indicator-mode))
 
-[[https://youtu.be/qTncc2lI6OI][video link]]
+  (setq-default org-tree-slide-activate-message "Presentation ON"
+                org-tree-slide-deactivate-message "Presentation OFF"
+                org-image-actual-width nil)
+  :bind ((:map org-mode-map
+              ("<f9>" . org-tree-slide-mode)))
+  :hook
+  (org-tree-slide-play-hook . annt/org-present-start)
+  (org-tree-slide-stop-hook . annt/org-present-end))
+#+end_src
 
-*** Vlog: best tiling WM, Emacs vs Vim, etc
+* Programming
 
-talks about why you should be picking =X= software and not copying others only
-to follow trends.
+** Version Control
 
-[[https://youtu.be/CxOkhsDfy_4][video link]]
+#+begin_src emacs-lisp
+;; Follow some good git practices
+(use-package git-commit
+  :init
+  (setq-default git-commit-summary-max-length 50
+                git-commit-style-convention-checks
+                '(non-empty-second-line overlong-summary-line)))
 
-*** Vlog: switching to emacs
+#+end_src
 
-discusses whether switching to GNU/Emacs is the right thing for you.
+*** Magit
 
-[[https://youtu.be/FLjbKuoBlXs][video link]]
+Interactive Git
 
-*** configs
+#+begin_src emacs-lisp
+(use-package magit
+  :ensure
+  :defer
+  :bind ("C-c g" . magit-status))
+#+end_src
 
-even tho his configuration =is/was= a bit overwhelming for knowledge at the
-time, he always had different approaches to accomplish the defaults you would
-find copy and pasted everywhere else.
+** Language Server Protocol (LSP)
 
-[[https://protesilaos.com/dotemacs][link]]
+This package /should not/ be =defer='d.
 
-** Cem Keylan
+#+begin_src emacs-lisp
+(use-package lsp-mode
+  :ensure
+  :init
+  (setq-default lsp-keymap-prefix "C-c l"
+                lsp-lens-enable t
+                lsp-modeline-diagnostics-enable t
+                lsp-headerline-breadcrumb-enable t))
+#+end_src
 
-Cem's configuration /is/was/ aimed to be minimal, helped a lot since he was
-also experimenting the emacs world at the time
+** Linting
 
-[[https://git.ckyln.com/emacs.d][link]]
+#+begin_src emacs-lisp
+(use-package flycheck
+  :ensure
+  :defer
+  :config
+  (setq-default flycheck-mode-line-prefix "FlyCheck"
+                flycheck-checker-error-threshold 100
+                flycheck-display-errors-delay    1
+                flycheck-idle-change-delay       1))
+#+end_src
 
-** David Wilson
+** Completion
 
-after my 3rd attempt trying emacs, he was putting up an emacs from scratch
-series where he built from ground up a usable IDE-like system
+#+begin_src emacs-lisp
+(use-package company
+  :ensure
+  :defer
+  :config
+  (setq-default company-show-numbers ''t
+                company-idle-delay   0.25
+                company-minimum-prefix-length 2))
+#+end_src
 
-[[https://www.youtube.com/playlist?list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ][Emacs From Scratch YouTube Playlist]]
+** Generic Formatter
 
-** Sandeep Nambiar
+#+begin_src emacs-lisp
+(use-package reformatter :ensure :defer)
+#+end_src
 
-straight-forward introduction to configuring emacs
+** Shell
 
-[[https://www.sandeepnambiar.com/my-minimal-emacs-setup][link]]
+#+begin_src emacs-lisp
+(use-package sh-script
+  :defer
+  :init
+  (setq-default sh-backslash-column fill-column
+                sh-indent-after-case     0
+                sh-indent-for-case-alt   0
+                sh-indent-after-switch   0
+                sh-indent-for-case-label 0)
+  :hook
+  ;; Linting
+  (sh-mode-hook . flycheck-mode)
+  ;; Completion
+  (sh-mode-hook . company-mode))
+#+end_src
+
+** C
+
+#+begin_src emacs-lisp
+(use-package cc-mode
+  :config
+  ;; GNU-styled with a few tweaks
+  (setq-default c-set-style    "gnu"
+                c-basic-offset 4)
+
+  ;; LSP
+  (use-package eglot
+    :defer
+    :ensure
+    :requires lsp-mode
+    :hook
+    (c-mode-hook . lsp-deferred)
+    (c-mode-hook . eglot-ensure))
+
+  ;; Formatter
+  ;; name of the of binary
+  (defconst annt/c-fmt-bin "uncrustify")
+
+  (defcustom c-fmt-command annt/c-fmt-bin
+    "Command used to format C files."
+    :group 'c
+    :type  'file
+    :safe  'stringp)
+
+  (reformatter-define c-fmt-command
+    :group   'c
+    :program annt/c-fmt-bin
+    :args    '("--no-backup"))
+
+  ;; keybind assignment for the formatter
+  :bind ("C-c c f" . c-fmt-command))
+#+end_src
+
+** Python
+
++ Dependencies:
+  + =python= (tested for ~>= 3.0~)
+  + =lsp-python-ms= (for [[https://emacs-lsp.github.io/lsp-mode/page/installation/][LSP]])
+    + The offered auto-installation scripts seems to be working fine, still
+      testing
+
+#+begin_src emacs-lisp
+(use-package python
+  :defer
+  :config
+  ;; Force using Python3
+  (setq-default python-shell-interpreter "python3")
+
+  ;; LSP
+  (use-package lsp-python-ms
+    :requires lsp-mode
+    :ensure
+    :init (setq-default lsp-python-ms-auto-install-server t)
+    :hook (python-mode-hook . lsp-deferred)))
+#+end_src
+
+** Markdown
+
+Unhandled natively... Perhaps exporting /Org/ --> /Markdown/ is not a bad idea.
+Still needed sometimes for =README= files, etc.
+
++ Dependencies:
+  =pandoc= (for Live Preview)
+
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :ensure
+  :defer
+  :init     (setq-default  markdown-command "pandoc")
+  :commands (markdown-mode gfm-mode)
+  :mode     (("README\\.md\\'" . gfm-mode)
+             ("\\.md\\'"       . markdown-mode)))
+
+;; Table of Contents support
+(use-package markdown-toc
+  :requires markdown-mode
+  :ensure
+  :defer
+  :init
+  (setq-default markdown-toc-header-toc-start "<!-- Markdown TOC :: Start -->"
+                markdown-toc-header-toc-end   "<!-- Markdown TOC :: End -->")
+  :hook (markdown-mode-hook . markdown-toc-mode))
+#+end_src
+
+** YAML
+
+No native support, [[https://github.com/yoshiki/yaml-mode][yaml-mode]] handles this.
+
+#+begin_src emacs-lisp
+(use-package yaml-mode :ensure :defer)
+#+end_src
+
+** Lua
+
+Lua support doesn't ship with Emacs. [[https://github.com/immerrr/lua-mode][lua-mode]] takes care.
+
+#+begin_src emacs-lisp
+(use-package lua-mode
+  :ensure
+  :defer
+  :init (setq-default lua-indent-level 2))
+#+end_src
+
+** Rust
+
+Rust programming is not part of GNU Emacs...
+[[https://github.com/rust-lang/rust-mode][Rust Mode]] accounts for this.
+
+#+begin_src emacs-lisp
+(use-package rust-mode
+  :ensure
+  :defer
+  :config
+  (setq-default rust-always-locate-project-on-open t
+                rust-format-on-save t)
+  :hook (rust-mode-hook . lsp-deferred))
+#+end_src
+
+** Emacs Lisp (elisp)
+
+#+begin_src emacs-lisp
+(use-package elisp-mode
+  :config
+  (electric-pair-mode)
+  (setq-default checkdoc-verb-check-experimental-flag nil)
+  :hook
+  ;; Linting
+  (emacs-lisp-mode-hook . flycheck-mode)
+  ;; Completion
+  (emacs-lisp-mode-hook . company-mode))
+#+end_src
+
+** Clojure
+
++ Dependencies:
+  + =JDK=
+  + =Lein= (for REPL)
+  + =clojure-lsp= (for [[https://emacs-lsp.github.io/lsp-mode/page/installation/][LSP]])
+    + The offered auto-installation scripts seems to be working fine, still
+      testing
+
+#+begin_src emacs-lisp
+(use-package clojure-mode
+  :ensure
+  :defer
+  :config
+  (electric-pair-mode)
+  ;; Disable native LSP completion to use CIDER's
+  (setq-default lsp-enable-completion-at-point nil)
+
+  ;; REPL
+  (use-package cider
+    :if (executable-find "lein")
+    :ensure)
+
+  :hook
+  ;; LSP
+  ((clojure-mode-hook clojurec-mode-hook clojurescript-mode-hook) . company-mode)
+  ((clojure-mode-hook clojurec-mode-hook clojurescript-mode-hook) . lsp-deferred))
+#+end_src

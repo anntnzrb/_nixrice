@@ -23,7 +23,13 @@
 case ${SYSTEM:?} in
 arch)
 # tools
-${PKG_INSTALL:?} 'python3' 'python-pip'
+${PKG_INSTALL:?} 'python3' 'python-pip' 'npm'
+
+# check if running with elevated priviledges; elevate if not
+! is_su && elevate_privs "$0" "$@"
+
+# LSP
+npm install -g 'pyright'
 ;;
 
 void)
@@ -49,9 +55,6 @@ esac
 # dependencies
 python3 -m pip install --user -U 'setuptools'
 python3 -m pip install --user -U 'pip'
-
-# language server
-python3 -m pip install --user -U 'python-language-server[all]'
 
 # code formatter (alternatively autopep8 & YAPF)
 python3 -m pip install --user -U 'black'
