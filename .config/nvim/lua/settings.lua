@@ -21,6 +21,7 @@ vim.bo.tabstop     = NUM_SPACES_TABS
 
 local MAX_LINE_CHARS = 80
 
+vim.o.termguicolors   = true
 vim.wo.number         = true
 vim.wo.relativenumber = true
 vim.wo.cursorline     = true
