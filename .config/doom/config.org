@@ -1,0 +1,310 @@
+#+title: annt's Doom Emacs'
+#+author: anntnzrb
+#+description: Doom Emacs' personal configuration
+
+* table of contents :TOC_3:noexport:
+- [[#why-doom-instead-of-vanilla-emacs][why /Doom/ instead of vanilla Emacs?]]
+- [[#doom-emacs-configuration][Doom Emacs configuration]]
+  - [[#modules][modules]]
+  - [[#packages][packages]]
+    - [[#programming][programming]]
+- [[#core-settings][core settings]]
+  - [[#appearance][appearance]]
+  - [[#editing][editing]]
+- [[#language-settings][language settings]]
+  - [[#c-like][c-like]]
+- [[#org][org]]
+- [[#custom-bindings][custom bindings]]
+- [[#external-package-configurations][external package configurations]]
+  - [[#which-key][which-key]]
+  - [[#aggressive-indent][aggressive-indent]]
+  - [[#rss-elfeed][rss (elfeed)]]
+
+* why /Doom/ instead of vanilla Emacs?
+
+i started my Emacs journey with vanilla Emacs but after some time it became a
+pain to maintain. Doom Emacs is focused on performance (which is a problem for
+vanilla Emacs if you don't consider using =use-package=...); anything related to
+lazy loading/speed/etc stuff is already engineered by Doom. this makes the
+configuration file less verbose and straight-forward. i also agree with most of
+its "opinated" defaults.
+
+link of interest :: [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org#how-does-doom-start-up-so-quickly][Doom Emacs' speed]]
+
+#+begin_quote
+Emacs is an all consuming black hole. Its users doom themselves, eternally.
+#+end_quote
+
+* Doom Emacs configuration
+
+** modules
+
+this file controls what /Doom/ modules are enabled and what order they load in.
+
+*NOTE* :: =doom sync= is needed after modifying this file.
+*NOTE* :: press =K= over a module's name (or its flags) for documentation.
+
+#+name: init.el
+#+begin_src elisp :tangle "init.el" :noweb no-export :comments none
+;;; init.el -*- lexical-binding: t; -*-
+
+(doom! :completion
+       <<doom-completion>>
+
+       :ui
+       <<doom-ui>>
+
+       :editor
+       <<doom-editor>>
+
+       :emacs
+       <<doom-emacs>>
+
+       :term
+       <<doom-term>>
+
+       :checkers
+       <<doom-checkers>>
+
+       :tools
+       <<doom-tools>>
+
+       :os
+       <<doom-os>>
+
+       :lang
+       <<doom-lang>>
+
+       ;;:email
+       ;;<<doom-email>>
+
+       :app
+       <<doom-app>>
+
+       :config
+       <<doom-config>>
+       )
+#+end_src
+
+#+name: doom-config
+#+begin_src elisp :tangle no
+literate
+(default +bindings +smartparens)
+#+end_src
+
+#+name: doom-completion
+#+begin_src elisp :tangle no
+company  ; the ultimate code completion backend
+(ivy     ; a search engine for love and life
+ +icons)
+#+end_src
+
+#+name: doom-ui
+#+begin_src elisp :tangle no
+doom              ; what makes DOOM look the way it does
+doom-dashboard    ; a nifty splash screen for Emacs
+(emoji            ; displays and inserts emojis (ASCII, Github style, unicode)
+ +ascii
+ +github
+ +unicode)
+hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
+indent-guides     ; highlighted indent columns
+ligatures         ; ligatures and symbols to make your code pretty again
+modeline          ; snazzy, Atom-inspired modeline, plus API
+ophints           ; highlight the region an operation acts on
+(popup +defaults) ; tame sudden yet inevitable temporary windows
+tabs              ; a tab bar for Emacs
+vc-gutter         ; vcs diff in the fringe
+workspaces        ; tab emulation, persistence & separate workspaces
+#+end_src
+
+#+name: doom-editor
+#+begin_src elisp :tangle no
+(evil +everywhere) ; come to the dark side, we have cookies
+file-templates     ; auto-snippets for empty files
+(format +onsave)   ; automated prettiness
+snippets           ; my elves. They type so I don't have to
+#+end_src
+
+#+name: doom-emacs
+#+begin_src elisp :tangle no
+(dired   ; making dired pretty [functional]
+ +icons)
+electric ; smarter, keyword-based electric-indent
+undo     ; persistent, smarter undo for your inevitable mistakes
+vc       ; version-control and Emacs, sitting in a tree
+#+end_src
+
+#+name: doom-term
+#+begin_src elisp :tangle no
+eshell ; the elisp shell that works everywhere
+#+end_src
+
+#+name: doom-checkers
+#+begin_src elisp :tangle no
+syntax        ; tasing you for every semicolon you forget
+(spell        ; tasing you for misspelling mispelling TODO :: config, pkg installation
+ +everywhere)
+grammar       ; tasing grammar mistake every you make TODO :: config, pkg installation
+#+end_src
+
+
+#+name: doom-tools
+#+begin_src elisp :tangle no
+(eval +overlay) ; run code, run (also, repls)
+lookup          ; navigate your code and its documentation
+lsp             ; the Language Server Protocol
+magit           ; a git porcelain for Emacs
+pdf             ; pdf enhancements
+rgb             ; creating color strings
+#+end_src
+
+#+name: doom-os
+#+begin_src elisp :tangle no
+tty ; improve the terminal Emacs experience
+#+end_src
+
+#+name: doom-lang
+#+begin_src elisp :tangle no
+elisp ; drown in parentheses
+(cc        ; C/C++/Obj-C madness
+ +lsp)
+(java      ; the poster child for carpal tunnel syndrome
+ +lsp)
+(json      ; At least it ain't XML
+ +lsp)
+(markdown  ; writing docs for people to ignore TODO :: config, pkg installation
+ +grip)
+(org       ; organize your plain life in plain text
+ +pandoc
+ +present
+ +pretty)
+(python    ; beautiful is better than ugly
+ +lsp)
+(sh        ; she sells {ba,z,fi}sh shells on the C xor
+ +lsp)
+#+end_src
+
+#+name: doom-app
+#+begin_src elisp :tangle no
+rss ; emacs as an RSS reader (elfeed)
+#+end_src
+
+** packages
+
+*NOTE* :: =doom sync= is needed after modifying this file.
+*NOTE* :: this file shouldn't be byte compiled.
+
+#+begin_src elisp :tangle "packages.el"
+;; -*- no-byte-compile: t; -*-
+#+end_src
+
+*** programming
+
+#+begin_src elisp :tangle "packages.el"
+(package! aggressive-indent) ; keeps your code nicely aligned when all you do is type
+#+end_src
+
+* core settings
+
+speed this file with
+
+#+begin_src elisp
+;;; config.el -*- lexical-binding: t; -*-
+#+end_src
+
+- identity
+
+#+begin_src elisp
+(setq-default user-full-name                   "anntnzrb")
+(setq-default user-mail-address "anntnzrb@protonmail.com")
+#+end_src
+
+** appearance
+
+- font
+- theme
+
+#+begin_src elisp
+(setq-default doom-font  (font-spec :family "Ubuntu Mono" :size 16))
+(setq-default doom-theme 'doom-gruvbox)
+#+end_src
+
+** editing
+
+- line numbers
+- trailing whitespaces cleanup
+- tab width
+
+#+begin_src elisp
+(setq-default display-line-numbers-type 'relative)
+(setq-default fill-column                      80)
+(setq-default tab-width                         4)
+(setq-default show-trailing-whitespace          t)
+(setq-default display-fill-column-indicator-column fill-column)
+
+(add-hook! 'after-save-hook #'whitespace-cleanup)
+(add-hook! '(prog-mode-hook text-mode-hook)
+           #'display-fill-column-indicator-mode)
+#+end_src
+
+* language settings
+
+** c-like
+
+#+begin_src elisp
+;; GNU-styled with a few tweaks
+(setq-default c-set-style    "gnu")
+(setq-default c-basic-offset     4)
+#+end_src
+
+* org
+
+#+begin_src elisp
+(setq-default org-directory (expand-file-name "~/lib/org"))
+#+end_src
+
+* custom bindings
+
+#+begin_src elisp
+(map! :leader
+      (:prefix ("1" . "recurrent")
+       ;; <leader> d --- dired
+       (:prefix ("d" . "dired")
+        :desc "Open dired" "d" #'dired)
+
+       ;; <leader> e --- elfeed
+       (:prefix ("e" . "elfeed")
+        :desc "Open elfeed"  "e" #'elfeed
+        :desc "Update feeds" "u" #'elfeed-update)
+
+       ;; <leader> t --- terminal
+       (:prefix ("t" . "terminal")
+        :desc "Open eshell" "e" #'eshell)))
+#+end_src
+
+* external package configurations
+
+** which-key
+
+#+begin_src elisp
+(after! which-key
+  (setq-default which-key-idle-delay 0.5))
+#+end_src
+
+** aggressive-indent
+
+#+begin_src elisp
+(after! aggressive-indent
+  (setq-default aggressive-indent-comments-too   t)
+  (setq-default aggressive-indent-sit-for-time 0.5)
+  (add-hook! 'prog-mode-hook #'aggressive-indent-mode))
+#+end_src
+
+** rss (elfeed)
+
+#+begin_src elisp
+(setq-default elfeed-feeds
+      '(("http://suckless.org/atom.xml"  unix)
+        ("https://lukesmith.xyz/rss.xml" unix)))
+#+end_src
