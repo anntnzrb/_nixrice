@@ -1,0 +1,723 @@
+#+title: annt's Emacs'
+#+author: anntnzrb
+#+email: anntnzrb@protonmail.com
+#+property: header-args :results silent
+#+macro: export-date (eval (format-time-string "%F" (current-time)))
+
+- created: 2020-11-07
+- updated: *{{{export-date}}}*
+
+* table of contents                                          :TOC_3:noexport:
+- [[#core-settings][core settings]]
+  - [[#early-init-file][early init file]]
+  - [[#init-file][init file]]
+  - [[#package-management][package management]]
+    - [[#packageel][=package.el=]]
+    - [[#use-package][=use-package=]]
+  - [[#performance][performance]]
+    - [[#garbage-collector][garbage collector]]
+    - [[#amount-of-procesed-data][amount of procesed data]]
+    - [[#extra-resources][extra resources]]
+  - [[#generals][generals]]
+    - [[#custom-custom-file][custom custom file]]
+    - [[#editing][editing]]
+    - [[#vi-emulation][Vi emulation]]
+  - [[#appearance][appearance]]
+    - [[#fonts][fonts]]
+    - [[#themes][themes]]
+    - [[#modeline][modeline]]
+    - [[#tooltips][tooltips]]
+- [[#dired][dired]]
+  - [[#extensions-for-dired][extensions for ~dired~]]
+- [[#programming][programming]]
+  - [[#keybinds][keybinds]]
+  - [[#tools][tools]]
+  - [[#c][C]]
+  - [[#emacs-lisp-elisp][Emacs Lisp (Elisp)]]
+  - [[#clojure][Clojure]]
+    - [[#extensions-for-clojure][extensions for Clojure]]
+- [[#version-control][version control]]
+- [[#utilities][utilities]]
+  - [[#completion][completion]]
+    - [[#ivy][ivy]]
+    - [[#company][company]]
+  - [[#checking][checking]]
+    - [[#syntax][syntax]]
+- [[#org][org]]
+  - [[#extensions-for-org][extensions for org]]
+
+* core settings
+
+** early init file
+
+Emacs =27.1= offers new file called =early-init.el= which allows customizations
+that take effect during Emacs startup earlier than the normal init file. This
+file is loaded before the package system and GUI is initialized.
+
+*References* :: [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.html][The Early Init File]]
+
+#+begin_src emacs-lisp :tangle "early-init.el"
+;;; early-init.el --- GNU Emacs >= 27.1 pre-initialization file -*- lexical-binding: t -*-
+
+;;; Commentary:
+
+;; This file gets loaded before the 'init.el' file.
+;; Should not have more than a few files.
+
+;;; Code:
+
+;; Package tweaks
+(setq package-enable-at-startup t)
+(setq package-quickstart        t)
+
+;; don't frame-resize this early
+(setq frame-inhibit-implied-resize t)
+
+;; GUI
+(menu-bar-mode   0)
+(tool-bar-mode   0)
+(scroll-bar-mode 0)
+(setq inhibit-splash-screen  t)
+(setq inhibit-startup-screen t)
+
+(provide 'early-init)
+
+;;; early-init.el ends here
+#+end_src
+
+** init file
+
+this file should be present anyways but adding here makes it easier to manage.
+
+#+begin_src elisp :tangle "init.el"
+;;; init.el --- Initialization file of GNU Emacs -*- lexical-binding: t; -*-
+
+;;; Commentary:
+;; This file gets loaded after the 'early-init.el' file.
+
+;;; Code:
+
+(org-babel-load-file (expand-file-name "readme.org" user-emacs-directory))
+
+(provide 'init)
+;;; init.el ends here
+#+end_src
+
+** package management
+
+*** =package.el=
+
+Emacs' built-in =package.el= is fine; u do have an eye on =straight.el= which i
+understand it's meant for fine adjusting specific versions of packages to
+install, thing that i'm not really interested at the moment.
+
+#+begin_src elisp
+;; initialize Emacs default package manager
+(require 'package)
+
+;; repositories
+(setq package-archives '(("GNU"   . "https://elpa.gnu.org/packages/")
+                         ("Melpa" . "https://melpa.org/packages/")))
+#+end_src
+
+*** =use-package=
+
+[[https://github.com/jwiegley/use-package#installing-use-package][use-package]] is a *macro* that allows to optimize the performance of the GNU
+Emacs configuration file, it also makes everything less verbose.
+
+#+begin_src elisp
+;; install use-package only if not installed already
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+(eval-when-compile
+  (require 'use-package)
+
+  ;; use-package settings
+  (setq use-package-verbose       t)
+  (setq use-package-always-defer  t)
+  (setq use-package-always-ensure t)
+  (setq use-package-hook-name-suffix nil))
+#+end_src
+
+- [[https://github.com/myrjola/diminish.el][diminish]]
+  - implements hiding or abbreviation of the mode line displays
+    (lighters) of minor-modes.
+
+#+begin_src elisp
+(use-package diminish)
+#+end_src
+
+** performance
+
+*** garbage collector
+
+[[https://emacs.stackexchange.com/a/34367][... setting `gc-cons-threshold` very high and collecting garbage when idle?]]
+
+#+begin_src emacs-lisp
+(setq gc-cons-threshold-orig gc-cons-threshold
+      gc-cons-threshold      (* 1024 1024 100)
+      file-name-handler-alist-orig file-name-handler-alist
+      file-name-handler-alist      nil)
+
+(run-with-idle-timer
+ 5 nil
+ (lambda ()
+   (setq gc-cons-threshold       gc-cons-threshold-orig
+         file-name-handler-alist file-name-handler-alist-orig)
+   (makunbound 'gc-cons-threshold-orig)
+   (makunbound 'file-name-handler-alist-orig)))
+#+end_src
+
+*** amount of procesed data
+
+[[https://emacs-lsp.github.io/lsp-mode/page/performance/][LSP :: Performance Guide]]
+
+#+begin_src emacs-lisp
+(setq read-process-output-max (* 1024 1024))
+#+end_src
+
+*** extra resources
+
+a list of useful posts regarding gnu emacs performance.
+
+- [[https://blog.d46.us/advanced-emacs-startup/][Advanced Techniques for Reducing Emacs Startup Time]]
+
+** generals
+
+settings that do not belong anywhere specific.
+
+#+begin_src elisp
+(use-package emacs
+  :ensure nil
+  :init
+  ;; backup
+  (setq create-lockfiles  nil)
+  (setq make-backup-files nil)
+
+  (setq visible-bell t)
+
+  ;; TODO :: refactor for Emacs 28
+  (defalias 'yes-or-no-p 'y-or-n-p)
+  :hook (after-init-hook . server-start))
+#+end_src
+
+*** custom custom file
+
+if you adjust settings directly from /Emacs/ (GUI), some Elisp code will be
+appended to the =init.el= file, this can be a bit messy; this can be adjusted
+to use another file and accomplish this.
+
+#+begin_src elisp
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+#+end_src
+
+*** editing
+
+#+begin_src elisp
+(use-package emacs
+  :ensure nil
+  :init
+  (setq mode-require-final-newline t)
+  (setq-default tab-width                    4)
+  (setq-default indent-tabs-mode           nil)
+  (setq-default show-trailing-whitespace     t)
+  (setq-default fill-column                 79)
+  (setq-default display-line-numbers 'relative)
+  (setq-default display-fill-column-indicator-column (+ fill-column 1))
+
+  (global-hl-line-mode) ;; line highlighting
+  :hook
+  ;; delete trailing whitespaces prior saving
+  (before-save-hook . whitespace-cleanup)
+
+  ;; display vertical column at line limit
+  ((prog-mode-hook text-mode-hook) . display-fill-column-indicator-mode)
+
+  ;; auto-wrapping
+  ((prog-mode-hook text-mode-hook) . auto-fill-mode))
+#+end_src
+
+*** Vi emulation
+
+my journey on /*nix/ environments began with /Vi/, it's difficult for
+me not to try looking everywhere for /Vi/ emulation.
+
+[[https://github.com/emacs-evil/evil][Evil]] is probably the best package for Vi emulation.
+
+#+begin_src elisp
+(use-package evil
+  :init
+  (setq evil-undo-system 'undo-fu)
+  (setq evil-want-keybinding  nil)
+
+  ;; init after set-up
+  (evil-mode)
+  :bind
+  ((:map evil-insert-state-map
+         ;; use ESC as C-g
+         ("C-g" . evil-normal-state))))
+#+end_src
+
+- [[https://github.com/emacs-evil/evil-collection][Evil-Collection]]
+  - collection of /Vi/ keybinds for some parts of /Emacs/ which are dealt
+    incorrectly by Evil.
+
+#+begin_src elisp
+(use-package evil-collection
+  :after evil
+  :init (evil-collection-init))
+#+end_src
+
+i'd prefer adding the following to the [tools] section, but since these really
+are essentials to /Evil/, better to have them together.
+
+[[https://github.com/emacs-evil/evil-surround][evil-surround]] emulates [[https://github.com/tpope/vim-surround][vim-surround]].
+
+#+begin_src elisp
+(use-package evil-surround
+  :after evil
+  :init (global-evil-surround-mode))
+#+end_src
+
+for {undo, redo}-ing with /Evil/, an external package is needed.
+
+*TODO* :: refactor for /Emacs 28/ (built-in)
+
+#+begin_src elisp
+(use-package undo-fu :after evil)
+#+end_src
+
+** appearance
+
+*** fonts
+
+#+begin_src elisp
+(let* ((annt/font-name "FantasqueSansMono")
+       (annt/font-size                  12)
+       (annt/full-font (format "%s-%s" annt/font-name annt/font-size)))
+
+  (dolist (face '(default fixed-pitch variable-pitch))
+    (set-face-attribute `,face nil :font annt/full-font)))
+#+end_src
+
+*** themes
+
+- [[https://gitlab.com/protesilaos/modus-themes/][Modus Themes]]
+  - pair of highly accessible themes that conform with the WCAG AAA
+    standard for colour contrast between background and foreground
+    combinations.
+
+#+begin_src elisp
+(use-package modus-themes
+  :if (display-graphic-p)
+  :init
+  (setq modus-themes-slanted-constructs t)
+  (setq modus-themes-bold-constructs    t)
+
+  ;; modeline
+  (setq modus-themes-mode-line   'accented)
+  (setq modus-themes-subtle-line-numbers t)
+
+  ;; hl-line
+  (setq modus-themes-hl-line 'x-underline-at-descent-line)
+
+  ;; links
+  (setq modus-themes-links 'neutral-underline)
+
+  ;; region
+  (setq  modus-themes-region 'accent-no-extend)
+
+  ;; org
+  (setq modus-themes-org-blocks 'grayscale)
+
+  (modus-themes-load-themes)
+  :config (modus-themes-load-vivendi)
+  :bind ("M-<f5>" . modus-themes-toggle))
+#+end_src
+
+*** modeline
+
+#+begin_src elisp
+(setq column-number-mode   t)
+(setq size-indication-mode t)
+(setq column-number-indicator-zero-based nil)
+#+end_src
+
+*** tooltips
+
+- GTK-tooltips disabled because they tend to change a lot.
+
+#+begin_src elisp
+(setq tooltip-short-delay         1)
+(setq x-gtk-use-system-tooltips nil)
+(setq tooltip-frame-parameters
+      '((border-width          . 0)
+        (internal-border-width . 4)))
+#+end_src
+
+* dired
+
+/Emacs/' *dir*ectory *ed*itor.
+
+#+begin_src elisp
+(use-package dired
+  :ensure nil
+  :config
+  (setq delete-by-moving-to-trash     t) ;; safer than `rm'
+  (setq dired-auto-revert-buffer      t)
+  (setq dired-recursive-copies  'always)
+  (setq dired-recursive-deletes 'always)
+  (setq dired-listing-switches "-AFhl --group-directories-first")
+  :hook
+  (dired-mode-hook . hl-line-mode)
+  ;; less verbose
+  (dired-mode-hook . dired-hide-details-mode))
+#+end_src
+
+** extensions for ~dired~
+
+- [[https://github.com/jtbm37/all-the-icons-dired][all-the-icons-dired]]
+  - should be pretty self-explanatory.
+
+#+begin_src elisp
+(use-package all-the-icons-dired
+  :if (display-graphic-p) ;; only if running Emacs as an X window
+  :after dired
+  :hook (dired-mode-hook . all-the-icons-dired-mode))
+#+end_src
+
+* programming
+
+** keybinds
+
+set of keyboard binding for programming modes
+
+#+begin_src elisp
+(use-package prog-mode
+  :ensure nil
+  :bind
+  (:map prog-mode-map
+        ("C-c c c" . compile)
+        ("C-c c r" . recompile)))
+#+end_src
+
+** tools
+
+- [[https://github.com/Malabarba/aggressive-indent-mode][aggressive-indent-mode]]
+  - keeps your code nicely aligned when all you do is type
+
+#+begin_src elisp
+(use-package aggressive-indent
+  :config
+  (setq aggressive-indent-comments-too   t)
+  (setq aggressive-indent-sit-for-time 0.5)
+  :hook (prog-mode-hook . aggressive-indent-mode))
+#+end_src
+
+- [[https://github.com/emacs-lsp/lsp-mode/][Language Server Protocol]]
+
+#+begin_src elisp
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :config
+  (setq lsp-lens-enable                  t)
+  (setq lsp-modeline-diagnostics-enable  t)
+  (setq lsp-headerline-breadcrumb-enable t))
+#+end_src
+
+#+begin_src elisp
+(use-package lsp-ui
+  :after lsp-mode
+  :commands lsp-ui-mode
+  :config (setq lsp-ui-doc-position 'bottom)
+  :hook   (lsp-mode-hook . lsp-ui-mode))
+#+end_src
+
+** C
+
+#+begin_src elisp
+(use-package cc-mode
+  :ensure nil
+  :config
+  ;; GNU-styled with a few tweaks
+  (setq c-set-style "gnu")
+  (setq c-basic-offset  4)
+  :hook (c-mode-hook . lsp-deferred))
+#+end_src
+
+** Emacs Lisp (Elisp)
+
+#+begin_src elisp
+(use-package emacs-lisp-mode
+  :ensure nil
+  :config
+  (electric-pair-mode)
+  (setq checkdoc-verb-check-experimental-flag nil)
+
+  ;; Flycheck
+  (setq flycheck-emacs-lisp-load-path 'inherit))
+#+end_src
+
+** Clojure
+
+#+begin_src elisp
+(use-package clojure-mode :init (electric-pair-mode))
+#+end_src
+
+*** extensions for Clojure
+
+- cider
+
+#+begin_src elisp
+(use-package cider :after clojure-mode)
+#+end_src
+
+* version control
+
+- [[https://github.com/magit/magit][Magit]]
+  - complete text-based user interface to [[https://git-scm.com/][Git]]
+
+#+begin_src elisp
+(use-package magit
+  :commands magit-status
+  :bind ("C-c g" . magit-status))
+#+end_src
+
+* utilities
+
+- [[https://github.com/domtronn/all-the-icons.el][all-the-icons]]
+  - is a package used by many other packages, it is a collection of various icon fonts.
+
+#+begin_src elisp
+(use-package all-the-icons
+  :if (display-graphic-p) ;; only if running Emacs as an X window
+  :config
+  (defun annt/all-the-icons-setup ()
+    "Checks if all-the-icon fonts are downloaded, gets them if not"
+    (unless (file-exists-p (expand-file-name
+                            "~/.local/share/fonts/all-the-icons.ttf"))
+      (all-the-icons-install-fonts)))
+  :hook
+  ;; Install all-the-icons automatically only if missing
+  (after-init-hook . annt/all-the-icons-setup))
+#+end_src
+
+- [[https://github.com/justbur/emacs-which-key][which-key]]
+  - displays available keybindings in popup.
+
+#+begin_src elisp
+(use-package which-key
+  :diminish
+  :init
+  (setq which-key-idle-delay 0.5)
+  (setq which-key-max-display-columns nil)
+  (setq which-key-sort-order #'which-key-key-order-alpha)
+
+  ;; init after set-up
+  (which-key-mode))
+#+end_src
+
+- [[https://github.com/Wilfred/helpful][Helpful]]
+  - better Emacs *help* buffer
+
+#+begin_src elisp
+(use-package helpful
+  :bind
+  ([remap      describe-key] . helpful-key     )
+  ([remap   describe-symbol] . helpful-symbol  )
+  ([remap  describe-command] . helpful-command )
+  ([remap describe-function] . helpful-function)
+  ([remap describe-variable] . helpful-variable))
+#+end_src
+
+- [[https://github.com/tarsius/hl-todo][hl-todo]]
+  - TODO/FIXME/etc keyword highlighting in comments and strings.
+
+#+begin_src elisp
+(use-package hl-todo :hook ((prog-mode-hook org-mode-hook) . hl-todo-mode))
+#+end_src
+
+- [[https://github.com/Fanael/rainbow-delimiters][rainbow-delimiters]]
+  - mode which highlights delimiters such as parentheses, brackets or braces
+    according to their depth
+
+#+begin_src elisp
+(use-package rainbow-delimiters
+  :hook (prog-mode-hook . rainbow-delimiters-mode))
+#+end_src
+
+** completion
+
+*** ivy
+
+[[https://github.com/abo-abo/swiper][ivy]] is a generic completion mechanism for Emacs, claimed to be faster than
+[[https://github.com/emacs-helm/helm][Helm]].
+
+#+begin_src elisp
+(use-package ivy
+  :diminish
+  :init
+  ;; default sorter size is slow, reduce it.
+  (setq ivy-sort-max-size 7500)
+  (ivy-mode))
+#+end_src
+
+**** extensions for ivy
+
+- [[https://github.com/asok/all-the-icons-ivy][all-the-icons-ivy]]
+  - should be pretty self-explanatory.
+
+#+begin_src elisp
+(use-package all-the-icons-ivy
+  :if (display-graphic-p) ;; only if running Emacs as an X window
+  :after ivy
+  ;; testing if there's a way to make this less generic
+  :hook (after-init-hook . all-the-icons-ivy-setup))
+#+end_src
+
+- [[https://github.com/abo-abo/swiper][counsel]]
+  - provides a collection of Ivy-enhanced versions of common /Emacs/ commands.
+
+#+begin_src elisp
+(use-package counsel
+  :after ivy
+  :demand
+  :bind
+  (([remap                find-file] . counsel-find-file)
+   ([remap         switch-to-buffer] . counsel-ibuffer  )
+   ([remap execute-extended-command] . counsel-M-x      )))
+#+end_src
+
+- [[https://github.com/yevgnen/ivy-rich][ivy-rich]]
+  - is a friendly interface for ivy.
+
+#+begin_src elisp
+(use-package ivy-rich
+  :after (counsel ivy)
+  :init
+  (setq ivy-rich-parse-remote-buffer nil)
+  (ivy-rich-mode))
+#+end_src
+
+
+*** company
+
+- [[https://github.com/company-mode/company-mode][company]]
+  - in-buffer completion framework
+
+#+begin_src elisp
+(use-package company
+  :config
+  (setq company-idle-delay          0.3)
+  (setq company-show-numbers          t)
+  (setq company-minimum-prefix-length 2)
+  :hook (prog-mode-hook . company-mode))
+#+end_src
+
+
+** checking
+
+*** syntax
+
+- [[https://github.com/flycheck/flycheck][Flycheck]]
+  - modern on-the-fly syntax checking.
+
+#+begin_src elisp
+(use-package flycheck
+  :config
+  (setq flycheck-mode-line-prefix "FlyCheck")
+  (setq flycheck-display-errors-delay    0.3)
+  (setq flycheck-idle-change-delay       0.7)
+  (setq flycheck-buffer-switch-check-intermediate-buffers t)
+  :hook (prog-mode-hook . flycheck-mode))
+#+end_src
+
+* org
+
+one of /Emacs/' killer features.
+
+#+begin_src elisp
+(use-package org
+  :config
+  (setq org-edit-src-content-indentation 0)
+  (setq org-startup-folded               t)
+  (setq org-confirm-babel-evaluate     nil)
+
+  (require 'org-tempo) ;; required to use structure templates
+  (setq org-structure-template-alist
+        '(("src"   . "src")
+          ("conf"  . "conf")
+          ;; languages
+          ("el"  . "src elisp")
+          ("sh"  . "src sh")
+          ("c"   . "src c")
+          ("py"  . "src python")
+          ;; misc
+          ("comm" . "comment")
+          ("ex"   . "example")
+          ("quo"  . "quote")))
+  :hook (org-mode-hook . org-indent-mode))
+#+end_src
+
+** extensions for org
+
+- [[https://github.com/snosov1/toc-org][toc-org]]
+  - utility to have an up-to-date table of contents on ~Org~ and ~Markdown~.
+
+#+begin_src elisp
+(use-package toc-org
+  :after org
+  :config (setq toc-org-hrefify-default "gh")
+  :hook (org-mode-hook . toc-org-mode))
+#+end_src
+
+- [[https://github.com/takaxp/org-tree-slide][org-tree-slide]]
+  - allows creating presentations with /Org-Mode/, it can even export to
+    =.pdf= using /Beamer/ (needs /LaTeX/ tools installed).
+  - there are a few things that can be done to extend this packages, a few of
+    them being toggling =display-fill-column-indicator-mode= and increasing the
+    font size.
+
+- references
+  - [[https://youtu.be/vz9aLmxYJB0][Emacs Tips - How to Give Presentations with Org Mode]]
+
+#+begin_src elisp
+(use-package org-tree-slide
+  :after org
+  :commands org-tree-slide-mode
+  :config
+  (defun annt/org-present-start ()
+    "Configurations settings for entering presentation mode."
+    (interactive "P")
+    ;; Save current settings
+    (setq display-line-numbers-orig display-line-numbers)
+
+    ;; Set new values
+    (setq text-scale-mode-amount 3
+          display-line-numbers nil)
+    (org-display-inline-images)
+    (display-fill-column-indicator-mode 0)
+    (text-scale-set text-scale-mode-amount))
+
+  (defun annt/org-present-end ()
+    "Configurations settings for exiting presentation mode, reverting changes
+mostly."
+    (interactive "P")
+    (setq text-scale-mode-amount 0
+          display-line-numbers display-line-numbers-orig)
+    (text-scale-set text-scale-mode-amount)
+    (display-fill-column-indicator-mode))
+
+  (setq org-tree-slide-activate-message    "Presentation ON")
+  (setq  org-tree-slide-deactivate-message "Presentation OFF")
+  (setq  org-image-actual-width nil)
+  :bind ((:map org-mode-map
+               ("<f9>" . org-tree-slide-mode)))
+  :hook
+  (org-tree-slide-play-hook . annt/org-present-start)
+  (org-tree-slide-stop-hook . annt/org-present-end))
+#+end_src
