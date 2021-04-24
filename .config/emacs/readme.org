@@ -89,7 +89,7 @@ file is loaded before the package system and GUI is initialized.
 
 this file should be present anyways but adding here makes it easier to manage.
 
-#+begin_src elisp :tangle "init.el"
+#+begin_src emacs-lisp :tangle "init.el"
 ;;; init.el --- Initialization file of GNU Emacs -*- lexical-binding: t; -*-
 
 ;;; Commentary:
@@ -111,7 +111,7 @@ Emacs' built-in =package.el= is fine; u do have an eye on =straight.el= which i
 understand it's meant for fine adjusting specific versions of packages to
 install, thing that i'm not really interested at the moment.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 ;; initialize Emacs default package manager
 (require 'package)
 
@@ -125,7 +125,7 @@ install, thing that i'm not really interested at the moment.
 [[https://github.com/jwiegley/use-package#installing-use-package][use-package]] is a *macro* that allows to optimize the performance of the GNU
 Emacs configuration file, it also makes everything less verbose.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 ;; install use-package only if not installed already
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -145,7 +145,7 @@ Emacs configuration file, it also makes everything less verbose.
   - implements hiding or abbreviation of the mode line displays
     (lighters) of minor-modes.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package diminish)
 #+end_src
 
@@ -188,7 +188,7 @@ a list of useful posts regarding gnu emacs performance.
 
 settings that do not belong anywhere specific.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package emacs
   :ensure nil
   :init
@@ -209,13 +209,13 @@ if you adjust settings directly from /Emacs/ (GUI), some Elisp code will be
 appended to the =init.el= file, this can be a bit messy; this can be adjusted
 to use another file and accomplish this.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 #+end_src
 
 *** editing
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package emacs
   :ensure nil
   :init
@@ -246,7 +246,7 @@ me not to try looking everywhere for /Vi/ emulation.
 
 [[https://github.com/emacs-evil/evil][Evil]] is probably the best package for Vi emulation.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package evil
   :init
   (setq evil-undo-system 'undo-fu)
@@ -264,7 +264,7 @@ me not to try looking everywhere for /Vi/ emulation.
   - collection of /Vi/ keybinds for some parts of /Emacs/ which are dealt
     incorrectly by Evil.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package evil-collection
   :after evil
   :init (evil-collection-init))
@@ -275,7 +275,7 @@ are essentials to /Evil/, better to have them together.
 
 [[https://github.com/emacs-evil/evil-surround][evil-surround]] emulates [[https://github.com/tpope/vim-surround][vim-surround]].
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package evil-surround
   :after evil
   :init (global-evil-surround-mode))
@@ -285,7 +285,7 @@ for {undo, redo}-ing with /Evil/, an external package is needed.
 
 *TODO* :: refactor for /Emacs 28/ (built-in)
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package undo-fu :after evil)
 #+end_src
 
@@ -293,7 +293,7 @@ for {undo, redo}-ing with /Evil/, an external package is needed.
 
 *** fonts
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (let* ((annt/font-name "FantasqueSansMono")
        (annt/font-size                  12)
        (annt/full-font (format "%s-%s" annt/font-name annt/font-size)))
@@ -309,7 +309,7 @@ for {undo, redo}-ing with /Evil/, an external package is needed.
     standard for colour contrast between background and foreground
     combinations.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package modus-themes
   :if (display-graphic-p)
   :init
@@ -339,7 +339,7 @@ for {undo, redo}-ing with /Evil/, an external package is needed.
 
 *** modeline
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq column-number-mode   t)
 (setq size-indication-mode t)
 (setq column-number-indicator-zero-based nil)
@@ -349,7 +349,7 @@ for {undo, redo}-ing with /Evil/, an external package is needed.
 
 - GTK-tooltips disabled because they tend to change a lot.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq tooltip-short-delay         1)
 (setq x-gtk-use-system-tooltips nil)
 (setq tooltip-frame-parameters
@@ -361,7 +361,7 @@ for {undo, redo}-ing with /Evil/, an external package is needed.
 
 /Emacs/' *dir*ectory *ed*itor.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package dired
   :ensure nil
   :config
@@ -381,7 +381,7 @@ for {undo, redo}-ing with /Evil/, an external package is needed.
 - [[https://github.com/jtbm37/all-the-icons-dired][all-the-icons-dired]]
   - should be pretty self-explanatory.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package all-the-icons-dired
   :if (display-graphic-p) ;; only if running Emacs as an X window
   :after dired
@@ -394,7 +394,7 @@ for {undo, redo}-ing with /Evil/, an external package is needed.
 
 set of keyboard binding for programming modes
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package prog-mode
   :ensure nil
   :bind
@@ -408,7 +408,7 @@ set of keyboard binding for programming modes
 - [[https://github.com/Malabarba/aggressive-indent-mode][aggressive-indent-mode]]
   - keeps your code nicely aligned when all you do is type
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package aggressive-indent
   :config
   (setq aggressive-indent-comments-too   t)
@@ -418,7 +418,7 @@ set of keyboard binding for programming modes
 
 - [[https://github.com/emacs-lsp/lsp-mode/][Language Server Protocol]]
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
   :init
@@ -429,7 +429,7 @@ set of keyboard binding for programming modes
   (setq lsp-headerline-breadcrumb-enable t))
 #+end_src
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package lsp-ui
   :after lsp-mode
   :commands lsp-ui-mode
@@ -439,7 +439,7 @@ set of keyboard binding for programming modes
 
 ** C
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package cc-mode
   :ensure nil
   :config
@@ -451,7 +451,7 @@ set of keyboard binding for programming modes
 
 ** Emacs Lisp (Elisp)
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package emacs-lisp-mode
   :ensure nil
   :config
@@ -464,7 +464,7 @@ set of keyboard binding for programming modes
 
 ** Clojure
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package clojure-mode :init (electric-pair-mode))
 #+end_src
 
@@ -472,7 +472,7 @@ set of keyboard binding for programming modes
 
 - cider
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package cider :after clojure-mode)
 #+end_src
 
@@ -481,7 +481,7 @@ set of keyboard binding for programming modes
 - [[https://github.com/magit/magit][Magit]]
   - complete text-based user interface to [[https://git-scm.com/][Git]]
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package magit
   :commands magit-status
   :bind ("C-c g" . magit-status))
@@ -492,7 +492,7 @@ set of keyboard binding for programming modes
 - [[https://github.com/domtronn/all-the-icons.el][all-the-icons]]
   - is a package used by many other packages, it is a collection of various icon fonts.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package all-the-icons
   :if (display-graphic-p) ;; only if running Emacs as an X window
   :config
@@ -509,7 +509,7 @@ set of keyboard binding for programming modes
 - [[https://github.com/justbur/emacs-which-key][which-key]]
   - displays available keybindings in popup.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package which-key
   :diminish
   :init
@@ -524,7 +524,7 @@ set of keyboard binding for programming modes
 - [[https://github.com/Wilfred/helpful][Helpful]]
   - better Emacs *help* buffer
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package helpful
   :bind
   ([remap      describe-key] . helpful-key     )
@@ -537,7 +537,7 @@ set of keyboard binding for programming modes
 - [[https://github.com/tarsius/hl-todo][hl-todo]]
   - TODO/FIXME/etc keyword highlighting in comments and strings.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package hl-todo :hook ((prog-mode-hook org-mode-hook) . hl-todo-mode))
 #+end_src
 
@@ -545,7 +545,7 @@ set of keyboard binding for programming modes
   - mode which highlights delimiters such as parentheses, brackets or braces
     according to their depth
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package rainbow-delimiters
   :hook (prog-mode-hook . rainbow-delimiters-mode))
 #+end_src
@@ -557,7 +557,7 @@ set of keyboard binding for programming modes
 [[https://github.com/abo-abo/swiper][ivy]] is a generic completion mechanism for Emacs, claimed to be faster than
 [[https://github.com/emacs-helm/helm][Helm]].
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package ivy
   :diminish
   :init
@@ -571,7 +571,7 @@ set of keyboard binding for programming modes
 - [[https://github.com/asok/all-the-icons-ivy][all-the-icons-ivy]]
   - should be pretty self-explanatory.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package all-the-icons-ivy
   :if (display-graphic-p) ;; only if running Emacs as an X window
   :after ivy
@@ -582,7 +582,7 @@ set of keyboard binding for programming modes
 - [[https://github.com/abo-abo/swiper][counsel]]
   - provides a collection of Ivy-enhanced versions of common /Emacs/ commands.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package counsel
   :after ivy
   :demand
@@ -595,7 +595,7 @@ set of keyboard binding for programming modes
 - [[https://github.com/yevgnen/ivy-rich][ivy-rich]]
   - is a friendly interface for ivy.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package ivy-rich
   :after (counsel ivy)
   :init
@@ -609,7 +609,7 @@ set of keyboard binding for programming modes
 - [[https://github.com/company-mode/company-mode][company]]
   - in-buffer completion framework
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package company
   :config
   (setq company-idle-delay          0.3)
@@ -626,7 +626,7 @@ set of keyboard binding for programming modes
 - [[https://github.com/flycheck/flycheck][Flycheck]]
   - modern on-the-fly syntax checking.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package flycheck
   :config
   (setq flycheck-mode-line-prefix "FlyCheck")
@@ -640,7 +640,7 @@ set of keyboard binding for programming modes
 
 one of /Emacs/' killer features.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package org
   :config
   (setq org-edit-src-content-indentation 0)
@@ -668,7 +668,7 @@ one of /Emacs/' killer features.
 - [[https://github.com/snosov1/toc-org][toc-org]]
   - utility to have an up-to-date table of contents on ~Org~ and ~Markdown~.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package toc-org
   :after org
   :config (setq toc-org-hrefify-default "gh")
@@ -685,7 +685,7 @@ one of /Emacs/' killer features.
 - references
   - [[https://youtu.be/vz9aLmxYJB0][Emacs Tips - How to Give Presentations with Org Mode]]
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (use-package org-tree-slide
   :after org
   :commands org-tree-slide-mode
