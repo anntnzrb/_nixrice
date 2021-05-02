@@ -34,8 +34,9 @@
   - [[#tools][tools]]
   - [[#c][C]]
   - [[#emacs-lisp-elisp][Emacs Lisp (Elisp)]]
-  - [[#clojure][Clojure]]
+  - [[#racket][Racket]]
     - [[#extensions-for-clojure][extensions for Clojure]]
+  - [[#nix][Nix]]
 - [[#version-control][version control]]
 - [[#utilities][utilities]]
   - [[#completion][completion]]
@@ -199,8 +200,7 @@ settings that do not belong anywhere specific.
   (setq visible-bell t)
 
   ;; TODO :: refactor for Emacs 28
-  (defalias 'yes-or-no-p 'y-or-n-p)
-  :hook (after-init-hook . server-start))
+  (defalias 'yes-or-no-p 'y-or-n-p))
 #+end_src
 
 *** custom custom file
@@ -383,6 +383,7 @@ for {undo, redo}-ing with /Evil/, an external package is needed.
 
 #+begin_src emacs-lisp
 (use-package all-the-icons-dired
+  :diminish
   :if (display-graphic-p) ;; only if running Emacs as an X window
   :after dired
   :hook (dired-mode-hook . all-the-icons-dired-mode))
@@ -462,10 +463,10 @@ set of keyboard binding for programming modes
   (setq flycheck-emacs-lisp-load-path 'inherit))
 #+end_src
 
-** Clojure
+** Racket
 
 #+begin_src emacs-lisp
-(use-package clojure-mode :init (electric-pair-mode))
+(use-package racket-mode :init (electric-pair-mode))
 #+end_src
 
 *** extensions for Clojure
@@ -474,6 +475,12 @@ set of keyboard binding for programming modes
 
 #+begin_src emacs-lisp
 (use-package cider :after clojure-mode)
+#+end_src
+
+** Nix
+
+#+begin_src elisp
+(use-package nix-mode :mode "\\.nix\\'")
 #+end_src
 
 * version control
