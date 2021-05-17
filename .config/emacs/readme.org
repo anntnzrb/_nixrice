@@ -40,8 +40,6 @@
 - [[#version-control][version control]]
 - [[#utilities][utilities]]
   - [[#completion][completion]]
-    - [[#ivy][ivy]]
-    - [[#company][company]]
   - [[#checking][checking]]
     - [[#syntax][syntax]]
 - [[#org][org]]
@@ -559,62 +557,37 @@ set of keyboard binding for programming modes
 
 ** completion
 
-*** ivy
+- [[https://github.com/oantolin/orderless][orderless]]
+  - completion style that is /order-less/
 
-[[https://github.com/abo-abo/swiper][ivy]] is a generic completion mechanism for Emacs, claimed to be faster than
-[[https://github.com/emacs-helm/helm][Helm]].
-
-#+begin_src emacs-lisp
-(use-package ivy
-  :diminish
-  :init
-  ;; default sorter size is slow, reduce it.
-  (setq ivy-sort-max-size 7500)
-  (ivy-mode))
+#+begin_src elisp
+(use-package orderless :init (setq completion-styles '(orderless)))
 #+end_src
 
-**** extensions for ivy
-
-- [[https://github.com/asok/all-the-icons-ivy][all-the-icons-ivy]]
-  - should be pretty self-explanatory.
-
-#+begin_src emacs-lisp
-(use-package all-the-icons-ivy
-  :if (display-graphic-p) ;; only if running Emacs as an X window
-  :after ivy
-  ;; testing if there's a way to make this less generic
-  :hook (after-init-hook . all-the-icons-ivy-setup))
-#+end_src
-
-- [[https://github.com/abo-abo/swiper][counsel]]
-  - provides a collection of Ivy-enhanced versions of common /Emacs/ commands.
+- [[https://github.com/minad/vertico][vertico]]
+  - minimalistic completion UI, uses /Emacs/' own completion engine in contrast
+    to other tools like [[https://github.com/abo-abo/swiper][Ivy]] and [[https://github.com/emacs-helm/helm][Helm]].
 
 #+begin_src emacs-lisp
-(use-package counsel
-  :after ivy
-  :demand
+(use-package vertico
   :bind
-  (([remap                find-file] . counsel-find-file)
-   ([remap         switch-to-buffer] . counsel-ibuffer  )
-   ([remap execute-extended-command] . counsel-M-x      )))
-#+end_src
-
-- [[https://github.com/yevgnen/ivy-rich][ivy-rich]]
-  - is a friendly interface for ivy.
-
-#+begin_src emacs-lisp
-(use-package ivy-rich
-  :after (counsel ivy)
+  (:map vertico-map
+        ;; Vi binds
+        ("C-j" . vertico-next)
+        ("C-k" . vertico-previous))
   :init
-  (setq ivy-rich-parse-remote-buffer nil)
-  (ivy-rich-mode))
+  (vertico-mode))
 #+end_src
 
+- [[https://github.com/minad/marginalia][Marginalia]]
+  - annotations in the minibuffer
 
-*** company
+#+begin_src elisp
+(use-package marginalia :init (marginalia-mode))
+#+end_src
 
 - [[https://github.com/company-mode/company-mode][company]]
-  - in-buffer completion framework
+  - text completion completion framework
 
 #+begin_src emacs-lisp
 (use-package company
@@ -624,7 +597,6 @@ set of keyboard binding for programming modes
   (setq company-minimum-prefix-length 2)
   :hook (prog-mode-hook . company-mode))
 #+end_src
-
 
 ** checking
 
