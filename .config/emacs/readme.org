@@ -292,12 +292,14 @@ for {undo, redo}-ing with /Evil/, an external package is needed.
 *** fonts
 
 #+begin_src emacs-lisp
-(let* ((annt/font-name "FantasqueSansMono")
-       (annt/font-size                  12)
-       (annt/full-font (format "%s-%s" annt/font-name annt/font-size)))
+(let* ((annt/font-size 12))
 
-  (dolist (face '(default fixed-pitch variable-pitch))
-    (set-face-attribute `,face nil :font annt/full-font)))
+  ;; generic
+  (set-face-attribute 'default nil
+                      :font (format "Mononoki-%s" annt/font-size))
+  ;; code
+  (set-face-attribute 'fixed-pitch nil
+                      :font (format "FantasqueSansMono-%s" annt/font-size)))
 #+end_src
 
 *** themes
