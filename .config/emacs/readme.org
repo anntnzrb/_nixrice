@@ -32,7 +32,8 @@
 - [[#programming][programming]]
   - [[#keybinds][keybinds]]
   - [[#tools][tools]]
-  - [[#c][C]]
+  - [[#c-like][C-like]]
+    - [[#c][C]]
   - [[#emacs-lisp-elisp][Emacs Lisp (Elisp)]]
   - [[#racket][Racket]]
     - [[#extensions-for-clojure][extensions for Clojure]]
@@ -439,16 +440,30 @@ set of keyboard binding for programming modes
   :hook   (lsp-mode-hook . lsp-ui-mode))
 #+end_src
 
-** C
+** C-like
 
 #+begin_src emacs-lisp
 (use-package cc-mode
   :ensure nil
   :config
-  ;; GNU-styled with a few tweaks
-  (setq c-set-style "gnu")
-  (setq c-basic-offset  4)
+  (add-to-list 'c-default-style '(c-mode . "k&r")))
+#+end_src
+
+*** C
+
+#+begin_src emacs-lisp
+(use-package c-mode
+  :ensure nil
+  :config
+  (setq tab-width      8)
+  (setq c-basic-offset 8)
+
+  ;; LSP :: Clangd
+  (setq lsp-clients-clangd-args
+        '("--header-insertion-decorators=0"
+          "--clang-tidy"))
   :hook (c-mode-hook . lsp-deferred))
+
 #+end_src
 
 ** Emacs Lisp (Elisp)
