@@ -3,17 +3,20 @@
 #+email: anntnzrb@protonmail.com
 #+property: header-args :results silent
 #+macro: export-date (eval (format-time-string "%F" (current-time)))
+#+macro: emacs-version (eval (substring (emacs-version) 10 17))
 
 - created: 2020-11-07
 - updated: *{{{export-date}}}*
+- GNU Emacs version: *{{{emacs-version}}}*
 
 * table of contents                                          :TOC_3:noexport:
 - [[#core-settings][core settings]]
-  - [[#early-init-file][early init file]]
-  - [[#init-file][init file]]
+  - [[#initialization-files][initialization files]]
+    - [[#early-initel][=early-init.el=]]
+    - [[#initel][=init.el=]]
   - [[#package-management][package management]]
-    - [[#packageel][=package.el=]]
-    - [[#use-package][=use-package=]]
+    - [[#packageel][~package.el~]]
+    - [[#use-package][~use-package~]]
   - [[#performance][performance]]
     - [[#garbage-collector][garbage collector]]
     - [[#amount-of-procesed-data][amount of procesed data]]
@@ -28,7 +31,6 @@
     - [[#modeline][modeline]]
     - [[#tooltips][tooltips]]
 - [[#dired][dired]]
-  - [[#extensions-for-dired][extensions for ~dired~]]
 - [[#programming][programming]]
   - [[#keybinds][keybinds]]
   - [[#tools][tools]]
@@ -36,26 +38,26 @@
     - [[#c][C]]
   - [[#emacs-lisp-elisp][Emacs Lisp (Elisp)]]
   - [[#racket][Racket]]
-    - [[#extensions-for-clojure][extensions for Clojure]]
   - [[#nix][Nix]]
 - [[#version-control][version control]]
-- [[#utilities][utilities]]
+- [[#applications--utilities][applications & utilities]]
   - [[#completion][completion]]
+    - [[#syntax-checking][syntax checking]]
     - [[#snippets][snippets]]
-  - [[#checking][checking]]
-    - [[#syntax][syntax]]
-- [[#org][org]]
-  - [[#extensions-for-org][extensions for org]]
+  - [[#org][org]]
 
 * core settings
 
-** early init file
+** initialization files
+
+*** =early-init.el=
 
 Emacs =27.1= offers new file called =early-init.el= which allows customizations
 that take effect during Emacs startup earlier than the normal init file. This
 file is loaded before the package system and GUI is initialized.
 
-*References* :: [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.html][The Early Init File]]
+-  references
+  - [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.html][The Early Init File]]
 
 #+begin_src emacs-lisp :tangle "early-init.el"
 ;;; early-init.el --- GNU Emacs >= 27.1 pre-initialization file -*- lexical-binding: t -*-
@@ -76,7 +78,6 @@ file is loaded before the package system and GUI is initialized.
 
 ;; GUI
 (menu-bar-mode   0)
-(tool-bar-mode   0)
 (scroll-bar-mode 0)
 (setq inhibit-splash-screen  t)
 (setq inhibit-startup-screen t)
@@ -86,7 +87,7 @@ file is loaded before the package system and GUI is initialized.
 ;;; early-init.el ends here
 #+end_src
 
-** init file
+*** =init.el=
 
 this file should be present anyways but adding here makes it easier to manage.
 
@@ -106,22 +107,21 @@ this file should be present anyways but adding here makes it easier to manage.
 
 ** package management
 
-*** =package.el=
+*** ~package.el~
 
-Emacs' built-in =package.el= is fine; u do have an eye on =straight.el= which i
-understand it's meant for fine adjusting specific versions of packages to
-install, thing that i'm not really interested at the moment.
+Emacs' built-in, =package.el=
 
 #+begin_src emacs-lisp
 ;; initialize Emacs default package manager
 (require 'package)
 
 ;; repositories
-(setq package-archives '(("GNU"   . "https://elpa.gnu.org/packages/")
-                         ("Melpa" . "https://melpa.org/packages/")))
+(setq package-archives '(("gnu"    . "https://elpa.gnu.org/packages/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                         ("melpa"  . "https://melpa.org/packages/")))
 #+end_src
 
-*** =use-package=
+*** ~use-package~
 
 [[https://github.com/jwiegley/use-package#installing-use-package][use-package]] is a *macro* that allows to optimize the performance of the GNU
 Emacs configuration file, it also makes everything less verbose.
@@ -142,9 +142,7 @@ Emacs configuration file, it also makes everything less verbose.
   (setq use-package-hook-name-suffix nil))
 #+end_src
 
-- [[https://github.com/myrjola/diminish.el][diminish]]
-  - implements hiding or abbreviation of the mode line displays
-    (lighters) of minor-modes.
+| [[https://github.com/myrjola/diminish.el][diminish]] | implements hiding or abbreviation of the mode line displays (lighters) of minor-modes |
 
 #+begin_src emacs-lisp
 (use-package diminish)
@@ -198,9 +196,11 @@ settings that do not belong anywhere specific.
   (setq make-backup-files nil)
 
   (setq visible-bell t)
+  (setq use-short-answers t)
 
-  ;; TODO :: refactor for Emacs 28
-  (defalias 'yes-or-no-p 'y-or-n-p))
+  :hook
+  ;; maximize Emacs on startup
+  (after-init-hook . toggle-frame-maximized))
 #+end_src
 
 *** custom custom file
@@ -244,12 +244,12 @@ to use another file and accomplish this.
 my journey on /*nix/ environments began with /Vi/, it's difficult for
 me not to try looking everywhere for /Vi/ emulation.
 
-[[https://github.com/emacs-evil/evil][Evil]] is probably the best package for Vi emulation.
+| [[https://github.com/emacs-evil/evil][Evil]] | extensible vi layer |
 
 #+begin_src emacs-lisp
 (use-package evil
   :init
-  (setq evil-undo-system 'undo-fu)
+  (setq evil-undo-system 'undo-redo) ;; Emacs >= 28
   (setq evil-want-keybinding  nil)
 
   ;; init after set-up
@@ -260,9 +260,7 @@ me not to try looking everywhere for /Vi/ emulation.
          ("C-g" . evil-normal-state))))
 #+end_src
 
-- [[https://github.com/emacs-evil/evil-collection][Evil-Collection]]
-  - collection of /Vi/ keybinds for some parts of /Emacs/ which are dealt
-    incorrectly by Evil.
+| [[https://github.com/emacs-evil/evil-collection][Evil-Collection]] | collection of /Vi/ keybinds for some parts of /Emacs/ which are dealt incorrectly by Evil |
 
 #+begin_src emacs-lisp
 (use-package evil-collection
@@ -270,23 +268,12 @@ me not to try looking everywhere for /Vi/ emulation.
   :init (evil-collection-init))
 #+end_src
 
-i'd prefer adding the following to the [tools] section, but since these really
-are essentials to /Evil/, better to have them together.
-
-[[https://github.com/emacs-evil/evil-surround][evil-surround]] emulates [[https://github.com/tpope/vim-surround][vim-surround]].
+| [[https://github.com/emacs-evil/evil-surround][evil-surround]] | [[https://github.com/tpope/vim-surround][vim-surround]] emulation |
 
 #+begin_src emacs-lisp
 (use-package evil-surround
   :after evil
   :init (global-evil-surround-mode))
-#+end_src
-
-for {undo, redo}-ing with /Evil/, an external package is needed.
-
-*TODO* :: refactor for /Emacs 28/ (built-in)
-
-#+begin_src emacs-lisp
-(use-package undo-fu :after evil)
 #+end_src
 
 ** appearance
@@ -296,7 +283,7 @@ for {undo, redo}-ing with /Evil/, an external package is needed.
 #+begin_src emacs-lisp
 (let* ((annt/font-size 12))
 
-  ;; generic
+  ;; default
   (set-face-attribute 'default nil
                       :font (format "Mononoki-%s" annt/font-size))
   ;; code
@@ -306,10 +293,7 @@ for {undo, redo}-ing with /Evil/, an external package is needed.
 
 *** themes
 
-- [[https://gitlab.com/protesilaos/modus-themes/][Modus Themes]]
-  - pair of highly accessible themes that conform with the WCAG AAA
-    standard for colour contrast between background and foreground
-    combinations.
+| [[https://gitlab.com/protesilaos/modus-themes/][Modus themes]] | pair of highly accessible themes that conform with the WCAG AAA standard for colour contrast between background and foreground combinations |
 
 #+begin_src emacs-lisp
 (use-package modus-themes
@@ -335,9 +319,26 @@ for {undo, redo}-ing with /Evil/, an external package is needed.
   (setq modus-themes-org-blocks 'grayscale)
 
   (modus-themes-load-themes)
-  :config (modus-themes-load-vivendi)
+  :config (modus-themes-load-operandi)
   :bind ("M-<f5>" . modus-themes-toggle))
 #+end_src
+
+| [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] | is a package used by many other packages, it is a collection of various icon fonts |
+
+#+begin_src emacs-lisp
+(use-package all-the-icons
+  :if (display-graphic-p) ;; only if running Emacs as an X window
+  :config
+  (defun annt/all-the-icons-setup ()
+    "Checks if all-the-icon fonts are downloaded, gets them if not"
+    (unless (file-exists-p (expand-file-name
+                            "~/.local/share/fonts/all-the-icons.ttf"))
+      (all-the-icons-install-fonts)))
+  :hook
+  ;; Install all-the-icons automatically only if missing
+  (after-init-hook . annt/all-the-icons-setup))
+#+end_src
+
 
 *** modeline
 
@@ -349,7 +350,7 @@ for {undo, redo}-ing with /Evil/, an external package is needed.
 
 *** tooltips
 
-- GTK-tooltips disabled because they tend to change a lot.
+- GTK-tooltips disabled for consistency
 
 #+begin_src emacs-lisp
 (setq tooltip-short-delay         1)
@@ -378,10 +379,7 @@ for {undo, redo}-ing with /Evil/, an external package is needed.
   (dired-mode-hook . dired-hide-details-mode))
 #+end_src
 
-** extensions for ~dired~
-
-- [[https://github.com/jtbm37/all-the-icons-dired][all-the-icons-dired]]
-  - should be pretty self-explanatory.
+| [[https://github.com/jtbm37/all-the-icons-dired][all-the-icons-dired]] | self-explanatory |
 
 #+begin_src emacs-lisp
 (use-package all-the-icons-dired
@@ -408,8 +406,7 @@ set of keyboard binding for programming modes
 
 ** tools
 
-- [[https://github.com/Malabarba/aggressive-indent-mode][aggressive-indent-mode]]
-  - keeps your code nicely aligned when all you do is type
+| [[https://github.com/Malabarba/aggressive-indent-mode][aggressive-indent-mode]] | keeps your code nicely aligned when all you do is type |
 
 #+begin_src emacs-lisp
 (use-package aggressive-indent
@@ -432,6 +429,8 @@ set of keyboard binding for programming modes
   (setq lsp-headerline-breadcrumb-enable t))
 #+end_src
 
+| [[https://github.com/emacs-lsp/lsp-ui][lsp-ui]] | UI integrations for /lsp-mode/ |
+
 #+begin_src emacs-lisp
 (use-package lsp-ui
   :after lsp-mode
@@ -441,6 +440,8 @@ set of keyboard binding for programming modes
 #+end_src
 
 ** C-like
+
+languages that are syntactically similar to /C/
 
 #+begin_src emacs-lisp
 (use-package cc-mode
@@ -485,27 +486,20 @@ set of keyboard binding for programming modes
 ** Racket
 
 #+begin_src emacs-lisp
-(use-package racket-mode :init (electric-pair-mode))
-#+end_src
-
-*** extensions for Clojure
-
-- cider
-
-#+begin_src emacs-lisp
-(use-package cider :after clojure-mode)
+(use-package racket-mode
+  :init (electric-pair-mode))
 #+end_src
 
 ** Nix
 
 #+begin_src elisp
-(use-package nix-mode :mode "\\.nix\\'")
+(use-package nix-mode
+  :mode "\\.nix\\'")
 #+end_src
 
 * version control
 
-- [[https://github.com/magit/magit][Magit]]
-  - complete text-based user interface to [[https://git-scm.com/][Git]]
+| [[https://github.com/magit/magit][Magit]] | complete text-based user interface to [[https://git-scm.com/][Git]] |
 
 #+begin_src emacs-lisp
 (use-package magit
@@ -513,27 +507,9 @@ set of keyboard binding for programming modes
   :bind ("C-c g" . magit-status))
 #+end_src
 
-* utilities
+* applications & utilities
 
-- [[https://github.com/domtronn/all-the-icons.el][all-the-icons]]
-  - is a package used by many other packages, it is a collection of various icon fonts.
-
-#+begin_src emacs-lisp
-(use-package all-the-icons
-  :if (display-graphic-p) ;; only if running Emacs as an X window
-  :config
-  (defun annt/all-the-icons-setup ()
-    "Checks if all-the-icon fonts are downloaded, gets them if not"
-    (unless (file-exists-p (expand-file-name
-                            "~/.local/share/fonts/all-the-icons.ttf"))
-      (all-the-icons-install-fonts)))
-  :hook
-  ;; Install all-the-icons automatically only if missing
-  (after-init-hook . annt/all-the-icons-setup))
-#+end_src
-
-- [[https://github.com/justbur/emacs-which-key][which-key]]
-  - displays available keybindings in popup.
+| [[https://github.com/justbur/emacs-which-key][which-key]] | displays available keybindings in popup |
 
 #+begin_src emacs-lisp
 (use-package which-key
@@ -547,8 +523,7 @@ set of keyboard binding for programming modes
   (which-key-mode))
 #+end_src
 
-- [[https://github.com/Wilfred/helpful][Helpful]]
-  - better Emacs *help* buffer
+| [[https://github.com/Wilfred/helpful][helpful]] | better Emacs *help* buffer |
 
 #+begin_src emacs-lisp
 (use-package helpful
@@ -560,16 +535,13 @@ set of keyboard binding for programming modes
   ([remap describe-variable] . helpful-variable))
 #+end_src
 
-- [[https://github.com/tarsius/hl-todo][hl-todo]]
-  - TODO/FIXME/etc keyword highlighting in comments and strings.
+| [[https://github.com/tarsius/hl-todo][hl-todo]] | TODO/FIXME/etc keyword highlighting in comments and strings |
 
 #+begin_src emacs-lisp
 (use-package hl-todo :hook ((prog-mode-hook org-mode-hook) . hl-todo-mode))
 #+end_src
 
-- [[https://github.com/Fanael/rainbow-delimiters][rainbow-delimiters]]
-  - mode which highlights delimiters such as parentheses, brackets or braces
-    according to their depth
+| [[https://github.com/Fanael/rainbow-delimiters][rainbow-delimiters]] | mode which highlights delimiters such as parentheses, brackets or braces according to their depth |
 
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
@@ -578,16 +550,13 @@ set of keyboard binding for programming modes
 
 ** completion
 
-- [[https://github.com/oantolin/orderless][orderless]]
-  - completion style that is /order-less/
+| [[https://github.com/oantolin/orderless][orderless]] | completion style that is /order-less/ |
 
 #+begin_src elisp
 (use-package orderless :init (setq completion-styles '(orderless)))
 #+end_src
 
-- [[https://github.com/minad/vertico][vertico]]
-  - minimalistic completion UI, uses /Emacs/' own completion engine in contrast
-    to other tools like [[https://github.com/abo-abo/swiper][Ivy]] and [[https://github.com/emacs-helm/helm][Helm]].
+| [[https://github.com/minad/vertico][vertico]] | minimalistic completion UI, uses /Emacs/' own completion engine in contrast to other tools like [[https://github.com/abo-abo/swiper][Ivy]] and [[https://github.com/emacs-helm/helm][Helm]] |
 
 #+begin_src emacs-lisp
 (use-package vertico
@@ -600,15 +569,14 @@ set of keyboard binding for programming modes
   (vertico-mode))
 #+end_src
 
-- [[https://github.com/minad/marginalia][Marginalia]]
-  - annotations in the minibuffer
+| [[https://github.com/minad/marginalia][Marginalia]] | annotations in the minibuffer |
 
 #+begin_src elisp
-(use-package marginalia :init (marginalia-mode))
+(use-package marginalia
+  :init (marginalia-mode))
 #+end_src
 
-- [[https://github.com/company-mode/company-mode][company]]
-  - text completion completion framework
+| [[https://github.com/company-mode/company-mode][company]] | text completion completion framework |
 
 #+begin_src emacs-lisp
 (use-package company
@@ -617,6 +585,19 @@ set of keyboard binding for programming modes
   (setq company-show-numbers          t)
   (setq company-minimum-prefix-length 2)
   :hook (prog-mode-hook . company-mode))
+#+end_src
+
+*** syntax checking
+
+| [[https://github.com/flycheck/flycheck][Flycheck]] | modern on-the-fly syntax checking |
+
+#+begin_src emacs-lisp
+(use-package flycheck
+  :config
+  (setq flycheck-mode-line-prefix "FlyCheck")
+  (setq flycheck-display-errors-delay    0.3)
+  (setq flycheck-idle-change-delay       0.7)
+  (setq flycheck-buffer-switch-check-intermediate-buffers t))
 #+end_src
 
 *** snippets
@@ -631,53 +612,22 @@ set of keyboard binding for programming modes
 
 #+end_src
 
-** checking
-
-*** syntax
-
-- [[https://github.com/flycheck/flycheck][Flycheck]]
-  - modern on-the-fly syntax checking.
-
-#+begin_src emacs-lisp
-(use-package flycheck
-  :config
-  (setq flycheck-mode-line-prefix "FlyCheck")
-  (setq flycheck-display-errors-delay    0.3)
-  (setq flycheck-idle-change-delay       0.7)
-  (setq flycheck-buffer-switch-check-intermediate-buffers t))
-#+end_src
-
-* org
+** org
 
 one of /Emacs/' killer features.
 
 #+begin_src emacs-lisp
 (use-package org
+  :ensure nil
   :config
   (setq org-edit-src-content-indentation 0)
   (setq org-startup-folded               t)
   (setq org-confirm-babel-evaluate     nil)
 
-  (require 'org-tempo) ;; required to use structure templates
-  (setq org-structure-template-alist
-        '(("src"   . "src")
-          ("conf"  . "conf")
-          ;; languages
-          ("el"  . "src elisp")
-          ("sh"  . "src sh")
-          ("c"   . "src c")
-          ("py"  . "src python")
-          ;; misc
-          ("comm" . "comment")
-          ("ex"   . "example")
-          ("quo"  . "quote")))
   :hook (org-mode-hook . org-indent-mode))
 #+end_src
 
-** extensions for org
-
-- [[https://github.com/snosov1/toc-org][toc-org]]
-  - utility to have an up-to-date table of contents on ~Org~ and ~Markdown~.
+| [[https://github.com/snosov1/toc-org][toc-org]] | utility to have an up-to-date table of contents on ~Org~ and ~Markdown~ |
 
 #+begin_src emacs-lisp
 (use-package toc-org
@@ -686,12 +636,7 @@ one of /Emacs/' killer features.
   :hook (org-mode-hook . toc-org-mode))
 #+end_src
 
-- [[https://github.com/takaxp/org-tree-slide][org-tree-slide]]
-  - allows creating presentations with /Org-Mode/, it can even export to
-    =.pdf= using /Beamer/ (needs /LaTeX/ tools installed).
-  - there are a few things that can be done to extend this packages, a few of
-    them being toggling =display-fill-column-indicator-mode= and increasing the
-    font size.
+| [[https://github.com/takaxp/org-tree-slide][org-tree-slide]] | allows creating presentations with /Org-Mode/ |
 
 - references
   - [[https://youtu.be/vz9aLmxYJB0][Emacs Tips - How to Give Presentations with Org Mode]]
