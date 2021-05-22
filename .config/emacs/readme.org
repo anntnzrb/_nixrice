@@ -40,6 +40,7 @@
 - [[#version-control][version control]]
 - [[#utilities][utilities]]
   - [[#completion][completion]]
+    - [[#snippets][snippets]]
   - [[#checking][checking]]
     - [[#syntax][syntax]]
 - [[#org][org]]
@@ -598,6 +599,18 @@ set of keyboard binding for programming modes
   (setq company-show-numbers          t)
   (setq company-minimum-prefix-length 2)
   :hook (prog-mode-hook . company-mode))
+#+end_src
+
+*** snippets
+
+#+begin_src emacs-lisp
+(use-package yasnippet
+  :config (yas-reload-all)
+  :bind
+  (:map yas-minor-mode-map
+        ("C-<tab>" . yas-expand))
+  :hook ((prog-mode-hook text-mode-hook) . yas-minor-mode))
+
 #+end_src
 
 ** checking
