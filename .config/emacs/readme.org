@@ -16,6 +16,7 @@
   - [[#initialization-files][initialization files]]
     - [[#early-initel][=early-init.el=]]
     - [[#initel][=init.el=]]
+  - [[#----lexical-binding-t---][=;; -*- lexical-binding: t -*-=]]
   - [[#package-management][package management]]
     - [[#straightel][~straight.el~]]
     - [[#use-package][~use-package~]]
@@ -104,6 +105,14 @@ this file should be present anyways but adding here makes it easier to manage.
 
 (provide 'init)
 ;;; init.el ends here
+#+end_src
+
+** =;; -*- lexical-binding: t -*-=
+
+this should make /Emacs/ a tiny bit faster
+
+#+begin_src emacs-lisp
+;; -*- lexical-binding: t -*-
 #+end_src
 
 ** package management
@@ -575,6 +584,7 @@ languages that are syntactically similar to /C/
 #+begin_src elisp
 (use-package orderless
   :straight t
+  :disabled t
   :init (setq completion-styles '(orderless)))
 #+end_src
 
