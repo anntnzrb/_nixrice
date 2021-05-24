@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Array lenght macro
+# key: !#arrlen
+# --
+
+#define ARR_LEN(x) (sizeof(x) / sizeof(*x))
