@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: Insert image
+# key: !img
+# --
+
+#+caption: ${1:This is the caption for the next figure link}
+#+name:    fig:{$2}
+[[./${3:PATH}]]
