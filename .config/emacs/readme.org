@@ -2,7 +2,9 @@
 #+author: anntnzrb
 #+email: anntnzrb@protonmail.com
 #+property: header-args :results silent
-#+macro: export-date (eval (format-time-string "%F" (current-time)))
+
+# macros
+#+macro: export-date   (eval (format-time-string "%F" (current-time)))
 #+macro: emacs-version (eval (substring (emacs-version) 10 17))
 
 - created: 2020-11-07
@@ -15,7 +17,7 @@
     - [[#early-initel][=early-init.el=]]
     - [[#initel][=init.el=]]
   - [[#package-management][package management]]
-    - [[#packageel][~package.el~]]
+    - [[#straightel][~straight.el~]]
     - [[#use-package][~use-package~]]
   - [[#performance][performance]]
     - [[#garbage-collector][garbage collector]]
@@ -69,9 +71,8 @@ file is loaded before the package system and GUI is initialized.
 
 ;;; Code:
 
-;; Package tweaks
-(setq package-enable-at-startup t)
-(setq package-quickstart        t)
+;; package tweaks
+(setq package-enable-at-startup nil) ;; needed by `straight.el'
 
 ;; don't frame-resize this early
 (setq frame-inhibit-implied-resize t)
@@ -107,18 +108,34 @@ this file should be present anyways but adding here makes it easier to manage.
 
 ** package management
 
-*** ~package.el~
+*** ~straight.el~
 
-Emacs' built-in, =package.el=
+| [[https://github.com/raxod502/straight.el][straight.el]] | purely functional package manager |
+
+a few reasons why i consider =straight.el=:
+
+- functional
+- reproducible package management
+- packages cloned as /Git/ repos
+- ability to provide own recipes
+- =package.el= loads every package meanwhile =straight.el= only loads whatever
+  is specifically stated on the init file
 
 #+begin_src emacs-lisp
-;; initialize Emacs default package manager
-(require 'package)
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
-;; repositories
-(setq package-archives '(("gnu"    . "https://elpa.gnu.org/packages/")
-                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                         ("melpa"  . "https://melpa.org/packages/")))
+(setq straight-repository-branch "master")
 #+end_src
 
 *** ~use-package~
@@ -127,25 +144,18 @@ Emacs' built-in, =package.el=
 Emacs configuration file, it also makes everything less verbose.
 
 #+begin_src emacs-lisp
-;; install use-package only if not installed already
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+(straight-use-package 'use-package)
 
-(eval-when-compile
-  (require 'use-package)
-
-  ;; use-package settings
-  (setq use-package-verbose       t)
-  (setq use-package-always-defer  t)
-  (setq use-package-always-ensure t)
-  (setq use-package-hook-name-suffix nil))
+(setq use-package-verbose            t)
+(setq use-package-always-defer       t)
+(setq use-package-hook-name-suffix nil)
 #+end_src
 
 | [[https://github.com/myrjola/diminish.el][diminish]] | implements hiding or abbreviation of the mode line displays (lighters) of minor-modes |
 
 #+begin_src emacs-lisp
-(use-package diminish)
+(use-package diminish
+  :straight t)
 #+end_src
 
 ** performance
@@ -189,7 +199,6 @@ settings that do not belong anywhere specific.
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :ensure nil
   :init
   ;; backup
   (setq create-lockfiles  nil)
@@ -217,7 +226,6 @@ to use another file and accomplish this.
 
 #+begin_src emacs-lisp
 (use-package emacs
-  :ensure nil
   :init
   (setq mode-require-final-newline t)
   (setq-default tab-width                    4)
@@ -248,8 +256,9 @@ me not to try looking everywhere for /Vi/ emulation.
 
 #+begin_src emacs-lisp
 (use-package evil
+  :straight t
   :init
-  (setq evil-undo-system 'undo-redo) ;; Emacs >= 28
+  (setq evil-undo-system 'undo-redo)
   (setq evil-want-keybinding  nil)
 
   ;; init after set-up
@@ -264,6 +273,7 @@ me not to try looking everywhere for /Vi/ emulation.
 
 #+begin_src emacs-lisp
 (use-package evil-collection
+  :straight t
   :after evil
   :init (evil-collection-init))
 #+end_src
@@ -272,6 +282,7 @@ me not to try looking everywhere for /Vi/ emulation.
 
 #+begin_src emacs-lisp
 (use-package evil-surround
+  :straight t
   :after evil
   :init (global-evil-surround-mode))
 #+end_src
@@ -297,6 +308,7 @@ me not to try looking everywhere for /Vi/ emulation.
 
 #+begin_src emacs-lisp
 (use-package modus-themes
+  :straight t
   :if (display-graphic-p)
   :init
   (setq modus-themes-slanted-constructs t)
@@ -327,6 +339,7 @@ me not to try looking everywhere for /Vi/ emulation.
 
 #+begin_src emacs-lisp
 (use-package all-the-icons
+  :straight t
   :if (display-graphic-p) ;; only if running Emacs as an X window
   :config
   (defun annt/all-the-icons-setup ()
@@ -366,7 +379,6 @@ me not to try looking everywhere for /Vi/ emulation.
 
 #+begin_src emacs-lisp
 (use-package dired
-  :ensure nil
   :config
   (setq delete-by-moving-to-trash     t) ;; safer than `rm'
   (setq dired-auto-revert-buffer      t)
@@ -383,6 +395,7 @@ me not to try looking everywhere for /Vi/ emulation.
 
 #+begin_src emacs-lisp
 (use-package all-the-icons-dired
+  :straight t
   :diminish
   :if (display-graphic-p) ;; only if running Emacs as an X window
   :after dired
@@ -397,7 +410,6 @@ set of keyboard binding for programming modes
 
 #+begin_src emacs-lisp
 (use-package prog-mode
-  :ensure nil
   :bind
   (:map prog-mode-map
         ("C-c c c" . compile)
@@ -410,6 +422,7 @@ set of keyboard binding for programming modes
 
 #+begin_src emacs-lisp
 (use-package aggressive-indent
+  :straight t
   :config
   (setq aggressive-indent-comments-too   t)
   (setq aggressive-indent-sit-for-time 0.5)
@@ -420,6 +433,7 @@ set of keyboard binding for programming modes
 
 #+begin_src emacs-lisp
 (use-package lsp-mode
+  :straight t
   :commands (lsp lsp-deferred)
   :init
   (setq lsp-keymap-prefix "C-c l")
@@ -433,6 +447,7 @@ set of keyboard binding for programming modes
 
 #+begin_src emacs-lisp
 (use-package lsp-ui
+  :straight t
   :after lsp-mode
   :commands lsp-ui-mode
   :config (setq lsp-ui-doc-position 'bottom)
@@ -445,7 +460,6 @@ languages that are syntactically similar to /C/
 
 #+begin_src emacs-lisp
 (use-package cc-mode
-  :ensure nil
   :config
   (add-to-list 'c-default-style '(c-mode . "k&r")))
 #+end_src
@@ -454,7 +468,6 @@ languages that are syntactically similar to /C/
 
 #+begin_src emacs-lisp
 (use-package c-mode
-  :ensure nil
   :config
   (setq tab-width      8)
   (setq c-basic-offset 8)
@@ -471,7 +484,6 @@ languages that are syntactically similar to /C/
 
 #+begin_src emacs-lisp
 (use-package emacs-lisp-mode
-  :ensure nil
   :config
   (electric-pair-mode)
   (setq checkdoc-verb-check-experimental-flag nil)
@@ -487,6 +499,7 @@ languages that are syntactically similar to /C/
 
 #+begin_src emacs-lisp
 (use-package racket-mode
+  :straight t
   :init (electric-pair-mode))
 #+end_src
 
@@ -494,6 +507,7 @@ languages that are syntactically similar to /C/
 
 #+begin_src elisp
 (use-package nix-mode
+  :straight t
   :mode "\\.nix\\'")
 #+end_src
 
@@ -503,6 +517,7 @@ languages that are syntactically similar to /C/
 
 #+begin_src emacs-lisp
 (use-package magit
+  :straight t
   :commands magit-status
   :bind ("C-c g" . magit-status))
 #+end_src
@@ -513,6 +528,7 @@ languages that are syntactically similar to /C/
 
 #+begin_src emacs-lisp
 (use-package which-key
+  :straight t
   :diminish
   :init
   (setq which-key-idle-delay 0.5)
@@ -527,6 +543,7 @@ languages that are syntactically similar to /C/
 
 #+begin_src emacs-lisp
 (use-package helpful
+  :straight t
   :bind
   ([remap      describe-key] . helpful-key     )
   ([remap   describe-symbol] . helpful-symbol  )
@@ -538,13 +555,16 @@ languages that are syntactically similar to /C/
 | [[https://github.com/tarsius/hl-todo][hl-todo]] | TODO/FIXME/etc keyword highlighting in comments and strings |
 
 #+begin_src emacs-lisp
-(use-package hl-todo :hook ((prog-mode-hook org-mode-hook) . hl-todo-mode))
+(use-package hl-todo
+  :straight t
+  :hook ((prog-mode-hook org-mode-hook) . hl-todo-mode))
 #+end_src
 
 | [[https://github.com/Fanael/rainbow-delimiters][rainbow-delimiters]] | mode which highlights delimiters such as parentheses, brackets or braces according to their depth |
 
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
+  :straight t
   :hook (prog-mode-hook . rainbow-delimiters-mode))
 #+end_src
 
@@ -553,13 +573,16 @@ languages that are syntactically similar to /C/
 | [[https://github.com/oantolin/orderless][orderless]] | completion style that is /order-less/ |
 
 #+begin_src elisp
-(use-package orderless :init (setq completion-styles '(orderless)))
+(use-package orderless
+  :straight t
+  :init (setq completion-styles '(orderless)))
 #+end_src
 
 | [[https://github.com/minad/vertico][vertico]] | minimalistic completion UI, uses /Emacs/' own completion engine in contrast to other tools like [[https://github.com/abo-abo/swiper][Ivy]] and [[https://github.com/emacs-helm/helm][Helm]] |
 
 #+begin_src emacs-lisp
 (use-package vertico
+  :straight t
   :bind
   (:map vertico-map
         ;; Vi binds
@@ -573,6 +596,7 @@ languages that are syntactically similar to /C/
 
 #+begin_src elisp
 (use-package marginalia
+  :straight t
   :init (marginalia-mode))
 #+end_src
 
@@ -580,6 +604,7 @@ languages that are syntactically similar to /C/
 
 #+begin_src emacs-lisp
 (use-package company
+  :straight t
   :config
   (setq company-idle-delay          0.3)
   (setq company-show-numbers          t)
@@ -593,6 +618,7 @@ languages that are syntactically similar to /C/
 
 #+begin_src emacs-lisp
 (use-package flycheck
+  :straight t
   :config
   (setq flycheck-mode-line-prefix "FlyCheck")
   (setq flycheck-display-errors-delay    0.3)
@@ -604,6 +630,7 @@ languages that are syntactically similar to /C/
 
 #+begin_src emacs-lisp
 (use-package yasnippet
+  :straight t
   :config (yas-reload-all)
   :bind
   (:map yas-minor-mode-map
@@ -618,7 +645,6 @@ one of /Emacs/' killer features.
 
 #+begin_src emacs-lisp
 (use-package org
-  :ensure nil
   :config
   (setq org-edit-src-content-indentation 0)
   (setq org-startup-folded               t)
@@ -631,6 +657,7 @@ one of /Emacs/' killer features.
 
 #+begin_src emacs-lisp
 (use-package toc-org
+  :straight t
   :after org
   :config (setq toc-org-hrefify-default "gh")
   :hook (org-mode-hook . toc-org-mode))
@@ -643,6 +670,7 @@ one of /Emacs/' killer features.
 
 #+begin_src emacs-lisp
 (use-package org-tree-slide
+  :straight t
   :after org
   :commands org-tree-slide-mode
   :config
