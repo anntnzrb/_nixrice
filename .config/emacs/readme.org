@@ -155,9 +155,7 @@ Emacs configuration file, it also makes everything less verbose.
 #+begin_src emacs-lisp
 (straight-use-package 'use-package)
 
-(setq use-package-verbose            t)
-(setq use-package-always-defer       t)
-(setq use-package-hook-name-suffix nil)
+(setq use-package-verbose t)
 #+end_src
 
 | [[https://github.com/myrjola/diminish.el][diminish]] | implements hiding or abbreviation of the mode line displays (lighters) of minor-modes |
@@ -207,18 +205,14 @@ a list of useful posts regarding gnu emacs performance.
 settings that do not belong anywhere specific.
 
 #+begin_src emacs-lisp
-(use-package emacs
-  :init
-  ;; backup
-  (setq create-lockfiles  nil)
-  (setq make-backup-files nil)
+;; backup
+(setq create-lockfiles  nil)
+(setq make-backup-files nil)
 
-  (setq visible-bell t)
-  (setq use-short-answers t)
+(setq visible-bell t)
+(setq use-short-answers t)
 
-  :hook
-  ;; maximize Emacs on startup
-  (after-init-hook . toggle-frame-maximized))
+(add-hook 'after-init-hook #'toggle-frame-maximized)
 #+end_src
 
 *** custom custom file
@@ -234,26 +228,21 @@ to use another file and accomplish this.
 *** editing
 
 #+begin_src emacs-lisp
-(use-package emacs
-  :init
-  (setq mode-require-final-newline t)
-  (setq-default tab-width                    4)
-  (setq-default indent-tabs-mode           nil)
-  (setq-default show-trailing-whitespace     t)
-  (setq-default fill-column                 79)
-  (setq-default display-line-numbers 'relative)
-  (setq-default display-fill-column-indicator-column (+ fill-column 1))
+(setq mode-require-final-newline t)
+(setq-default tab-width                    4)
+(setq-default indent-tabs-mode           nil)
+(setq-default show-trailing-whitespace     t)
+(setq-default fill-column                 79)
+(setq-default display-line-numbers 'relative)
+(setq-default display-fill-column-indicator-column (+ fill-column 1))
 
-  (global-hl-line-mode) ;; line highlighting
-  :hook
-  ;; delete trailing whitespaces prior saving
-  (before-save-hook . whitespace-cleanup)
+;; display vertical column at line limit
+(global-display-fill-column-indicator-mode)
+(global-hl-line-mode) ;; line highlighting
+(auto-fill-mode)      ;; auto-wrapping
 
-  ;; display vertical column at line limit
-  ((prog-mode-hook text-mode-hook) . display-fill-column-indicator-mode)
-
-  ;; auto-wrapping
-  ((prog-mode-hook text-mode-hook) . auto-fill-mode))
+;; delete trailing whitespaces prior saving
+(add-hook 'before-save-hook #'whitespace-cleanup)
 #+end_src
 
 *** Vi emulation
@@ -272,10 +261,9 @@ me not to try looking everywhere for /Vi/ emulation.
 
   ;; init after set-up
   (evil-mode)
-  :bind
-  ((:map evil-insert-state-map
-         ;; use ESC as C-g
-         ("C-g" . evil-normal-state))))
+
+  :config
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state))
 #+end_src
 
 | [[https://github.com/emacs-evil/evil-collection][Evil-Collection]] | collection of /Vi/ keybinds for some parts of /Emacs/ which are dealt incorrectly by Evil |
@@ -340,8 +328,9 @@ me not to try looking everywhere for /Vi/ emulation.
   (setq modus-themes-org-blocks 'grayscale)
 
   (modus-themes-load-themes)
-  :config (modus-themes-load-operandi)
-  :bind ("M-<f5>" . modus-themes-toggle))
+  :config
+  (modus-themes-load-operandi)
+  (define-key global-map (kbd "M-<f5>") 'modus-themes-toggle))
 #+end_src
 
 | [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] | is a package used by many other packages, it is a collection of various icon fonts |
@@ -356,9 +345,9 @@ me not to try looking everywhere for /Vi/ emulation.
     (unless (file-exists-p (expand-file-name
                             "~/.local/share/fonts/all-the-icons.ttf"))
       (all-the-icons-install-fonts)))
-  :hook
-  ;; Install all-the-icons automatically only if missing
-  (after-init-hook . annt/all-the-icons-setup))
+
+  ;; install all-the-icons on boot only if missing
+  (add-hook 'after-init-hook #'annt/all-the-icons-setup))
 #+end_src
 
 
@@ -394,10 +383,9 @@ me not to try looking everywhere for /Vi/ emulation.
   (setq dired-recursive-copies  'always)
   (setq dired-recursive-deletes 'always)
   (setq dired-listing-switches "-AFhl --group-directories-first")
-  :hook
-  (dired-mode-hook . hl-line-mode)
-  ;; less verbose
-  (dired-mode-hook . dired-hide-details-mode))
+
+  ;; less verbose output
+  (add-hook 'dired-mode-hook #'dired-hide-details-mode))
 #+end_src
 
 | [[https://github.com/jtbm37/all-the-icons-dired][all-the-icons-dired]] | self-explanatory |
@@ -405,10 +393,12 @@ me not to try looking everywhere for /Vi/ emulation.
 #+begin_src emacs-lisp
 (use-package all-the-icons-dired
   :straight t
+  :disabled t
   :diminish
   :if (display-graphic-p) ;; only if running Emacs as an X window
   :after dired
-  :hook (dired-mode-hook . all-the-icons-dired-mode))
+  :config
+  (add-hook 'dired-mode-hook #'all-the-icons-dired-mode))
 #+end_src
 
 * programming
@@ -419,10 +409,10 @@ set of keyboard binding for programming modes
 
 #+begin_src emacs-lisp
 (use-package prog-mode
-  :bind
-  (:map prog-mode-map
-        ("C-c c c" . compile)
-        ("C-c c r" . recompile)))
+  :config
+  (let ((map prog-mode-map))
+    (define-key map (kbd "C-c c c") 'compile)
+    (define-key map (kbd "C-c c r") 'recompile)))
 #+end_src
 
 ** tools
@@ -435,7 +425,8 @@ set of keyboard binding for programming modes
   :config
   (setq aggressive-indent-comments-too   t)
   (setq aggressive-indent-sit-for-time 0.5)
-  :hook (prog-mode-hook . aggressive-indent-mode))
+
+  (add-hook 'prog-mode-hook #'aggressive-indent-mode))
 #+end_src
 
 - [[https://github.com/emacs-lsp/lsp-mode/][Language Server Protocol]]
@@ -459,8 +450,10 @@ set of keyboard binding for programming modes
   :straight t
   :after lsp-mode
   :commands lsp-ui-mode
-  :config (setq lsp-ui-doc-position 'bottom)
-  :hook   (lsp-mode-hook . lsp-ui-mode))
+  :config
+  (setq lsp-ui-doc-position 'bottom)
+
+  (add-hook 'lsp-mode-hook #'lsp-ui-mode))
 #+end_src
 
 ** C-like
@@ -476,32 +469,25 @@ languages that are syntactically similar to /C/
 *** C
 
 #+begin_src emacs-lisp
-(use-package c-mode
-  :config
-  (setq tab-width      8)
-  (setq c-basic-offset 8)
+;; LSP :: Clangd
+(setq lsp-clients-clangd-args
+      '("--header-insertion-decorators=0"
+        "--clang-tidy"))
 
-  ;; LSP :: Clangd
-  (setq lsp-clients-clangd-args
-        '("--header-insertion-decorators=0"
-          "--clang-tidy"))
-  :hook (c-mode-hook . lsp-deferred))
-
+(add-hook 'c-mode-hook #'lsp-deferred)
 #+end_src
 
 ** Emacs Lisp (Elisp)
 
 #+begin_src emacs-lisp
 (use-package emacs-lisp-mode
+  :defer 5
   :config
   (electric-pair-mode)
   (setq checkdoc-verb-check-experimental-flag nil)
 
   ;; Flycheck
-  (setq flycheck-emacs-lisp-load-path 'inherit)
-  :hook
-  ;; Flycheck
-  (emacs-lisp-mode-hook . flycheck-mode))
+  (setq flycheck-emacs-lisp-load-path 'inherit))
 #+end_src
 
 ** Racket
@@ -528,7 +514,8 @@ languages that are syntactically similar to /C/
 (use-package magit
   :straight t
   :commands magit-status
-  :bind ("C-c g" . magit-status))
+  :config
+  (define-key global-map (kbd "C-c g") 'magit-status))
 #+end_src
 
 * applications & utilities
@@ -553,12 +540,13 @@ languages that are syntactically similar to /C/
 #+begin_src emacs-lisp
 (use-package helpful
   :straight t
-  :bind
-  ([remap      describe-key] . helpful-key     )
-  ([remap   describe-symbol] . helpful-symbol  )
-  ([remap  describe-command] . helpful-command )
-  ([remap describe-function] . helpful-function)
-  ([remap describe-variable] . helpful-variable))
+  :config
+  (let ((map global-map))
+    (define-key map [remap      describe-key] 'helpful-key)
+    (define-key map [remap   describe-symbol] 'helpful-symbol)
+    (define-key map [remap  describe-command] 'helpful-command)
+    (define-key map [remap describe-function] 'helpful-function)
+    (define-key map [remap describe-variable] 'helpful-variable)))
 #+end_src
 
 | [[https://github.com/tarsius/hl-todo][hl-todo]] | TODO/FIXME/etc keyword highlighting in comments and strings |
@@ -566,7 +554,9 @@ languages that are syntactically similar to /C/
 #+begin_src emacs-lisp
 (use-package hl-todo
   :straight t
-  :hook ((prog-mode-hook org-mode-hook) . hl-todo-mode))
+  :config
+  (dolist (hooks '(prog-mode-hook text-mode-hook))
+    (add-hook hooks #'hl-todo-mode)))
 #+end_src
 
 | [[https://github.com/Fanael/rainbow-delimiters][rainbow-delimiters]] | mode which highlights delimiters such as parentheses, brackets or braces according to their depth |
@@ -574,7 +564,8 @@ languages that are syntactically similar to /C/
 #+begin_src emacs-lisp
 (use-package rainbow-delimiters
   :straight t
-  :hook (prog-mode-hook . rainbow-delimiters-mode))
+  :config
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 #+end_src
 
 ** completion
@@ -593,13 +584,12 @@ languages that are syntactically similar to /C/
 #+begin_src emacs-lisp
 (use-package vertico
   :straight t
-  :bind
-  (:map vertico-map
-        ;; Vi binds
-        ("C-j" . vertico-next)
-        ("C-k" . vertico-previous))
   :init
-  (vertico-mode))
+  (vertico-mode)
+  :config
+  (let ((map vertico-map))
+    (define-key map (kbd "C-j") 'vertico-next)
+    (define-key map (kbd "C-k") 'vertico-previous)))
 #+end_src
 
 | [[https://github.com/minad/marginalia][Marginalia]] | annotations in the minibuffer |
@@ -619,7 +609,8 @@ languages that are syntactically similar to /C/
   (setq company-idle-delay          0.3)
   (setq company-show-numbers          t)
   (setq company-minimum-prefix-length 2)
-  :hook (prog-mode-hook . company-mode))
+
+  (add-hook 'prog-mode-hook #'company-mode))
 #+end_src
 
 *** syntax checking
@@ -633,7 +624,10 @@ languages that are syntactically similar to /C/
   (setq flycheck-mode-line-prefix "FlyCheck")
   (setq flycheck-display-errors-delay    0.3)
   (setq flycheck-idle-change-delay       0.7)
-  (setq flycheck-buffer-switch-check-intermediate-buffers t))
+  (setq flycheck-buffer-switch-check-intermediate-buffers t)
+
+  (dolist (hooks '(prog-mode-hook text-mode-hook))
+    (add-hook hooks #'flycheck-mode)))
 #+end_src
 
 *** snippets
@@ -641,12 +635,12 @@ languages that are syntactically similar to /C/
 #+begin_src emacs-lisp
 (use-package yasnippet
   :straight t
-  :config (yas-reload-all)
-  :bind
-  (:map yas-minor-mode-map
-        ("C-<tab>" . yas-expand))
-  :hook ((prog-mode-hook text-mode-hook) . yas-minor-mode))
+  :config
+  (define-key yas-minor-mode-map (kbd "C-<tab>") 'yas-expand)
+  (yas-reload-all)
 
+  (dolist (hooks '(prog-mode-hook text-mode-hook))
+    (add-hook hooks #'yas-minor-mode)))
 #+end_src
 
 ** org
@@ -655,12 +649,13 @@ one of /Emacs/' killer features.
 
 #+begin_src emacs-lisp
 (use-package org
+  :straight t
   :config
   (setq org-edit-src-content-indentation 0)
   (setq org-startup-folded               t)
   (setq org-confirm-babel-evaluate     nil)
 
-  :hook (org-mode-hook . org-indent-mode))
+  (add-hook 'org-mode-hook #'org-indent-mode))
 #+end_src
 
 | [[https://github.com/snosov1/toc-org][toc-org]] | utility to have an up-to-date table of contents on ~Org~ and ~Markdown~ |
@@ -669,8 +664,9 @@ one of /Emacs/' killer features.
 (use-package toc-org
   :straight t
   :after org
-  :config (setq toc-org-hrefify-default "gh")
-  :hook (org-mode-hook . toc-org-mode))
+  :config
+  (setq toc-org-hrefify-default "gh")
+  (add-hook 'org-mode-hook #'toc-org-mode))
 #+end_src
 
 | [[https://github.com/takaxp/org-tree-slide][org-tree-slide]] | allows creating presentations with /Org-Mode/ |
@@ -709,9 +705,10 @@ mostly."
   (setq org-tree-slide-activate-message    "Presentation ON")
   (setq  org-tree-slide-deactivate-message "Presentation OFF")
   (setq  org-image-actual-width nil)
-  :bind ((:map org-mode-map
-               ("<f9>" . org-tree-slide-mode)))
-  :hook
-  (org-tree-slide-play-hook . annt/org-present-start)
-  (org-tree-slide-stop-hook . annt/org-present-end))
+
+  ;; keybinds
+  (define-key org-mode-map (kbd "<f9>") 'org-tree-slide-mode)
+
+  (add-hook 'org-tree-slide-play-hook #'annt/org-present-start)
+  (add-hook 'org-tree-slide-stop-hook #'annt/org-present-end))
 #+end_src
