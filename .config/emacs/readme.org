@@ -16,7 +16,7 @@
   - [[#initialization-files][initialization files]]
     - [[#early-initel][=early-init.el=]]
     - [[#initel][=init.el=]]
-  - [[#----lexical-binding-t---][=;; -*- lexical-binding: t -*-=]]
+  - [[#header][header]]
   - [[#helpers][helpers]]
   - [[#package-management][package management]]
     - [[#straightel][~straight.el~]]
@@ -107,18 +107,25 @@ this file should be present anyways but adding here makes it easier to manage.
 ;;; init.el ends here
 #+end_src
 
-** =;; -*- lexical-binding: t -*-=
+** header
 
-this should make /Emacs/ a tiny bit faster
+=lexical-binding= should make /Emacs/ a tiny bit faster
 
 #+begin_src emacs-lisp
-;; -*- lexical-binding: t -*-
+;;; readme.org --- annt's GNU Emacs configuration file -*- lexical-binding: t -*-
+
+;;; Commentary:
+
+;; This file contains my personal configuration
+
+;;; Code:
 #+end_src
 
 ** helpers
 
 this helpers functions & macros were yoinked from the [[https://github.com/hlissner/doom-emacs][Doom Emacs]]' source code,
-all credit goes to their contributors.
+all credit goes to their contributors as i only partially edited them to fit my
+needs.
 
 | [[https://github.com/hlissner/doom-emacs/blob/8424e0a780534de89f44dbe5b5e90f6b77fffdee/core/core-lib.el#L333-L378][after!]] | allows lazy loading packages like the =:defer= keyword in =use-package= |
 
@@ -139,8 +146,9 @@ functions or variables. It can be:
     (after! (:and package-a (:or package-b package-c) ...) BODY...)
   Without :or/:any/:and/:all, :and/:all are implied.
 This is a wrapper around `eval-after-load' that:
-1. Supports compound package statements (see below)
-2. Prevents eager expansion pulling in autoloaded macros all at once"
+1. Suppresses warnings for disabled packages at compile-time
+3. Supports compound package statements (see below)
+4. Prevents eager expansion pulling in autoloaded macros all at once"
   (declare (indent defun) (debug t))
   (if (symbolp package)
       (list (if (or (not (bound-and-true-p byte-compile-current-file))
