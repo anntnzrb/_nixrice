@@ -328,14 +328,14 @@ me not to try looking everywhere for /Vi/ emulation.
 *** fonts
 
 #+begin_src emacs-lisp
-(let* ((annt/font-size 12))
+(let ((font-size 12))
 
   ;; default
   (set-face-attribute 'default nil
-                      :font (format "Mononoki-%s" annt/font-size))
+                      :font (format "Mononoki-%s" font-size))
   ;; code
   (set-face-attribute 'fixed-pitch nil
-                      :font (format "FantasqueSansMono-%s" annt/font-size)))
+                      :font (format "FantasqueSansMono-%s" font-size)))
 #+end_src
 
 *** themes
