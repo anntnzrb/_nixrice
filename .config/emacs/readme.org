@@ -662,8 +662,6 @@ languages that are syntactically similar to /C/
 one of /Emacs/' killer features.
 
 #+begin_src emacs-lisp
-(straight-use-package 'org)
-
 (after! org
   (setq org-edit-src-content-indentation 0)
   (setq org-startup-folded               t)
@@ -694,13 +692,13 @@ one of /Emacs/' killer features.
   (defun annt/org-present-start ()
     "Configurations settings for entering presentation mode."
     (interactive "P")
-    ;; Save current settings
-    (setq display-line-numbers-orig display-line-numbers)
+    ;; save current settings
+    (setq-local display-line-numbers-orig display-line-numbers)
 
-    ;; Set new values
-    (setq text-scale-mode-amount 3
-          display-line-numbers nil)
-    (org-display-inline-images)
+    ;; set new values
+    (setq-local text-scale-mode-amount 3)
+    (setq-local display-line-numbers nil)
+    (org-display-inline-images) ;; enable images for org
     (display-fill-column-indicator-mode 0)
     (text-scale-set text-scale-mode-amount))
 
@@ -708,14 +706,15 @@ one of /Emacs/' killer features.
     "Configurations settings for exiting presentation mode, reverting changes
 mostly."
     (interactive "P")
-    (setq text-scale-mode-amount 0
-          display-line-numbers display-line-numbers-orig)
+    ;; restore settings
+    (setq-local text-scale-mode-amount 0)
+    (setq display-line-numbers display-line-numbers-orig)
     (text-scale-set text-scale-mode-amount)
     (display-fill-column-indicator-mode))
 
-  (setq org-tree-slide-activate-message    "Presentation ON")
-  (setq  org-tree-slide-deactivate-message "Presentation OFF")
-  (setq  org-image-actual-width nil)
+  (setq org-tree-slide-activate-message   "Presentation ON")
+  (setq org-tree-slide-deactivate-message "Presentation OFF")
+  (setq org-image-actual-width nil)
 
   ;; keybinds
   (define-key org-mode-map (kbd "<f9>") 'org-tree-slide-mode)
