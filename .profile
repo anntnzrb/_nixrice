@@ -71,7 +71,7 @@ export XDG_DATA_HOME="${HOME}/.local/share"
 # defaults
 # -----------------------------------------------------------------------------
 
-export EDITOR="${XDG_DESKTOP_DIR:?}}/.local/bin/editor"
+export EDITOR="${XDG_DESKTOP_DIR:?}/.local/bin/editor"
 export TERMINAL='alacritty'
 export BROWSER='qutebrowser'
 export FILE='pcmanfm'
