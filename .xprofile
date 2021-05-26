@@ -31,11 +31,8 @@ setbg &
 # compositor
 picom -b &
 
-# audio
-pulseaudio -k ; pulseaudio --start --exit-idle-time=-1 >/dev/null 2>&1 &
-
 # keybindings
-sxhkd -t 5 &
+sxhkd -m 1 -t 5 &
 
 # dunst
 dunst &
@@ -44,11 +41,8 @@ dunst &
 unclutter -grab &
 
 # -----------------------------------------------------------------------------
-# other applications
+# other apps
 # -----------------------------------------------------------------------------
-
-# music player daemon
-mpd &
 
 # light filter
 redshift &

@@ -8,7 +8,6 @@
 #   ██    ░░░░░██░██  ░██ ░██   ░██   ██
 #  ██████ ██████ ░██  ░██░███   ░░█████
 # ░░░░░░ ░░░░░░  ░░   ░░ ░░░     ░░░░░
-# useful stuff should be @ ../zsh/lib/
 
 # -----------------------------------------------------------------------------
 # general
@@ -94,16 +93,6 @@ if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
 fi
 
 # -----------------------------------------------------------------------------
-# miscellaneous
-# -----------------------------------------------------------------------------
-
-# source aliases, functions, etc
-for f in "$HOME"/.config/sh/lib/*; do . "$f"; done
-
-# uncrustify config (for some reason this needs to be sourced every time)
-export UNCRUSTIFY_CONFIG="$HOME/.config/uncrustify/uncrustify.cfg"
-
-# -----------------------------------------------------------------------------
 # prompt
 # -----------------------------------------------------------------------------
 
@@ -119,7 +108,16 @@ export TYPEWRITTEN_SYMBOL="◞◜·◦°"
 # source the prompt (should be after settings)
 . $PROMPT_DIR/typewritten/typewritten.zsh
 
+# ----------------------------------------------------------------------------
+# defaults
 # -----------------------------------------------------------------------------
+
+# prompt, aliases, functions...
+. "${SH_CFGS}/sh-prompt"
+. "${SH_CFGS}/sh-aliases"
+. "${SH_CFGS}/sh-functions"
+
+# ----------------------------------------------------------------------------
 # extensions (should be at last)
 # -----------------------------------------------------------------------------
 
