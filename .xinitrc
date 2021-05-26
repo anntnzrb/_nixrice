@@ -8,7 +8,6 @@
 #   ██░██ ░██ ░██  ░██░██  ░██
 #  ██ ░░██░██ ███  ░██░██  ░░██
 # ░░   ░░ ░░ ░░░   ░░ ░░    ░░
-
 # runs after executing `startx`
 
 # shellcheck disable=1090
@@ -19,11 +18,11 @@ pgrep -x 'systemd' >/dev/null && . '/etc/X11/xinit/xinitrc.d/50-systemd-user.sh'
 
 SESSION='dwm'
 
-case ${SESSION} in
+case ${SESSION:?} in
 i3)
 
 # keybinds
-sxhkd -t 5 -c "${HOME}/.config/i3/sxhkdrc_i3" &
+sxhkd -m 1 -t 5 -c "${HOME}/.config/i3/sxhkdrc_i3" &
 
 exec i3 ;;
 
@@ -34,7 +33,7 @@ dwm)
 dwmblocks &
 
 # keybinds (only if using dwmc)
-#sxhkd -t 5 -c "${HOME}/.config/dwm/sxhkdrc_dwm" &
+#sxhkd -m 1 -t 5 -c "${HOME}/.config/dwm/sxhkdrc_dwm" &
 
 # run dwm as a loop in order to restart, also log
 while :; do dwm 2>"${HOME}/.dwm.log" >&2; done
