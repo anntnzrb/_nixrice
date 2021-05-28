@@ -28,6 +28,7 @@
     - [[#custom-custom-file][custom custom file]]
     - [[#editing][editing]]
     - [[#vi-emulation][Vi emulation]]
+    - [[#mouse--cursor][mouse & cursor]]
   - [[#appearance][appearance]]
     - [[#fonts][fonts]]
     - [[#themes][themes]]
@@ -321,6 +322,46 @@ me not to try looking everywhere for /Vi/ emulation.
 
 (after! evil
   (global-evil-surround-mode))
+#+end_src
+
+*** mouse & cursor
+
+mouse & mouse wheel behavior.
+
++ don't copy region to kill-ring upon selection
++ hide mouse pointer when typing
++ remove mouse wheel acceleration
++ keep mouse pointer at the same visual position
+
+mouse wheel behavior:
+
++ scroll =1= line be default
++ holding =meta= scrolls half a screen
++ holding =control= adjusts the size of text (GNU Emacs =27+=)
+
+#+begin_src emacs-lisp
+(setq make-pointer-invisible          t)
+(setq mouse-drag-copy-region        nil)
+(setq mouse-wheel-follow-mouse      nil)
+(setq mouse-wheel-progressive-speed nil)
+(setq scroll-preserve-screen-position t)
+
+(setq mouse-wheel-scroll-amount
+      '(1
+        ((meta) . 0.5)
+        ((control) . text-scale)))
+#+end_src
+
+**** cursor
+
+#+begin_src emacs-lisp
+(setq blink-cursor-blinks     0) ;; blink forever
+(setq blink-cursor-delay    0.2)
+(setq blink-cursor-interval 0.3)
+
+;; hourglass cursor
+(setq display-hourglass t)
+(setq hourglass-delay   0)
 #+end_src
 
 ** appearance
