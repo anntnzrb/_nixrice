@@ -38,10 +38,12 @@
 - [[#programming][programming]]
   - [[#keybinds][keybinds]]
   - [[#tools][tools]]
+  - [[#shell][shell]]
   - [[#c-like][C-like]]
     - [[#c][C]]
-  - [[#emacs-lisp-elisp][Emacs Lisp (Elisp)]]
-  - [[#racket][Racket]]
+  - [[#lispy][Lispy]]
+    - [[#emacs-lisp-elisp][Emacs Lisp (Elisp)]]
+    - [[#racket][Racket]]
   - [[#nix][Nix]]
 - [[#version-control][version control]]
 - [[#applications--utilities][applications & utilities]]
@@ -428,7 +430,6 @@ mouse wheel behavior:
   (add-hook 'after-init-hook #'annt/all-the-icons-setup))
 #+end_src
 
-
 *** modeline
 
 #+begin_src emacs-lisp
@@ -523,6 +524,21 @@ set of keyboard binding for programming modes
   (add-hook 'lsp-mode-hook #'lsp-ui-mode))
 #+end_src
 
+** shell
+
+settings for shell scripts.
+
+#+begin_src emacs-lisp
+(after! sh-script
+  (setq sh-backlash-align t)
+  (setq sh-basic-offset   4)
+
+  ;; indentation
+  (setq sh-indent-for-case-alt      '+)
+  (setq sh-indent-for-case-label     0)
+  (setq sh-indent-after-continuation t))
+#+end_src
+
 ** C-like
 
 languages that are syntactically similar to /C/
@@ -543,7 +559,9 @@ languages that are syntactically similar to /C/
         "--clang-tidy"))
 #+end_src
 
-** Emacs Lisp (Elisp)
+** Lispy
+
+*** Emacs Lisp (Elisp)
 
 #+begin_src emacs-lisp
 (after! emacs-lisp-mode
@@ -554,7 +572,7 @@ languages that are syntactically similar to /C/
   (setq flycheck-emacs-lisp-load-path 'inherit))
 #+end_src
 
-** Racket
+*** Racket
 
 #+begin_src emacs-lisp
 (straight-use-package 'racket-mode)
@@ -565,6 +583,7 @@ languages that are syntactically similar to /C/
 #+begin_src elisp
 (straight-use-package 'nix-mode)
 
+;; detect Nix files by extension
 (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
 #+end_src
 
