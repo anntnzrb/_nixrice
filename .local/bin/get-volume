@@ -18,7 +18,7 @@
 # main
 # -----------------------------------------------------------------------------
 
-is_installed 'pulseaudio' && {
+if is_installed 'pulseaudio' || is_installed 'pipewire'; then
     # get pulseaudio info
     VOL_STAT="$(pactl list sinks)"
 
@@ -37,4 +37,6 @@ is_installed 'pulseaudio' && {
     fi
 
     printf "%s %s%%" "$icon" "$VOL"
-} || printf '🔊???\n'
+else
+    printf '🔊???\n'
+fi
