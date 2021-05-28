@@ -45,7 +45,10 @@ unclutter -grab &
 # -----------------------------------------------------------------------------
 
 # light filter
-redshift &
+redshift -l \
+         "$(curl -Ss \
+         https://location.services.mozilla.com/v1/geolocate?key=geoclue \
+         | awk 'OFS=":" { print $3,$5 }' | tr -d ',}')" &
 
 # choose display
 displayselect &
