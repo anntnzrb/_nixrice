@@ -604,9 +604,10 @@ languages that are syntactically similar to /C/
 #+begin_src emacs-lisp
 (straight-use-package 'which-key)
 
-(setq which-key-lighter             nil) ;; disable lighter on mode-line
-(setq which-key-idle-delay          0.5)
-(setq which-key-max-display-columns nil)
+(setq which-key-lighter                  nil) ;; disable lighter on mode-line
+(setq which-key-idle-delay               0.5)
+(setq which-key-max-display-columns      nil)
+(setq which-key-paging-key          "<next>")
 (setq which-key-sort-order #'which-key-key-order-alpha)
 
 ;; init after set-up
