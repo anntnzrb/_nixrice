@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: snippet for `die'
+# key: !die
+# --
+
+die("$0\n", ${1:args});

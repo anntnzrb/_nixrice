@@ -2,10 +2,11 @@
 # name: main
 # key: !main
 # --
+
 int
 main(${1:int argc, char *argv[]})
 {
-    $0
+    $0;
 
     return 0;
 }

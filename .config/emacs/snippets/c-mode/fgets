@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: fgets snippet
+# key: !fgets
+# --
+
+char ${1:var}[${2:size}] = {0};
+fgets($1, ARR_LEN($1), ${3:stream});
