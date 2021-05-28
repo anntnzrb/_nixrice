@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: C program skeleton
+# key: !base
+# --
+
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int
+main(${1:int argc, char *argv[]})
+{
+    $0;
+
+    return 0;
+}
