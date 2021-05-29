@@ -496,8 +496,6 @@ set of keyboard binding for programming modes
 #+begin_src emacs-lisp
 (straight-use-package 'aggressive-indent)
 
-(add-hook 'prog-mode-hook #'aggressive-indent-mode)
-
 (after! aggressive-indent
   (setq aggressive-indent-comments-too   t)
   (setq aggressive-indent-sit-for-time 0.5))
@@ -555,15 +553,54 @@ settings for shell scripts.
   (setq tab-width         4))
 #+end_src
 
+** C-like
+
+languages that are syntactically similar to /C/
+
 *** C
 
-#+begin_src emacs-lisp
-(add-hook 'c-mode-hook #'lsp-deferred)
+settings and style for the /C/ language.
 
-;; LSP :: Clangd
-(setq lsp-clients-clangd-args
-      '("--header-insertion-decorators=0"
-        "--clang-tidy"))
+#+begin_src emacs-lisp
+(after! cc-mode
+  ;; OpenBSD KNF-style inherited from Kernighan & Ritchie
+  (setq c-auto-align-backslashes                t)
+  (setq c-backslash-max-column        fill-column)
+  (setq c-basic-offset                          4)
+  (setq c-electric-flag                         t)
+  (setq c-mark-wrong-style-of-comment           t)
+  (setq c-max-one-liner-length        fill-column)
+  (setq c-tab-always-indent                     t)
+
+  ;; offsets
+  (setq c-strict-syntax-p t) ;; we're serious in here
+  (setq c-offsets-alist
+        '((c                    . c-lineup-C-comments)
+          (block-close          . 0)
+          (block-open           . 0)
+          (case-label           . 0)
+          (defun-block-intro    . +)
+          (defun-close          . 0)
+          (defun-open           . 0)
+          (do-while-closure     . 0)
+          (else-clause          . 0)
+          (statement            . 0)
+          (statement-case-intro . +)
+          (statement-case-open  . +)))
+
+  ;; braces
+  (setq c-hanging-braces-alist
+        '((defun-open  before after)
+          (defun-close before after)))
+
+  ;; Flycheck
+  (add-hook 'c-mode-hook #'flycheck-mode)
+
+  ;; LSP :: Clangd
+  (setq lsp-clients-clangd-args
+        '("--header-insertion-decorators=0"
+          "--clang-tidy"))
+  (add-hook 'c-mode-hook #'lsp-deferred))
 #+end_src
 
 ** Lispy
@@ -702,8 +739,6 @@ settings for shell scripts.
 
 #+begin_src emacs-lisp
 (straight-use-package 'flycheck)
-
-(add-hook 'prog-mode-hook #'flycheck-mode)
 
 (after! flycheck
   (setq flycheck-mode-line-prefix "FlyCheck")
