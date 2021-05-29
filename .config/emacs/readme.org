@@ -608,18 +608,23 @@ settings and style for the /C/ language.
 *** Emacs Lisp (Elisp)
 
 #+begin_src emacs-lisp
-(after! emacs-lisp-mode
+(after! elisp-mode
   (electric-pair-mode)
   (setq checkdoc-verb-check-experimental-flag nil)
 
   ;; Flycheck
-  (setq flycheck-emacs-lisp-load-path 'inherit))
+  (setq flycheck-emacs-lisp-load-path 'inherit)
+  (add-hook 'emacs-lisp-mode-hook #'flycheck-mode))
 #+end_src
 
 *** Racket
 
 #+begin_src emacs-lisp
 (straight-use-package 'racket-mode)
+
+(after! racket-mode
+  ;; Flycheck
+  (add-hook 'racket-mode-hook #'flycheck-mode))
 #+end_src
 
 ** Nix
