@@ -29,6 +29,7 @@
     - [[#editing][editing]]
     - [[#vi-emulation][Vi emulation]]
     - [[#mouse--cursor][mouse & cursor]]
+    - [[#unicode--emoji-support][unicode / emoji support]]
   - [[#appearance][appearance]]
     - [[#fonts][fonts]]
     - [[#themes][themes]]
@@ -365,6 +366,16 @@ mouse wheel behavior:
 ;; hourglass cursor
 (setq display-hourglass t)
 (setq hourglass-delay   0)
+#+end_src
+
+*** unicode / emoji support
+
+| [[https://github.com/iqbalansari/emacs-emojify][emojify]] | display emojis |
+
+#+begin_src emacs-lisp
+(straight-use-package 'emojify)
+
+(add-hook 'after-init-hook #'global-emojify-mode)
 #+end_src
 
 ** appearance
