@@ -39,6 +39,7 @@
   - [[#keybinds][keybinds]]
   - [[#tools][tools]]
   - [[#shell][shell]]
+  - [[#makefile][Makefile]]
   - [[#c-like][C-like]]
     - [[#c][C]]
   - [[#lispy][Lispy]]
@@ -539,13 +540,19 @@ settings for shell scripts.
   (setq sh-indent-after-continuation t))
 #+end_src
 
-** C-like
+** Makefile
 
-languages that are syntactically similar to /C/
+=Makefile= files should follow the [[\[\[https://www.gnu.org/software/make/manual/html_node/Makefile-Conventions.html\]\[these\]\] conventions][GNU Makefile conventions]].
 
 #+begin_src emacs-lisp
-(after! cc-mode
-  (add-to-list 'c-default-style '(c-mode . "k&r")))
+(after! make-mode
+  (setq makefile-backslash-align               t)
+  (setq makefile-tab-after-target-colon        t)
+  (setq makefile-use-curly-braces-for-macros-p t)
+
+  ;; indentation
+  (setq indent-tabs-mode  t) ;; use tabs over spaces
+  (setq tab-width         4))
 #+end_src
 
 *** C
