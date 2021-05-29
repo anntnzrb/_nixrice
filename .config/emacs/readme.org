@@ -1,4 +1,4 @@
-#+title: annt's Emacs'
+#+title: annt's GNU Emacs'
 #+author: anntnzrb
 #+email: anntnzrb@protonmail.com
 #+property: header-args :results silent
@@ -9,7 +9,7 @@
 
 - created: 2020-11-07
 - updated: *{{{export-date}}}*
-- GNU Emacs version: *{{{emacs-version}}}*
+- GNU Emacs version (last export): *{{{emacs-version}}}*
 
 * table of contents                                          :TOC_3:noexport:
 - [[#core-settings][core settings]]
