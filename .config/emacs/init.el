@@ -1,11 +1,120 @@
 ;;; init.el --- Initialization file of GNU Emacs -*- lexical-binding: t; -*-
 
+;; This file is NOT part of GNU Emacs.
+
+;; This file is free software: you can redistribute it and/or modify it
+;; under the terms of the GNU General Public License as published by the
+;; Free Software Foundation, either version 3 of the License, or (at
+;; your option) any later version.
+;;
+;; This file is distributed in the hope that it will be useful, but
+;; WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;; General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this file.  If not, see <http://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;; This file gets loaded after the 'early-init.el' file.
+
+;; This initialization file configures the literate configuration file written
+;; in Org, it does so by checking when it was las updated and tangles it only
+;; when needed, loads the non-updated file otherwise.  The main goal here is to
+;; remove the unneeded tangling and improve startup time.
+
+;; There are a few other options I like to keep here, should be well-documented.
+
+;; Lastly, there a few benchmarks to debug the initialization.
 
 ;;; Code:
 
-(org-babel-load-file (expand-file-name "readme.org" user-emacs-directory))
+;; check if using minimum required version
+(let ((min-ver "27.1"))
+  (when (version< emacs-version min-ver)
+    (error "Your version of GNU Emacs (v%s) is outdated you need at least v%s"
+           emacs-version min-ver)))
+
+(defvar annt/emacs-config-file "readme"
+  "Base name of annt's configuration file.")
+
+(defun annt/notify-and-log (message)
+  "Prints MESSAGE and logs it to a file in `user-emacs-directory' directory."
+  (message message)
+
+  ;; log to file
+  (append-to-file
+   (format "[%s] :: %s\n" (current-time-string) message)
+   nil
+   (expand-file-name "emacs.log" user-emacs-directory)))
+
+(defun annt/expand-emacs-file-name (file extension)
+  "Return canonical path to FILE to Emacs config with EXTENSION."
+  (locate-user-emacs-file
+   (concat file extension)))
+
+(defun annt/org-tangle-and-byte-compile (FILE TARGET-FILE)
+  "Tangle given FILE to TARGET_FILE and byte-compile it."
+  (require 'ob-tangle)
+  (org-babel-tangle-file FILE TARGET-FILE)
+  (byte-compile-file          TARGET-FILE))
+
+(defun annt/update-emacs-config ()
+  "If configuration files were modified, update them with the latest changes.
+First it checks wether the literate configuration file (Org) was modified or
+not, only when there's a change it deletes the previously tangled ELisp code
+and re-tangles it, byte-compiles it afterwards."
+  (let* ((cfg-file annt/emacs-config-file)
+         (cfg-file-org
+          (annt/expand-emacs-file-name cfg-file ".org"))
+         (cfg-file-el
+          (annt/expand-emacs-file-name cfg-file ".el"))
+         (cfg-file-el-compiled
+          (annt/expand-emacs-file-name cfg-file ".elc"))
+         (cfg-file-org-last-modified
+          (file-attribute-modification-time (file-attributes cfg-file-org))))
+
+    (require 'org-macs)
+    (unless (org-file-newer-than-p cfg-file-el cfg-file-org-last-modified)
+      (annt/notify-and-log "Literate configuration has been updated...")
+      (annt/notify-and-log "Deleting old configuration files files...")
+      (delete-file cfg-file-el          t)
+      (delete-file cfg-file-el-compiled t)
+      (annt/org-tangle-and-byte-compile cfg-file-org cfg-file-el))))
+
+;; set working directory to `~' regardless of where Emacs was started from
+(cd (expand-file-name "~/"))
+
+;; configuration file initialization
+(let* ((cfg-file annt/emacs-config-file)
+       (cfg-file-org (annt/expand-emacs-file-name cfg-file ".org"))
+       (cfg-file-el  (annt/expand-emacs-file-name cfg-file ".el")))
+
+  ;; only tangle if tangled file does not exists
+  (unless (file-exists-p cfg-file-el)
+    (annt/notify-and-log "Literate configuration has not been tangled yet...")
+    (annt/notify-and-log "Proceeding to tangle & byte-compile configuration...")
+    (annt/org-tangle-and-byte-compile cfg-file-org cfg-file-el)
+    (annt/notify-and-log "Literate configuration was tangled & byte-compiled."))
+
+  ;; finally load the configuration file
+  (load-file cfg-file-el)
+  (annt/notify-and-log "Configuration loaded."))
+
+;; `kill-emacs-hook' used for startup time
+(add-hook 'kill-emacs-hook #'annt/update-emacs-config)
+
+;; WARNING: Reset garbage collector (should be at the end of this file)
+;; After everything else is set-up, set the garbage collector to a considerable
+;; non-archaic value.
+(defun annt/setup-gc ()
+  "Sets up efficient garbage collector settings.
+The following values are modified: `gc-cons-threshold' and
+`gc-cons-percentage'."
+  (setq gc-cons-threshold (* 20 1024 1024))
+  (setq gc-cons-percentage 0.1))
+
+;; `emacs-startup-hook' can be used to set this after init files are done
+(add-hook 'emacs-startup-hook #'annt/setup-gc)
 
 (provide 'init)
 ;;; init.el ends here

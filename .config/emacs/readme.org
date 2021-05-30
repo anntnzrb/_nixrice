@@ -20,10 +20,6 @@
   - [[#helpers][helpers]]
   - [[#package-management][package management]]
     - [[#straightel][~straight.el~]]
-  - [[#performance][performance]]
-    - [[#garbage-collector][garbage collector]]
-    - [[#amount-of-procesed-data][amount of procesed data]]
-    - [[#extra-resources][extra resources]]
   - [[#generals][generals]]
     - [[#custom-custom-file][custom custom file]]
     - [[#editing][editing]]
@@ -58,55 +54,201 @@
 
 ** initialization files
 
+these file should already be present in the =user-emacs-directory= directory
+but are kept here for editing purposes.
+
 *** =early-init.el=
 
-Emacs =27.1= offers new file called =early-init.el= which allows customizations
-that take effect during Emacs startup earlier than the normal init file. This
-file is loaded before the package system and GUI is initialized.
+/GNU Emacs/ =27.1= offers new file called =early-init.el= which allows
+customizations that take effect during Emacs startup earlier than the normal
+init file. This file is loaded before the package system and GUI is
+initialized.
 
--  references
-  - [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.html][The Early Init File]]
+references:
+- [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.html][The Early Init File]]
 
 #+begin_src emacs-lisp :tangle "early-init.el"
 ;;; early-init.el --- GNU Emacs >= 27.1 pre-initialization file -*- lexical-binding: t -*-
 
+;; This file is NOT part of GNU Emacs.
+
+;; This file is free software: you can redistribute it and/or modify it
+;; under the terms of the GNU General Public License as published by the
+;; Free Software Foundation, either version 3 of the License, or (at
+;; your option) any later version.
+;;
+;; This file is distributed in the hope that it will be useful, but
+;; WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;; General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this file.  If not, see <http://www.gnu.org/licenses/>.
+
 ;;; Commentary:
 
-;; This file gets loaded before the 'init.el' file.
-;; Should not have more than a few files.
+;; At this early stage there a few settings to be set in order to set-up Emacs
+;; efficiently, this file should not be long at all.  All other usual
+;; configuration should remain elsewhere.
+;; This fill is only valid for GNU Emacs 27.1+.  Gets loaded before the
+;; 'init.el' file.
 
 ;;; Code:
 
+;; The garbage collector threshold is increased here to prevent it from
+;; running at these early stages, the objective here is to reset it later.
+;; Consider checking the 'init.el' file right next to this file for the
+;; remaining instructions.
+;; WARNING :: Not adjusting this settings properly will lead to
+;; freezes/stuttering and unexpected behavior.
+(setq gc-cons-threshold most-positive-fixnum)
+(setq gc-cons-percentage 0.6)
+
+;; Increase the amount of data which Emacs reads from processes
+(setq read-process-output-max (* 1024 1024))
+
+;; native compilation
+(setq native-comp-async-report-warnings-errors 'silent)
+
 ;; package tweaks
 (setq package-enable-at-startup nil) ;; needed by `straight.el'
-
-;; don't frame-resize this early
-(setq frame-inhibit-implied-resize t)
 
 ;; GUI
 (menu-bar-mode   0)
 (scroll-bar-mode 0)
 (setq inhibit-splash-screen  t)
 (setq inhibit-startup-screen t)
+(setq frame-inhibit-implied-resize t) ;; don't frame-resize this early
 
 (provide 'early-init)
-
 ;;; early-init.el ends here
 #+end_src
 
 *** =init.el=
 
-this file should be present anyways but adding here makes it easier to manage.
+this file is responsible of loading the neccesary /ELisp/ code whenever
+/GNU Emacs/ starts. my configuration is (obviously) written literally using
+/Org/ so the purpose of this file is to contain the instructions to transform
+this literate configuration into /ELisp/ code and load it.
 
 #+begin_src emacs-lisp :tangle "init.el"
 ;;; init.el --- Initialization file of GNU Emacs -*- lexical-binding: t; -*-
 
+;; This file is NOT part of GNU Emacs.
+
+;; This file is free software: you can redistribute it and/or modify it
+;; under the terms of the GNU General Public License as published by the
+;; Free Software Foundation, either version 3 of the License, or (at
+;; your option) any later version.
+;;
+;; This file is distributed in the hope that it will be useful, but
+;; WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+;; General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this file.  If not, see <http://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;; This file gets loaded after the 'early-init.el' file.
+
+;; This initialization file configures the literate configuration file written
+;; in Org, it does so by checking when it was las updated and tangles it only
+;; when needed, loads the non-updated file otherwise.  The main goal here is to
+;; remove the unneeded tangling and improve startup time.
+
+;; There are a few other options I like to keep here, should be well-documented.
+
+;; Lastly, there a few benchmarks to debug the initialization.
 
 ;;; Code:
 
-(org-babel-load-file (expand-file-name "readme.org" user-emacs-directory))
+;; check if using minimum required version
+(let ((min-ver "27.1"))
+  (when (version< emacs-version min-ver)
+    (error "Your version of GNU Emacs (v%s) is outdated you need at least v%s"
+           emacs-version min-ver)))
+
+(defvar annt/emacs-config-file "readme"
+  "Base name of annt's configuration file.")
+
+(defun annt/notify-and-log (message)
+  "Prints MESSAGE and logs it to a file in `user-emacs-directory' directory."
+  (message message)
+
+  ;; log to file
+  (append-to-file
+   (format "[%s] :: %s\n" (current-time-string) message)
+   nil
+   (expand-file-name "emacs.log" user-emacs-directory)))
+
+(defun annt/expand-emacs-file-name (file extension)
+  "Return canonical path to FILE to Emacs config with EXTENSION."
+  (locate-user-emacs-file
+   (concat file extension)))
+
+(defun annt/org-tangle-and-byte-compile (FILE TARGET-FILE)
+  "Tangle given FILE to TARGET_FILE and byte-compile it."
+  (require 'ob-tangle)
+  (org-babel-tangle-file FILE TARGET-FILE)
+  (byte-compile-file          TARGET-FILE))
+
+(defun annt/update-emacs-config ()
+  "If configuration files were modified, update them with the latest changes.
+First it checks wether the literate configuration file (Org) was modified or
+not, only when there's a change it deletes the previously tangled ELisp code
+and re-tangles it, byte-compiles it afterwards."
+  (let* ((cfg-file annt/emacs-config-file)
+         (cfg-file-org
+          (annt/expand-emacs-file-name cfg-file ".org"))
+         (cfg-file-el
+          (annt/expand-emacs-file-name cfg-file ".el"))
+         (cfg-file-el-compiled
+          (annt/expand-emacs-file-name cfg-file ".elc"))
+         (cfg-file-org-last-modified
+          (file-attribute-modification-time (file-attributes cfg-file-org))))
+
+    (require 'org-macs)
+    (unless (org-file-newer-than-p cfg-file-el cfg-file-org-last-modified)
+      (annt/notify-and-log "Literate configuration has been updated...")
+      (annt/notify-and-log "Deleting old configuration files files...")
+      (delete-file cfg-file-el          t)
+      (delete-file cfg-file-el-compiled t)
+      (annt/org-tangle-and-byte-compile cfg-file-org cfg-file-el))))
+
+;; set working directory to `~' regardless of where Emacs was started from
+(cd (expand-file-name "~/"))
+
+;; configuration file initialization
+(let* ((cfg-file annt/emacs-config-file)
+       (cfg-file-org (annt/expand-emacs-file-name cfg-file ".org"))
+       (cfg-file-el  (annt/expand-emacs-file-name cfg-file ".el")))
+
+  ;; only tangle if tangled file does not exists
+  (unless (file-exists-p cfg-file-el)
+    (annt/notify-and-log "Literate configuration has not been tangled yet...")
+    (annt/notify-and-log "Proceeding to tangle & byte-compile configuration...")
+    (annt/org-tangle-and-byte-compile cfg-file-org cfg-file-el)
+    (annt/notify-and-log "Literate configuration was tangled & byte-compiled."))
+
+  ;; finally load the configuration file
+  (load-file cfg-file-el)
+  (annt/notify-and-log "Configuration loaded."))
+
+;; `kill-emacs-hook' used for startup time
+(add-hook 'kill-emacs-hook #'annt/update-emacs-config)
+
+;; WARNING: Reset garbage collector (should be at the end of this file)
+;; After everything else is set-up, set the garbage collector to a considerable
+;; non-archaic value.
+(defun annt/setup-gc ()
+  "Sets up efficient garbage collector settings.
+The following values are modified: `gc-cons-threshold' and
+`gc-cons-percentage'."
+  (setq gc-cons-threshold (* 20 1024 1024))
+  (setq gc-cons-percentage 0.1))
+
+;; `emacs-startup-hook' can be used to set this after init files are done
+(add-hook 'emacs-startup-hook #'annt/setup-gc)
 
 (provide 'init)
 ;;; init.el ends here
@@ -208,41 +350,6 @@ a few reasons why i consider =straight.el=:
 
 (setq straight-repository-branch "master")
 #+end_src
-
-** performance
-
-*** garbage collector
-
-[[https://emacs.stackexchange.com/a/34367][... setting `gc-cons-threshold` very high and collecting garbage when idle?]]
-
-#+begin_src emacs-lisp
-(setq gc-cons-threshold-orig gc-cons-threshold
-      gc-cons-threshold      (* 1024 1024 100)
-      file-name-handler-alist-orig file-name-handler-alist
-      file-name-handler-alist      nil)
-
-(run-with-idle-timer
- 5 nil
- (lambda ()
-   (setq gc-cons-threshold       gc-cons-threshold-orig
-         file-name-handler-alist file-name-handler-alist-orig)
-   (makunbound 'gc-cons-threshold-orig)
-   (makunbound 'file-name-handler-alist-orig)))
-#+end_src
-
-*** amount of procesed data
-
-[[https://emacs-lsp.github.io/lsp-mode/page/performance/][LSP :: Performance Guide]]
-
-#+begin_src emacs-lisp
-(setq read-process-output-max (* 1024 1024))
-#+end_src
-
-*** extra resources
-
-a list of useful posts regarding gnu emacs performance.
-
-- [[https://blog.d46.us/advanced-emacs-startup/][Advanced Techniques for Reducing Emacs Startup Time]]
 
 ** generals
 
