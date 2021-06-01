@@ -659,7 +659,14 @@ set of keyboard binding for programming modes
 
 (after! aggressive-indent
   (setq aggressive-indent-comments-too   t)
-  (setq aggressive-indent-sit-for-time 0.5))
+  (setq aggressive-indent-sit-for-time 0.5)
+
+  (defun annt/disable-aggressive-indent ()
+    "Disable aggressive-indent-mode. Created to avoid using a lambda."
+    (aggressive-indent-mode 0))
+
+  ;; disable for certain modes
+  (add-hook 'snippet-mode-hook #'annt/disable-aggressive-indent))
 
 (add-hook 'prog-mode-hook #'aggressive-indent-mode)
 #+end_src
