@@ -109,8 +109,15 @@ references:
 ;; Increase the amount of data which Emacs reads from processes
 (setq read-process-output-max (* 1024 1024))
 
-;; native compilation
-(setq native-comp-async-report-warnings-errors 'silent)
+;; Native Compilation
+;; REVIEW: future refactor
+(when (and
+       (fboundp 'native-comp-available-p)
+       (native-comp-available-p))
+  (message "Native compilation is available.")
+  (setq native-comp-async-report-warnings-errors 'silent)
+  ;; Prevent unwanted runtime compilation
+  (setq native-comp-deferred-compilation nil))
 
 ;; package tweaks
 (setq package-enable-at-startup nil) ;; needed by `straight.el'
