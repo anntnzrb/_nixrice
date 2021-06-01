@@ -3,4 +3,4 @@
 # key: !hook
 # --
 
-(add-hook '${1:hook} #'${2:fun})
+(add-hook '${1:hook} #'${0:fun})

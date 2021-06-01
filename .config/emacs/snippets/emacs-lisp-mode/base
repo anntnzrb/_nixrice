@@ -1,0 +1,26 @@
+# -*- mode: snippet -*-
+# name: skeleton for Emacs Lisp files
+# key: !base
+# contributor: Henrik Lissner, anntnzrb
+# --
+
+;;; `(file-name-nondirectory buffer-file-name)` --- ${1:Description} -*- lexical-binding: t; -*-
+
+;; Copyright (C) `(format-time-string "%Y")` ${2:`user-full-name`}
+
+;; Author: $2 <`user-mail-address`>
+;; Created: `(format-time-string "%B %d, %Y")`
+;; Keywords: $3
+
+;; This file is not part of GNU Emacs.
+
+;;; Commentary:
+
+;;  $1
+
+;;; Code:
+
+$0
+
+(provide '`(file-name-base buffer-file-name)`)
+;;; `(file-name-nondirectory buffer-file-name)` ends here

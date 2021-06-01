@@ -3,4 +3,4 @@
 # key: !printf
 # --
 
-printf("$0\n", $1);
+printf("$1\n", $0);

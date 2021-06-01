@@ -3,4 +3,4 @@
 # key: !defkey
 # --
 
-(define-key ${1:mode-map} (kbd "$2") '$3)
+(define-key ${1:mode}-map (kbd "$2") '$0)
