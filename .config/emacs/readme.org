@@ -372,9 +372,15 @@ settings that do not belong anywhere specific.
 (setq create-lockfiles  nil)
 (setq make-backup-files nil)
 
-(setq visible-bell t)
-(setq use-short-answers t)
+(setq delete-by-moving-to-trash t) ;; safer than `rm'
+(setq use-short-answers         t)
+(setq visible-bell              t) ;; flash screen
 
+;; always autorevert
+(setq auto-revert-verbose t)
+(add-hook 'after-init-hook #'global-auto-revert-mode)
+
+;; automatically maximize frame when Emacs starts
 (add-hook 'after-init-hook #'toggle-frame-maximized)
 #+end_src
 
@@ -583,15 +589,14 @@ mouse wheel behavior:
 
 * dired
 
-/Emacs/' *dir*ectory *ed*itor.
+/Emacs/' =dir=-ectory =ed=-itor.
 
 #+begin_src emacs-lisp
 (after! dired
-  (setq delete-by-moving-to-trash     t) ;; safer than `rm'
-  (setq dired-auto-revert-buffer      t)
+  (setq dired-auto-revert-buffer       #'dired-directory-changed-p)
+  (setq dired-listing-switches   "-AFhl --group-directories-first")
   (setq dired-recursive-copies  'always)
   (setq dired-recursive-deletes 'always)
-  (setq dired-listing-switches "-AFhl --group-directories-first")
 
   ;; less verbose output
   (add-hook 'dired-mode-hook #'dired-hide-details-mode))
