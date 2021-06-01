@@ -21,6 +21,7 @@
   - [[#package-management][package management]]
     - [[#straightel][~straight.el~]]
   - [[#generals][generals]]
+    - [[#indentification][indentification]]
     - [[#custom-custom-file][custom custom file]]
     - [[#editing][editing]]
     - [[#vi-emulation][Vi emulation]]
@@ -69,6 +70,8 @@ references:
 
 #+begin_src emacs-lisp :tangle "early-init.el"
 ;;; early-init.el --- GNU Emacs >= 27.1 pre-initialization file -*- lexical-binding: t -*-
+
+;; Copyright (C) 2020-2021 anntnzrb
 
 ;; Author: anntnzrb <anntnzrb@protonmail.com>
 ;; Keywords: initialization
@@ -142,6 +145,8 @@ this literate configuration into /ELisp/ code and load it.
 
 #+begin_src emacs-lisp :tangle "init.el"
 ;;; init.el --- Initialization file of GNU Emacs -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2020-2021 anntnzrb
 
 ;; Author: anntnzrb <anntnzrb@protonmail.com>
 ;; Keywords: initialization
@@ -382,6 +387,15 @@ settings that do not belong anywhere specific.
 
 ;; automatically maximize frame when Emacs starts
 (add-hook 'after-init-hook #'toggle-frame-maximized)
+#+end_src
+
+*** indentification
+
+information about myself.
+
+#+begin_src emacs-lisp
+(setq user-full-name    "anntnzrb")
+(setq user-mail-address "anntnzrb@protonmail.com")
 #+end_src
 
 *** custom custom file

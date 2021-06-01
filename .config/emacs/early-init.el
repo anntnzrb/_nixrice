@@ -1,5 +1,7 @@
 ;;; early-init.el --- GNU Emacs >= 27.1 pre-initialization file -*- lexical-binding: t -*-
 
+;; Copyright (C) 2020-2021 anntnzrb
+
 ;; Author: anntnzrb <anntnzrb@protonmail.com>
 ;; Keywords: initialization
 

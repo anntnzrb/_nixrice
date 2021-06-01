@@ -1,5 +1,7 @@
 ;;; init.el --- Initialization file of GNU Emacs -*- lexical-binding: t; -*-
 
+;; Copyright (C) 2020-2021 anntnzrb
+
 ;; Author: anntnzrb <anntnzrb@protonmail.com>
 ;; Keywords: initialization
 
