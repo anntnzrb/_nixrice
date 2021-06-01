@@ -3,12 +3,19 @@
 # key: !base
 # --
 
+/* ${1:`(file-relative-name buffer-file-truename)`} --- $2 */
+
+/**
+ * \file        $1
+ * \brief       $2
+ */
+
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 int
-main(${1:int argc, char *argv[]})
+main(${3:int argc, char *argv[]})
 {
     $0;
 

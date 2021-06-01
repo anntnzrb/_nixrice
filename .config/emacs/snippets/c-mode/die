@@ -3,4 +3,4 @@
 # key: !die
 # --
 
-die("$0\n", ${1:args});
+die("$1\n", ${0:args});
