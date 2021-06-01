@@ -390,8 +390,18 @@ if you adjust settings directly from /Emacs/ (GUI), some Elisp code will be
 appended to the =init.el= file, this can be a bit messy; this can be adjusted
 to use another file and accomplish this.
 
+#+begin_quote
+i've finally decided to just not use a custom file at all; everything should be
+handled from this file anyways. i've had issues with my settings whenever i'm
+going thru =customize= and accidentally set-up a settings or two.
+#+end_quote
+
 #+begin_src emacs-lisp
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(let ((use-custom-file-p nil))
+  (setq custom-file
+        (if use-custom-file-p
+            (expand-file-name "custom.el" user-emacs-directory)
+          null-device)))
 #+end_src
 
 *** editing
