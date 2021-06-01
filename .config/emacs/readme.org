@@ -644,6 +644,8 @@ set of keyboard binding for programming modes
 (after! aggressive-indent
   (setq aggressive-indent-comments-too   t)
   (setq aggressive-indent-sit-for-time 0.5))
+
+(add-hook 'prog-mode-hook #'aggressive-indent-mode)
 #+end_src
 
 - [[https://github.com/emacs-lsp/lsp-mode/][Language Server Protocol]]
@@ -694,8 +696,8 @@ settings for shell scripts.
   (setq makefile-use-curly-braces-for-macros-p t)
 
   ;; indentation
-  (setq indent-tabs-mode  t) ;; use tabs over spaces
-  (setq tab-width         4))
+  (setq indent-tabs-mode t) ;; use tabs over spaces
+  (setq tab-width        4))
 #+end_src
 
 ** C-like
