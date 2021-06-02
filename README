@@ -1,0 +1,50 @@
+-*- mode: org -*-
+
+#+title:    annt's =~/=
+#+author:   anntnzrb
+#+language: en
+
+* table of contents :toc:noexport:
+- [[#intro][intro]]
+- [[#disclaimer][disclaimer]]
+- [[#installation][installation]]
+- [[#copying][copying]]
+
+* intro
+
+these /.files/ have accompanied me since *2019*ish (under VC since 2020), the
+files (scripts) are written with portability in mind, meaning they're meant to
+work across multiple [[https://0x0.st/HNfM][*nix distrubutions]].
+
+* disclaimer
+
+this repository serves as a laboratory. it's meant for experimentation and
+should be considered /unstable/, /biased/ and sometimes even /untested/.
+
+nevertheless feel free to take a look and learn from it, experimenting and
+sharing is always encouraged.
+
+* installation
+
+as of right i'm not using [[https://www.gnu.org/software/stow/][GNU Stow]] or any other fancy tool for deploying these.
+
+get the repo:
+
+#+begin_src shell
+git clone --depth 1 'https://gitlab.com/anntnzrb/_nixrice.git' '/tmp/annt-nixrice'
+#+end_src
+
+install @ =~/=:
+
+*NOTE*: /this will overwrite your existing files under your home folder./
+
+#+begin_src shell
+cp -Rf "/tmp/annt-nixrice/." "${HOME}/"
+#+end_src
+
+* copying
+
+refer to the [[file:COPYING][COPYING]] file for licensing information.
+
+unless otherwise noted, all code herein is distributed under the terms of the
+[[https://www.gnu.org/licenses/gpl-3.0.en.html][GNU General Public License Version 3 or later]].
