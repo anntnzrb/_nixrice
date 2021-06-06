@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: main funciton of C programs
+# key: !fnmain
+# --
+
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int
+main(${3:int argc, char **argv})
+{
+    $0;
+
+    return 0;
+}

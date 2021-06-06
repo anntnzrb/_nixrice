@@ -3,5 +3,4 @@
 # key: !#arrlen
 # --
 
-#define ARR_LEN(x) (sizeof((x)) / sizeof(*(x))
-$0
+#define ARR_LEN(x) (sizeof((x)) / sizeof(*(x)))
