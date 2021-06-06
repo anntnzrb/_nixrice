@@ -10,14 +10,4 @@
  * \brief       $2
  */
 
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-int
-main(${3:int argc, char *argv[]})
-{
-    $0;
-
-    return 0;
-}
+!fnmain$0
