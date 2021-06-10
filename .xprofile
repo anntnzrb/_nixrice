@@ -10,19 +10,7 @@
 # ░░ ░░   ░░ ░░      ░░░     ░░░░░░    ░░   ░░ ░░░  ░░░░░░
 # ░░░░ runs on tty / dm login
 
-# -----------------------------------------------------------------------------
-# system
-# -----------------------------------------------------------------------------
-
-# == Xorg settings
-# disable screensaver
-xset s off &
-# off-screen time
-xset dpms 0 0 900 &
-# source Xresources
-xrdb "${XDG_CONFIG_HOME:?}/X11/.Xresources" &
-
-# keyboard settings
+# personal keyboard settings
 remaps &
 
 # sets the background with `setbg` script
@@ -31,8 +19,8 @@ setbg &
 # compositor
 picom -b &
 
-# keybindings
-sxhkd -m 1 -t 5 &
+# global keybindings
+sxhkd -m 1 -t 5 -c "${HOME}/.config/sxhkd/sxhkdrc" &
 
 # dunst
 dunst &
