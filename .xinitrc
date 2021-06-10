@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# shellcheck disable=1090,1091
+# bypass non-constant source following
+
 #          ██          ██   ██
 #         ░░          ░░   ░██
 #  ██   ██ ██ ███████  ██ ██████
@@ -10,38 +13,51 @@
 # ░░   ░░ ░░ ░░░   ░░ ░░    ░░
 # runs after executing `startx`
 
-# shellcheck disable=1090
-test -f "${HOME}/.xprofile" && . "${HOME}/.xprofile"
+# load defaults
+xinit_cfg_dir='/etc/X11/xinit/xinitrc.d'
+test -d "${xinit_cfg_dir}" && {
+    for f in "${xinit_cfg_dir}"/*.sh ; do
+        test -x "${f}" && . "${f}"
+    done
+    unset f
+}
+unset -v xinit_cfg_dir
 
-# some dbus patch for systemd systems (keyring-related)
-pgrep -x 'systemd' >/dev/null && . '/etc/X11/xinit/xinitrc.d/50-systemd-user.sh'
+# -----------------------------------------------------------------------------
+# Xorg settings
+# -----------------------------------------------------------------------------
 
-SESSION='dwm'
+xset s off &                                  # disable screensaver
+xset dpms 0 0 900 &                           # off-screen time
+xrdb "${XDG_CONFIG_HOME:?}/X11/.Xresources" & # source Xresources
 
-case ${SESSION:?} in
-i3)
+# load X start-up programs
+test -x "${HOME}/.xprofile" && . "${HOME}/.xprofile"
 
-# keybinds
-sxhkd -m 1 -t 5 -c "${HOME}/.config/i3/sxhkdrc_i3" &
+# -----------------------------------------------------------------------------
+# graphical environment (window manager/desktop environment)
+# -----------------------------------------------------------------------------
 
-exec i3 ;;
+# default ses
+session='awesome'
 
-bsp[wm]) exec bspwm ;;
+case ${session:?} in
+awesome)
+    unset -v session
+
+    exec awesome
+    ;;
 
 dwm)
-# statusbar
-dwmblocks &
+    unset -v session
 
-# keybinds (only if using dwmc)
-#sxhkd -m 1 -t 5 -c "${HOME}/.config/dwm/sxhkdrc_dwm" &
+    # statusbar
+    dwmblocks &
 
-# run dwm as a loop in order to restart, also log
-while :; do dwm 2>"${HOME}/.dwm.log" >&2; done
-;;
-
-spectr[wm]) exec spectrwm ;;
-
-qtile) exec qtile ;;
-
-*) exit 1 ;;
+    # run dwm as a loop in order to restart, also log
+    while :; do dwm 2>"${HOME}/.dwm.log" >&2; done
+    ;;
+*)
+    printf "error :: '%s'\n" "$1" >&2
+    exit 1
 esac
