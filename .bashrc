@@ -39,8 +39,20 @@ export HISTCONTROL='erasedups'        # keep duplicates off
 export HISTFILESIZE=10000
 export HISTIGNORE='cd:ls:ll:exit:pwd' # commands to be ignored in history
 
+ps1_user="\[\033[38;5;1m\]\u\[$(tput sgr0)\]"
+ps1_hostname="\[\033[38;5;69m\]\H\[$(tput sgr0)\]"
+ps1_at="\[$(tput bold)\]\[\033[38;5;244m\]@\[$(tput sgr0)\]"
+ps1_arrow="\[$(tput bold)\]\[\033[38;5;244m\]->\[$(tput sgr0)\]"
+ps1_dir="\[\033[38;5;3m\]\w\[$(tput sgr0)\]"
+ps1_qstn="\[$(tput bold)\]\[\033[38;5;244m\]?\[$(tput sgr0)\]"
+ps1_exit_code="\[$(tput bold)\]\[\033[38;5;160m\]\$?\[$(tput sgr0)\]"
+ps1_colons="\[$(tput bold)\]\[\033[38;5;244m\]::\[$(tput sgr0)\]"
+
 # prompt + git
-PS1="\[\033[38;5;9m\]\u\[$(tput sgr0)\]\[\033[38;5;238m\]@\[$(tput sgr0)\]\[\033[38;5;244m\]\h\[$(tput sgr0)\] \[$(tput sgr0)\]\[\033[38;5;239m\]-\[$(tput sgr0)\]\[\033[38;5;238m\]>\[$(tput sgr0)\] \[$(tput sgr0)\]\[\033[38;5;6m\]\w\[$(tput sgr0)\] \[$(tput sgr0)\]\[\033[38;5;238m\]*\[$(tput sgr0)\]*\[$(tput sgr0)\]\[\033[38;5;238m\]*\[$(tput sgr0)\] \[$(tput sgr0)\]\[\033[38;5;4m\]\A\[$(tput sgr0)\] \[$(tput sgr0)\]\[\033[38;5;238m\]?\[$(tput sgr0)\] \[$(tput sgr0)\]\[\033[38;5;1m\]\$?\[$(tput sgr0)\] \[$(tput sgr0)\]\[\033[38;5;238m\]::\[$(tput sgr0)\] \[$(tput sgr0)\]\[\033[38;5;28m\]\\$ \[$(tput sgr0)\]"
+PS1="${ps1_user}${ps1_at}${ps1_hostname} ${ps1_arrow} ${ps1_dir}\n${ps1_arrow} ${ps1_qstn} ${ps1_exit_code} ${ps1_colons} "
+
+# cleanup
+unset -v ps1_user ps1_hostname ps1_at ps1_arrow ps1_dir ps1_qstn ps1_exit_code ps1_colons
 
 # prompt, aliases, functions...
 . "${SH_CFGS}/sh-prompt"
