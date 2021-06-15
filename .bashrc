@@ -19,16 +19,31 @@
 # do nothing if not running interactively
 [[ $- != *i* ]] && return
 
-set -o posix
+setup_posix() {
+    # **
+    # sets up POSIX mode for Bash if available.
+    # *
+
+    if test ${IN_NIX_SHELL}; then
+        printf "nix-shell does not support the 'POSIX' option, disabling...\n"
+    else
+        set -o posix
+    fi
+}
+
+setup_posix
 # update the values of LINES and COLUMNS
 test "${DISPLAY}" && shopt -s checkwinsize
-shopt -s globstar   # allow ** to match recursively
-shopt -s nocaseglob # match globs case-insensitively
-shopt -s histappend # append to history
+shopt -s globstar      # allow ** to match recursively
+shopt -s nocaseglob    # match globs case-insensitively
+shopt -s histappend    # append to history
 shopt -s cmdhist       # save multiline commands as one
 # attempt correcting directory names
 shopt -s dirspell
 shopt -s cdspell
+
+# cleanup
+unset -f setup_posix
 
 # -----------------------------------------------------------------------------
 # settings
