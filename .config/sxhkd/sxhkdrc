@@ -100,4 +100,4 @@ super + F11
 # kill Xorg session
 # meant to kill the x server in an emergency situation
 super + control + alt + Escape
-  pkill -15 'Xorg'
+  pkill -15 'X'

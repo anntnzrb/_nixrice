@@ -31,29 +31,8 @@ alias \
 alias \
     eed='${EDITOR:?}' \
     seed='sudo ${EDITOR:?}' \
-    sx11='startx' \
-    kx11="pkill -15 'Xorg'"
-
-# -----------------------------------------------------------------------------
-# system-specific aliases
-# -----------------------------------------------------------------------------
-
-# arch-based
-if test -x "`command -v 'pacman'`"; then
-    alias \
-        pkgf='pacman -Ss' \
-        pkgi="sudo pacman --needed -Suy 'pacman' && sudo pacman -S" \
-        pkgr='sudo pacman -Rns' \
-        pkgu="sudo pacman --needed -Suy 'pacman' && sudo pacman -Suyy"
-
-# void
-elif test -x "`command -v 'xbps-install'`"; then
-    alias \
-        pkgf='xbps-query' \
-        pkgi="sudo xbps-install -S 'xbps' && sudo xbps-install -S" \
-        pkgr='sudo xbps-remove -Rf' \
-        pkgu="sudo xbps-install -S 'xbps' && sudo xbps-install -Su"
-fi
+    sx11='startx ${HOME}/.xinitrc' \
+    kx11="pkill -15 'X'"
 
 # -----------------------------------------------------------------------------
 # miscellaneous
