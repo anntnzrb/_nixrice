@@ -780,20 +780,22 @@ settings and style for the /C/ language.
 *** Racket
 
 #+begin_src emacs-lisp
-(straight-use-package 'racket-mode)
+(when (executable-find "racket")
+  (straight-use-package 'racket-mode)
 
-(after! racket-mode
-  ;; Flycheck
-  (add-hook 'racket-mode-hook #'flycheck-mode))
+  (after! racket-mode
+    ;; Flycheck
+    (add-hook 'racket-mode-hook #'flycheck-mode)))
 #+end_src
 
 ** Nix
 
 #+begin_src elisp
-(straight-use-package 'nix-mode)
+(when (executable-find "nix")
+  (straight-use-package 'nix-mode)
 
-;; detect Nix files by extension
-(add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
+  ;; detect Nix files by extension
+  (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode)))
 #+end_src
 
 * version control
