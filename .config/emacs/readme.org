@@ -461,18 +461,18 @@ me not to try looking everywhere for /Vi/ emulation.
 | [[https://github.com/emacs-evil/evil-collection][Evil-Collection]] | collection of /Vi/ keybinds for some parts of /Emacs/ which are dealt incorrectly by Evil |
 
 #+begin_src emacs-lisp
-(straight-use-package 'evil-collection)
-
 (after! evil
+  (straight-use-package 'evil-collection)
+
   (evil-collection-init))
 #+end_src
 
 | [[https://github.com/emacs-evil/evil-surround][evil-surround]] | [[https://github.com/tpope/vim-surround][vim-surround]] emulation |
 
 #+begin_src emacs-lisp
-(straight-use-package 'evil-surround)
-
 (after! evil
+  (straight-use-package 'evil-surround)
+
   (global-evil-surround-mode))
 #+end_src
 
@@ -663,21 +663,22 @@ set of keyboard binding for programming modes
 - [[https://github.com/emacs-lsp/lsp-mode/][Language Server Protocol]]
 
 #+begin_src emacs-lisp
-(straight-use-package 'lsp-mode)
+(after! prog-mode
+  (straight-use-package 'lsp-mode)
 
-(after! lsp-mode
-  (setq lsp-keymap-prefix "C-c l")
-  (setq lsp-lens-enable                  t)
-  (setq lsp-modeline-diagnostics-enable  t)
-  (setq lsp-headerline-breadcrumb-enable t))
+  (after! lsp-mode
+    (setq lsp-keymap-prefix "C-c l")
+    (setq lsp-lens-enable                  t)
+    (setq lsp-modeline-diagnostics-enable  t)
+    (setq lsp-headerline-breadcrumb-enable t)))
 #+end_src
 
 | [[https://github.com/emacs-lsp/lsp-ui][lsp-ui]] | UI integrations for /lsp-mode/ |
 
 #+begin_src emacs-lisp
-(straight-use-package 'lsp-ui)
-
 (after! lsp-mode
+  (straight-use-package 'lsp-ui)
+
   (setq lsp-ui-doc-position 'bottom)
   (add-hook 'lsp-mode-hook #'lsp-ui-mode))
 #+end_src
@@ -877,9 +878,9 @@ settings and style for the /C/ language.
 | [[https://github.com/minad/marginalia][Marginalia]] | annotations in the minibuffer |
 
 #+begin_src elisp
-(straight-use-package 'marginalia)
-
 (after! vertico
+  (straight-use-package 'marginalia)
+
   (marginalia-mode))
 #+end_src
 
