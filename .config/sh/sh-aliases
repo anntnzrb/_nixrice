@@ -20,6 +20,7 @@ alias \
     ls='ls -AFhq --color=auto --group-directories-first' \
     ll='ls -AFhlq --color=auto --group-directories-first' \
     mkdir='mkdir -pv' \
+    lsblk='lsblk -ap' \
     mv='mv -iv' \
     rm='rm -v' \
     rmfr='rm -Rfv' \
