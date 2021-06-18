@@ -27,6 +27,9 @@ super + e
 # CLI rss feeder
 super + n
   $TERMINAL -e newsboat
+# system monitor
+super + i
+  ${TERMINAL} -e 'htop'
 
 # audio
 # CLI to control PulseAudio
