@@ -1,17 +1,17 @@
 # terminal emulator
 super + Return
-  $TERMINAL
+  ${TERMINAL}
 
 # text editor
 # ... but just as a generic way to call it. this is a terminal-based text
 # editor, set by $EDITOR variable
 super + v
-  $TERMINAL -e $EDITOR
+  ${TERMINAL} -e ${EDITOR}
 
 # browser
 # a graphical browser, set by $BROWSER
 super + w
-  $BROWSER
+  ${BROWSER}
 
 # applicaction launcher
 # a run dialog & app launcher precisely
@@ -21,12 +21,8 @@ super + d
 # file manager
 # a graphical file manager, set by $FILE
 super + e
-  $FILE
+  ${FILE}
 
-# rss feed
-# CLI rss feeder
-super + n
-  $TERMINAL -e newsboat
 # system monitor
 super + i
   ${TERMINAL} -e 'htop'
@@ -34,7 +30,7 @@ super + i
 # audio
 # CLI to control PulseAudio
 super + a
-  $TERMINAL -e pulsemixer
+  ${TERMINAL} -e 'pulsemixer'
 
 # mute
 XF86AudioMute
@@ -48,11 +44,6 @@ XF86Audio{Lower,Raise}Volume
 # increase/decrease
 XF86MonBrightness{Down,Up}
   xbacklight -{dec,inc} 10 && pkill -RTMIN+2 dwmblocks
-
-# system monitor
-# CLI system activity monitor
-super + shift + Escape
-  $TERMINAL -e $SYS_MONITOR
 
 # password selector dropdown
 super + p
@@ -77,7 +68,7 @@ super + shift + x
 # network tools
 # CLI for Network Manager
 super + F12
-  $TERMINAL -e sudo nmtui
+  ${TERMINAL} -e 'sudo nmtui'
 
 # torrent tools
 # toggle the transmission daemon with F6 and launch the cli with F7
