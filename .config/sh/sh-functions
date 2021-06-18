@@ -18,7 +18,7 @@ shorten_url() {
     # shorten URLs with 0x0.st
     # *
 
-    curl -Ss -F "shorten=$*" 'https://0x0.st' | xclip -sel clip || return 1
+    { curl -Ss -F "shorten=$*" 'https://0x0.st' | xclip -sel clip; } || return 1
     printf 'link(s) copied to clipboard\n'
 }
 
@@ -27,16 +27,16 @@ upl_file() {
     # upload files to 0x0.st (expire)
     # *
 
-    curl -Ss -F "file=@$*" 'https://0x0.st' | xclip -sel clip || return 1
+    { curl -Ss -F "file=@$*" 'https://0x0.st' | xclip -sel clip; } || return 1
     printf 'link(s) copied to clipboard\n'
 }
 
 dddd() {
     # **
-    # alias for dd, flags i normally use
+    # alias for dd with a few flags
     # *
 
-    sudo -E dd if="$1" of="$2" bs='1M' status='progress' && sync || return 1
+    { sudo -E dd bs=1M status=progress if="$1" of="$2" && sync; } || return 1
     printf "dd finished copying '%s'\n" "$2"
 }
 
@@ -53,7 +53,7 @@ sh_script() {
         chmod 755 "${NEW_SCRIPT_PATH}"
     }
 
-    ${EDITOR:?} "${NEW_SCRIPT_PATH}"
+    "${EDITOR:?}" "${NEW_SCRIPT_PATH}"
 }
 
 loop_ip() {
@@ -62,7 +62,7 @@ loop_ip() {
     # *
 
     while :; do
-        printf '%s\n' "`curl --limit-rate '1' -Ss 'ifconfig.me'`"
+        printf '%s\n' "$(curl --limit-rate '1' -Ss 'ifconfig.me')"
         sleep "${1:-3}"
     done
 }
@@ -132,14 +132,14 @@ gpg_import_key() {
 
     gpg --import "$1"
     printf "\nkeys: %s\n\nuse 'gpg --edit-keys <mail>' to set trust level\n" \
-        "`gpg --list-keys`"
+        "$(gpg --list-keys)"
 }
 
 # -----------------------------------------------------------------------------
 # distro-especific
 # -----------------------------------------------------------------------------
 
-test -x "`command -v 'pacman'`" && {
+test -x "$(command -v 'pacman')" && {
     add_key() {
         # **
         # adds a pacman key
