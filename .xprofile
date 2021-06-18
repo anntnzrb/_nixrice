@@ -39,7 +39,7 @@ redshift -l \
          | awk 'OFS=":" { print $3,$5 }' | tr -d ',}')" &
 
 # system monitor
-"${TERMINAL:?}" -e 'htop'
+"${TERMINAL:?}" -e 'htop' &
 
 # dmenu display select prompt
 displayselect &
