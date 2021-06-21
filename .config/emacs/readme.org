@@ -43,6 +43,7 @@
     - [[#emacs-lisp-elisp][Emacs Lisp (Elisp)]]
     - [[#racket][Racket]]
   - [[#nix][Nix]]
+  - [[#haskell][Haskell]]
 - [[#version-control][version control]]
 - [[#applications--utilities][applications & utilities]]
   - [[#completion][completion]]
@@ -796,6 +797,23 @@ settings and style for the /C/ language.
 
   ;; detect Nix files by extension
   (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode)))
+#+end_src
+
+** Haskell
+
+#+begin_src emacs-lisp
+(when (executable-find "ghcup")
+  (straight-use-package 'haskell-mode)
+
+  (after! haskell-mode
+    ;; `lsp-haskell' is needed as an extra to `lsp-mode'
+    (after! lsp-mode (straight-use-package 'lsp-haskell))
+
+    ;; LSP for Haskell's modes
+    (dolist (hooks '(haskell-mode-hook haskell-literate-mode-hook))
+      (add-hook hooks #'lsp-deferred))
+
+    (add-hook 'haskell-mode-hook #'flycheck-mode)))
 #+end_src
 
 * version control
