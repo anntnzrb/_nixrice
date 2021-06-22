@@ -802,18 +802,23 @@ settings and style for the /C/ language.
 ** Haskell
 
 #+begin_src emacs-lisp
-(when (executable-find "ghcup")
+(when (executable-find "ghc")
   (straight-use-package 'haskell-mode)
+  (straight-use-package 'hindent)
 
   (after! haskell-mode
+    ;; Flycheck
+    (add-hook 'haskell-mode-hook #'flycheck-mode)
+
+    ;; LSP for Haskell's modes
     ;; `lsp-haskell' is needed as an extra to `lsp-mode'
     (after! lsp-mode (straight-use-package 'lsp-haskell))
 
-    ;; LSP for Haskell's modes
     (dolist (hooks '(haskell-mode-hook haskell-literate-mode-hook))
       (add-hook hooks #'lsp-deferred))
 
-    (add-hook 'haskell-mode-hook #'flycheck-mode)))
+    ;; format before saving
+    (add-hook 'before-save-hook #'hindent-reformat-buffer)))
 #+end_src
 
 * version control
