@@ -649,16 +649,7 @@ set of keyboard binding for programming modes
 
 (after! aggressive-indent
   (setq aggressive-indent-comments-too   t)
-  (setq aggressive-indent-sit-for-time 0.5)
-
-  (defun annt/disable-aggressive-indent ()
-    "Disable aggressive-indent-mode. Created to avoid using a lambda."
-    (aggressive-indent-mode 0))
-
-  ;; disable for certain modes
-  (add-hook 'snippet-mode-hook #'annt/disable-aggressive-indent))
-
-(add-hook 'prog-mode-hook #'aggressive-indent-mode)
+  (setq aggressive-indent-sit-for-time 0.5))
 #+end_src
 
 - [[https://github.com/emacs-lsp/lsp-mode/][Language Server Protocol]]
@@ -775,6 +766,7 @@ settings and style for the /C/ language.
 
   ;; Flycheck
   (setq flycheck-emacs-lisp-load-path 'inherit)
+  (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
   (add-hook 'emacs-lisp-mode-hook #'flycheck-mode))
 #+end_src
 
@@ -786,6 +778,7 @@ settings and style for the /C/ language.
 
   (after! racket-mode
     ;; Flycheck
+    (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
     (add-hook 'racket-mode-hook #'flycheck-mode)))
 #+end_src
 
