@@ -23,8 +23,8 @@ append_path() {
     # Append "$1" to $PATH when not already in.
     # taken from '/etc/profile'
     case ":${PATH}:" in
-        *:"$1":*) ;;
-        *) PATH="${PATH:+${PATH}:}$1"
+    *:"$1":*) ;;
+    *) PATH="${PATH:+${PATH}:}$1"
     esac
 }
 
@@ -47,7 +47,10 @@ JAVA_HOME=$(readlink -f '/usr/bin/java' | sed 's:/bin/java::') \
 export PATH
 unset -f append_path
 
-# source SDKman
+# Haskell (ghcup)
+test -f "${HOME}/.ghcup/env" && . "${HOME}/.ghcup/env"
+
+# SDKman
 test -d "${HOME}/.sdkman/" && . "${HOME}/.sdkman/bin/sdkman-init.sh"
 
 # -----------------------------------------------------------------------------

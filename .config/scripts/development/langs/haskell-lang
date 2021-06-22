@@ -9,33 +9,26 @@
 # ░██  ░██░░████████ ██████ ░██░░██░░██████ ███ ███
 # ░░   ░░  ░░░░░░░░ ░░░░░░  ░░  ░░  ░░░░░░ ░░░ ░░░
 
-# -----------------------------------------------------------------------------
-# preamble
-# -----------------------------------------------------------------------------
+# install only if not already installed
+if test ! -d "${HOME}/.ghcup"; then
+    # install ghcup (GHC manager)
+    curl --proto '=https' --tlsv1.2 -Sfs 'https://get-ghcup.haskell.org' | sh
 
-# source utilities
-# shellcheck disable=SC1090
-. "$LIBSHUTILS/sys-utils"
+else
+    printf "ghcup is already installed @ %s/.ghcup\n" "${HOME}"
+fi
 
-# -----------------------------------------------------------------------------
-# main
-# -----------------------------------------------------------------------------
+# update Cabal (Haskell's package manager)
+cabal update
 
-# quit if already installed
-[ -d "$HOME/.ghcup" ] && {
-    printf 'ghcup is already installed @ %s/.ghcup\n' "$HOME"
-    exit 1
-}
+# packages to be installed by cabal
+pkgs='hindent hlint '
 
-case $SYSTEM in
-*)
-    # install ghcup (GHC manager) (similar to rustup)
-    curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
+for pkg in ${pkgs}; do
+    cabal install "${pkg}"
 
-    # update Cabal (Haskell's package manager)
-    "$HOME/.ghcup/bin/cabal" update
+    unset -v pkg
+done
 
-    # [vim::ALE] (formatter)
-    "$HOME/.ghcup/bin/cabal" install brittany
-    ;;
-esac
+# cleanup
+unset -v pkgs
