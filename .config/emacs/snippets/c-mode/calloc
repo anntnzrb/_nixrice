@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: safe calloc
+# key: !calloc
+# --
+
+${1:type} *${2:ptr} = calloc(${3:n}, sizeof(*$2));
+
+!ptrnull$0

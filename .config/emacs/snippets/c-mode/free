@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: free and NULL
+# key: !free
+# --
+
+free(${1:ptr});
+$1 = NULL;
