@@ -29,7 +29,9 @@ check_font_dir() {
 }
 
 install_font() {
-    cp -Rfv "$1" "${fonts_dir}"
+    # shellcheck disable=2086
+    # quoting $1 breaks the wildcard expansion for some reason
+    cp -Rfv $1 "${fonts_dir}"
 }
 
 fgclone() {
