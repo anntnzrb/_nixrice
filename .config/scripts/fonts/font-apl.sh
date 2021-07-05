@@ -22,7 +22,7 @@ font_path="/tmp/font-${font_link##*/}"
 fgclone "${font_link}" "${font_path}"
 
 # copy (install) it
-install_font "${font_path}/APL386.ttf" || die "Error installing fonts..."
+install_font "${font_path}/*.ttf" || die "Error installing fonts..."
 
 # update fonts
 update_fonts
