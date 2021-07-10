@@ -3,24 +3,47 @@
 # **
 # retrieves tiny formatted weather info
 #
-# should adjust the varibale `LOCATION` to desired location
+# var `location` should obtain current location programatically
 # *
 
 # -----------------------------------------------------------------------------
-# preamble
+# functions
 # -----------------------------------------------------------------------------
 
-# load utilities
-# shellcheck disable=1090
-. "$LIBSHUTILS/std-utils"
+is_net() {
+    # **
+    # Checks if there is an active Internet connection
+    #
+    # "example.com" preferred (this is the purpose of this website)
+    # *
+
+    ping -q -c 1 "example.com" >/dev/null 2>&1
+}
+
+die() {
+    # **
+    # Prints a message to stderr & exits script with non-successful code "1"
+    # *
+
+    printf '%s\n' "$@" >&2
+    exit 1
+}
 
 # -----------------------------------------------------------------------------
 # main
 # -----------------------------------------------------------------------------
 
-# set-up location
-LOCATION="Guayaquil"
+# quit if no internet connection
+! is_net && die '📡❌'
 
-is_net && {
-    curl -fs "wttr.in/$LOCATION?format=%c+%t" | tr -d '[:space:]'
-} || printf '📡❌\n'
+# set-up location
+location=$(curl -Sfs 'ifconfig.co/city')
+
+# get weather status
+weather=$(curl -Sfs "https://wttr.in/${location}?format=%c+%t" | tr -d '[:space:]')
+
+if printf ${weather} | grep -q 'known'; then
+    printf '☀ N/A'
+else
+    printf '%s' ${weather}
+fi
