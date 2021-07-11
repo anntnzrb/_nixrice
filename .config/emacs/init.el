@@ -33,12 +33,6 @@
 
 ;;; Code:
 
-;; check if using minimum required version
-(let ((min-ver "27.1"))
-  (when (version< emacs-version min-ver)
-    (error "Your version of GNU Emacs (v%s) is outdated you need at least v%s"
-           emacs-version min-ver)))
-
 (defvar annt/emacs-config-file "readme"
   "Base name of annt's configuration file.")
 
