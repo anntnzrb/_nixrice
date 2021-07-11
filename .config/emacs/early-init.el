@@ -29,6 +29,12 @@
 
 ;;; Code:
 
+;; check if using minimum required version
+(let ((min-ver "28.0"))
+  (when (version< emacs-version min-ver)
+    (error "Your version of GNU Emacs (v%s) is outdated, you need at least v%s"
+           emacs-version min-ver)))
+
 ;; The garbage collector threshold is increased here to prevent it from
 ;; running at these early stages, the objective here is to reset it later.
 ;; Consider checking the 'init.el' file right next to this file for the
