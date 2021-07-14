@@ -1,0 +1,15 @@
+# Configuration for OneDrive Linux Client
+
+sync_dir = "~/lib/OneDrive/"
+monitor_interval = "300"
+log_dir = "/var/log/onedrive/"
+disable_notifications = "false"
+disable_upload_validation = "false"
+enable_logging = "false"
+skip_symlinks = "false"
+skip_dotfiles = "false"
+dry_run = "false"
+min_notify_changes = "5"
+monitor_log_frequency = "5"
+monitor_fullscan_frequency = "10"
+sync_root_files = "false"
