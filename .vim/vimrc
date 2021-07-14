@@ -1,0 +1,94 @@
+" annt's vimrc
+
+" -----------------------------------------------------------------------------
+"  preamble
+" -----------------------------------------------------------------------------
+
+" use vim settings, rather than vi settings;
+" this must be first, because it changes other options as a side effect.
+" avoid side effects when it was already reset.
+if &compatible
+  set nocompatible
+endif
+
+set encoding=UTF-8
+
+" -----------------------------------------------------------------------------
+"  editing
+" -----------------------------------------------------------------------------
+
+" identation
+let g:NUM_SPACES_TABS = 4
+set autoindent smartindent smarttab
+set expandtab " always spaces instead of tabs
+set cindent   " 'C' style indenting
+let &shiftwidth  = NUM_SPACES_TABS
+let &softtabstop = &shiftwidth
+
+" allow backspacing over everything in insert mode.
+set backspace=indent,eol,start
+
+" -----------------------------------------------------------------------------
+" visual settings
+" -----------------------------------------------------------------------------
+
+let g:MAX_LINE_CHARS = 80
+set cursorline " show horizontal ruler on cursor
+set ruler      " show the cursor position all the time
+set showcmd    " display incomplete commands
+set cmdheight=2
+let &colorcolumn = MAX_LINE_CHARS
+let &textwidth   = &colorcolumn
+set number relativenumber
+set showmatch " highlight matching brace
+set list listchars=trail:-,tab:<->,nbsp:%
+" auto-wrapping
+autocmd BufEnter * setlocal formatoptions=jqlt
+
+" -----------------------------------------------------------------------------
+" find & replace
+" -----------------------------------------------------------------------------
+
+set hlsearch   " highlight all search results
+set ignorecase " always case-insensitive
+set smartcase
+set infercase
+
+" -----------------------------------------------------------------------------
+"  miscellaneous
+" -----------------------------------------------------------------------------
+
+" don't use ex mode, use q for formatting.
+map Q gq
+
+set scrolljump=-20         " lines to scroll when cursor gets off screen
+set mouse=a                " enable normie mouse
+set path+=**               " extend path
+set wildmenu               " display completion matches in a status line
+set clipboard+=unnamedplus " clipboard integration for all operations
+set autochdir              " automatically cd to opened file's directory
+set visualbell             " visual bell over beeping preferred
+" delete trailing whitespaces & newlines on save
+au BufWritePre * %s/\s\+$//e | %s/\n\+\%$//e
+" filetype & syntax
+filetype plugin indent on
+syntax on
+
+" performance tweaks
+set lazyredraw
+set nobackup
+set noswapfile
+set nowritebackup
+
+" -----------------------------------------------------------------------------
+" theme
+"  -----------------------------------------------------------------------------
+
+" Gruvbox
+
+let g:gruvbox_contrast_dark = 'gray'
+let g:gruvbox_italic = 1            " enable italic text
+let g:gruvbox_italicize_strings = 1 " enable italic for strings
+
+set background=dark
+colorscheme gruvbox " preferred theme
