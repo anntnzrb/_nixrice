@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# shellcheck disable=2046
+# cannot quote as we are comparing integers
+# shellcheck disable=2006
+# backtick notation is portable
+
+test `id -u` -eq 0

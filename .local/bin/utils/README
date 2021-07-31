@@ -1,0 +1,41 @@
+Shell Utilities
+===============
+Set of utility scripts used across the system.
+
+These scripts are meant to be portable across UNIX-like systems by following
+the POSIX standards.
+
+Scripts should be checked with shellcheck <https://www.shellcheck.net/>.
+The recommended flags are the following
+
+    shellcheck -o 'all' <file>
+
+Portable Shell scripting is detailed by GNU autoconf
+<https://www.gnu.org/savannah-checkouts/gnu/autoconf/manual/autoconf-2.70/html_node/Portable-Shell.html#Portable-Shell>
+
+err
+---
+Prints a message to stderr.
+
+Message may be ommited.
+
+installed-p
+-----------
+Checks if given command is installed on the system.
+
+Verifies if the file (program) is an executable file found somewhere in $PATH,
+this is used to prevent conflicts with user-defined aliases and functions.
+
+internet-p
+----------
+Checks if there is an active internet connection.
+
+running-p
+---------
+Checks if given command is currently running.
+
+"command" name must be exact.
+
+root-p
+------
+Checks if invoking user is has elevated priviledges.
