@@ -39,6 +39,9 @@ fi
 # '~/.local/bin'
 append_path "${HOME}/.local/bin/"
 
+# utitilies
+append_path "${HOME}/.local/bin/utils"
+
 # Java
 JAVA_HOME=$(readlink -f '/usr/bin/java' | sed 's:/bin/java::') \
     && export JAVA_HOME && append_path "${JAVA_HOME}/bin"
@@ -76,13 +79,10 @@ export XDG_DATA_HOME="${HOME}/.local/share"
 
 export EDITOR="${XDG_DESKTOP_DIR:?}/.local/bin/editor"
 export TERMINAL='alacritty'
-export BROWSER='qutebrowser'
+export BROWSER='chromium'
 export FILE='pcmanfm'
 export READER='zathura'
 export SH_CFGS="${XDG_CONFIG_HOME:?}/sh"
-
-# load utilities
-export LIBSHUTILS="${HOME}/.local/bin/libshutils"
 
 # shell(s)
 export ZDOTDIR="${SH_CFGS}/zsh"

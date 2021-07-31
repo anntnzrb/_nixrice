@@ -1,0 +1,8 @@
+#!/bin/sh
+
+case ${#} in
+0) printf '' >&2 ;;
+*)
+    printf '%s\n' "${@}" >&2
+    ;;
+esac
