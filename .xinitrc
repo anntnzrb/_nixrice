@@ -39,25 +39,21 @@ test -x "${HOME}/.xprofile" && . "${HOME}/.xprofile"
 # -----------------------------------------------------------------------------
 
 # default ses
-session='awesome'
+session='dwm'
 
 case ${session:?} in
-awesome)
-    unset -v session
-
-    exec awesome
-    ;;
-
 dwm)
     unset -v session
 
     # statusbar
     dwmblocks &
 
-    # run dwm as a loop in order to restart, also log
-    while :; do dwm 2>"${HOME}/.dwm.log" >&2; done
+    # run dwm as a loop for restarting, log it as well
+    while :; do dwm 2>"/tmp/dwm.log" >&2; done
     ;;
 *)
-    printf "error :: '%s'\n" "$1" >&2
+    unset -v session
+
+    printf "\n\nerror :: '%s'\n" "$1" >&2
     exit 1
 esac
