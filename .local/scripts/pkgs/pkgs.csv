@@ -1,0 +1,49 @@
+# core
+deb,build-essential
+deb,curl
+deb,wget
+
+# main packages
+deb,atool
+deb,cowsay
+deb,dunst
+deb,feh
+deb,fortune-mod
+deb,gnome-keyring
+deb,gnupg
+deb,htop
+deb,libnotify-bin
+deb,lm-sensors
+deb,maim
+deb,mpv
+deb,neofetch
+deb,onedrive
+deb,pcmanfm
+deb,picom
+deb,redshift
+deb,unclutter
+deb,unzip
+deb,zathura
+deb,zathura-djvu
+deb,zathura-pdf-poppler
+deb,zathura-ps
+deb,zip
+
+# X11 (graphical environment)
+deb,sxhkd
+deb,x11-utils
+deb,x11-xkb-utils
+deb,x11-xserver-utils
+deb,xbacklight
+deb,xclip
+deb,xdg-user-dirs
+deb,xdotool
+deb,xinit
+deb,xserver-xorg
+
+# hardware-specific
+deb,apulse
+deb,firmware-linux
+deb,intel-microcode
+deb,pulseaudio
+deb,pulsemixer
