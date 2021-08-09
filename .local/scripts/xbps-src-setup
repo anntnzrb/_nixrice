@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# setup-xbps-src --- Void Linux XBPS source packages collection setup
+# xbps-src-setup --- Void Linux XBPS source packages collection setup
 
 # Commentary:
 
