@@ -39,4 +39,4 @@ tx=$(update /sys/class/net/[ew]*/statistics/tx_bytes)
 # shellcheck disable=2046
 # shellcheck disable=2086
 # these are numbers, not strings
-printf "%4sB %4sB\\n" $(numfmt --to=iec ${rx}) $(numfmt --to=iec ${tx})
+printf "%4sB %4sB\\n" $(numfmt --to=iec ${rx}) $(numfmt --to=iec ${tx})
