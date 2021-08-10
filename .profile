@@ -55,12 +55,6 @@ JAVA_HOME=$(readlink -f '/usr/bin/java' | sed 's:/bin/java::') \
 export PATH
 unset -f append_path
 
-# Haskell (ghcup)
-test -f "${HOME}/.ghcup/env" && . "${HOME}/.ghcup/env"
-
-# SDKman
-test -d "${HOME}/.sdkman/" && . "${HOME}/.sdkman/bin/sdkman-init.sh"
-
 # -----------------------------------------------------------------------------
 # applications
 # -----------------------------------------------------------------------------
@@ -138,6 +132,20 @@ export LESSKEY="${XDG_CONFIG_HOME:?}/less/lesskey"
 export LESSHISTFILE='-'
 export SUDO_ASKPASS="${XDG_DESKTOP_DIR:?}/.local/bin/dmenupass"
 
+# -----------------------------------------------------------------------------
+# miscellaneous
+# -----------------------------------------------------------------------------
+
+# == languages
+# Rust
+test -d "${HOME}/.cargo/" && . "${HOME}/cargo/env"
+
+# Haskell (ghcup)
+test -d "${HOME}/.ghcup/" && . "${HOME}/.ghcup/env"
+
+# SDKman
+test -d "${HOME}/.sdkman/" && . "${HOME}/.sdkman/bin/sdkman-init.sh"
+
 # == pfetch
 # information to display
 export PF_INFO='ascii title kernel os host wm de memory pkgs editor shell uptime palette'
@@ -147,10 +155,6 @@ export PF_ALIGN='7'
 export PF_COL2=4
 # color of title data
 export PF_COL3=1
-
-# -----------------------------------------------------------------------------
-# miscellaneous
-# -----------------------------------------------------------------------------
 
 # Java apps fix for dwm
 export _JAVA_AWT_WM_NONREPARENTING=1
