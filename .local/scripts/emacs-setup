@@ -33,7 +33,7 @@ apt install -y \
     'texinfo'
 
 printf 'Cloning and installing...\n'
-git-clone-fast -b 'master' 'https://github.com/emacs-mirror/emacs' '/tmp/emacs'
+fast-git-clone -b 'master' 'https://github.com/emacs-mirror/emacs' '/tmp/emacs'
 
 cd /tmp/emacs || { err 'Cannot cd into dir.' && exit 1; }
 
