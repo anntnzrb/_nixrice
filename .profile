@@ -32,8 +32,8 @@ append_path() {
 if test -d '/etc/profile.d/'; then
     for prof in /etc/profile.d/*.sh; do
         test -r "${prof}" && . "${prof}"
-    done
     unset prof
+    done
 fi
 
 # extras
@@ -61,10 +61,10 @@ unset -f append_path
 
 # == Xorg stuff
 export XDG_DESKTOP_DIR="${HOME}"
-export XDG_DOCUMENTS_DIR="${HOME}/lib/docs/"
-export XDG_PICTURES_DIR="${HOME}/lib/imgs/"
-export XDG_VIDEOS_DIR="${HOME}/lib/vids/"
-export XDG_MUSIC_DIR="${HOME}/lib/audio/"
+export XDG_DOCUMENTS_DIR="${HOME}/lib/docs"
+export XDG_PICTURES_DIR="${HOME}/lib/imgs"
+export XDG_VIDEOS_DIR="${HOME}/lib/vids"
+export XDG_MUSIC_DIR="${HOME}/lib/audio"
 export XDG_DOWNLOAD_DIR="${HOME}/downloads"
 export XDG_TEMPLATES_DIR="${HOME}/lib"
 export XDG_PUBLICSHARE_DIR="${HOME}/lib"
@@ -76,12 +76,12 @@ export XDG_DATA_HOME="${HOME}/.local/share"
 # defaults
 # -----------------------------------------------------------------------------
 
-export EDITOR="${XDG_DESKTOP_DIR:?}/.local/bin/editor"
+export EDITOR="${HOME}/.local/bin/editor"
 export TERMINAL='alacritty'
 export BROWSER='chromium'
 export FILE='pcmanfm'
 export READER='zathura'
-export SH_CFGS="${XDG_CONFIG_HOME:?}/sh"
+export SH_CFGS="${HOME}/.config/sh"
 
 # shell(s)
 export ZDOTDIR="${SH_CFGS}/zsh"
@@ -110,27 +110,23 @@ test -x "$(command -v 'tput')" && {
 # ~/ clean-up
 # -----------------------------------------------------------------------------
 
-# == languages
-# Rust
-export CARGO_HOME="${XDG_DATA_HOME:?}/.local/share}/cargo"
-
 # == Android
-export ANDROID_SDK_HOME="${XDG_CONFIG_HOME:?}/.config}/android"
-export ANDROID_AVD_HOME="${XDG_DATA_HOME:?}/.local/share}/android"
-export ANDROID_EMULATOR_HOME="${XDG_DATA_HOME:?}/.local/share}/android"
-export ADB_VENDOR_KEY="${XDG_CONFIG_HOME:?}/.config}/android"
+export ANDROID_SDK_HOME="${HOME}/.config/android"
+export ANDROID_AVD_HOME="${HOME}/.local/share/android"
+export ANDROID_EMULATOR_HOME="${HOME}/.local/share/android"
+export ADB_VENDOR_KEY="${HOME}/.config/android"
 
 # == GTK
-export GTK_RC_FILES="${XDG_CONFIG_HOME:?}/.config}/gtk-1.0/gtkrc"
-export GTK2_RC_FILES="${XDG_CONFIG_HOME:?}/.config}/gtk-2.0/gtkrc"
+export GTK_RC_FILES="${HOME}/.config/gtk-1.0/gtkrc"
+export GTK2_RC_FILES="${HOME}/.config/gtk-2.0/gtkrc"
 
 # == misc
-export HISTFILE="${XDG_DATA_HOME:?}/.local/share}/history"
-export WGETRC="${XDG_CONFIG_HOME:?}/.config}/wget/wgetrc"
+export HISTFILE="${HOME}/.local/share/history"
+export WGETRC="${HOME}/.config/wget/wgetrc"
 export FZF_DEFAULT_OPTS='--layout=reverse --height 40%'
-export LESSKEY="${XDG_CONFIG_HOME:?}/less/lesskey"
+export LESSKEY="${HOME}/.config/less/lesskey"
 export LESSHISTFILE='-'
-export SUDO_ASKPASS="${XDG_DESKTOP_DIR:?}/.local/bin/dmenupass"
+export SUDO_ASKPASS="${HOME}/.local/bin/dmenupass"
 
 # -----------------------------------------------------------------------------
 # miscellaneous
