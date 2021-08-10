@@ -36,11 +36,16 @@ if test -d '/etc/profile.d/'; then
     unset prof
 fi
 
+# extras
+append_path '/sbin/'
+append_path '/usr/sbin/'
+append_path '/usr/local/sbin/'
+
 # '~/.local/bin'
 append_path "${HOME}/.local/bin/"
 
 # utitilies
-append_path "${HOME}/.local/bin/utils"
+append_path "${HOME}/.local/bin/utils/"
 
 # Java
 JAVA_HOME=$(readlink -f '/usr/bin/java' | sed 's:/bin/java::') \
