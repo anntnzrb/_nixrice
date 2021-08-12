@@ -1,6 +1,10 @@
 # core
 deb,build-essential
 deb,curl
+deb,man-db
+deb,manpages-posix
+deb,manpages-posix-dev
+deb,sudo
 deb,wget
 
 # main packages
@@ -21,8 +25,10 @@ deb,onedrive
 deb,pcmanfm
 deb,picom
 deb,redshift
+deb,tree
 deb,unclutter
 deb,unzip
+deb,vim-nox
 deb,zathura
 deb,zathura-djvu
 deb,zathura-pdf-poppler
