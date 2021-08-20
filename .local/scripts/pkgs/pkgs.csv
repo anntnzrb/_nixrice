@@ -68,21 +68,23 @@ arch,curl
 arch,wget
 
 # main packages
+#arch,onedrive
 arch,alacritty
 arch,atool
 arch,cowsay
 arch,dunst
-arch,libnotify
+arch,dunst
 arch,feh
 arch,fortune-mod
 arch,gnome-keyring
 arch,gnupg
 arch,htop
-arch,dunst
+arch,libnotify
+arch,libreoffice-still
+arch,libreoffice-still-es
 arch,maim
 arch,mpv
 arch,neofetch
-#arch,onedrive
 arch,pcmanfm
 arch,picom
 arch,redshift
@@ -117,9 +119,6 @@ arch,tlp
 
 # audio
 arch,pamixer
-arch,pipewire
-arch,pipewire-alsa
-arch,pipewire-jack
-arch,pipewire-media-session
-arch,pipewire-pulse
 arch,pulsemixer
+arch,pulseaudio-alsa
+arch,pulseaudio
