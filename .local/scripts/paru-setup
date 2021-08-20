@@ -1,0 +1,38 @@
+#!/bin/sh
+
+# paru-setup --- Paru AUR helper setup
+
+# Commentary:
+
+# Paru is an AUR helper and pacman wrapper, an alternative to 'yay'
+
+# References: https://github.com/Morganamilo/paru
+
+# Code:
+
+# -----------------------------------------------------------------------------
+# preamble
+# -----------------------------------------------------------------------------
+
+# quit if not running an arch-based distro
+! installed-p 'pacman' && err 'Not running an Arch-based distribution' && exit 1
+root-p && err 'This CANNOT be run as root...' && exit 1
+
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
+
+# only download & install if 'paru' is not installed already
+if ! installed-p 'paru'; then
+    dest='/tmp/paru/'
+
+    fast-git-clone 'https://aur.archlinux.org/paru.git' "${dest}"
+    cd "${dest}" || { err 'Could not cd, exiting...' && exit 1; }
+    makepkg --needed --noconfirm -Ccirs
+
+    # cleanup
+    unset -v dest
+
+else
+    err "'paru' is already installed..." && exit 1
+fi

@@ -1,3 +1,7 @@
+# -----------------------------------------------------------------------------
+# Debian-like
+# -----------------------------------------------------------------------------
+
 # core
 deb,build-essential
 deb,curl
@@ -53,3 +57,69 @@ deb,firmware-linux
 deb,intel-microcode
 deb,pulseaudio
 deb,pulsemixer
+#
+# -----------------------------------------------------------------------------
+# Arch-like
+# -----------------------------------------------------------------------------
+
+# core
+arch,base-devel
+arch,curl
+arch,wget
+
+# main packages
+arch,alacritty
+arch,atool
+arch,cowsay
+arch,dunst
+arch,libnotify
+arch,feh
+arch,fortune-mod
+arch,gnome-keyring
+arch,gnupg
+arch,htop
+arch,dunst
+arch,maim
+arch,mpv
+arch,neofetch
+#arch,onedrive
+arch,pcmanfm
+arch,picom
+arch,redshift
+arch,tree
+arch,unclutter
+arch,unzip
+arch,vim
+arch,zip
+
+# X11 (graphical environment)
+arch,xclip
+arch,xdg-user-dirs
+arch,xdotool
+arch,xorg-server
+arch,xorg-setxkbmap
+arch,xorg-xbacklight
+arch,xorg-xinit
+arch,xorg-xkill
+arch,xorg-xprop
+arch,xorg-xrandr
+arch,xorg-xrdb
+arch,xorg-xset
+arch,xorg-xsetroot
+arch,awesome
+arch,sxhkd
+
+# hardware-specific
+arch,nvidia-lts
+arch,intel-ucode
+arch,linux-firmware
+arch,tlp
+
+# audio
+arch,pamixer
+arch,pipewire
+arch,pipewire-alsa
+arch,pipewire-jack
+arch,pipewire-media-session
+arch,pipewire-pulse
+arch,pulsemixer
