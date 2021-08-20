@@ -13,33 +13,56 @@
 # shellcheck disable=2046
 # disable for numbers instead of strings
 
-# quit if non-root
-! root-p && err 'This scripts needs root access.' && exit 1
+# -----------------------------------------------------------------------------
+# functions
+# -----------------------------------------------------------------------------
 
+clone_emacs() {
+    # **
+    # Clones GNU Emacs from repository
+    # *
+
+    printf 'Cloning and installing...\n'
+    fast-git-clone -b 'master' 'https://github.com/emacs-mirror/emacs' '/tmp/emacs/'
+
+    cd '/tmp/emacs/' || { err 'Cannot cd into dir.' && exit 1; }
+}
+
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
+
+printf 'Installing dependencies...\n'
 # Debian-like
 if installed-p 'apt-get'; then
-printf 'Installing dependencies...\n'
-apt install -y \
-    'autoconf' \
-    'gnutls-dev' \
-    'libgccjit-10-dev' \
-    'libgif-dev' \
-    'libgtk-3-dev' \
-    'libjpeg-dev' \
-    'libncurses-dev' \
-    'libpng-dev' \
-    'libtiff-dev' \
-    'libxpm-dev' \
-    'texinfo'
+    # quit if non-root
+    ! root-p && err 'This scripts needs root access.' && exit 1
 
-printf 'Cloning and installing...\n'
-fast-git-clone -b 'master' 'https://github.com/emacs-mirror/emacs' '/tmp/emacs'
+    apt install -y \
+        'autoconf' \
+        'gnutls-dev' \
+        'libgccjit-10-dev' \
+        'libgif-dev' \
+        'libgtk-3-dev' \
+        'libjpeg-dev' \
+        'libncurses-dev' \
+        'libpng-dev' \
+        'libtiff-dev' \
+        'libxpm-dev' \
+        'texinfo'
 
-cd /tmp/emacs || { err 'Cannot cd into dir.' && exit 1; }
+    clone_emacs
+    ./autogen.sh
+    ./configure --with-native-compilation
+    
+    make -j$(nproc)
+    make -j$(nproc) install
 
-./autogen.sh
-./configure --with-native-compilation
-
-make -j$(nproc)
-make -j$(nproc) install
+elif installed-p 'pacman'; then
+    clone_emacs
+    ./autogen.sh
+    ./configure
+    
+    make -j$(nproc)
+    sudo make -j$(nproc) install
 fi

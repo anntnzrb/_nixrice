@@ -8,9 +8,6 @@
 # Contains a "tag" preppended to the name of the package to install depending
 # on the package manager.
 
-# checks
-! root-p && err 'This script needs root access.' && exit 1
-
 # *****************************************************************************
 # functions
 # *****************************************************************************
@@ -30,7 +27,8 @@ parse_pkgs() {
     # parse package list depending on the pkg manager
     while IFS=, read -r tag prog; do
         case "${tag}" in
-        "deb") printf '%s\n' "${prog}" >> '/tmp/pkgs-deb.txt'
+        "deb") printf '%s\n' "${prog}" >> '/tmp/pkgs-deb.txt' ;;
+        "arch") printf '%s\n' "${prog}" >> '/tmp/pkgs-arch.txt' ;;
         esac
     done < "${tmp_prog_file}"
 }
@@ -42,8 +40,14 @@ install_pkgs() {
 
     # Debian-like
     if installed-p 'apt-get'; then
+        ! root-p && err 'This script needs root access.' && exit 1
         apt update && apt upgrade -y && apt dist-upgrade -y && apt full-upgrade -y
         xargs apt install -y < '/tmp/pkgs-deb.txt'
+
+    # Arch-like
+    elif installed-p 'pacman' &&  installed-p 'paru'; then
+        paru -Suyy --needed --noconfirm
+        paru --needed --noconfirm -S - < '/tmp/pkgs-arch.txt'
     fi
 }
 
