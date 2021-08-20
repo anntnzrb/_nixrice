@@ -134,7 +134,7 @@ export SUDO_ASKPASS="${HOME}/.local/bin/dmenupass"
 
 # == languages
 # Rust
-test -d "${HOME}/.cargo/" && . "${HOME}/cargo/env"
+test -f "${HOME}/.cargo/env" && . "${HOME}/.cargo/env"
 
 # Haskell (ghcup)
 test -d "${HOME}/.ghcup/" && . "${HOME}/.ghcup/env"
