@@ -121,7 +121,6 @@ export GTK_RC_FILES="${HOME}/.config/gtk-1.0/gtkrc"
 export GTK2_RC_FILES="${HOME}/.config/gtk-2.0/gtkrc"
 
 # == misc
-export HISTFILE="${HOME}/.local/share/history"
 export WGETRC="${HOME}/.config/wget/wgetrc"
 export FZF_DEFAULT_OPTS='--layout=reverse --height 40%'
 export LESSKEY="${HOME}/.config/less/lesskey"
