@@ -68,7 +68,6 @@ arch,curl
 arch,wget
 
 # main packages
-#arch,onedrive
 arch,alacritty
 arch,atool
 arch,cowsay
@@ -85,6 +84,7 @@ arch,libreoffice-still-es
 arch,maim
 arch,mpv
 arch,neofetch
+arch,onedrive-abraunegg-git
 arch,pcmanfm
 arch,picom
 arch,redshift
@@ -92,6 +92,8 @@ arch,tree
 arch,unclutter
 arch,unzip
 arch,vim
+arch,zathura
+arch,zathura-pdf-mupdf
 arch,zip
 
 # X11 (graphical environment)
