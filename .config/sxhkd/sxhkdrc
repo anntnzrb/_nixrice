@@ -63,7 +63,7 @@ Print
 
 # system options dropdown
 super + shift + x
-  sysfns
+  sudo -AE sysfns
 
 # network tools
 # CLI for Network Manager
