@@ -40,22 +40,6 @@ dddd() {
     printf "dd finished copying '%s'\n" "$2"
 }
 
-sh_script() {
-    # **
-    # create a new script if it does not exist already
-    # located at ~/.local/bin and made executable
-    # *
-
-    NEW_SCRIPT_PATH="${HOME}/.local/bin/$1"
-
-    test ! -f "${NEW_SCRIPT_PATH}" && {
-        printf '!#/bin/sh\n' | tee "${NEW_SCRIPT_PATH}" >/dev/null
-        chmod 755 "${NEW_SCRIPT_PATH}"
-    }
-
-    "${EDITOR:?}" "${NEW_SCRIPT_PATH}"
-}
-
 loop_ip() {
     # **
     # loop thru public IP address
