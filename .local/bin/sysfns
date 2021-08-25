@@ -6,52 +6,49 @@
 # systemd commands by default
 # *
 
-# -----------------------------------------------------------------------------
-# preamble
-# -----------------------------------------------------------------------------
-
-# load utilities
-# shellcheck disable=1090
-. "$LIBSHUTILS/std-utils"
-
 # check if running with elevated priviledges; elevate if not
-! is_su && elevate_privs "$0" "$@"
+! root-p && err 'This script needs root priviledges' && exit 1
 
-# -----------------------------------------------------------------------------
-# main
-# -----------------------------------------------------------------------------
-
-# non-systemd systems
-case "$(readlink -f /sbin/init)" in
+# init systems
+case "$(readlink -f '/sbin/init')" in
 *runit*)
-    zzz="zzz"
-    sdn="poweroff"
+    zzz='zzz'
+    reb='reboot'
+    sdn='poweroff'
     ;;
-*openrc*)
-    reb="openrc-shutdown -r"
-    sdn="openrc-shutdown -p"
+*openrc*) # untested
+    zzz='hibernate'
+    reb='openrc-shutdown -r'
+    sdn='openrc-shutdown -p'
     ;;
+*systemd*)
+    zzz='systemctl suspend'
+    reb='systemctl reboot'
+    sdn='systemctl suspend'
+    ;;
+*) err 'No option set for this system' && exit 1 ;;
 esac
 
 # list of options
-opts="reboot sleep shutdown kill-x"
+opts='reboot sleep shutdown kill-x'
 
 # menu
 # shellcheck disable=2086
-case "$(printf "%s\n" $opts | dmenu -c -i -l 20 -bw 6 -p 'command: ')" in
+case "$(printf "%s\n" ${opts} | dmenu -c -i -l 20 -bw 6 -p 'command: ')" in
 reboot)
-    ${reb:-systemctl reboot}
+    ${reb}
     ;;
 
 sleep)
-    ${zzz:-systemctl suspend}
+    ${zzz}
     ;;
 
 shutdown)
-    ${sdn:-systemctl poweroff}
+    ${sdn}
     ;;
 
 kill-x)
-    pkill -15 'Xorg'
+    pkill -15 'X'
     ;;
+*) ;;
 esac
