@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# dddev --- Flash an .iso file using `dd`
+
+# Commentary:
+
+# This is just a wrapper around `dd` with a few extra options usually used.
+
+# NOTE: This script may also be used for purposes other than flashing an
+# iso specifically.
+
+# References:
+# - https://unix.stackexchange.com/a/183920
+
+# check
+! root-p && err 'You need root priviledges to run this.' && exit 1
+test ${#} -ne 2 && err 'Usage: dddev <foo>.iso /dev/<bar>' && exit 1
+
+# flash the iso
+dd bs=128k status=progress if="${1}" of="${2}" \
+    || err 'There was an error while coping'   \
+    && exit 1
+sync # flush file system buffers
+printf "dd finished copying '%s'\n" "${2}"

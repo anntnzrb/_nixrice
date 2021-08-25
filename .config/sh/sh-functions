@@ -31,15 +31,6 @@ upl_file() {
     printf 'link(s) copied to clipboard\n'
 }
 
-dddd() {
-    # **
-    # alias for dd with a few flags
-    # *
-
-    { sudo -E dd bs=1M status=progress if="$1" of="$2" && sync; } || return 1
-    printf "dd finished copying '%s'\n" "$2"
-}
-
 loop_ip() {
     # **
     # loop thru public IP address
