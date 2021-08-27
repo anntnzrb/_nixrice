@@ -66,6 +66,8 @@ deb,pulsemixer
 arch,base-devel
 arch,curl
 arch,wget
+arch,bat
+arch,exa
 
 # main packages
 arch,alacritty

@@ -1,37 +1,56 @@
 #!/bin/sh
 
-#             ██ ██
-#            ░██░░
-#   ██████   ░██ ██  ██████    ██████  █████   ██████
-#  ░░░░░░██  ░██░██ ░░░░░░██  ██░░░░  ██░░░██ ██░░░░
-#   ███████  ░██░██  ███████ ░░█████ ░███████░░█████
-#  ██░░░░██  ░██░██ ██░░░░██  ░░░░░██░██░░░░  ░░░░░██
-# ░░████████ ███░██░░████████ ██████ ░░██████ ██████
-#  ░░░░░░░░ ░░░ ░░  ░░░░░░░░ ░░░░░░   ░░░░░░ ░░░░░░
+# sh-aliases --- Aliases for the shell.
 
-# -----------------------------------------------------------------------------
-# general
-# -----------------------------------------------------------------------------
+# Commentary:
+
+# This aliases are shell-agnostic with portability in mind.
+
+# References:
+# - https://wiki.archlinux.org/title/Core_utilities
+
+# shellcheck disable=2006
+# keep backticks for portability.
+
+# = core utilities
+
+# ls === exa
+if test -x "`command -v 'exa'`"; then
+    alias \
+        ls='exa --color=automatic --group-directories-first --icons --sort=Name -Fagh' \
+        ll='exa --color=automatic --group-directories-first --icons --sort=Name -Faglh'
+else
+    alias \
+        ls='ls --color=auto --group-directories-first -AFhq'  \
+        ll='ls --color=auto --group-directories-first -AFhlq'
+fi
+
+# cat/less === bat
+if test -x "`command -v 'bat'`"; then
+    alias \
+        cat='bat --color=auto --theme="Monokai Extended Origin" --style=full -P' \
+        less='bat --color=auto --theme="Monokai Extended Origin" --style=full'
+else
+    alias cat='cat -n'
+fi
 
 alias \
-    cp='cp -Riv' \
-    diff='diff --color=auto' \
-    grep='grep -i --color=auto' \
-    ls='ls -AFhq --color=auto --group-directories-first' \
-    ll='ls -AFhlq --color=auto --group-directories-first' \
-    mkdir='mkdir -pv' \
-    lsblk='lsblk -ap' \
-    mv='mv -iv' \
-    rm='rm -v' \
-    rmfr='rm -Rfv' \
-    tree='tree -CFlq --dirsfirst' \
-    treed='tree -CFdlq --dirsfirst' \
+    cp='cp -Riv'                     \
+    diff='diff --color=auto'         \
+    grep='grep --color=auto -hin'    \
+    mkdir='mkdir -pv'                \
+    lsblk='lsblk -ap'                \
+    mv='mv -iv'                      \
+    rm='rm -v'                       \
+    rmfr='rm -Rfv'                   \
+    tree='tree --dirsfirst -CFlq '   \
+    treed='tree --dirsfirst -CFdlq ' \
     zip='zip -rv'
 
 # shortcuts
 alias \
-    eed='${EDITOR:?}' \
-    seed='sudo ${EDITOR:?}' \
+    eed='${EDITOR:?}'              \
+    seed='sudo ${EDITOR:?}'        \
     sx11='startx ${HOME}/.xinitrc' \
     kx11="pkill -15 'X'"
 
@@ -40,15 +59,11 @@ alias \
 # -----------------------------------------------------------------------------
 
 alias \
-    ascii="toilet -t -f '3d'" \
-    cheat='cht.sh' \
-    future="toilet -t -f 'future'" \
-    rusto="toilet -t -f 'rusto'" \
-    rustofat="toilet -t -f 'rustofat'" \
-    tnet="ping 'example.com'" \
-    tnetspeed='speedtest-cli' \
-    yt='youtube-dl --restrict-filenames' \
-    ytf='youtube-dl -F' \
-    ytt='youtube-dl --restrict-filenames --skip-download --write-thumbnail' \
+    ascii="toilet -t -f '3d'"                                                      \
+    tnet="ping 'example.com'"                                                      \
+    tnetspeed='speedtest-cli'                                                      \
+    yt='youtube-dl --restrict-filenames'                                           \
+    ytf='youtube-dl -F'                                                            \
+    ytt='youtube-dl --restrict-filenames --skip-download --write-thumbnail'        \
     yta="youtube-dl --restrict-filenames --prefer-ffmpeg --audio-format 'best' -x" \
     ytv="youtube-dl --restrict-filenames -f 'best'"
