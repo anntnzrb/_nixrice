@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# cpyclip --- Copies input file's content to clipboard.
+
+# Commentary:
+
+# Requires xclip
+
+# Code:
+
+# checks
+! installed-p 'xclip' && err "'xclip' is not installed, unable to copy." && exit 1
+test ${#} -ne 1 && err 'Usage: cpyclip <file>' && exit 1
+
+xclip -sil -sel clip -i "${1}"
+printf "file's content has been copied to the clipboard.\\n"
+file "${1}"
