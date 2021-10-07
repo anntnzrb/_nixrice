@@ -64,10 +64,12 @@ deb,pulsemixer
 
 # core
 arch,base-devel
-arch,curl
-arch,wget
 arch,bat
+arch,curl
 arch,exa
+arch,man-db
+arch,man-pages
+arch,wget
 
 # main packages
 arch,alacritty
@@ -86,6 +88,7 @@ arch,libreoffice-still-es
 arch,maim
 arch,mpv
 arch,neofetch
+arch,network-manager-applet
 arch,onedrive-abraunegg-git
 arch,pcmanfm
 arch,picom
@@ -112,7 +115,7 @@ arch,xorg-xrandr
 arch,xorg-xrdb
 arch,xorg-xset
 arch,xorg-xsetroot
-arch,awesome
+arch,i3-gaps
 arch,sxhkd
 
 # hardware-specific
