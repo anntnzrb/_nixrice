@@ -25,12 +25,8 @@ sxhkd -m 1 -t 5 -c "${HOME}/.config/sxhkd/sxhkdrc" &
 # dunst
 dunst &
 
-# remove mouse when idle
+# hide mouse when idle
 unclutter -grab &
-
-# -----------------------------------------------------------------------------
-# other apps
-# -----------------------------------------------------------------------------
 
 # light filter
 redshift -l \
@@ -40,6 +36,9 @@ redshift -l \
 
 # system monitor
 "${TERMINAL:?}" -e 'htop' &
+
+# network applet (requires a bar that supports tray icons)
+nm-applet &
 
 # dmenu display select prompt
 displayselect &
