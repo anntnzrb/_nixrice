@@ -1,0 +1,48 @@
+#!/bin/sh
+
+# get-crypto --- Retrieve price information about given cyrptocurrency
+
+# Commentary:
+
+# Based off Luke Smith's sb-price script; tweaked by anntnzrb
+
+# checks
+test ${#} -eq 0 && err 'Usage: get-crypto <crypto> [currency]' && exit 1
+test ${#} -gt 2 && err 'Usage: get-crypto <crypto> [currency]' && exit 1
+! internet-p && err 'N/A' && exit 1
+
+# use $4 as currency, if not passed in use "usd" as default
+crypto="${1}"
+currency="${2:-usd}"
+interval='@14d'    # History contained in chart preceded by '@' (7d = 7 days)
+dir='/tmp/crypto-prices'
+pricefile="${dir}/${crypto}-${currency}"
+chartfile="${dir}/${crypto}-${currency}-chart"
+
+update_price() {
+    curl -Sfs "${currency}.rate.sx/1${crypto}" > "${pricefile}"
+    curl -Sfs "${currency}.rate.sx/${crypto}${interval}" > "${chartfile}"
+}
+
+# create directory if not present
+test -d "${dir}" || mkdir -p "${dir}"
+
+# update the price only if it hasn't been updated today
+[ "$(stat -c %x "${pricefile}" 2>/dev/null | cut -d' ' -f1)" != "$(date '+%Y-%m-%d')" ] \
+    && update_price "${crypto}"
+
+case "${currency}" in
+    usd) curr_symb="$" ;;
+    gbp) curr_symb="£" ;;
+    eur) curr_symb="€" ;;
+    *) curr_symb="❔"  ;;
+esac
+
+case "${crypto}" in
+    ada) crypto_symb="₳" ;;
+    btc) crypto_symb="₿" ;;
+    eth) crypto_symb="Ξ" ;;
+    *) crypto_symb="❔"  ;;
+esac
+
+printf "${crypto_symb}↔${curr_symb}%0.2f\\n" "$(cat "${pricefile}")"
