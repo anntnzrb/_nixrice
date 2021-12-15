@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# shorten-url --- Shorten given URL using a URL shortening service
+
+{ curl -Ss -F "shorten=$*" 'https://0x0.st' | xclip -sel clip; } || return 1
+printf 'link(s) copied to clipboard\n'
