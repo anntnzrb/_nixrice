@@ -13,24 +13,6 @@
 # miscellaneous
 # -----------------------------------------------------------------------------
 
-shorten_url() {
-    # **
-    # shorten URLs with 0x0.st
-    # *
-
-    { curl -Ss -F "shorten=$*" 'https://0x0.st' | xclip -sel clip; } || return 1
-    printf 'link(s) copied to clipboard\n'
-}
-
-upl_file() {
-    # **
-    # upload files to 0x0.st (expire)
-    # *
-
-    { curl -Ss -F "file=@$*" 'https://0x0.st' | xclip -sel clip; } || return 1
-    printf 'link(s) copied to clipboard\n'
-}
-
 loop_ip() {
     # **
     # loop thru public IP address
