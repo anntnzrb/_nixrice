@@ -27,9 +27,12 @@ unset -v xinit_cfg_dir
 # Xorg settings
 # -----------------------------------------------------------------------------
 
-xset s off &                                  # disable screensaver
-xset dpms 0 0 900 &                           # off-screen time
-xrdb "${XDG_CONFIG_HOME:?}/X11/.Xresources" & # source Xresources
+xrandr --dpi 92 &   # DPI defaulted to 1920x1080 24" screen
+xset s off &        # disable screensaver
+xset dpms 0 0 900 & # off-screen time
+# source Xresources and ensure it's loaded before running WM/DE
+xrdb "${XDG_CONFIG_HOME:?}/X11/.Xresources" & xrdbflag=1
+test -n "${xrdbflag}" && wait "${xrdbflag}" && unset -v xrdbflag
 
 # load X start-up programs
 test -x "${HOME}/.xprofile" && . "${HOME}/.xprofile"
@@ -39,9 +42,21 @@ test -x "${HOME}/.xprofile" && . "${HOME}/.xprofile"
 # -----------------------------------------------------------------------------
 
 # default ses
-session='dwm'
+session='awesome'
 
 case ${session:?} in
+i3)
+    unset -v session
+
+    exec i3
+    ;;
+
+awesome)
+    unset -v session
+
+    exec awesome
+    ;;
+
 dwm)
     unset -v session
 
