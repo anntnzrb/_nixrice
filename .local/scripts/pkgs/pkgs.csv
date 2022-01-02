@@ -66,9 +66,15 @@ deb,pulsemixer
 arch,base-devel
 arch,bat
 arch,curl
+arch,dosfstools
 arch,exa
+arch,haveged
 arch,man-db
 arch,man-pages
+arch,ntfs-3g
+arch,openssh
+arch,pacman-contrib
+arch,usbutils
 arch,wget
 
 # main packages
@@ -102,9 +108,13 @@ arch,zathura-pdf-mupdf
 arch,zip
 
 # X11 (graphical environment)
+arch,awesome
+arch,sxhkd
 arch,xclip
 arch,xdg-user-dirs
 arch,xdotool
+arch,xf86-input-libinput
+arch,xf86-input-synaptics
 arch,xorg-server
 arch,xorg-setxkbmap
 arch,xorg-xbacklight
@@ -115,14 +125,15 @@ arch,xorg-xrandr
 arch,xorg-xrdb
 arch,xorg-xset
 arch,xorg-xsetroot
-arch,i3-gaps
-arch,sxhkd
 
 # hardware-specific
 arch,nvidia-lts
 arch,intel-ucode
 arch,linux-firmware
 arch,tlp
+arch,bluez
+arch,bluez-utils
+arch,blueman
 
 # audio
 arch,pamixer
