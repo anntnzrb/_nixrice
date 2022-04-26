@@ -1,0 +1,59 @@
+#!/bin/sh
+
+# pkgs-setup --- Packages setup
+
+# Commentary:
+
+# This script parses a file containing the packages to install.
+# Contains a "tag" preppended to the name of the package to install depending
+# on the package manager.
+
+# *****************************************************************************
+# functions
+# *****************************************************************************
+
+parse_pkgs() {
+    # **
+    # Parse package list
+    # *
+
+    prog_file='./pkgs.csv'
+    tmp_prog_file='/tmp/pkgs.txt'
+    # trim comments and empty lines
+    sed '/^#/d ; /^$/d' < "${prog_file}" > "${tmp_prog_file}"
+
+    # delete any parsed file, just in case
+    rm /tmp/pkgs-*.txt
+    # parse package list depending on the pkg manager
+    while IFS=, read -r tag prog; do
+        case "${tag}" in
+        "deb") printf '%s\n' "${prog}" >> '/tmp/pkgs-deb.txt' ;;
+        "arch") printf '%s\n' "${prog}" >> '/tmp/pkgs-arch.txt' ;;
+        esac
+    done < "${tmp_prog_file}"
+}
+
+install_pkgs() {
+    # **
+    # Install pkgs based on the package manager
+    # *
+
+    # Debian-like
+    if installed-p 'apt-get'; then
+        ! root-p && err 'This script needs root access.' && exit 1
+        apt update && apt upgrade -y && apt dist-upgrade -y && apt full-upgrade -y
+        xargs apt install -y < '/tmp/pkgs-deb.txt'
+
+    # Arch-like
+    elif installed-p 'pacman' &&  installed-p 'paru'; then
+        paru -Suyy --needed --noconfirm
+        paru --needed --noconfirm -S - < '/tmp/pkgs-arch.txt'
+    fi
+}
+
+# *****************************************************************************
+# main
+# *****************************************************************************
+
+parse_pkgs
+#install_pkgs
