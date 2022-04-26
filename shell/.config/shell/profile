@@ -1,0 +1,152 @@
+#!/bin/sh
+
+# shellcheck disable=1090
+# follow non-constant sources
+
+#                            ████ ██  ██
+#  ██████                   ░██░ ░░  ░██
+# ░██░░░██ ██████  ██████  ██████ ██ ░██  █████
+# ░██  ░██░░██░░█ ██░░░░██░░░██░ ░██ ░██ ██░░░██
+# ░██████  ░██ ░ ░██   ░██  ░██  ░██ ░██░███████
+# ░██░░░   ░██   ░██   ░██  ░██  ░██ ░██░██░░░░
+# ░██     ░███   ░░██████   ░██  ░██ ███░░██████
+# ░░      ░░░     ░░░░░░    ░░   ░░ ░░░  ░░░░░░
+# runs on login
+# environment variables are set here
+
+# -----------------------------------------------------------------------------
+# preamble
+# -----------------------------------------------------------------------------
+
+# == $PATH
+append_path() {
+    # Append "$1" to $PATH when not already in.
+    # taken from '/etc/profile'
+    case ":${PATH}:" in
+    *:"$1":*) ;;
+    *) PATH="${PATH:+${PATH}:}$1"
+    esac
+}
+
+# load profiles from /etc/profile.d/
+if test -d '/etc/profile.d/'; then
+    for prof in /etc/profile.d/*.sh; do
+        test -r "${prof}" && . "${prof}"
+    unset prof
+    done
+fi
+
+# extras
+append_path '/sbin/'
+append_path '/usr/sbin/'
+append_path '/usr/local/sbin/'
+
+# '~/.local/bin'
+append_path "${HOME}/.local/bin/"
+
+# utilities
+append_path "${HOME}/.local/bin/utils"
+
+# ... finally export
+export PATH
+
+# -----------------------------------------------------------------------------
+# applications
+# -----------------------------------------------------------------------------
+
+# == Xorg stuff
+export XDG_DESKTOP_DIR="${HOME}"
+export XDG_DOCUMENTS_DIR="${HOME}/lib/docs"
+export XDG_PICTURES_DIR="${HOME}/lib/imgs"
+export XDG_VIDEOS_DIR="${HOME}/lib/vids"
+export XDG_MUSIC_DIR="${HOME}/lib/audio"
+export XDG_DOWNLOAD_DIR="${HOME}/downloads"
+export XDG_TEMPLATES_DIR="${HOME}/lib"
+export XDG_PUBLICSHARE_DIR="${HOME}/lib"
+export XDG_CONFIG_HOME="${HOME}/.config"
+export XDG_CACHE_HOME="${HOME}/.cache"
+export XDG_DATA_HOME="${HOME}/.local/share"
+
+# -----------------------------------------------------------------------------
+# defaults
+# -----------------------------------------------------------------------------
+
+export EDITOR="nvim"
+export TERMINAL='alacritty'
+export BROWSER='chromium'
+export FILE='pcmanfm'
+export READER='zathura'
+
+export SHDIR="${XDG_CONFIG_HOME:-$HOME/.config}/shell"
+export XORGDIR="${XDG_CONFIG_HOME:-$HOME/.config}/xorg"
+export ZDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
+
+# -----------------------------------------------------------------------------
+# colors
+# -----------------------------------------------------------------------------
+
+test -x "$(command -v 'tput')" && {
+    export LESS_TERMCAP_ZN=$(tput ssubm)
+    export LESS_TERMCAP_ZO=$(tput ssupm)
+    export LESS_TERMCAP_ZV=$(tput rsubm)
+    export LESS_TERMCAP_ZW=$(tput rsupm)
+    export LESS_TERMCAP_mb=$(tput bold; tput setaf 3)
+    export LESS_TERMCAP_md=$(tput bold; tput setaf 2)
+    export LESS_TERMCAP_me=$(tput sgr0)
+    export LESS_TERMCAP_mh=$(tput dim)
+    export LESS_TERMCAP_mr=$(tput rev)
+    export LESS_TERMCAP_se=$(tput rmso; tput sgr0)
+    export LESS_TERMCAP_so=$(tput bold; tput setaf 3; tput setab 4)
+    export LESS_TERMCAP_ue=$(tput rmul; tput sgr0)
+    export LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 7)
+}
+
+# -----------------------------------------------------------------------------
+# ~/ clean-up
+# -----------------------------------------------------------------------------
+
+# == Android
+export ANDROID_SDK_HOME="${HOME}/.config/android"
+export ANDROID_AVD_HOME="${HOME}/.local/share/android"
+export ANDROID_EMULATOR_HOME="${HOME}/.local/share/android"
+export ADB_VENDOR_KEY="${HOME}/.config/android"
+
+# == GTK
+export GTK_RC_FILES="${HOME}/.config/gtk-1.0/gtkrc"
+export GTK2_RC_FILES="${HOME}/.config/gtk-2.0/gtkrc"
+
+# == misc
+export WGETRC="${HOME}/.config/wget/wgetrc"
+export FZF_DEFAULT_OPTS='--layout=reverse --height 40%'
+export LESSKEY="${HOME}/.config/less/lesskey"
+export LESSHISTFILE='-'
+export SUDO_ASKPASS="${HOME}/.local/bin/dmenupass"
+
+# -----------------------------------------------------------------------------
+# sourcing
+# -----------------------------------------------------------------------------
+
+# languages
+
+# rust (cargo)
+test -f "${HOME}/.cargo/env" && . "${HOME}/.cargo/env"
+
+# haskell (ghcup)
+test -d "${HOME}/.ghcup/" && . "${HOME}/.ghcup/env"
+
+# sdkman
+test -d "${HOME}/.sdkman/" && . "${HOME}/.sdkman/bin/sdkman-init.sh"
+
+# java
+JAVA_HOME=$(readlink -f '/usr/bin/java' | sed 's:/bin/java::') \
+    && export JAVA_HOME && append_path "${JAVA_HOME}/bin"
+
+# -----------------------------------------------------------------------------
+# miscellaneous
+# -----------------------------------------------------------------------------
+
+# Java apps fix for dwm
+export _JAVA_AWT_WM_NONREPARENTING=1
+
+# start graphical automatically
+#test "$(tty)" = '/dev/tty1' && ! pgrep -x 'Xorg' >/dev/null 2>&1 && exec startx "${XORGDIR}/xinitrc"

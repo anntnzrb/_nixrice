@@ -1,0 +1,98 @@
+#!/bin/sh
+
+#    ████                            ██   ██
+#   ░██░                            ░██  ░░
+#  ██████ ██   ██ ███████   █████  ██████ ██  ██████  ███████   ██████
+# ░░░██░ ░██  ░██░░██░░░██ ██░░░██░░░██░ ░██ ██░░░░██░░██░░░██ ██░░░░
+#   ░██  ░██  ░██ ░██  ░██░██  ░░   ░██  ░██░██   ░██ ░██  ░██░░█████
+#   ░██  ░██  ░██ ░██  ░██░██   ██  ░██  ░██░██   ░██ ░██  ░██ ░░░░░██
+#   ░██  ░░██████ ███  ░██░░█████   ░░██ ░██░░██████  ███  ░██ ██████
+#   ░░    ░░░░░░ ░░░   ░░  ░░░░░     ░░  ░░  ░░░░░░  ░░░   ░░ ░░░░░░
+
+# -----------------------------------------------------------------------------
+# miscellaneous
+# -----------------------------------------------------------------------------
+
+loop_ip() {
+    # **
+    # loop thru public IP address
+    # *
+
+    while :; do
+        printf '%s\n' "$(curl --limit-rate '1' -Ss 'ifconfig.me')"
+        sleep "${1:-3}"
+    done
+}
+
+# -----------------------------------------------------------------------------
+# miscellaneous
+# -----------------------------------------------------------------------------
+
+sscreenkey() {
+    # **
+    # toggles screenkey, with some defaults
+    # *
+
+    if ! { pgrep -x 'screenkey' >/dev/null; }; then
+        setsid -f screenkey --no-systray --vis-shift --bak-mode full \
+            --opacity 0.55 -f FiraCodeRetina -t 2 -p bottom -s small \
+            --show-settings
+    else
+        # kill if already running
+        pkill -15 'screenkey'
+    fi
+}
+
+bitrate() {
+    # **
+    # retrieves the bitrate of a file (audio)
+    # *
+
+    ffprobe "$1" 2>&1 | grep 'rate'
+}
+
+gpg_export_pub_key() {
+    # **
+    # export public GPG key
+    # *
+
+    gpg --output "${HOME}/temp/pub_key.pgp" --armor --export "$1"
+}
+
+gpg_export_sec_key() {
+    # **
+    # export secret GPG key
+    # *
+
+    gpg --output "${HOME}/temp/sec_key.pgp" --armor --export-secret-key "$1"
+}
+
+gpg_import_key() {
+    # **
+    # import GPG key :: public/private
+    # *
+
+    gpg --import "$1"
+    printf "\nkeys: %s\n\nuse 'gpg --edit-keys <mail>' to set trust level\n" \
+        "$(gpg --list-keys)"
+}
+
+# -----------------------------------------------------------------------------
+# distro-especific
+# -----------------------------------------------------------------------------
+
+# arch
+
+test -x "$(command -v 'pacman')" && {
+    add_key() {
+        # **
+        # adds a pacman key
+        # TODO: fix multiple use of sudo
+        # *
+
+        sudo pacman-key --recv-keys "$1" &&
+            sudo pacman-key --finger "$1" &&
+            sudo pacman-key --lsign-key "$1" &&
+            sudo pacman --noconfirm -Syy archlinux-keyring
+    }
+}
