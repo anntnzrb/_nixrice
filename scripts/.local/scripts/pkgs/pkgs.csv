@@ -1,8 +1,8 @@
-# -----------------------------------------------------------------------------
-# Debian-like
-# -----------------------------------------------------------------------------
+#distro,package name
 
-# core
+#debian-like
+
+#core
 deb,build-essential
 deb,curl
 deb,man-db
@@ -11,7 +11,7 @@ deb,manpages-posix-dev
 deb,sudo
 deb,wget
 
-# main packages
+#main packages
 deb,atool
 deb,cowsay
 deb,dunst
@@ -39,7 +39,7 @@ deb,zathura-pdf-poppler
 deb,zathura-ps
 deb,zip
 
-# X11 (graphical environment)
+#X11 (graphical environment)
 deb,sxhkd
 deb,x11-utils
 deb,x11-xkb-utils
@@ -51,18 +51,16 @@ deb,xdotool
 deb,xinit
 deb,xserver-xorg
 
-# hardware-specific
+#hardware-specific
 deb,apulse
 deb,firmware-linux
 deb,intel-microcode
 deb,pulseaudio
 deb,pulsemixer
-#
-# -----------------------------------------------------------------------------
-# Arch-like
-# -----------------------------------------------------------------------------
 
-# core
+#arch-like
+
+#core
 arch,base-devel
 arch,bat
 arch,curl
@@ -77,7 +75,7 @@ arch,pacman-contrib
 arch,usbutils
 arch,wget
 
-# main packages
+#main packages
 arch,alacritty
 arch,atool
 arch,cowsay
@@ -108,7 +106,7 @@ arch,zathura
 arch,zathura-pdf-mupdf
 arch,zip
 
-# X11 (graphical environment)
+#X11 (graphical environment)
 arch,awesome
 arch,sxhkd
 arch,xclip
@@ -124,14 +122,14 @@ arch,xorg-xrdb
 arch,xorg-xset
 arch,xorg-xsetroot
 
-# hardware-specific
+#hardware-specific
 arch,intel-ucode
 arch,linux-firmware
 arch,bluez
 arch,bluez-utils
 arch,blueman
 
-# audio
+#audio
 arch,pamixer
 arch,pulsemixer
 arch,pipewire
