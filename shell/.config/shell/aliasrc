@@ -44,6 +44,7 @@ alias \
     rm='rm -v'                       \
     rmfr='rm -Rfv'                   \
     tree='tree --dirsfirst -CFlq '   \
+    treea='tree --dirsfirst -CFalq '   \
     treed='tree --dirsfirst -CFdlq ' \
     zip='zip -rv'
 
