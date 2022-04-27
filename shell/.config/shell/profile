@@ -72,7 +72,7 @@ export XDG_DATA_HOME="${HOME}/.local/share"
 # -----------------------------------------------------------------------------
 
 export EDITOR="nvim"
-export TERMINAL='alacritty'
+export TERMINAL='st'
 export BROWSER='chromium'
 export FILE='pcmanfm'
 export READER='zathura'
