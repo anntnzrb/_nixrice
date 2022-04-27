@@ -1,5 +1,3 @@
-""" generals.vim --- global configurations
-
 " -----------------------------------------------------------------------------
 " identation
 " -----------------------------------------------------------------------------
@@ -31,16 +29,7 @@ autocmd BufEnter * setlocal formatoptions=jqlt
 
 set hlsearch   " highlight all search results
 set ignorecase " always case-insensitive
-set smartcase
 set infercase
-
-" -----------------------------------------------------------------------------
-" completion
-" -----------------------------------------------------------------------------
-
-set omnifunc=syntaxcomplete#Complete " enable omnicompletion
-set completeopt=menuone,longest,preview
-set shortmess+=c " reduce verbosity on cmd when completing
 
 " -----------------------------------------------------------------------------
 " miscellaneous
@@ -54,6 +43,6 @@ set autochdir              " automatically cd to opened file's directory
 set visualbell             " visual bell over beeping preferred
 " delete trailing whitespaces & newlines on save
 au BufWritePre * %s/\s\+$//e | %s/\n\+\%$//e
-set noswapfile
-filetype plugin indent on
-syntax on
+set noswapfile             " backup files
+filetype plugin indent on  " smart auto file-type detection
+syntax on                  " syntax highlightning for files
