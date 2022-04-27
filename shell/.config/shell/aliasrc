@@ -63,8 +63,8 @@ alias \
     ascii="toilet -t -f '3d'"                                                      \
     tnet="ping 'example.com'"                                                      \
     tnetspeed='speedtest-cli'                                                      \
-    yt='youtube-dl --restrict-filenames'                                           \
-    ytf='youtube-dl -F'                                                            \
-    ytt='youtube-dl --restrict-filenames --skip-download --write-thumbnail'        \
-    yta="youtube-dl --restrict-filenames --prefer-ffmpeg --audio-format 'best' -x" \
-    ytv="youtube-dl --restrict-filenames -f 'best'"
+    yt='yt-dlp --restrict-filenames'                                           \
+    ytf='yt-dlp -F'                                                            \
+    ytt='yt-dlp --restrict-filenames --skip-download --write-thumbnail'        \
+    yta="yt-dlp --restrict-filenames --prefer-ffmpeg --audio-format 'best' -x" \
+    ytv="yt-dlp --restrict-filenames -f 'best'"
