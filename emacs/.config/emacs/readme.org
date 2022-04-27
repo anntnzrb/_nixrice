@@ -133,6 +133,7 @@ references:
 
 ;; GUI
 (menu-bar-mode   0)
+(tool-bar-mode   0)
 (scroll-bar-mode 0)
 (setq inhibit-splash-screen  t)
 (setq inhibit-startup-screen t)
@@ -545,24 +546,14 @@ mouse wheel behavior:
       (setq modus-themes-bold-constructs    t)
 
       ;; modeline
-      (setq modus-themes-mode-line   'accented)
       (setq modus-themes-subtle-line-numbers t)
-
-      ;; hl-line
-      (setq modus-themes-hl-line 'x-underline-at-descent-line)
-
-      ;; links
-      (setq modus-themes-links 'neutral-underline)
-
-      ;; region
-      (setq  modus-themes-region 'accent-no-extend)
 
       ;; org
       (setq modus-themes-org-blocks 'grayscale)
 
       (modus-themes-load-themes)
 
-      (modus-themes-load-operandi)
+      (modus-themes-load-vivendi)
       (define-key global-map (kbd "M-<f5>") 'modus-themes-toggle))
   (message "No theme loaded :: Not running from a graphical display."))
 #+end_src
@@ -876,9 +867,9 @@ settings and style for the /C/ language.
 | [[https://github.com/oantolin/orderless][orderless]] | completion style that is /order-less/ |
 
 #+begin_src elisp
-;;(straight-use-package 'orderless)
-;;
-;;(setq completion-styles '(orderless))
+(straight-use-package 'orderless)
+
+(setq completion-styles '(orderless))
 #+end_src
 
 | [[https://github.com/minad/vertico][vertico]] | minimalistic completion UI, uses /Emacs/' own completion engine in contrast to other tools like [[https://github.com/abo-abo/swiper][Ivy]] and [[https://github.com/emacs-helm/helm][Helm]] |
