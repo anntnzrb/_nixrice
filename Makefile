@@ -1,5 +1,6 @@
 apps := alacritty \
 	bash \
+	bin \
 	defaults \
 	dunst \
 	emacs \
@@ -17,6 +18,7 @@ apps := alacritty \
 	qutebrowser \
 	redshift \
 	resources \
+	scripts \
 	shell \
 	sxhkd \
 	vim \
@@ -24,7 +26,7 @@ apps := alacritty \
 	zathura \
 	zsh
 
-stow_cmd := stow --dir=. --target="${HOME}" 
+stow_cmd := stow --dir=. --target="${HOME}"
 
 all:
 	printf 'make install --- installs .files\n'
