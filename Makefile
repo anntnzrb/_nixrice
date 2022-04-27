@@ -11,7 +11,6 @@ apps := alacritty \
 	mpv \
 	neofetch \
 	newsboat \
-	nvim \
 	onedrive \
 	pcmanfm \
 	picom \
@@ -20,6 +19,7 @@ apps := alacritty \
 	resources \
 	shell \
 	sxhkd \
+	vim \
 	xorg \
 	zathura \
 	zsh
@@ -37,6 +37,8 @@ install: $(apps)
 
 reload: $(apps)
 	@printf 'reloading .files...\n'
+	$(stow_cmd) -D $^
+	$(stow_cmd) -S $^
 	$(stow_cmd) -R $^
 
 clean: $(apps)
