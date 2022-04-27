@@ -1,10 +1,17 @@
 #!/bin/sh
 
-# key-press repeat rate
-xset r rate 225 50 &
+# remaps --- Configures keyboard settings.
 
-# altgr + letter for (accents, etc)
-setxkbmap -layout 'us' -variant 'altgr-intl' &
+# Commentary:
+
+# This script should be called when starting the graphical environment;
+# that is `xprofile` (or equivalent).
+
+# set key repeat delay and key repeat respectively
+xset r rate 220 50
+
+# altgr for accented letters, etc.
+setxkbmap -layout 'us' -variant 'altgr-intl'
 
 # map the CAPS-LOCK key to SUPER
-setxkbmap -option 'caps:escape' &
+setxkbmap -option 'caps:escape'
