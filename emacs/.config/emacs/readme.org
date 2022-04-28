@@ -391,7 +391,7 @@ settings that do not belong anywhere specific.
 (add-hook 'after-init-hook #'global-auto-revert-mode)
 
 ;; automatically maximize frame when Emacs starts
-(add-hook 'after-init-hook #'toggle-frame-maximized)
+;;(add-hook 'after-init-hook #'toggle-frame-maximized)
 #+end_src
 
 *** indentification
