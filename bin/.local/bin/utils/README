@@ -40,7 +40,7 @@ root-p
 ------
 Checks if invoking user is has elevated priviledges.
 
-git-clone-fast
+fast-git-clone
 --------------
 Wrapper around `git clone` to only clone with latest commit plus use all CPU
 cores.
