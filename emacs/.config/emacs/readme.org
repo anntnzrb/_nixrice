@@ -540,6 +540,7 @@ mouse wheel behavior:
 
 ;; save cursor position
 (save-place-mode 1)
+(setq save-place-file (expand-file-name "backups/places" user-emacs-directory))
 (setq save-place-forget-unreadable-files t)
 #+end_src
 
