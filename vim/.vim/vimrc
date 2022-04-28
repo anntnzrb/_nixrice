@@ -1,4 +1,4 @@
-""" vimrc--- main configuration file for [n]Vi[m]
+""" vimrc --- main configuration file for Vim
 
 " the leader key
 let mapleader = ","
