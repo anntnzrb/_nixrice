@@ -32,7 +32,7 @@ append_path() {
 if test -d '/etc/profile.d/'; then
     for prof in /etc/profile.d/*.sh; do
         test -r "${prof}" && . "${prof}"
-    unset prof
+        unset prof
     done
 fi
 
