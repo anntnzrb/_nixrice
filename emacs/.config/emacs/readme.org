@@ -520,6 +520,10 @@ mouse wheel behavior:
 ;; hourglass cursor
 (setq display-hourglass t)
 (setq hourglass-delay   0) ;; display hourglass immediately
+
+;; save cursor position
+(save-place-mode 1)
+(setq save-place-forget-unreadable-files t)
 #+end_src
 
 ** appearance
