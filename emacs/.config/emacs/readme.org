@@ -678,7 +678,10 @@ settings for shell scripts.
   ;; indentation
   (setq sh-indent-for-case-alt      '+)
   (setq sh-indent-for-case-label     0)
-  (setq sh-indent-after-continuation t))
+  (setq sh-indent-after-continuation t)
+
+  ;; Flycheck
+  (add-hook 'sh-mode-hook #'flycheck-mode))
 #+end_src
 
 ** Makefile
