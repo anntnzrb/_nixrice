@@ -1,29 +1,14 @@
 #!/bin/sh
 
-# **
-# utility to select editor
-#
-# *
-
-# -----------------------------------------------------------------------------
-# preamble
-# -----------------------------------------------------------------------------
-
-# load utilities
-# shellcheck disable=1090
-. "${LIBSHUTILS:?}/std-utils"
-
-# -----------------------------------------------------------------------------
-# main
-# -----------------------------------------------------------------------------
+# editor --- Utility to select text editor.
 
 # editor of choice
-ED="emacs"
+ed="emacs"
 
-case ${ED} in
+case ${ed} in
 gnu | emacs)
-    # if the script is ran via terminal, emacs is launched in terminal mode,
-    # launches GUI version otherwise;
+# if the script is ran via terminal, emacs is launched in terminal mode,
+# launches GUI version otherwise;
 
 tty >/dev/null 2>&1 && set -- --no-splash -nw "$@"
 exec emacs --no-splash "$@"
@@ -33,10 +18,10 @@ nvim) exec nvim ;;
 
 # fallback editor
 *)
-is_installed 'vi' && exec vi
-is_installed 'nano' && exec nano
+installed-p 'vi' && exec vi
+installed-p 'nano' && exec nano
 
 # this line will only be reached if those above fail
-die 'no editor was found'
+err 'no editor was found, try using sed instead.' && exit 1
 ;;
 esac

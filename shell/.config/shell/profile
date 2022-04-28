@@ -71,7 +71,7 @@ export XDG_DATA_HOME="${HOME}/.local/share"
 # defaults
 # -----------------------------------------------------------------------------
 
-export EDITOR="nvim"
+export EDITOR="editor"
 export TERMINAL='st'
 export BROWSER='chromium'
 export FILE='pcmanfm'
