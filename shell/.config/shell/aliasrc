@@ -12,7 +12,11 @@
 # shellcheck disable=2006
 # keep backticks for portability.
 
-# = core utilities
+# -----------------------------------------------------------------------------
+# core utilities
+# -----------------------------------------------------------------------------
+# use "modern UNIX utilities" (Rust implementation) if available, fallback to
+# original commands otherwise.
 
 # ls === exa
 if test -x "`command -v 'exa'`"; then
@@ -34,10 +38,16 @@ else
     alias cat='cat -n'
 fi
 
+# rg (ripgrep) === grep
+if test -x "`command -v 'rg'`"; then
+    alias grep='rg --color=auto --column --hidden -Hin'
+else
+    alias grep='grep --color=auto -in'
+fi
+
 alias \
     cp='cp -Riv'                     \
     diff='diff --color=auto'         \
-    grep='grep --color=auto -in'    \
     mkdir='mkdir -pv'                \
     lsblk='lsblk -ap'                \
     mv='mv -iv'                      \

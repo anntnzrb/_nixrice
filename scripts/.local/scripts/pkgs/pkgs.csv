@@ -62,10 +62,8 @@ deb,pulsemixer
 
 #core
 arch,base-devel
-arch,bat
 arch,curl
 arch,dosfstools
-arch,exa
 arch,haveged
 arch,man-db
 arch,man-pages
@@ -74,6 +72,11 @@ arch,openssh
 arch,pacman-contrib
 arch,usbutils
 arch,wget
+
+#core-utils
+arch,bat
+arch,exa
+arch,ripgrep
 
 #main packages
 arch,alacritty
