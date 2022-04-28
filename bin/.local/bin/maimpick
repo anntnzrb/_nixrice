@@ -1,14 +1,32 @@
 #!/bin/sh
 
+# maimpick --- Utility to take screenshots.
+
+# Commentary:
+
 # lets you choose the kind of screenshot to take, including copying the image
-# or even highlighting an area to copy
-# dependencies: maim, xdotool
+# or even highlighting an area to copy.
+
+# dependencies
+! installed-p 'dmenu' && err "'dmenu' is needed to run this script." && exit 1
+! installed-p 'maim' && err "'maim' is needed to run this script." && exit 1
+! installed-p 'xdotool' && err "'xdtool' is needed to run this script." && exit 1
+
+# variables
+date="$(date '+%Y%m%d-%H%M%S')"
+maim_cmd="maim -B -m 1 -f png"
+xclip_cmd="xclip -sel clip -t image/png"
+xdotool_cmd="$(xdotool getactivewindow)"
+get_active_window="$(xdotool getactivewindow getwindowclassname)"
 
 case "$(printf "a selected area\\ncurrent window\\nfull screen\\na selected area (copy)\\ncurrent window (copy)\\nfull screen (copy)" | dmenu -l 6 -i -p "Screenshot which area?")" in
-"a selected area") maim -s pic-selected-"$(date '+%y%m%d-%H%M-%S').png" ;;
-"current window") maim -i "$(xdotool getactivewindow)" pic-window-"$(date '+%y%m%d-%H%M-%S').png" ;;
-"full screen") maim pic-full-"$(date '+%y%m%d-%H%M-%S').png" ;;
-"a selected area (copy)") maim -s | xclip -selection clipboard -t image/png ;;
-"current window (copy)") maim -i "$(xdotool getactivewindow)" | xclip -selection clipboard -t image/png ;;
-"full screen (copy)") maim | xclip -selection clipboard -t image/png ;;
+"a selected area") ${maim_cmd} -s pic-selected-"${date}" ;;
+"current window") ${maim_cmd} -q -d 0.2 -i "${xdotool_cmd}" pic-window-"${get_active_window}"-"${date}" ;;
+"full screen") ${maim_cmd} -q -d 0.2 pic-full-"${date}" ;;
+"a selected area (copy)") ${maim_cmd} -s | ${xclip_cmd} ;;
+"current window (copy)") ${maim_cmd} -q -d 0.2 -i "${xdotool_cmd}" | ${xclip_cmd} ;;
+"full screen (copy)") ${maim_cmd} -q -d 0.2 | ${xclip_cmd} ;;
 esac
+
+# cleanup
+unset -v date maim_cmd xclip_cmd xdotool_cmd get_active_window
