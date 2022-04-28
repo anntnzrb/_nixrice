@@ -23,6 +23,7 @@
   - [[#generals][generals]]
     - [[#indentification][indentification]]
     - [[#custom-custom-file][custom custom file]]
+    - [[#backups][backups]]
     - [[#editing][editing]]
     - [[#vi-emulation][Vi emulation]]
     - [[#mouse--cursor][mouse & cursor]]
@@ -378,10 +379,6 @@ a few reasons why i consider =straight.el=:
 settings that do not belong anywhere specific.
 
 #+begin_src emacs-lisp
-;; backup
-(setq create-lockfiles  nil)
-(setq make-backup-files nil)
-
 (setq delete-by-moving-to-trash t) ;; safer than `rm'
 (setq use-short-answers         t)
 (setq visible-bell              t) ;; flash screen
@@ -416,11 +413,31 @@ going thru =customize= and accidentally set-up a settings or two.
 #+end_quote
 
 #+begin_src emacs-lisp
+;; change between `t' and `nil' to enable/disable custom file
 (let ((use-custom-file-p nil))
   (setq custom-file
         (if use-custom-file-p
             (expand-file-name "custom.el" user-emacs-directory)
           null-device)))
+#+end_src
+
+*** backups
+
+i've never used this functionality in a text editor before, i immediately
+disable this feature as it can be annoying, /e.g/ (/Vim/'s swapfiles)...
+
+however, if set properly this can be a catastrophe saver.
+
+#+begin_src emacs-lisp
+(setq backup-directory-alist
+      `(("." . ,(concat user-emacs-directory "backups/"))))
+(setq make-backup-files   t)
+(setq backup-by-copying   t)
+(setq version-control     t)
+(setq delete-old-versions t)
+(setq kept-new-versions   8)
+(setq kept-old-versions   2)
+(setq create-lockfiles    nil)
 #+end_src
 
 *** editing
