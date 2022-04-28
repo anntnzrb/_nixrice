@@ -68,5 +68,9 @@
 (setq inhibit-startup-screen t)
 (setq frame-inhibit-implied-resize t) ;; don't frame-resize this early
 
+;; dialogs; preferably disabled for a totally keyboard-driven experience
+(setq use-dialog-box  nil)
+(setq use-file-dialog nil)
+
 (provide 'early-init)
 ;;; early-init.el ends here
