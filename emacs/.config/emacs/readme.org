@@ -1,11 +1,11 @@
 #+title:    annt's GNU Emacs'
 #+author:   anntnzrb
-#+email:    anntnzrb@protonmail.com
+#+email:    anntnzrb@proton.me
 #+property: header-args :results silent
 
 # macros
 #+macro: export-date   (eval (format-time-string "%F" (current-time)))
-#+macro: emacs-version (eval (substring (emacs-version) 10 17))
+#+macro: emacs-version (eval (substring (emacs-version) 10 14))
 
 - created: 2020-11-07
 - updated: *{{{export-date}}}*
@@ -71,9 +71,9 @@ references:
 #+begin_src emacs-lisp :tangle "early-init.el"
 ;;; early-init.el --- GNU Emacs >= 27.1 pre-initialization file -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020-2021 anntnzrb
+;; Copyright (C) 2020-2022 anntnzrb
 
-;; Author: anntnzrb <anntnzrb@protonmail.com>
+;; Author: anntnzrb <anntnzrb@proton.me>
 ;; Keywords: initialization
 
 ;; This file is NOT part of GNU Emacs.
@@ -153,9 +153,9 @@ this literate configuration into /ELisp/ code and load it.
 #+begin_src emacs-lisp :tangle "init.el"
 ;;; init.el --- Initialization file of GNU Emacs -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2020-2021 anntnzrb
+;; Copyright (C) 2020-2022 anntnzrb
 
-;; Author: anntnzrb <anntnzrb@protonmail.com>
+;; Author: anntnzrb <anntnzrb@proton.me>
 ;; Keywords: initialization
 
 ;; This file is NOT part of GNU Emacs.
@@ -396,7 +396,7 @@ information about myself.
 
 #+begin_src emacs-lisp
 (setq user-full-name    "anntnzrb")
-(setq user-mail-address "anntnzrb@protonmail.com")
+(setq user-mail-address "anntnzrb@proton.me")
 #+end_src
 
 *** custom custom file
