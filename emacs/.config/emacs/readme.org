@@ -386,7 +386,7 @@ settings that do not belong anywhere specific.
 (setq use-short-answers         t)
 (setq visible-bell              t) ;; flash screen
 
-;; always autorevert
+;; always autorevert (dynamically refresh buffer contents)
 (setq auto-revert-verbose t)
 (add-hook 'after-init-hook #'global-auto-revert-mode)
 
@@ -519,7 +519,7 @@ mouse wheel behavior:
 
 ;; hourglass cursor
 (setq display-hourglass t)
-(setq hourglass-delay   0)
+(setq hourglass-delay   0) ;; display hourglass immediately
 #+end_src
 
 ** appearance
@@ -604,10 +604,10 @@ mouse wheel behavior:
 
 #+begin_src emacs-lisp
 (after! dired
-  (setq dired-auto-revert-buffer       #'dired-directory-changed-p)
+  (setq dired-auto-revert-buffer #'dired-directory-changed-p)
   (setq dired-listing-switches   "-AFhl --group-directories-first")
-  (setq dired-recursive-copies  'always)
-  (setq dired-recursive-deletes 'always)
+  (setq dired-recursive-copies   'always)
+  (setq dired-recursive-deletes  'always)
 
   ;; less verbose output
   (add-hook 'dired-mode-hook #'dired-hide-details-mode))
