@@ -542,6 +542,10 @@ mouse wheel behavior:
 (save-place-mode 1)
 (setq save-place-file (expand-file-name "backups/places" user-emacs-directory))
 (setq save-place-forget-unreadable-files t)
+
+;; settings for TTY Emacs
+(unless (display-graphic-p)
+  (setq visible-cursor nil))
 #+end_src
 
 ** appearance
@@ -637,11 +641,14 @@ mouse wheel behavior:
 
 | [[https://github.com/jtbm37/all-the-icons-dired][all-the-icons-dired]] | self-explanatory |
 
-#+begin_src emacs-lisp
-(after! dired
-  (straight-use-package 'all-the-icons-dired)
+only enable /dired/ icons when using graphical /Emacs/.
 
-  (add-hook 'dired-mode-hook #'all-the-icons-dired-mode))
+#+begin_src emacs-lisp
+(when (display-graphic-p)
+  (after! dired
+    (straight-use-package 'all-the-icons-dired)
+
+    (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)))
 #+end_src
 
 * programming
