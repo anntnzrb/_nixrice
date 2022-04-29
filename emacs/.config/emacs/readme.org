@@ -849,6 +849,14 @@ settings and style for the /C/ language.
 (straight-use-package 'magit)
 
 (define-key global-map (kbd "C-c g") 'magit-status)
+
+(after! magit
+  (defun annt/disable-line-numbers ()
+    "Disables line numbers from displaying as it causes issues with magit
+ diff selection."
+    (setq-local display-line-numbers nil))
+
+  (add-hook 'magit-status-mode-hook #'annt/disable-line-numbers))
 #+end_src
 
 * applications & utilities
