@@ -14,18 +14,45 @@
 # disable for numbers instead of strings
 
 # -----------------------------------------------------------------------------
+# variables
+# -----------------------------------------------------------------------------
+
+branch='emacs-28'
+flags="--with-native-compilation \
+    --with-mailutils \
+    --with-sound=yes \
+    --without-compress-install \
+    --without-gsettings \
+    --without-gconf"
+
+# -----------------------------------------------------------------------------
 # functions
 # -----------------------------------------------------------------------------
 
 clone_emacs() {
     # **
-    # Clones GNU Emacs from repository
+    # Clones GNU Emacs from repository.
     # *
 
-    printf 'Cloning and installing...\n'
-    fast-git-clone -b 'master' 'https://github.com/emacs-mirror/emacs' '/tmp/emacs/'
+    printf 'Cloning Emacs repository...\n'
+    fast-git-clone -b "${branch}" 'https://github.com/emacs-mirror/emacs' '/tmp/emacs/'
 
     cd '/tmp/emacs/' || { err 'Cannot cd into dir.' && exit 1; }
+}
+
+configure() {
+    # **
+    # Configures GNU Emacs autoconf settings.
+    # *
+
+    ./autogen.sh
+    ./configure ${flags}
+
+    printf '\n--------------------------------------------------------------\n'
+    printf 'Resuming in 10 seconds...\n'
+    printf 'Please review the settings shown above and check for errors.\n'
+    printf '--------------------------------------------------------------\n'
+    sleep 10
 }
 
 # -----------------------------------------------------------------------------
@@ -52,17 +79,20 @@ if installed-p 'apt-get'; then
         'texinfo'
 
     clone_emacs
-    ./autogen.sh
-    ./configure --with-native-compilation
-    
+    configure
+
     make -j$(nproc)
     make -j$(nproc) install
 
 elif installed-p 'pacman'; then
+    sudo pacman --needed --noconfirm -Syu 'base-devel' 'libgccjit'
+
     clone_emacs
-    ./autogen.sh
-    ./configure
-    
+    configure
+
     make -j$(nproc)
     sudo make -j$(nproc) install
 fi
+
+# cleanup
+unset -v branch flags
