@@ -619,6 +619,36 @@ mouse wheel behavior:
 (setq column-number-indicator-zero-based nil)
 #+end_src
 
+**** keycast
+
+| [[https://github.com/tarsius/keycast][keycast]] | shows current key and its command in the mode line |
+
+even though this is commonly used for screencasts (which i don't do), it looks
+great and helps me identifying some muscle memory keys i usually press without
+notice.
+
+#+begin_src emacs-lisp
+(straight-use-package 'keycast)
+
+(after! keycast
+  (setq keycast-mode-line-format "%k%c%r")
+  (setq keycast-tab-bar-format   "%k%c%r")
+  (setq keycast-mode-line-remove-tail-elements nil) ;; don't hide rest of the modeline
+
+  ;; disable logging when actually typing stuff
+  (dolist (ev '(self-insert-command
+                org-self-insert-command))
+    (add-to-list 'keycast-substitute-alist `(,ev "..." "Typing…")))
+
+  ;; list of events to ignore
+  (dolist (ev '(mouse-event-p
+                mouse-movement-p
+                mwheel-scroll))
+    (add-to-list 'keycast-substitute-alist `(,ev nil))))
+
+(add-hook 'after-init-hook #'keycast-mode)
+#+end_src
+
 *** tooltips
 
 - GTK-tooltips disabled for consistency
