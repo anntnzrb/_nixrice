@@ -607,6 +607,13 @@ mouse wheel behavior:
 *** modeline
 
 #+begin_src emacs-lisp
+;; clock
+(setq display-time-format "%a @ %H:%M")
+(setq display-time-interval 50) ;; update faster to catch up
+(setq display-time-default-load-average nil)
+
+(add-hook 'after-init-hook #'display-time-mode)
+
 (setq column-number-mode   t)
 (setq size-indication-mode t)
 (setq column-number-indicator-zero-based nil)
