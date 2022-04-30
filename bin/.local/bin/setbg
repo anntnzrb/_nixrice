@@ -1,24 +1,22 @@
 #!/bin/sh
 
-# **
-# simple script to set a background/wallpaper
-#
-# dependencies :: feh
+# setbg --- Utility script to set a background/wallpaper.
+
+# dependencies
+! installed-p 'feh' && err "'feh' is needed to run this script" && exit 1
 
 # wallpapers location
-WP_PATH="$HOME/lib/imgs/wallpapers"
+wp_path="${HOME}/lib/imgs/wallpapers"
 
 # use defaults if argv[1] is null
-[ -z "$1" ] && {
-    feh -rz --no-fehbg --bg-scale "$WP_PATH"
-}
+test -z "${1}" && feh -rz --no-fehbg --bg-scale "${wp_path}"
 
 # if argv[1] is a file, set it as wallpaper
-[ -f "$1" ] && { feh --no-fehbg --bg-scale "$1"; }
+test -f "${1}" && feh --no-fehbg --bg-scale "${1}"
 
 # if argv[1] is a directory, randomly pick a file from that directory and
 # set is as wallpaper
-[ -d "$1" ] && { feh -rz --no-fehbg --bg-scale "$1"; }
+test -d "${1}" && feh -rz --no-fehbg --bg-scale "${1}"
 
 # notify & exit
 notify-send 'wallpaper updated...'
