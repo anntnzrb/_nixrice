@@ -45,6 +45,7 @@
     - [[#racket][Racket]]
   - [[#nix][Nix]]
   - [[#haskell][Haskell]]
+  - [[#yaml][YAML]]
 - [[#version-control][version control]]
 - [[#applications--utilities][applications & utilities]]
   - [[#completion][completion]]
@@ -876,6 +877,17 @@ settings and style for the /C/ language.
 
     ;; format before saving
     (add-hook 'before-save-hook #'hindent-reformat-buffer)))
+#+end_src
+
+** YAML
+
+| [[https://github.com/yoshiki/yaml-mode][yaml-mode]] | support for =.yml= files which are not natively supported |
+
+#+begin_src emacs-lisp
+(straight-use-package 'yaml-mode)
+
+(after! yaml-mode
+  (setq yaml-indent-offset 2))
 #+end_src
 
 * version control
