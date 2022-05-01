@@ -1,62 +1,80 @@
-#             ██                          ██   ██     ██
-#            ░██                         ░░   ░██    ░██    ██   ██
-#   ██████   ░██  ██████    █████  ██████ ██ ██████ ██████ ░░██ ██
-#  ░░░░░░██  ░██ ░░░░░░██  ██░░░██░░██░░█░██░░░██░ ░░░██░   ░░███
-#   ███████  ░██  ███████ ░██  ░░  ░██ ░ ░██  ░██    ░██     ░██
-#  ██░░░░██  ░██ ██░░░░██ ░██   ██ ░██   ░██  ░██    ░██     ██
-# ░░████████ ███░░████████░░█████ ░███   ░██  ░░██   ░░██   ██
-#  ░░░░░░░░ ░░░  ░░░░░░░░  ░░░░░  ░░░    ░░    ░░     ░░   ░░
-# configuration for Alacritty, the GPU enhanced terminal emulator
-
-# Any items in the `env` entry below will be added as environment variables
-#env:
-  #TERM: xterm-256color
+# alacritty.yml --- Configuration for Alacritty, the GPU enhanced terminal emulator.
 
 # -----------------------------------------------------------------------------
-# colors / transparency
+# window
 # -----------------------------------------------------------------------------
 
-# transparency
-# `0.0` to `1.0`.
-background_opacity: 0.85
+window:
+  # background opacity (transparency)
+  #
+  # window opacity as a floating point number from `0.0` to `1.0`.
+  opacity: 0.85
 
-# font configuration
+  # window title
+  title: Alacritty
+
+  # allow terminal applications to change alacritty's window title.
+  dynamic_title: true
+
+  # window class (Linux/BSD only):
+  class:
+    # application instance name
+    instance: Alacritty
+    # general application class
+    general: Alacritty
+
+scrolling:
+  # maximum number of lines in the scrollback buffer; '0' disables scrolling.
+  history: 100000
+
+  # scrolling distance multiplier.
+  multiplier: 1
+
+# -----------------------------------------------------------------------------
+# font
+# -----------------------------------------------------------------------------
+
+# Font configuration
 font:
-# default - (Linux/BSD): monospace
-    normal:
-        family: Fantasque Sans Mono
-        style: Regular
+  normal:
+    family: Fantasque Sans Mono
+    style: Regular
 
-    bold:
-        family: Fantasque Sans Mono
-        style: Bold
+  bold:
+    family: Fantasque Sans Mono
+    style: Bold
 
-    italic:
-        family: Fantasque Sans Mono
-        style: Italic
+  italic:
+    family: Fantasque Sans Mono
+    style: Italic
 
-    bold_italic:
-        family: Fantasque Sans Mono
-        style: Bold Italic
+  bold_italic:
+    family: Fantasque Sans Mono
+    style: Bold Italic
 
-# point size
-    size: 14.0
+  # point size
+  size: 14.0
 
-# offset is the extra space around each character
-    offset:
-        x: 0
-        y: 0
+  # offset is the extra space around each character. `offset.y` can be thought
+  # of as modifying the line spacing, and `offset.x` as modifying the letter
+  # spacing.
+  offset:
+    x: 0
+    y: 0
 
-# glyph offset determines the locations of the glyphs within their cells with
-# the default being at the bottom. increasing `x` moves the glyph to the right,
-# increasing `y` moves the glyph upwards.
-    glyph_offset:
-        x: 0
-        y: 0
+  # use built-in font for box drawing characters.
+  #
+  # if `true`, alacritty will use a custom built-in font for box drawing
+  # characters (Unicode points 2500 - 259f).
+  #
+  builtin_box_drawing: true
 
-# if `true`, bold text is drawn using the bright color variants
-    draw_bold_text_with_bright_colors: false
+# if `true`, bold text is drawn using the bright color variants.
+draw_bold_text_with_bright_colors: true
 
+# -----------------------------------------------------------------------------
+# colors
+# -----------------------------------------------------------------------------
 
 # colors (Dracula)
 colors:
@@ -102,98 +120,66 @@ colors:
         cyan:    '0x59dffc'
         white:   '0xe6e6d1'
 
-# indexed colors
-# the indexed colors include all colors from 16 to 256.
-# when these are not set, they're filled with sensible defaults.
-    indexed_colors: []
-
 # -----------------------------------------------------------------------------
-# window settings
-# -----------------------------------------------------------------------------
-
-window:
-# dimensions
-# specified in number of columns/lines, not pixels. `0` to ignore
-    dimensions:
-        columns: 75
-        lines: 18
-
-# padding
-# blank space added around the window in pixels.
-    padding:
-        x: 12
-        y: 12
-
-# spread additional padding evenly around the terminal content.
-    dynamic_padding: true
-
-# decorations
-# values for `decorations`:
-#     - full: Borders and title bar
-#     - none: Neither borders nor title bar
-    decorations: full
-
-# startup mode
-# values for `startup_mode`:
-#   - Windowed
-#   - Maximized
-#   - Fullscreen
-    startup_mode: Windowed
-
-# -----------------------------------------------------------------------------
-# misc settings
-# -----------------------------------------------------------------------------
-
-# window title
-title: Alacritty
-
-# window class
-class:
-# application instance name
-    instance: Alacritty
-# general application class
-    general: Alacritty
-
-# GTK theme variant (Linux/BSD only)
-# override the variant of the gtk theme. supported values are `dark` and `light`.
-# `none` to use the default theme variant.
-gtk_theme_variant: None
-
-# scrolling
-# maximum number of lines in the scrollback buffer. '0' will disable scrolling.
-history: 10000
-
-# number of lines the viewport will move for every line scrolled when (history > 0)
-multiplier: 3
-
 # cursor
-## cursor style
+# -----------------------------------------------------------------------------
+
 cursor:
-# values for `style`:
-#   - ▇ Block
-#   - _ Underline
-#   - | Beam
-    style: Beam
+  # cursor style
+  style:
+    # values for `shape`:
+    #   - ▇ Block
+    #   - _ Underline
+    #   - | Beam
+    shape: Beam
 
-# window is not focused.
-    unfocused_hollow: true
+    # cursor blinking state
+    #
+    # values for `blinking`:
+    #   - Never: Prevent the cursor from ever blinking
+    #   - Off: Disable blinking by default
+    #   - On: Enable blinking by default
+    #   - Always: Force the cursor to always blink
+    blinking: On
 
-# URL launcher
-url:
-## when set to `None`, URL launching will be disabled completely
-#   - (Linux/BSD) xdg-open
-    launcher:
-        program: xdg-open
-        args: []
-        modifiers: Control
+  # cursor blinking interval in milliseconds.
+  blink_interval: 300
+
+  # if this is `true`, the cursor will be rendered as a hollow box when the
+  # window is not focused.
+  unfocused_hollow: true
+
+  # thickness of the cursor relative to the cell width as floating point number
+  # from `0.0` to `1.0`.
+  thickness: 0.1
+
+# live config reload (changes require restart)
+live_config_reload: true
 
 # -----------------------------------------------------------------------------
-# key bindings
+# mouse
 # -----------------------------------------------------------------------------
 
-# to unset a default binding, it can be mapped to the `ReceiveChar` action.
-# alternatively, you can use `None` for a no-op if you do not wish to receive
-# input characters for that binding
+mouse:
+  # click settings
+  #
+  # the `double_click` and `triple_click` settings control the time
+  # alacritty should wait for accepting multiple clicks as one double
+  # or triple click.
+  double_click: { threshold: 200 }
+  triple_click: { threshold: 200 }
+
+  # if this is `true`, the cursor is temporarily hidden when typing.
+  hide_when_typing: false
+
+# -----------------------------------------------------------------------------
+# keyboard
+# -----------------------------------------------------------------------------
+
+# Key bindings
+#
+# key bindings are specified as a list of objects. for example, this is the
+# default paste binding:
 
 key_bindings:
   - { key: C,              mods: Alt,                 action: Copy             }
