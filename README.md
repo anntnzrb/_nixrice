@@ -1,13 +1,26 @@
+# \*nixrice
+
 ## intro
 
 these *.files* have accompanied me since *2019*ish (under VC since 2020), the
 files (scripts) are written with portability in mind, meaning they're meant to
-work across multiple [*nix distrubutions](https://0x0.st/HNfM).
+work across multiple [*nix distrubutions](https://0x0.st/HNfM "\*nix distributions").
 
 ## installation
 
 somewhere around early *2022* i switched from a bare git repo to using
-[GNU Stow](https://www.gnu.org/software/stow/) to properly sync **.files**.
+[GNU Stow](https://www.gnu.org/software/stow/ "GNU Stow") to properly sync **.files**.
+
+### dependencies
+
+| dependencies                                              | description                                               |
+|-----------------------------------------------------------|-----------------------------------------------------------|
+| [Git](https://git-scm.com/ "Git")                         | (duh)                                                     |
+| [GNU Make](https://www.gnu.org/software/make/ "GNU Make") | automation tool that generates builds executable programs |
+| [GNU Stow](https://www.gnu.org/software/stow/ "GNU Stow") | tool that deploys these dotfiles                          |
+
+
+### instructions
 
 get the repo and cd into it:
 
@@ -53,4 +66,4 @@ sharing is always encouraged.
 refer to the [COPYING](./COPYING) file for licensing information.
 
 unless otherwise noted, all code herein is distributed under the terms of the
-[GNU General Public License Version 3 or later](https://www.gnu.org/licenses/gpl-3.0.en.html).
+[GNU General Public License Version 3 or later](https://www.gnu.org/licenses/gpl-3.0.en.html "GNU GPLv3").
