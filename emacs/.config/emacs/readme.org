@@ -1037,6 +1037,18 @@ one of /Emacs/' killer features.
   (setq org-startup-folded               t)
   (setq org-confirm-babel-evaluate     nil)
 
+  ;; list of available exports
+  (setq org-export-backends '(ascii
+                              beamer
+                              groff
+                              html
+                              latex
+                              man
+                              md
+                              odt
+                              org
+                              texinfo))
+
   (add-hook 'org-mode-hook #'org-indent-mode))
 #+end_src
 
