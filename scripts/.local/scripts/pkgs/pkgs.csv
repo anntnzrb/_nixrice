@@ -136,3 +136,9 @@ arch,blueman
 arch,pamixer
 arch,pulsemixer
 arch,pipewire
+
+# languages
+arch,aspell
+arch,aspell-de
+arch,aspell-en
+arch,aspell-es
