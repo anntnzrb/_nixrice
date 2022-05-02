@@ -432,23 +432,25 @@ however, if set properly this can be a catastrophe saver.
 #+begin_src emacs-lisp
 (setq backup-directory-alist
       `(("." . ,(concat user-emacs-directory "backups/"))))
-(setq make-backup-files   t)
-(setq backup-by-copying   t)
-(setq version-control     t)
-(setq delete-old-versions t)
-(setq kept-new-versions   8)
-(setq kept-old-versions   2)
+(setq make-backup-files     t)
+(setq backup-by-copying     t)
+(setq version-control       t)
+(setq delete-old-versions   t)
+(setq kept-new-versions     8)
+(setq kept-old-versions     2)
 (setq create-lockfiles    nil)
 #+end_src
 
 *** editing
 
 #+begin_src emacs-lisp
-(setq mode-require-final-newline t)
-(setq-default tab-width                    4)
-(setq-default indent-tabs-mode           nil)
-(setq-default show-trailing-whitespace     t)
-(setq-default fill-column                 79)
+(setq mode-require-final-newline         t)
+(setq-default tab-width                  4)
+(setq-default indent-tabs-mode         nil)
+(setq-default show-trailing-whitespace   t)
+(setq-default fill-column               79)
+
+;; line numbers
 (setq-default display-line-numbers 'relative)
 (setq-default display-fill-column-indicator-column (+ fill-column 1))
 
@@ -466,10 +468,10 @@ however, if set properly this can be a catastrophe saver.
 
 *** Vi emulation
 
-my journey on /*nix/ environments began with /Vi/, it's difficult for
-me not to try looking everywhere for /Vi/ emulation.
+my journey on /*nix/ environments began with /[neo]Vi[m]/, it's difficult for
+me not to seek for /Vi/ emulation everywhere.
 
-| [[https://github.com/emacs-evil/evil][Evil]] | extensible vi layer |
+| [[https://github.com/emacs-evil/evil][evil]] | extensible vi layer |
 
 #+begin_src emacs-lisp
 (straight-use-package 'evil)
@@ -482,7 +484,7 @@ me not to try looking everywhere for /Vi/ emulation.
 (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
 #+end_src
 
-| [[https://github.com/emacs-evil/evil-collection][Evil-Collection]] | collection of /Vi/ keybinds for some parts of /Emacs/ which are dealt incorrectly by Evil |
+| [[https://github.com/emacs-evil/evil-collection][evil-collection]] | collection of /Vi/ keybinds for some parts of /Emacs/ which are dealt incorrectly by evil |
 
 #+begin_src emacs-lisp
 (after! evil
@@ -609,8 +611,8 @@ mouse wheel behavior:
 
 #+begin_src emacs-lisp
 ;; clock
-(setq display-time-format "%a @ %H:%M")
-(setq display-time-interval 50) ;; update faster to catch up
+(setq display-time-format      "%a @ %H:%M")
+(setq display-time-interval              50) ;; update faster to catch up
 (setq display-time-default-load-average nil)
 
 (add-hook 'after-init-hook #'display-time-mode)
@@ -632,8 +634,8 @@ notice.
 (straight-use-package 'keycast)
 
 (after! keycast
-  (setq keycast-mode-line-format "%k%c%r")
-  (setq keycast-tab-bar-format   "%k%c%r")
+  (setq keycast-mode-line-format          "%k%c%r")
+  (setq keycast-tab-bar-format            "%k%c%r")
   (setq keycast-mode-line-remove-tail-elements nil) ;; don't hide rest of the modeline
 
   ;; disable logging when actually typing stuff
@@ -668,10 +670,10 @@ notice.
 
 #+begin_src emacs-lisp
 (after! dired
-  (setq dired-auto-revert-buffer #'dired-directory-changed-p)
+  (setq dired-auto-revert-buffer       #'dired-directory-changed-p)
   (setq dired-listing-switches   "-AFhl --group-directories-first")
-  (setq dired-recursive-copies   'always)
-  (setq dired-recursive-deletes  'always)
+  (setq dired-recursive-copies                             'always)
+  (setq dired-recursive-deletes                            'always)
 
   ;; less verbose output
   (add-hook 'dired-mode-hook #'dired-hide-details-mode))
@@ -698,7 +700,7 @@ set of keyboard binding for programming modes
 #+begin_src emacs-lisp
 (after! prog-mode
   (let ((map prog-mode-map))
-    (define-key map (kbd "C-c c c") 'compile)
+    (define-key map (kbd "C-c c c")   'compile)
     (define-key map (kbd "C-c c r") 'recompile)))
 #+end_src
 
@@ -714,26 +716,27 @@ set of keyboard binding for programming modes
   (setq aggressive-indent-sit-for-time 0.5))
 #+end_src
 
-- [[https://github.com/emacs-lsp/lsp-mode/][Language Server Protocol]]
+| [[https://github.com/emacs-lsp/lsp-mode/][lsp-mode]] | Emacs client/library for the /Language Server Protocol (LSP)/. |
 
 #+begin_src emacs-lisp
 (after! prog-mode
   (straight-use-package 'lsp-mode)
 
   (after! lsp-mode
-    (setq lsp-keymap-prefix "C-c l")
+    (setq lsp-keymap-prefix          "C-c l")
     (setq lsp-lens-enable                  t)
     (setq lsp-modeline-diagnostics-enable  t)
     (setq lsp-headerline-breadcrumb-enable t)))
 #+end_src
 
-| [[https://github.com/emacs-lsp/lsp-ui][lsp-ui]] | UI integrations for /lsp-mode/ |
+| [[https://github.com/emacs-lsp/lsp-ui][lsp-ui]] | UI integrations for =lsp-mode= |
 
 #+begin_src emacs-lisp
 (after! lsp-mode
   (straight-use-package 'lsp-ui)
 
   (setq lsp-ui-doc-position 'bottom)
+
   (add-hook 'lsp-mode-hook #'lsp-ui-mode))
 #+end_src
 
@@ -757,7 +760,7 @@ settings for shell scripts.
 
 ** Makefile
 
-=Makefile= files should follow the [[\[\[https://www.gnu.org/software/make/manual/html_node/Makefile-Conventions.html\]\[these\]\] conventions][GNU Makefile conventions]].
+=Makefile= files should follow the [[https://www.gnu.org/software/make/manual/html_node/Makefile-Conventions.html][GNU Makefile conventions]].
 
 #+begin_src emacs-lisp
 (after! make-mode
@@ -831,8 +834,9 @@ settings and style for the /C/ language.
 
   ;; Flycheck
   (setq flycheck-emacs-lisp-load-path 'inherit)
+
   (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
-  (add-hook 'emacs-lisp-mode-hook #'flycheck-mode))
+  (add-hook 'emacs-lisp-mode-hook          #'flycheck-mode))
 #+end_src
 
 *** Racket
@@ -844,7 +848,7 @@ settings and style for the /C/ language.
   (after! racket-mode
     ;; Flycheck
     (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
-    (add-hook 'racket-mode-hook #'flycheck-mode)))
+    (add-hook 'racket-mode-hook              #'flycheck-mode)))
 #+end_src
 
 ** Nix
@@ -915,10 +919,10 @@ settings and style for the /C/ language.
 #+begin_src emacs-lisp
 (straight-use-package 'which-key)
 
-(setq which-key-lighter                  nil) ;; disable lighter on mode-line
-(setq which-key-idle-delay               0.5)
-(setq which-key-max-display-columns      nil)
-(setq which-key-paging-key          "<next>")
+(setq which-key-lighter                            nil) ;; disable lighter on mode-line
+(setq which-key-idle-delay                         0.5)
+(setq which-key-max-display-columns                nil)
+(setq which-key-paging-key                    "<next>")
 (setq which-key-sort-order #'which-key-key-order-alpha)
 
 ;; init after set-up
@@ -931,9 +935,9 @@ settings and style for the /C/ language.
 (straight-use-package 'helpful)
 
 (let ((map global-map))
-  (define-key map [remap      describe-key] 'helpful-key)
-  (define-key map [remap   describe-symbol] 'helpful-symbol)
-  (define-key map [remap  describe-command] 'helpful-command)
+  (define-key map [remap      describe-key]      'helpful-key)
+  (define-key map [remap   describe-symbol]   'helpful-symbol)
+  (define-key map [remap  describe-command]  'helpful-command)
   (define-key map [remap describe-function] 'helpful-function)
   (define-key map [remap describe-variable] 'helpful-variable))
 #+end_src
@@ -965,7 +969,7 @@ settings and style for the /C/ language.
 (setq completion-styles '(orderless))
 #+end_src
 
-| [[https://github.com/minad/vertico][vertico]] | minimalistic completion UI, uses /Emacs/' own completion engine in contrast to other tools like [[https://github.com/abo-abo/swiper][Ivy]] and [[https://github.com/emacs-helm/helm][Helm]] |
+| [[https://github.com/minad/vertico][vertico]] | minimalistic completion UI, uses /Emacs/' own completion engine in contrast to other tools like [[https://github.com/abo-abo/swiper][ivy]] and [[https://github.com/emacs-helm/helm][helm]] |
 
 #+begin_src emacs-lisp
 (straight-use-package 'vertico)
@@ -973,7 +977,7 @@ settings and style for the /C/ language.
 (vertico-mode)
 
 (let ((map vertico-map))
-  (define-key map (kbd "C-j") 'vertico-next)
+  (define-key map (kbd "C-j")     'vertico-next)
   (define-key map (kbd "C-k") 'vertico-previous))
 #+end_src
 
@@ -1008,9 +1012,9 @@ settings and style for the /C/ language.
 (straight-use-package 'flycheck)
 
 (after! flycheck
-  (setq flycheck-mode-line-prefix "FlyCheck")
-  (setq flycheck-display-errors-delay    0.3)
-  (setq flycheck-idle-change-delay       0.7)
+  (setq flycheck-mode-line-prefix                "FlyCheck")
+  (setq flycheck-display-errors-delay                   0.3)
+  (setq flycheck-idle-change-delay                      0.7)
   (setq flycheck-buffer-switch-check-intermediate-buffers t))
 #+end_src
 
@@ -1059,6 +1063,7 @@ one of /Emacs/' killer features.
   (straight-use-package 'toc-org)
 
   (setq toc-org-hrefify-default "gh")
+
   (add-hook 'org-mode-hook #'toc-org-mode))
 #+end_src
 
@@ -1094,7 +1099,7 @@ mostly."
     (text-scale-set text-scale-mode-amount)
     (display-fill-column-indicator-mode))
 
-  (setq org-tree-slide-activate-message   "Presentation ON")
+  (setq org-tree-slide-activate-message    "Presentation ON")
   (setq org-tree-slide-deactivate-message "Presentation OFF")
   (setq org-image-actual-width nil)
 
@@ -1102,5 +1107,5 @@ mostly."
   (define-key org-mode-map (kbd "<f9>") 'org-tree-slide-mode)
 
   (add-hook 'org-tree-slide-play-hook #'annt/org-present-start)
-  (add-hook 'org-tree-slide-stop-hook #'annt/org-present-end))
+  (add-hook 'org-tree-slide-stop-hook   #'annt/org-present-end))
 #+end_src
