@@ -40,7 +40,7 @@
 ;; Consider checking the 'init.el' file right next to this file for the
 ;; remaining instructions.
 ;; WARNING :: Not adjusting this settings properly will lead to
-;; freezes/stuttering and unexpected behavior.
+;; freezes/stuttering and unexpected behaviour.
 (setq gc-cons-threshold most-positive-fixnum)
 (setq gc-cons-percentage 0.6)
 
