@@ -13,17 +13,42 @@
 # shellcheck disable=2046
 # disable for numbers instead of strings
 
+# checks
+! root-p && err 'This scripts needs root access.' && exit 1
+
 # -----------------------------------------------------------------------------
 # variables
 # -----------------------------------------------------------------------------
 
 branch='emacs-28'
+
+# debug ./configure options before installing
+debug_configure=
+
+# -----------------------------------------------------------------------------
+# flags
+# -----------------------------------------------------------------------------
+
+# generic flags
 flags="--with-native-compilation \
-    --with-mailutils \
-    --with-sound=yes \
-    --without-compress-install \
-    --without-gsettings \
-    --without-gconf"
+--with-mailutils \
+--with-sound=yes \
+--without-compress-install"
+
+# g-stuff
+flags="${flags} --without-gsettings \
+--without-gconf"
+
+# shaping-text related stuff
+# disabling the following forces the use Harfbuzz
+flags="${flags} --with-harfbuzz \
+--without-libotf \
+--without-m17n-flt"
+
+# windowing system
+flags="${flags} --with-x-toolkit=gtk3 \
+--with-xwidgets \
+--without-xaw3d"
 
 # -----------------------------------------------------------------------------
 # functions
@@ -48,11 +73,26 @@ configure() {
     ./autogen.sh
     ./configure ${flags}
 
+    # debug
+    if test ! -z "${debug_configure}"; then
+        printf 'Debug is enabled, quitting...\n'
+        exit 0
+    fi
+
     printf '\n--------------------------------------------------------------\n'
     printf 'Resuming in 10 seconds...\n'
     printf 'Please review the settings shown above and check for errors.\n'
     printf '--------------------------------------------------------------\n'
     sleep 10
+}
+
+install() {
+    # **
+    # Install GNU Emacs to the system.
+    # *
+
+    make -j$(nproc)
+    make -j$(nproc) install
 }
 
 # -----------------------------------------------------------------------------
@@ -62,9 +102,6 @@ configure() {
 printf 'Installing dependencies...\n'
 # Debian-like
 if installed-p 'apt-get'; then
-    # quit if non-root
-    ! root-p && err 'This scripts needs root access.' && exit 1
-
     apt install -y \
         'autoconf' \
         'gnutls-dev' \
@@ -80,19 +117,15 @@ if installed-p 'apt-get'; then
 
     clone_emacs
     configure
-
-    make -j$(nproc)
-    make -j$(nproc) install
+    install
 
 elif installed-p 'pacman'; then
-    sudo pacman --needed --noconfirm -Syu 'base-devel' 'libgccjit'
+    pacman --needed --noconfirm -Syu \
+           'base-devel' \
+           'libgccjit' \
+           'webkit2gtk'
 
     clone_emacs
     configure
-
-    make -j$(nproc)
-    sudo make -j$(nproc) install
+    install
 fi
-
-# cleanup
-unset -v branch flags
