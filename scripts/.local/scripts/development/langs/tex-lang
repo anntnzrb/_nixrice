@@ -1,57 +1,35 @@
 #!/bin/sh
 
-#    ██
-#   ░██
-#  ██████  █████  ██   ██
-# ░░░██░  ██░░░██░░██ ██
-#   ░██  ░███████ ░░███
-#   ░██  ░██░░░░   ██░██
-#   ░░██ ░░██████ ██ ░░██
-#    ░░   ░░░░░░ ░░   ░░
+# tex-lang --- LaTeX setup.
 
-# -----------------------------------------------------------------------------
-# preamble
-# -----------------------------------------------------------------------------
+# checks
+! root-p && err 'This scripts needs root access.' && exit 1
 
-# source utilities
-# shellcheck disable=SC1090
-. "$LIBSHUTILS/sys-utils"
-
-# -----------------------------------------------------------------------------
-# main
-# -----------------------------------------------------------------------------
-
-case $SYSTEM in
-arch)
+if installed-p 'pacman'; then
     # compiler & tools
-    $PKG_INSTALL "texlive-most" "biber" "pandoc" "pandoc-citeproc"
-    ;;
+    pacman --needed --noconfirm -Syu 'texlive-most' 'biber' 'pandoc'
+fi
 
-void)
-    # check if running with elevated priviledges; elevate if not
-    ! is_su && elevate_privs "$0" "$@"
+# void stuff
+#   # compiler & tools
+#   $PKG_INSTALL "texlive-bin" "biber" "pandoc"
 
-    # compiler & tools
-    $PKG_INSTALL "texlive-bin" "biber" "pandoc"
+#   # == tlmgr
+#   # gnupg is required to install via tlmgr
+#   $PKG_INSTALL "gnupg"
 
-    # == tlmgr
-    # gnupg is required to install via tlmgr
-    $PKG_INSTALL "gnupg"
+#   # update
+#   tlmgr update --all
 
-    # update
-    tlmgr update --all
+#   tlmgr install biblatex
+#   tlmgr install biblatex-apa
+#   tlmgr install biblatex-ieee
+#   tlmgr install capt-of
+#   tlmgr install wrapfig
 
-    tlmgr install biblatex
-    tlmgr install biblatex-apa
-    tlmgr install biblatex-ieee
-    tlmgr install capt-of
-    tlmgr install wrapfig
-
-    # cleanup
-    tlmgr update --all
-    texhash
-    ;;
-esac
+#   # cleanup
+#   tlmgr update --all
+#   texhash
 
 # -----------------------------------------------------------------------------
 # references
