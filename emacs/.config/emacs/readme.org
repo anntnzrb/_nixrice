@@ -115,7 +115,7 @@ references:
 ;; Consider checking the 'init.el' file right next to this file for the
 ;; remaining instructions.
 ;; WARNING :: Not adjusting this settings properly will lead to
-;; freezes/stuttering and unexpected behavior.
+;; freezes/stuttering and unexpected behaviour.
 (setq gc-cons-threshold most-positive-fixnum)
 (setq gc-cons-percentage 0.6)
 
@@ -153,7 +153,7 @@ references:
 
 *** =init.el=
 
-this file is responsible of loading the neccesary /ELisp/ code whenever
+this file is responsible of loading the necessary /ELisp/ code whenever
 /GNU Emacs/ starts. my configuration is (obviously) written literally using
 /Org/ so the purpose of this file is to contain the instructions to transform
 this literate configuration into /ELisp/ code and load it.
@@ -184,7 +184,7 @@ this literate configuration into /ELisp/ code and load it.
 ;;; Commentary:
 
 ;; This initialization file configures the literate configuration file written
-;; in Org, it does so by checking when it was las updated and tangles it only
+;; in Org, it does so by checking when it was last updated and tangles it only
 ;; when needed, loads the non-updated file otherwise.  The main goal here is to
 ;; remove the unneeded tangling and improve startup time.
 
@@ -506,14 +506,14 @@ me not to seek for /Vi/ emulation everywhere.
 
 *** mouse & cursor
 
-mouse & mouse wheel behavior.
+mouse & mouse wheel behaviour.
 
 + don't copy region to kill-ring upon selection
 + hide mouse pointer when typing
 + remove mouse wheel acceleration
 + keep mouse pointer at the same visual position
 
-mouse wheel behavior:
+mouse wheel behaviour:
 
 + scroll =1= line be default
 + holding =meta= scrolls half a screen
@@ -731,7 +731,7 @@ set of keyboard binding for programming modes
     (setq lsp-headerline-breadcrumb-enable t)))
 #+end_src
 
-| [[https://github.com/emacs-lsp/lsp-ui][lsp-ui]] | UI integrations for =lsp-mode= |
+| [[https://github.com/emacs-lsp/lsp-ui][lsp-ui]] | UI integration for =lsp-mode= |
 
 #+begin_src emacs-lisp
 (after! lsp-mode

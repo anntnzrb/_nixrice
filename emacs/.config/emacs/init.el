@@ -23,7 +23,7 @@
 ;;; Commentary:
 
 ;; This initialization file configures the literate configuration file written
-;; in Org, it does so by checking when it was las updated and tangles it only
+;; in Org, it does so by checking when it was last updated and tangles it only
 ;; when needed, loads the non-updated file otherwise.  The main goal here is to
 ;; remove the unneeded tangling and improve startup time.
 
