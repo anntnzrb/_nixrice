@@ -4,12 +4,15 @@
 #+property: header-args :results silent
 
 # macros
-#+macro: export-date   (eval (format-time-string "%F" (current-time)))
-#+macro: emacs-version (eval (substring (emacs-version) 10 14))
+#+macro: export-date    (eval (format-time-string "%F" (current-time)))
+#+macro: emacs-version  (eval (substring (emacs-version) 10 14))
+#+macro: system-options (eval system-configuration-options)
 
 - created: 2020-11-07
 - updated: *{{{export-date}}}*
-- GNU Emacs version (last export): *{{{emacs-version}}}*
+- /GNU Emacs/ system details:
+  - version: *{{{emacs-version}}}*
+  - build options: *{{{system-options}}}*
 
 * table of contents                                          :TOC_3:noexport:
 - [[#core-settings][core settings]]
