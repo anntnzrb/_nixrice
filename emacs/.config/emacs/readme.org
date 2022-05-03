@@ -363,13 +363,16 @@ a few reasons why i consider =straight.el=:
 #+begin_src emacs-lisp
 (defvar bootstrap-version)
 (let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        user-emacs-directory))
       (bootstrap-version 5))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
         (url-retrieve-synchronously
          "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
+         'silent
+         'inhibit-cookies)
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
@@ -638,7 +641,9 @@ notice.
 (after! keycast
   (setq keycast-mode-line-format          "%k%c%r")
   (setq keycast-tab-bar-format            "%k%c%r")
-  (setq keycast-mode-line-remove-tail-elements nil) ;; don't hide rest of the modeline
+
+  ;; don't hide rest of the modeline
+  (setq keycast-mode-line-remove-tail-elements nil)
 
   ;; disable logging when actually typing stuff
   (dolist (ev '(self-insert-command
@@ -921,7 +926,8 @@ settings and style for the /C/ language.
 #+begin_src emacs-lisp
 (straight-use-package 'which-key)
 
-(setq which-key-lighter                            nil) ;; disable lighter on mode-line
+;; disable lighter on mode-line
+(setq which-key-lighter                            nil)
 (setq which-key-idle-delay                         0.5)
 (setq which-key-max-display-columns                nil)
 (setq which-key-paging-key                    "<next>")
@@ -1044,7 +1050,8 @@ alternatives, those being =aspell=, =hunspell= & =enchant=.
   (let ((backend "aspell"))
     (if (executable-find backend)
         (setq ispell-program-name backend)
-      (annt/notify-and-log "Dictionary backend not found; spell checking disabled.")))
+      (annt/notify-and-log
+       "Dictionary backend not found; spell checking disabled.")))
 
   ;; dictionaries
   (let ((dicts "en_GB"))
