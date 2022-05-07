@@ -37,8 +37,10 @@ redshift -l \
 # system monitor
 "${TERMINAL:?}" -e 'htop' &
 
-# network applet (requires a bar that supports tray icons)
+# applets (requires a bar which supports them)
+# NetworkManager
 nm-applet &
+pasystray &
 
 # dmenu display select prompt (wait a bit for prompt)
 { sleep 5 && displayselect; } &
