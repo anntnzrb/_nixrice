@@ -868,7 +868,10 @@ settings and style for the /C/ language.
   (straight-use-package 'nix-mode)
 
   ;; detect Nix files by extension
-  (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode)))
+  (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
+
+  (add-hook 'nix-mode-hook #'lsp-deferred)
+  (add-hook 'nix-mode-hook #'aggressive-indent-mode))
 #+end_src
 
 ** Haskell
