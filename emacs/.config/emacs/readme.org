@@ -472,6 +472,11 @@ however, if set properly this can be a catastrophe saver.
 
 ;; delete trailing whitespaces prior saving
 (add-hook 'before-save-hook #'whitespace-cleanup)
+
+;; some defaults i dislike
+(let ((map global-map))
+  (define-key map (kbd "C-SPC") nil)
+ (define-key map (kbd "C-@") nil))
 #+end_src
 
 *** Vi emulation
