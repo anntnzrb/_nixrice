@@ -1,4 +1,5 @@
 apps := alacritty \
+	awesome \
 	bash \
 	bin \
 	defaults \
