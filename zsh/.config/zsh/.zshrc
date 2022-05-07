@@ -81,12 +81,12 @@ key[Control-Right]="${terminfo[kRIT5]}"
 key[Shift-Tab]="${terminfo[kcbt]}"
 
 # actual binding
-[[ -n "${key[Home]}"          ]] && bindkey -- "${key[Home]}"          beginning-of-line
-[[ -n "${key[End]}"           ]] && bindkey -- "${key[End]}"           end-of-line
-[[ -n "${key[Delete]}"        ]] && bindkey -- "${key[Delete]}"        delete-char
-[[ -n "${key[Control-Left]}"  ]] && bindkey -- "${key[Control-Left]}"  backward-word
-[[ -n "${key[Control-Right]}" ]] && bindkey -- "${key[Control-Right]}" forward-word
-[[ -n "${key[Shift-Tab]}"     ]] && bindkey -- "${key[Shift-Tab]}"     reverse-menu-complete
+test -n "${key[Home]}"          && bindkey -- "${key[Home]}"          beginning-of-line
+test -n "${key[End]}"           && bindkey -- "${key[End]}"           end-of-line
+test -n "${key[Delete]}"        && bindkey -- "${key[Delete]}"        delete-char
+test -n "${key[Control-Left]}"  && bindkey -- "${key[Control-Left]}"  backward-word
+test -n "${key[Control-Right]}" && bindkey -- "${key[Control-Right]}" forward-word
+test -n "${key[Shift-Tab]}"     && bindkey -- "${key[Shift-Tab]}"     reverse-menu-complete
 
 # force terminal in application mode
 if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then

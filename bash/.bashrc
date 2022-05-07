@@ -17,7 +17,7 @@
 # -----------------------------------------------------------------------------
 
 # do nothing if not running interactively
-[[ $- != *i* ]] && return
+[[ ${-} != *i* ]] && return
 
 setup_posix() {
     # **
