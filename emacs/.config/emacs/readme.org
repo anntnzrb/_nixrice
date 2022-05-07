@@ -48,6 +48,7 @@
     - [[#racket][Racket]]
   - [[#nix][Nix]]
   - [[#haskell][Haskell]]
+  - [[#lua][Lua]]
   - [[#yaml][YAML]]
 - [[#version-control][version control]]
 - [[#applications--utilities][applications & utilities]]
@@ -882,7 +883,8 @@ settings and style for the /C/ language.
 ** Haskell
 
 #+begin_src emacs-lisp
-(when (executable-find "ghc")
+(when (or (executable-find "ghc")
+          (executable-find "xmonad"))
   (straight-use-package 'haskell-mode)
   (straight-use-package 'hindent)
 
@@ -899,6 +901,22 @@ settings and style for the /C/ language.
 
     ;; format before saving
     (add-hook 'before-save-hook #'hindent-reformat-buffer)))
+#+end_src
+
+** Lua
+
+| [[https://github.com/immerrr/lua-mode][lua-mode]] | /Lua/ support for Emacs |
+
+#+begin_src elisp
+(when (or (executable-find "awesome")
+          (executable-find "lua-language-server"))
+  (straight-use-package 'lua-mode)
+
+  (after! lua-mode
+    (setq lua-indent-level 2))
+
+  (add-hook 'lua-mode-hook #'lsp-deferred)
+  (add-hook 'lua-mode-hook #'aggressive-indent-mode))
 #+end_src
 
 ** YAML
