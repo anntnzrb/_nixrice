@@ -5,7 +5,6 @@ apps := alacritty \
 	defaults \
 	dunst \
 	emacs \
-	fonts \
 	git \
 	htop \
 	lib \
