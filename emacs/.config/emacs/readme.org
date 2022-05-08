@@ -30,6 +30,7 @@
     - [[#editing][editing]]
     - [[#vi-emulation][Vi emulation]]
     - [[#mouse--cursor][mouse & cursor]]
+    - [[#binds][binds]]
   - [[#appearance][appearance]]
     - [[#fonts][fonts]]
     - [[#themes][themes]]
@@ -473,15 +474,6 @@ however, if set properly this can be a catastrophe saver.
 
 ;; delete trailing whitespaces prior saving
 (add-hook 'before-save-hook #'whitespace-cleanup)
-
-;; some defaults i dislike from the global map
-(let ((map global-map))
-  (dolist (bind (list
-                 (kbd "C-SPC")
-                 (kbd "C-@")
-                 [mouse-2]
-                 [mouse-3]))
-    (define-key map bind nil)))
 #+end_src
 
 *** Vi emulation
@@ -567,13 +559,29 @@ mouse wheel behaviour:
 (setq hourglass-delay   0) ;; display hourglass immediately
 
 ;; save cursor position
-(save-place-mode 1)
+(save-place-mode)
 (setq save-place-file (expand-file-name "backups/places" user-emacs-directory))
 (setq save-place-forget-unreadable-files t)
 
 ;; settings for TTY Emacs
 (unless (display-graphic-p)
   (setq visible-cursor nil))
+#+end_src
+
+*** binds
+
+place where general binds go, the rest should be on its respective section
+under its respective =mode-map=-ing.
+
+#+begin_src emacs-lisp
+;; some defaults i dislike from the global map
+(let ((map global-map))
+  (dolist (bind (list
+                 (kbd "C-SPC")
+                 (kbd "C-@")
+                 [mouse-2]
+                 [mouse-3]))
+    (define-key map bind nil)))
 #+end_src
 
 ** appearance
