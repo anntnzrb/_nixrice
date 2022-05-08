@@ -397,8 +397,8 @@ settings that do not belong anywhere specific.
 (setq auto-revert-verbose t)
 (add-hook 'after-init-hook #'global-auto-revert-mode)
 
-;; automatically maximize frame when Emacs starts
-;;(add-hook 'after-init-hook #'toggle-frame-maximized)
+;; performance improvement for really long files
+(global-so-long-mode)
 #+end_src
 
 *** indentification
