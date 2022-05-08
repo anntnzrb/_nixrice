@@ -474,10 +474,14 @@ however, if set properly this can be a catastrophe saver.
 ;; delete trailing whitespaces prior saving
 (add-hook 'before-save-hook #'whitespace-cleanup)
 
-;; some defaults i dislike
+;; some defaults i dislike from the global map
 (let ((map global-map))
-  (define-key map (kbd "C-SPC") nil)
- (define-key map (kbd "C-@") nil))
+  (dolist (bind (list
+                 (kbd "C-SPC")
+                 (kbd "C-@")
+                 [mouse-2]
+                 [mouse-3]))
+    (define-key map bind nil)))
 #+end_src
 
 *** Vi emulation
@@ -490,12 +494,19 @@ me not to seek for /Vi/ emulation everywhere.
 #+begin_src emacs-lisp
 (straight-use-package 'evil)
 
-(setq evil-undo-system 'undo-redo)
-(setq evil-want-keybinding    nil)
+(setq evil-want-keybinding nil)
+(setq evil-undo-system     'undo-redo)
+
+(after! evil
+  (dolist (map (list
+                evil-insert-state-map evil-normal-state-map
+                evil-replace-state-map evil-visual-state-map))
+    (define-key map [mouse-2] 'nil))
+
+  (define-key evil-motion-state-map [down-mouse-1] 'nil)
+  (define-key evil-insert-state-map (kbd "C-g")    'evil-normal-state))
 
 (evil-mode) ;; evil is used everywhere
-
-(define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
 #+end_src
 
 | [[https://github.com/emacs-evil/evil-collection][evil-collection]] | collection of /Vi/ keybinds for some parts of /Emacs/ which are dealt incorrectly by evil |
@@ -690,6 +701,14 @@ notice.
   (setq dired-listing-switches   "-AFhl --group-directories-first")
   (setq dired-recursive-copies                             'always)
   (setq dired-recursive-deletes                            'always)
+
+  ;; mouse
+  (let ((map dired-mode-map))
+    (define-key map [mouse-1]              'nil)
+    (define-key map [normal-state mouse-2] 'nil)
+    (define-key map [mouse-2]              'nil)
+    (define-key map [mouse-3]              'dired-mouse-find-file)
+    (define-key map [mouse-8]              'dired-up-directory))
 
   ;; less verbose output
   (add-hook 'dired-mode-hook #'dired-hide-details-mode))

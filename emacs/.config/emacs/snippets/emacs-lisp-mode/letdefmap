@@ -3,5 +3,5 @@
 # key: !letdefmap
 # --
 
-(let ((map ${1:mode-map}))
+(let ((map ${1:mode}-map))
   (define-key map (kbd "$2") '$0))
