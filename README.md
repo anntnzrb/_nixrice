@@ -25,7 +25,7 @@ somewhere around early *2022* i switched from a bare git repo to using
 get the repo and cd into it:
 
 ```shell
-git clone --depth 1 'https://gitlab.com/anntnzrb/_nixrice.git' '/tmp/annt-rice'
+git clone --depth 1 'https://gitlab.com/anntnzrb/xnixrice.git' '/tmp/annt-rice'
 
 cd '/tmp/annt-rice'
 ```
@@ -61,9 +61,30 @@ should be considered *unstable*, *biased* and sometimes even *untested*.
 nevertheless feel free to take a look and learn from it, experimenting and
 sharing is always encouraged.
 
+## log
+
+section designed to only track **very remarkable** stuff.
+
+_(descending by date)_
+
+**2022-05-08** - mass repo cleanup
+
+  - due to bad practices, this repo was filled with large blobs of files by the
+    extentions `{png,ttf,otf}` (stored a few wallpapers + fonts). **these blobs
+    were pruned at the cost of the whole commit history being rewritten**.
+
+**2022-04-26** - switch to _GNU Stow_.
+
+  - this repository literally emulated the structure of a `~/` directory prior
+    to the switch.
+
+**2021-06-02** - License switch _GPLv2_ -> _GPLv3_.
+
+**2020-11-14** - _GNU Emacs_ is introduced.
+
 ## copying
 
-refer to the [COPYING](./COPYING) file for licensing information.
+refer to the [COPYING](./COPYING "COPYING") file for licensing information.
 
 unless otherwise noted, all code herein is distributed under the terms of the
 [GNU General Public License Version 3 or later](https://www.gnu.org/licenses/gpl-3.0.en.html "GNU GPLv3").
