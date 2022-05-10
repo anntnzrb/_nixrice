@@ -4,7 +4,9 @@
 
 #+property: header-args :exports code
 
+
 * table of contents :toc:noexport:
+- [[#preamble][preamble]]
 - [[#intro][intro]]
 - [[#installation][installation]]
   - [[#dependencies][dependencies]]
@@ -12,6 +14,12 @@
 - [[#disclaimer][disclaimer]]
 - [[#log][log]]
 - [[#copying][copying]]
+
+* preamble
+
+this file was originally created using /GNU Emacs' Org-Mode/, refer to
+=./docs/= for the source code; you may also do so if you're reading thru a
+Markdown/Org renderer.
 
 * intro
 
@@ -113,7 +121,6 @@ unless otherwise noted, all code herein is distributed under the terms of the
 # local variables:
 # eval: (add-hook 'after-save-hook 'org-babel-execute-buffer nil t)
 # eval: (add-hook 'after-save-hook 'org-ascii-export-to-ascii nil t)
-# eval: (add-hook 'after-save-hook 'org-md-export-to-markdown nil t)
-# eval: (rename-file "README.md" "../README.md" t)
-# eval: (chmod "../README.md" #o444)
+# eval: (add-hook 'after-save-hook (lambda () (rename-file "README.txt" "../README" t)) t)
+# eval: (add-hook 'after-save-hook (lambda () (delete-file "README.txt")) t)
 # end:

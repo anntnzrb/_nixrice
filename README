@@ -9,19 +9,28 @@
 Table of Contents
 _________________
 
-1. intro
-2. installation
+1. preamble
+2. intro
+3. installation
 .. 1. dependencies
 .. 2. instructions
-3. disclaimer
-4. log
-5. copying
+4. disclaimer
+5. log
+6. copying
 
 
 
 
 
-1 intro
+1 preamble
+==========
+
+  this file was originally created using /GNU Emacs' Org-Mode/, refer to
+  `./docs/' for the source code; you may also do so if you're reading
+  thru a Markdown/Org renderer.
+
+
+2 intro
 =======
 
   these /.files/ have accompanied me since /2019/-ish (under VC since
@@ -32,7 +41,7 @@ _________________
 [*nix distrubutions] <https://0x0.st/HNfM>
 
 
-2 installation
+3 installation
 ==============
 
   somewhere around early /2022/ i switched from a bare git repo to using
@@ -41,7 +50,7 @@ _________________
 
 [GNU Stow] <https://www.gnu.org/software/stow/>
 
-2.1 dependencies
+3.1 dependencies
 ~~~~~~~~~~~~~~~~
 
    dependencies  description
@@ -58,7 +67,7 @@ _________________
 [GNU Stow] <https://www.gnu.org/software/stow/>
 
 
-2.2 instructions
+3.2 instructions
 ~~~~~~~~~~~~~~~~
 
   get the repo and `cd' into it:
@@ -95,7 +104,7 @@ _________________
   `----
 
 
-3 disclaimer
+4 disclaimer
 ============
 
   this repository serves as a laboratory. it's meant for experimentation
@@ -106,7 +115,7 @@ _________________
   and sharing is always encouraged.
 
 
-4 log
+5 log
 =====
 
   section designed to only track *very remarkable* stuff.
@@ -130,7 +139,7 @@ _________________
   *2020-11-14* - /GNU Emacs/ is introduced.
 
 
-5 copying
+6 copying
 =========
 
   refer to the [COPYING] file for licensing information.
