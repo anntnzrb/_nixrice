@@ -1,50 +1,20 @@
-apps := alacritty \
-	awesome \
-	bash \
-	bin \
-	defaults \
-	dunst \
-	emacs \
-	git \
-	htop \
-	lib \
-	libreoffice \
-	mpv \
-	neofetch \
-	newsboat \
-	onedrive \
-	pcmanfm \
-	picom \
-	qutebrowser \
-	redshift \
-	resources \
-	scripts \
-	shell \
-	sxhkd \
-	vim \
-	xorg \
-	zathura \
-	zsh
-
-stow_cmd := stow --dir=. --target="${HOME}"
+# Makefile --- GNU Makefile wrapper for ./.files/' Makefile
 
 all:
 	printf 'make install --- installs .files\n'
 	printf 'make clean   --- removes .files\n'
 	printf 'make reload  --- updates .files (re-links)\n'
 
-install: $(apps)
+install:
 	@printf 'installing .files...\n'
-	$(stow_cmd) -S $^
+	make -C './.files/' install
 
-reload: $(apps)
+reload:
 	@printf 'reloading .files...\n'
-	$(stow_cmd) -D $^
-	$(stow_cmd) -S $^
-	$(stow_cmd) -R $^
+	make -C './.files/' reload
 
-clean: $(apps)
+clean:
 	@printf 'cleaning .files...\n'
-	$(stow_cmd) -D $^
+	make -C './.files/' clean
 
 .PHONY: all install reload clean
