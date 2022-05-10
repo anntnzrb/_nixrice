@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: NULL ptr exit
-# key: !ptrnull
-# --
-
-if (${1:ptr} == NULL) { die("${2:Memory not available.}\n"); }
-$0

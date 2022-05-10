@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: C source code block for Org
-# key: <c
-# --
-
-#+begin_src C
-$0
-#+end_src

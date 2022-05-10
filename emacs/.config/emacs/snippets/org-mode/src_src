@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: generic source code block for Org
-# key: <src
-# --
-
-#+begin_src ${lang}
-$0
-#+end_src
