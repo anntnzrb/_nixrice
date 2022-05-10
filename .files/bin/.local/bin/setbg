@@ -5,19 +5,56 @@
 # dependencies
 ! installed-p 'feh' && err "'feh' is needed to run this script" && exit 1
 
-# wallpapers location
-wp_path="${HOME}/lib/imgs/wallpapers"
+# variables
+wp_path='/tmp/wallpaper.png'
+feh_cmd='feh --no-fehbg --bg-scale'
 
-# use defaults if argv[1] is null
-test -z "${1}" && feh -rz --no-fehbg --bg-scale "${wp_path}"
+# -----------------------------------------------------------------------------
+# functions
+# -----------------------------------------------------------------------------
+
+wallpaper_exists_p() {
+    # **
+    # Retrieves the primary connected screen's resolution.
+    # *
+
+    test -s "${wp_path}"
+}
+
+get_wp_net() {
+    # **
+    # Retrieves and sets a wallpaper from a given link.
+    # *
+
+    # retrieve online background only if net is available
+    internet-p && {
+        get_screen_res() {
+            # **
+            # Retrieves the primmary connected screen's resolution.
+            # *
+
+            xrandr --current \
+                | grep '*'   \
+                | uniq       \
+                | awk '{print $1}'
+        }
+
+        # variables
+        res=`get_screen_res | sed 's/x/\//'`
+
+        wget -q -O "${wp_path}" "https://unsplash.it/${res}/?nature"
+    }
+
+    # set the wallpaper only if the file exists
+    wallpaper_exists_p && ${feh_cmd} "${wp_path}"
+}
+
+# get wallpaper from the internet as default if argv[1] is null
+test -z "${1}" && get_wp_net
 
 # if argv[1] is a file, set it as wallpaper
-test -f "${1}" && feh --no-fehbg --bg-scale "${1}"
+test -f "${1}" && ${feh_cmd} "${1}"
 
-# if argv[1] is a directory, randomly pick a file from that directory and
-# set is as wallpaper
-test -d "${1}" && feh -rz --no-fehbg --bg-scale "${1}"
-
-# notify & exit
-notify-send 'wallpaper updated...'
-exit 0
+# if argv[1] is a directory, randomly pick a file from that directory and set
+# is as wallpaper
+test -d "${1}" && ${feh_cmd} -rz "${1}"
