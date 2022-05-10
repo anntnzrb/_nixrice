@@ -301,17 +301,18 @@ The following values are modified: `gc-cons-threshold' and
 
 ** helpers
 
-this helpers functions & macros were yoinked from the [[https://github.com/hlissner/doom-emacs][Doom Emacs]]' source code,
-all credit goes to their contributors as i only partially edited them to fit my
-needs.
+the following macro was yoinked from the [[https://github.com/hlissner/doom-emacs][Doom Emacs]]' source code, all credit
+goes to their contributors as i only partially edited them to fit my needs.
 
-| [[https://github.com/hlissner/doom-emacs/blob/8424e0a780534de89f44dbe5b5e90f6b77fffdee/core/core-lib.el#L333-L378][after!]] | allows lazy loading packages like the =:defer= keyword in =use-package= |
+| [[https://github.com/doomemacs/doomemacs/blob/8a27eb99bec5a955833b6d23f431c5cc39e91f7f/core/core-lib.el#L506-L549][macro :: after!]] | allows lazy loading packages like the =:defer= keyword in =use-package= |
 
 #+begin_src emacs-lisp
 (defmacro after! (package &rest body)
   "Evaluate BODY after PACKAGE have loaded.
+
 PACKAGE is a symbol or list of them. These are package names, not modes,
 functions or variables. It can be:
+
 - An unquoted package symbol (the name of a package)
     (after! helm BODY...)
 - An unquoted list of package symbols (i.e. BODY is evaluated once both magit
@@ -323,10 +324,12 @@ functions or variables. It can be:
     (after! (:and package-a package-b ...) BODY...)
     (after! (:and package-a (:or package-b package-c) ...) BODY...)
   Without :or/:any/:and/:all, :and/:all are implied.
+
 This is a wrapper around `eval-after-load' that:
+
 1. Suppresses warnings for disabled packages at compile-time
-3. Supports compound package statements (see below)
-4. Prevents eager expansion pulling in autoloaded macros all at once"
+2. Supports compound package statements (see below)
+3. Prevents eager expansion pulling in autoloaded macros all at once"
   (declare (indent defun) (debug t))
   (if (symbolp package)
       (list (if (or (not (bound-and-true-p byte-compile-current-file))
@@ -338,16 +341,14 @@ This is a wrapper around `eval-after-load' that:
             ;; macros/packages.
             `(eval-after-load ',package ',(macroexp-progn body)))
     (let ((p (car package)))
-      (cond ((not (keywordp p))
-             `(after! (:and ,@package) ,@body))
-            ((memq p '(:or :any))
+      (cond ((memq p '(:or :any))
              (macroexp-progn
               (cl-loop for next in (cdr package)
                        collect `(after! ,next ,@body))))
             ((memq p '(:and :all))
-             (dolist (next (cdr package))
-               (setq body `((after! ,next ,@body))))
-             (car body))))))
+             (dolist (next (reverse (cdr package)) (car body))
+               (setq body `((after! ,next ,@body)))))
+            (`(after! (:and ,@package) ,@body))))))
 #+end_src
 
 ** package management
