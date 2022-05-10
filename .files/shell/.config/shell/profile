@@ -72,7 +72,7 @@ export XDG_DATA_HOME="${HOME}/.local/share"
 # -----------------------------------------------------------------------------
 
 export EDITOR="editor"
-export TERMINAL='st'
+export TERMINAL='alacritty'
 export BROWSER='chromium'
 export FILE='pcmanfm'
 export READER='zathura'
