@@ -1,16 +1,16 @@
 # Table of Contents
 
-1.  [intro](#org78ef3af)
-2.  [installation](#orgfde7389)
-    1.  [dependencies](#orgbc17eff)
-    2.  [instructions](#org6c4067f)
-3.  [disclaimer](#orga7c8719)
-4.  [log](#org2c812d1)
-5.  [copying](#orged70b87)
+1.  [intro](#orgf8f984d)
+2.  [installation](#orgb2cfffc)
+    1.  [dependencies](#orgec54cea)
+    2.  [instructions](#org6343d38)
+3.  [disclaimer](#org34d8fc6)
+4.  [log](#org2261d7a)
+5.  [copying](#orgc4874b6)
 
 
 
-<a id="org78ef3af"></a>
+<a id="orgf8f984d"></a>
 
 # intro
 
@@ -19,7 +19,7 @@ files (scripts) are written with portability in mind, meaning they're meant to
 work across multiple [\*nix distrubutions](https://0x0.st/HNfM).
 
 
-<a id="orgfde7389"></a>
+<a id="orgb2cfffc"></a>
 
 # installation
 
@@ -27,7 +27,7 @@ somewhere around early *2022* i switched from a bare git repo to using [GNU Stow
 to properly sync **.files**.
 
 
-<a id="orgbc17eff"></a>
+<a id="orgec54cea"></a>
 
 ## dependencies
 
@@ -67,7 +67,7 @@ to properly sync **.files**.
 </table>
 
 
-<a id="org6c4067f"></a>
+<a id="org6343d38"></a>
 
 ## instructions
 
@@ -95,7 +95,7 @@ update (re-link):
     make reload
 
 
-<a id="orga7c8719"></a>
+<a id="org34d8fc6"></a>
 
 # disclaimer
 
@@ -106,7 +106,7 @@ nevertheless feel free to take a look and learn from it, experimenting and
 sharing is always encouraged.
 
 
-<a id="org2c812d1"></a>
+<a id="org2261d7a"></a>
 
 # log
 
@@ -130,7 +130,7 @@ section designed to only track **very remarkable** stuff.
 **2020-11-14** - *GNU Emacs* is introduced.
 
 
-<a id="orged70b87"></a>
+<a id="orgc4874b6"></a>
 
 # copying
 

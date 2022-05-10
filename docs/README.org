@@ -1,0 +1,119 @@
+#+title:    *nixrice
+#+author:   anntnzrb
+#+language: en
+
+#+property: header-args :exports code
+
+* table of contents :toc:noexport:
+- [[#intro][intro]]
+- [[#installation][installation]]
+  - [[#dependencies][dependencies]]
+  - [[#instructions][instructions]]
+- [[#disclaimer][disclaimer]]
+- [[#log][log]]
+- [[#copying][copying]]
+
+* intro
+
+these /.files/ have accompanied me since /2019/-ish (under VC since 2020), the
+files (scripts) are written with portability in mind, meaning they're meant to
+work across multiple [[https://0x0.st/HNfM][*nix distrubutions]].
+
+* installation
+
+somewhere around early /2022/ i switched from a bare git repo to using [[https://www.gnu.org/software/stow/][GNU Stow]]
+to properly sync *.files*.
+
+** dependencies
+
+| dependencies | description                                               |
+|--------------+-----------------------------------------------------------|
+| [[https://git-scm.com/][Git]]          | (duh)                                                     |
+| [[https://www.gnu.org/software/make/][GNU Make]]     | automation tool that generates builds executable programs |
+| [[https://www.gnu.org/software/stow/][GNU Stow]]     | tool that deploys these dotfiles                          |
+
+** instructions
+
+get the repo and =cd= into it:
+
+#+begin_src shell
+git clone --depth 1 'https://gitlab.com/anntnzrb/xnixrice.git' '/tmp/annt-rice'
+
+cd '/tmp/annt-rice'
+#+end_src
+
+#+RESULTS:
+
+
+*OPTIONAL*: /you may take a look at the =Makefile= and add/remove the folders
+to sync/
+
+install:
+
+#+begin_src shell
+make install
+#+end_src
+
+#+RESULTS:
+
+*NOTE*: /if an existing file is found =make= will throw an error and abort./
+
+uninstall:
+
+#+begin_src shell
+make clean
+#+end_src
+
+#+RESULTS:
+
+update (re-link):
+
+#+begin_src shell
+make reload
+#+end_src
+
+#+RESULTS:
+
+* disclaimer
+
+this repository serves as a laboratory. it's meant for experimentation and
+should be considered /unstable/, /biased/ and sometimes even /untested/.
+
+nevertheless feel free to take a look and learn from it, experimenting and
+sharing is always encouraged.
+
+* log
+
+section designed to only track *very remarkable* stuff.
+
+/(descending by date)/
+
+*2022-05-08* - mass repo cleanup
+
+- due to bad practices, this repo was filled with large blobs of files
+  by the extentions ={png,ttf,otf}= (stored a few wallpapers + fonts).  *these
+  blobs were pruned at the cost of the whole commit history being rewritten*.
+
+*2022-04-26* - switch to /GNU Stow/.
+
+- this repository literally emulated the structure of a =~/= directory
+  prior to the switch.
+
+*2021-06-02* - License switch /GPLv2/ -> /GPLv3/.
+
+*2020-11-14* - /GNU Emacs/ is introduced.
+
+* copying
+
+refer to the [[./COPYING][COPYING]] file for licensing information.
+
+unless otherwise noted, all code herein is distributed under the terms of the
+[[https://www.gnu.org/licenses/gpl-3.0.en.html][GNU General Public License Version 3 or later]].
+
+# local variables:
+# eval: (add-hook 'after-save-hook 'org-babel-execute-buffer nil t)
+# eval: (add-hook 'after-save-hook 'org-ascii-export-to-ascii nil t)
+# eval: (add-hook 'after-save-hook 'org-md-export-to-markdown nil t)
+# eval: (rename-file "README.md" "../README.md" t)
+# eval: (chmod "../README.md" #o444)
+# end:
