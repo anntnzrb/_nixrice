@@ -763,14 +763,13 @@ set of keyboard binding for programming modes
 | [[https://github.com/emacs-lsp/lsp-mode/][lsp-mode]] | Emacs client/library for the /Language Server Protocol (LSP)/. |
 
 #+begin_src emacs-lisp
-(after! prog-mode
+(after! (prog-mode lsp-mode)
   (straight-use-package 'lsp-mode)
 
-  (after! lsp-mode
-    (setq lsp-keymap-prefix          "C-c l")
-    (setq lsp-lens-enable                  t)
-    (setq lsp-modeline-diagnostics-enable  t)
-    (setq lsp-headerline-breadcrumb-enable t)))
+  (setq lsp-keymap-prefix          "C-c l")
+  (setq lsp-lens-enable                  t)
+  (setq lsp-modeline-diagnostics-enable  t)
+  (setq lsp-headerline-breadcrumb-enable t))
 #+end_src
 
 | [[https://github.com/emacs-lsp/lsp-ui][lsp-ui]] | UI integration for =lsp-mode= |
@@ -914,18 +913,19 @@ settings and style for the /C/ language.
 (when (or (executable-find "ghc")
           (executable-find "xmonad"))
   (straight-use-package 'haskell-mode)
-  (straight-use-package 'hindent)
 
-  (after! haskell-mode
-    ;; Flycheck
-    (add-hook 'haskell-mode-hook #'flycheck-mode)
+  (after! (haskell-mode lsp-mode)
+    (straight-use-package 'hindent)
 
     ;; LSP for Haskell's modes
     ;; `lsp-haskell' is needed as an extra to `lsp-mode'
-    (after! lsp-mode (straight-use-package 'lsp-haskell))
+    (straight-use-package 'lsp-haskell)
 
     (dolist (hooks '(haskell-mode-hook haskell-literate-mode-hook))
       (add-hook hooks #'lsp-deferred))
+
+    ;; Flycheck
+    (add-hook 'haskell-mode-hook #'flycheck-mode)
 
     ;; format before saving
     (add-hook 'before-save-hook #'hindent-reformat-buffer)))
