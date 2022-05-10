@@ -18,7 +18,6 @@ apps := alacritty \
 	onedrive \
 	pcmanfm \
 	picom \
-	qutebrowser \
 	redshift \
 	resources \
 	scripts \
