@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: LaTeX source code block for Org
+# key: <tex
+# --
+
+#+begin_src latex
+$0
+#+end_src

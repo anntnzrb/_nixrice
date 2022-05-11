@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: Makefile source code block for Org
+# key: <make
+# --
+
+#+begin_src makefile
+$0
+#+end_src

@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: Clojure source code block for Org
+# key: <clj
+# --
+
+#+begin_src clojure
+$0
+#+end_src

@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: LaTeX headers for Org documents
+# key: !htex
+# --
+
+# TeX
+#+latex_class:         article
+#+latex_class_options: [12pt, a4paper]
+#+latex_header:        \renewcommand{\baselinestretch}{1.6}
+#+latex_header:        \usepackage[portrait, margin=1in]{geometry}
+#+latex_header:        \usepackage[AUTO]{babel}
+
+\clearpage
