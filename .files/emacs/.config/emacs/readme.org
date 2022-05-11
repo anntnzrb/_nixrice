@@ -1053,6 +1053,20 @@ in short, the /7 rules/ summarized:
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 #+end_src
 
+| [[https://github.com/malabarba/beacon][beacon]] | a flashing light that follows your cursor around so you don't lose it |
+
+#+begin_src emacs-lisp
+(straight-use-package 'beacon)
+
+(beacon-mode)
+
+(after! beacon
+  (setq beacon-lighter         nil)
+  (setq beacon-size    fill-column)
+  (setq beacon-blink-delay     0.5)
+  (setq beacon-blink-duration  0.5))
+#+end_src
+
 ** completion
 
 | [[https://github.com/oantolin/orderless][orderless]] | completion style that is /order-less/ |
