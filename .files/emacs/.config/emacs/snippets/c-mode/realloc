@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: safe realloc
+# key: !realloc
+# --
+
+${1:type} *${2:ptr} = realloc($2, sizeof(*$2) * ${3:n});
+
+!ptrnull$0
+
+memset($2, ${4:0}, sizeof(*$2) * $3);

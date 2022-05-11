@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: `let' statement for define-key
+# key: !letdefmap
+# --
+
+(let ((map ${1:mode}-map))
+  (define-key map (kbd "$2") '$0))

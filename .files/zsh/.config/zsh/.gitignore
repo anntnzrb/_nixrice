@@ -2,8 +2,6 @@
 /*
 !.gitignore
 
-!/snippets
+!/plugins
 
-!early-init.el
-!init.el
-!readme.org
+!.zshrc

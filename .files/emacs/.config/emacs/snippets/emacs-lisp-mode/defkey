@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Define new key
+# key: !defkey
+# --
+
+(define-key ${1:mode}-map (kbd "$2") '$0)

@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: C program skeleton
+# key: !base
+# --
+
+/* ${1:`(file-relative-name buffer-file-truename)`} --- $2 */
+
+/**
+ * \file        $1
+ * \brief       $2
+ */
+
+!fnmain$0
