@@ -11,12 +11,14 @@ _________________
 
 1. preamble
 2. intro
-3. installation
+3. overview
+.. 1. bin/scripts
+4. installation
 .. 1. dependencies
 .. 2. instructions
-4. disclaimer
-5. log
-6. copying
+5. disclaimer
+6. log
+7. copying
 
 
 
@@ -41,7 +43,100 @@ _________________
 [*nix distrubutions] <https://0x0.st/HNfM>
 
 
-3 installation
+3 overview
+==========
+
+  a sneak peek of:
+
+
+3.1 bin/scripts
+~~~~~~~~~~~~~~~
+
+  ,----
+  | ../.files/bin/.local/bin/
+  | ├── compiler*
+  | ├── cpyclip*
+  | ├── dddev*
+  | ├── displayselect*
+  | ├── dmenumount*
+  | ├── dmenupass*
+  | ├── dmenuumount*
+  | ├── dmenuunicode*
+  | ├── editor*
+  | ├── fix-pkgs*
+  | ├── get-battery-cap*
+  | ├── get-brightness*
+  | ├── get-cpu-temp*
+  | ├── get-crypto*
+  | ├── get-epoch*
+  | ├── get-mem-usage*
+  | ├── get-net-traff*
+  | ├── get-torrent*
+  | ├── get-updates*
+  | ├── get-volume*
+  | ├── get-weather*
+  | ├── maimpick*
+  | ├── mkscript*
+  | ├── pfetch*
+  | ├── remaps*
+  | ├── setbg*
+  | ├── shorten-url*
+  | ├── sysfns*
+  | ├── sys-maintenance*
+  | ├── toggle-cmd*
+  | ├── upload-file*
+  | └── utils/
+  |     ├── err*
+  |     ├── fast-git-clone*
+  |     ├── installed-p*
+  |     ├── internet-p*
+  |     ├── README
+  |     ├── root-p*
+  |     └── running-p*
+  `----
+
+  ,----
+  | ../.files/scripts/.local/scripts/
+  | ├── arch/
+  | │   └── arch-tweaks*
+  | ├── development/
+  | │   ├── cheat-sheets*
+  | │   ├── doom-emacs-setup.sh*
+  | │   ├── jetbrains-toolbox-setup.sh*
+  | │   ├── langs/
+  | │   │   ├── android-dev*
+  | │   │   ├── c-lang.sh*
+  | │   │   ├── haskell-lang*
+  | │   │   ├── java-lang.sh*
+  | │   │   ├── json-lang*
+  | │   │   ├── kotlin-lang.sh*
+  | │   │   ├── markdown-lang*
+  | │   │   ├── perl-lang*
+  | │   │   ├── python-lang.sh*
+  | │   │   ├── rust-lang*
+  | │   │   ├── sh-lang*
+  | │   │   └── tex-lang*
+  | │   ├── paru-setup.sh*
+  | │   ├── sdkman-setup.sh*
+  | │   ├── virtualization*
+  | │   └── vscode-extensions*
+  | ├── emacs-setup*
+  | ├── misc/
+  | │   ├── gaming-setup*
+  | │   └── vpn-setup*
+  | ├── nix-setup*
+  | ├── paru-setup*
+  | ├── pkgs/
+  | │   ├── pkgs.csv
+  | │   └── pkgs-setup*
+  | ├── signal-setup*
+  | ├── spotify-setup*
+  | ├── woeusb-setup*
+  | └── xbps-src-setup*
+  `----
+
+
+4 installation
 ==============
 
   somewhere around early /2022/ i switched from a bare git repo to using
@@ -50,7 +145,7 @@ _________________
 
 [GNU Stow] <https://www.gnu.org/software/stow/>
 
-3.1 dependencies
+4.1 dependencies
 ~~~~~~~~~~~~~~~~
 
    dependencies  description
@@ -67,7 +162,7 @@ _________________
 [GNU Stow] <https://www.gnu.org/software/stow/>
 
 
-3.2 instructions
+4.2 instructions
 ~~~~~~~~~~~~~~~~
 
   get the repo and `cd' into it:
@@ -104,7 +199,7 @@ _________________
   `----
 
 
-4 disclaimer
+5 disclaimer
 ============
 
   this repository serves as a laboratory. it's meant for experimentation
@@ -115,7 +210,7 @@ _________________
   and sharing is always encouraged.
 
 
-5 log
+6 log
 =====
 
   section designed to only track *very remarkable* stuff.
@@ -139,7 +234,7 @@ _________________
   *2020-11-14* - /GNU Emacs/ is introduced.
 
 
-6 copying
+7 copying
 =========
 
   refer to the [COPYING] file for licensing information.

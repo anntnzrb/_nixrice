@@ -2,12 +2,14 @@
 #+author:   anntnzrb
 #+language: en
 
-#+property: header-args :exports code
+#+property: header-args :exports code :results output verbatim
 
 
 * table of contents :toc:noexport:
 - [[#preamble][preamble]]
 - [[#intro][intro]]
+- [[#overview][overview]]
+  - [[#binscripts][bin/scripts]]
 - [[#installation][installation]]
   - [[#dependencies][dependencies]]
   - [[#instructions][instructions]]
@@ -26,6 +28,106 @@ Markdown/Org renderer.
 these /.files/ have accompanied me since /2019/-ish (under VC since 2020), the
 files (scripts) are written with portability in mind, meaning they're meant to
 work across multiple [[https://0x0.st/HNfM][*nix distrubutions]].
+
+* overview
+
+a sneak peek of:
+
+** bin/scripts
+
+#+begin_src shell :exports results
+tree -Fq ../.files/bin/.local/bin/ | head -n -2
+#+end_src
+
+#+RESULTS:
+#+begin_example
+../.files/bin/.local/bin/
+├── compiler*
+├── cpyclip*
+├── dddev*
+├── displayselect*
+├── dmenumount*
+├── dmenupass*
+├── dmenuumount*
+├── dmenuunicode*
+├── editor*
+├── fix-pkgs*
+├── get-battery-cap*
+├── get-brightness*
+├── get-cpu-temp*
+├── get-crypto*
+├── get-epoch*
+├── get-mem-usage*
+├── get-net-traff*
+├── get-torrent*
+├── get-updates*
+├── get-volume*
+├── get-weather*
+├── maimpick*
+├── mkscript*
+├── pfetch*
+├── remaps*
+├── setbg*
+├── shorten-url*
+├── sysfns*
+├── sys-maintenance*
+├── toggle-cmd*
+├── upload-file*
+└── utils/
+    ├── err*
+    ├── fast-git-clone*
+    ├── installed-p*
+    ├── internet-p*
+    ├── README
+    ├── root-p*
+    └── running-p*
+#+end_example
+
+#+begin_src shell :exports results
+tree -Fq ../.files/scripts/.local/scripts/ | head -n -2
+#+end_src
+
+#+RESULTS:
+#+begin_example
+../.files/scripts/.local/scripts/
+├── arch/
+│   └── arch-tweaks*
+├── development/
+│   ├── cheat-sheets*
+│   ├── doom-emacs-setup.sh*
+│   ├── jetbrains-toolbox-setup.sh*
+│   ├── langs/
+│   │   ├── android-dev*
+│   │   ├── c-lang.sh*
+│   │   ├── haskell-lang*
+│   │   ├── java-lang.sh*
+│   │   ├── json-lang*
+│   │   ├── kotlin-lang.sh*
+│   │   ├── markdown-lang*
+│   │   ├── perl-lang*
+│   │   ├── python-lang.sh*
+│   │   ├── rust-lang*
+│   │   ├── sh-lang*
+│   │   └── tex-lang*
+│   ├── paru-setup.sh*
+│   ├── sdkman-setup.sh*
+│   ├── virtualization*
+│   └── vscode-extensions*
+├── emacs-setup*
+├── misc/
+│   ├── gaming-setup*
+│   └── vpn-setup*
+├── nix-setup*
+├── paru-setup*
+├── pkgs/
+│   ├── pkgs.csv
+│   └── pkgs-setup*
+├── signal-setup*
+├── spotify-setup*
+├── woeusb-setup*
+└── xbps-src-setup*
+#+end_example
+
 
 * installation
 
