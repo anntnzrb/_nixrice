@@ -44,9 +44,14 @@ super + d; {d,m,u,v,grave}
 # -----------------------------------------------------------------------------
 # chord: Super + Escape
 
+# - 'p' -- poweroff
+# - 'r' -- reboot
+# - 'z' -- suspend
+# - 'w' -- simulate alt + F4 (kill active window)
 # - 'x' -- kill Xorg session
-super + Escape ; {w, x}
-  {kill -15 "$(xdotool getactivewindow getwindowpid)",pkill -15 'X'}
+
+super + Escape ; {p,r,z,w,x}
+  {poweroff,reboot,systemctl suspend,kill -15 "$(xdotool getactivewindow getwindowpid)",pkill -15 'X'}
 
 # -----------------------------------------------------------------------------
 # audio
