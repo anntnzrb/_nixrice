@@ -960,6 +960,35 @@ settings and style for the /C/ language.
 
 * version control
 
+the following is configured according to the [[https://cbea.ms/git-commit/][How to Write a Git Commit Message]]
+guide.
+
+in short, the /7 rules/ summarized:
+
+#+begin_quote
+1. Separate subject from body with a blank line
+2. Limit the subject line to 50 characters
+3. Capitalize the subject line
+4. Do not end the subject line with a period
+5. Use the imperative mood in the subject line
+6. Wrap the body at 72 characters
+7. Use the body to explain what and why vs. how
+#+end_quote
+
+#+begin_src emacs-lisp
+(after! git-commit
+  (setq git-commit-style-convention-checks '(non-empty-second-line
+                                             overlong-summary-line)))
+;; fill-column
+(defun annt/set-git-fill-column ()
+  "Updates the value of fill-column for git commit messages."
+  (setq-local fill-column 72)
+  (setq-local display-fill-column-indicator-column (+ fill-column 1)))
+
+(setq git-commit-summary-max-length 50)
+(add-hook 'git-commit-mode-hook #'annt/set-git-fill-column)
+#+end_src
+
 | [[https://github.com/magit/magit][Magit]] | complete text-based user interface to [[https://git-scm.com/][Git]] |
 
 #+begin_src emacs-lisp
