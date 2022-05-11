@@ -1,97 +1,70 @@
+# -----------------------------------------------------------------------------
+# terminal
+# -----------------------------------------------------------------------------
+# chord: Super + Return
+
+# - 'a'         -- pulsemixer
+# - 'e'         -- $EDITOR
+# - 'i'         -- system monitor
+# - 'n'         -- network manager
+# - 'BackSpace' -- show this file
+
 # terminal emulator
-super + Return
-  ${TERMINAL}
+super + Return ; {Return,a,e,i,n,BackSpace}
+  $TERMINAL {_,-e 'pulsemixer',-e $EDITOR,-e 'htop',-e 'nmtui',-e less $HOME/.config/sxhkd/sxhkdrc}
 
-# text editor
-# ... but just as a generic way to call it. this is a terminal-based text
-# editor, set by $EDITOR variable
-super + v
-  ${TERMINAL} -e ${EDITOR}
+# -----------------------------------------------------------------------------
+# apps
+# -----------------------------------------------------------------------------
+# chord: Super + w
 
-# browser
-# a graphical browser, set by $BROWSER
-super + w
-  ${BROWSER}
+# - 'e' -- emacs
+# - 'f' -- $FILE
+# - 'w' -- $BROWSER
 
-# applicaction launcher
-# a run dialog & app launcher precisely
-super + d
-  dmenu_run -i -p 'summon:'
+super + w ; {e,f,w}
+  {emacs,$FILE,$BROWSER}
 
-# file manager
-# a graphical file manager, set by $FILE
-super + e
-  ${FILE}
+# -----------------------------------------------------------------------------
+# dmenu
+# -----------------------------------------------------------------------------
+# chord: Super + d
 
-# system monitor
-super + i
-  ${TERMINAL} -e 'htop'
+# - 'd' -- a run dialog/app launcher
+# - 'm' -- mount device
+# - 'u' -- umount device
+# - 'v' -- display selector dropdown
+# - 'grave' -- display selector dropdown
 
+super + d; {d,m,u,v,grave}
+  {dmenu_run -i -p 'summon:',dmenumount,dmenuumount,displayselect,dmenuunicode}
+
+# -----------------------------------------------------------------------------
+# utils
+# -----------------------------------------------------------------------------
+# chord: Super + Escape
+
+# - 'x' -- kill Xorg session
+super + Escape ; {w, x}
+  {kill -15 "$(xdotool getactivewindow getwindowpid)",pkill -15 'X'}
+
+# -----------------------------------------------------------------------------
 # audio
-# CLI to control PulseAudio
-super + a
-  ${TERMINAL} -e 'pulsemixer'
+# -----------------------------------------------------------------------------
 
 # mute
 XF86AudioMute
-  pamixer -t && pkill -RTMIN+1 dwmblocks
+  pamixer -t
 
 # increase/decrease
 XF86Audio{Lower,Raise}Volume
-  pamixer -{d,i} 5 && pkill -RTMIN+1 dwmblocks
+  pamixer -{d,i} 5
 
 # brightness
 # increase/decrease
 XF86MonBrightness{Down,Up}
-  xbacklight -{dec,inc} 10 && pkill -RTMIN+2 dwmblocks
-
-# password selector dropdown
-super + p
-  passmenu
-
-# display selector dropdown
-super + F3
-  displayselect
-
-# emoji / unicode list dropdown
-super + grave
-  dmenuunicode
+  xbacklight -{dec,inc} 10
 
 # screenshot utility dropdown
 Print
   maimpick
-
-# system options dropdown
-super + shift + x
-  sudo -AE sysfns
-
-# network tools
-# CLI for Network Manager
-super + F12
-  ${TERMINAL} -e 'sudo nmtui'
-
-# torrent tools
-# toggle the transmission daemon with F6 and launch the cli with F7
-super + F{6,7}
- {td-toggle,torwrap}
-
-# mouting tools
-super + F{9,10}
-  {dmenumount,dmenuumount}
-
-# kill currently focused window
-# an alternative to window manager's built-in window close functionality; this
-# should be used as last resource
-alt + F4
-  kill -15 "$(xdotool getactivewindow getwindowpid)"
-
-# toggle compositor
-# Picom is the compistor i currently use, i turn it off for games; with this
-# bind i'm able to toggle in on the fly
-super + F11
-  toggle-cmd 'picom'
-
-# kill Xorg session
-# meant to kill the x server in an emergency situation
-super + control + alt + Escape
-  pkill -15 'X'

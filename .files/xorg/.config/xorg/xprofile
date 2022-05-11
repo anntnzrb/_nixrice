@@ -20,7 +20,7 @@ setbg &
 picom -b &
 
 # global keybindings
-sxhkd -m 1 -t 5 -c "${HOME}/.config/sxhkd/sxhkdrc" &
+sxhkd -m 1 -t 2 -a 'Escape' -c "${HOME}/.config/sxhkd/sxhkdrc" &
 
 # dunst
 dunst &
