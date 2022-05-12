@@ -24,6 +24,7 @@
   - [[#package-management][package management]]
     - [[#straightel][~straight.el~]]
   - [[#generals][generals]]
+    - [[#emacs-server][Emacs server]]
     - [[#indentification][indentification]]
     - [[#custom-custom-file][custom custom file]]
     - [[#backups][backups]]
@@ -401,6 +402,17 @@ settings that do not belong anywhere specific.
 
 ;; performance improvement for really long files
 (global-so-long-mode)
+#+end_src
+
+*** Emacs server
+
+the following allows enabling an "/Emacs server/" on startup, this allows Emacs
+to "share" itself across new instances (those being graphical or via terminal).
+
+/Protesilaos/ provides a video tutorial with practical use cases [[https://youtu.be/BjhcmRMF9qs][here]].
+
+#+begin_src emacs-lisp
+(unless (daemonp) (add-hook 'after-init-hook #'server-start))
 #+end_src
 
 *** indentification
