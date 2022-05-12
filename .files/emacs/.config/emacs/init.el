@@ -74,8 +74,7 @@ and re-tangles it, byte-compiles it afterwards."
 
     (require 'org-macs)
     (unless (org-file-newer-than-p cfg-file-el cfg-file-org-last-modified)
-      (annt/notify-and-log "Literate configuration has been updated...")
-      (annt/notify-and-log "Deleting old configuration files files...")
+      (annt/notify-and-log "Deleting old configurations for update...")
       (delete-file cfg-file-el          t)
       (delete-file cfg-file-el-compiled t)
       (annt/org-tangle-and-byte-compile cfg-file-org cfg-file-el))))
