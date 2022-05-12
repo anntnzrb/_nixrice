@@ -279,8 +279,18 @@ The following values are modified: `gc-cons-threshold' and
   (setq gc-cons-threshold (* 20 1024 1024))
   (setq gc-cons-percentage 0.1))
 
+(defun annt/debug-init()
+  "Displays information related to initialization."
+  (annt/notify-and-log
+   (format
+    "GNU Emacs initialized in %.2fs :: performed %d garbage collections."
+    (float-time (time-subtract after-init-time
+                               before-init-time))
+    gcs-done)))
+
 ;; `emacs-startup-hook' can be used to set this after init files are done
 (add-hook 'emacs-startup-hook #'annt/setup-gc)
+(add-hook 'emacs-startup-hook #'annt/debug-init)
 
 (provide 'init)
 ;;; init.el ends here
