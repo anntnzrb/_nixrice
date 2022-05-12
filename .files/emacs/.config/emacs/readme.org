@@ -35,6 +35,7 @@
   - [[#appearance][appearance]]
     - [[#fonts][fonts]]
     - [[#themes][themes]]
+    - [[#dashboard][dashboard]]
     - [[#modeline][modeline]]
     - [[#tooltips][tooltips]]
 - [[#dired][dired]]
@@ -675,6 +676,38 @@ under its respective =mode-map=-ing.
 
   ;; install all-the-icons on boot only if missing
   (add-hook 'after-init-hook #'annt/all-the-icons-setup))
+#+end_src
+
+*** dashboard
+
+#+begin_src emacs-lisp
+(straight-use-package 'dashboard)
+
+(dashboard-setup-startup-hook) ;; enable dashboard `after-init-hook'
+;; set the dashboard as the initial buffer
+(setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+
+(after! dashboard
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-center-content    t)
+  (setq dashboard-set-file-icons    t)
+  (setq dashboard-set-init-info     t)
+  (setq dashboard-set-footer        t)
+
+  (setq dashboard-banner-logo-title "Behold, GNU/Emacs")
+
+  (setq dashboard-items '((recents   . 5)
+                          (bookmarks . 5)
+                          (agenda    . 5)))
+
+  (setq dashboard-show-shortcuts t)
+  (setq dashboard-item-shortcuts '((recents   . "r")
+                                   (bookmarks . "b")
+                                   (projects  . "p")
+                                   (agenda    . "a")
+                                   (registers . "e")))
+
+  (add-hook 'dashboard-mode-hook #'annt/disable-local-line-numbers))
 #+end_src
 
 *** modeline
