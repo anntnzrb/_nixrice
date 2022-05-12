@@ -60,6 +60,7 @@
     - [[#snippets][snippets]]
   - [[#spelling][spelling]]
     - [[#flyspell][FlySpell]]
+  - [[#bookmarks][bookmarks]]
   - [[#org][org]]
 
 * core settings
@@ -689,23 +690,17 @@ under its respective =mode-map=-ing.
 
 (after! dashboard
   (setq dashboard-set-heading-icons t)
+  (setq dashboard-show-shortcuts    t)
   (setq dashboard-center-content    t)
   (setq dashboard-set-file-icons    t)
   (setq dashboard-set-init-info     t)
   (setq dashboard-set-footer        t)
 
-  (setq dashboard-banner-logo-title "Behold, GNU/Emacs")
+  (setq dashboard-banner-logo-title "Behold; GNU/Emacs")
 
   (setq dashboard-items '((recents   . 5)
                           (bookmarks . 5)
                           (agenda    . 5)))
-
-  (setq dashboard-show-shortcuts t)
-  (setq dashboard-item-shortcuts '((recents   . "r")
-                                   (bookmarks . "b")
-                                   (projects  . "p")
-                                   (agenda    . "a")
-                                   (registers . "e")))
 
   (add-hook 'dashboard-mode-hook #'annt/disable-local-line-numbers))
 #+end_src
@@ -1241,6 +1236,40 @@ words.
   (define-key global-map (kbd "M-\"") #'flyspell-buffer))
 
 (add-hook 'text-mode-hook #'flyspell-mode)
+#+end_src
+
+** bookmarks
+
+#+begin_src emacs-lisp
+(after! bookmark
+  (setq bookmark-save-flag             nil)
+  (setq bookmark-sort-flag               t)
+  (setq bookmark-menu-length   fill-column)
+  (setq bookmark-search-delay          0.5)
+  (setq bookmark-use-annotations       nil)
+  (setq bookmark-set-fringe-mark         t)
+  (setq bookmark-version-control       nil)
+  (setq bookmark-watch-bookmark-file   nil)
+  (setq bookmark-menu-confirm-deletion   t)
+  (setq bookmark-completion-ignore-case  t)
+
+  (setq bookmark-default-file (expand-file-name "bookmarks" user-emacs-directory)))
+#+end_src
+
+the following snippet of code gets tangled into the =bookmarks= file, there's
+no need to directly edit it; modify it below instead.
+
+#+begin_src emacs-lisp :tangle "bookmarks"
+;; Emacs Bookmarks -- -*- coding: utf-8-emacs; mode: lisp-data -*-
+;; -*- End Of Bookmark File Format Version Stamp -*-
+
+(
+ ("emacs/"
+  (filename . "~/.config/emacs/"))
+
+ ("shell/"
+  (filename . "~/.config/shell/"))
+)
 #+end_src
 
 ** org
