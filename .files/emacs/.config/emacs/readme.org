@@ -370,6 +370,12 @@ This is a wrapper around `eval-after-load' that:
             (`(after! (:and ,@package) ,@body))))))
 #+end_src
 
+#+begin_src emacs-lisp
+(defun annt/disable-local-line-numbers ()
+  "Disables line numbers from displaying locally."
+  (setq-local display-line-numbers nil))
+#+end_src
+
 ** package management
 
 *** ~straight.el~
@@ -1027,12 +1033,7 @@ in short, the /7 rules/ summarized:
 (define-key global-map (kbd "C-c g") 'magit-status)
 
 (after! magit
-  (defun annt/disable-line-numbers ()
-    "Disables line numbers from displaying as it causes issues with magit
- diff selection."
-    (setq-local display-line-numbers nil))
-
-  (add-hook 'magit-status-mode-hook #'annt/disable-line-numbers))
+  (add-hook 'magit-status-mode-hook #'annt/disable-local-line-numbers))
 #+end_src
 
 * applications & utilities
