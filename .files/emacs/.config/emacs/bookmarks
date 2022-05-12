@@ -1,0 +1,10 @@
+;; Emacs Bookmarks -- -*- coding: utf-8-emacs; mode: lisp-data -*-
+;; -*- End Of Bookmark File Format Version Stamp -*-
+
+(
+ ("emacs/"
+  (filename . "~/.config/emacs/"))
+
+ ("shell/"
+  (filename . "~/.config/shell/"))
+)
