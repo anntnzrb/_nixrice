@@ -36,13 +36,13 @@
 (defvar annt/emacs-config-file "readme"
   "Base name of annt's configuration file.")
 
-(defun annt/notify-and-log (message)
-  "Prints MESSAGE and logs it to a file in `user-emacs-directory' directory."
-  (message message)
+(defun annt/notify-and-log (msg)
+  "Prints MSG and logs it to a file in `user-emacs-directory' directory."
+  (message msg)
 
   ;; log to file
   (append-to-file
-   (format "[%s] :: %s\n" (current-time-string) message)
+   (format "[%s] :: %s\n" (current-time-string) msg)
    nil
    (expand-file-name "emacs.log" user-emacs-directory)))
 
@@ -51,11 +51,11 @@
   (locate-user-emacs-file
    (concat file extension)))
 
-(defun annt/org-tangle-and-byte-compile (FILE TARGET-FILE)
-  "Tangle given FILE to TARGET_FILE and byte-compile it."
+(defun annt/org-tangle-and-byte-compile (file target-file)
+  "Tangle given FILE to TARGET-FILE and byte-compile it."
   (require 'ob-tangle)
-  (org-babel-tangle-file FILE TARGET-FILE)
-  (byte-compile-file          TARGET-FILE))
+  (org-babel-tangle-file file target-file)
+  (byte-compile-file          target-file))
 
 (defun annt/update-emacs-config ()
   "If configuration files were modified, update them with the latest changes.
@@ -114,12 +114,21 @@ The following values are modified: `gc-cons-threshold' and
 
 (defun annt/debug-init()
   "Displays information related to initialization."
-  (annt/notify-and-log
-   (format
-    "GNU Emacs initialized in %.2fs :: performed %d garbage collections."
-    (float-time (time-subtract after-init-time
-                               before-init-time))
-    gcs-done)))
+  (let ((pkg-count 0)
+        (init-time (emacs-init-time)))
+
+    ;; package.el
+    (when (bound-and-true-p package-alist)
+      (setq pkg-count (length package-activated-list)))
+
+    ;; straight.el
+    (when (boundp 'straight--profile-cache)
+      (setq pkg-count (+ (hash-table-count straight--profile-cache) pkg-count)))
+
+    (annt/notify-and-log
+     (format
+      "GNU Emacs initialized in %s (%d pkgs) :: performed %d garbage collections."
+      init-time pkg-count gcs-done))))
 
 ;; `emacs-startup-hook' can be used to set this after init files are done
 (add-hook 'emacs-startup-hook #'annt/setup-gc)
