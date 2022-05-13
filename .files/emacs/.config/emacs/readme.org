@@ -20,9 +20,9 @@
     - [[#early-initel][=early-init.el=]]
     - [[#initel][=init.el=]]
   - [[#header][header]]
-  - [[#helpers][helpers]]
   - [[#package-management][package management]]
     - [[#straightel][~straight.el~]]
+  - [[#helpers][helpers]]
   - [[#generals][generals]]
     - [[#emacs-server][Emacs server]]
     - [[#indentification][indentification]]
@@ -320,6 +320,41 @@ The following values are modified: `gc-cons-threshold' and
 ;;; Code:
 #+end_src
 
+** package management
+
+*** ~straight.el~
+
+| [[https://github.com/raxod502/straight.el][straight.el]] | purely functional package manager |
+
+a few reasons why i consider =straight.el=:
+
+- functional
+- reproducible package management
+- packages cloned as /Git/ repos
+- ability to provide own recipes
+- =package.el= loads every package meanwhile =straight.el= only loads whatever
+  is specifically stated on the init file
+
+#+begin_src emacs-lisp
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent
+         'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(setq straight-repository-branch "master")
+#+end_src
+
 ** helpers
 
 the following macro was yoinked from the [[https://github.com/hlissner/doom-emacs][Doom Emacs]]' source code, all credit
@@ -378,39 +413,24 @@ This is a wrapper around `eval-after-load' that:
   (setq-local display-line-numbers nil))
 #+end_src
 
-** package management
+| [[https://github.com/noctuid/general.el][general.el]] | powerful package that offers macros and wrappers for key, advice and hook definitions |
 
-*** ~straight.el~
-
-| [[https://github.com/raxod502/straight.el][straight.el]] | purely functional package manager |
-
-a few reasons why i consider =straight.el=:
-
-- functional
-- reproducible package management
-- packages cloned as /Git/ repos
-- ability to provide own recipes
-- =package.el= loads every package meanwhile =straight.el= only loads whatever
-  is specifically stated on the init file
+*NOTE*: the following package drastically impacts the commonly used syntax for
+defining keys/advices/hooks; as stated, these are macros and wrappers around
+the "proper" way of defining those mentioned before. it is adviced to have a
+clear understanding of core commands such as =define-key=, =global-set-key=,
+etc.  before proceeding to replace them with =package.el=.
+please do read at least the =README= file on the package's repository.
 
 #+begin_src emacs-lisp
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name
-        "straight/repos/straight.el/bootstrap.el"
-        user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent
-         'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+(straight-use-package 'general)
 
-(setq straight-repository-branch "master")
+(setq general-implicit-kbd t) ;; auto expand "str" to (kbd "str")
+
+(defalias 'def-key!   #'general-def)
+(defalias 'undef-key! #'general-unbind)
+
+(add-hook 'after-init-hook #'general-auto-unbind-keys)
 #+end_src
 
 ** generals
@@ -529,13 +549,15 @@ me not to seek for /Vi/ emulation everywhere.
 (setq evil-undo-system     'undo-redo)
 
 (after! evil
-  (dolist (map (list
-                evil-insert-state-map evil-normal-state-map
-                evil-replace-state-map evil-visual-state-map))
-    (define-key map [mouse-2] 'nil))
+  (undef-key! '(evil-insert-state-map
+                evil-normal-state-map
+                evil-replace-state-map
+                evil-visual-state-map)
+    :with #'ignore
+    [mouse-2])
 
-  (define-key evil-motion-state-map [down-mouse-1] 'nil)
-  (define-key evil-insert-state-map (kbd "C-g")    'evil-normal-state))
+  (def-key! evil-motion-state-map [down-mouse-1] #'ignore)
+  (def-key! evil-insert-state-map "C-g"          #'evil-normal-state))
 
 (evil-mode) ;; evil is used everywhere
 #+end_src
@@ -614,13 +636,12 @@ under its respective =mode-map=-ing.
 
 #+begin_src emacs-lisp
 ;; some defaults i dislike from the global map
-(let ((map global-map))
-  (dolist (bind (list
-                 (kbd "C-SPC")
-                 (kbd "C-@")
-                 [mouse-2]
-                 [mouse-3]))
-    (define-key map bind nil)))
+(undef-key!
+  :with #'ignore
+  "C-SPC"
+  "C-@"
+  [mouse-2]
+  [mouse-3])
 #+end_src
 
 ** appearance
@@ -659,7 +680,7 @@ under its respective =mode-map=-ing.
       (modus-themes-load-themes)
 
       (modus-themes-load-vivendi)
-      (define-key global-map (kbd "M-<f5>") 'modus-themes-toggle))
+      (def-key! "M-<f5>" #'modus-themes-toggle))
   (message "No theme loaded :: Not running from a graphical display."))
 #+end_src
 
@@ -775,13 +796,16 @@ notice.
   (setq dired-recursive-copies                             'always)
   (setq dired-recursive-deletes                            'always)
 
-  ;; mouse
-  (let ((map dired-mode-map))
-    (define-key map [mouse-1]              'nil)
-    (define-key map [normal-state mouse-2] 'nil)
-    (define-key map [mouse-2]              'nil)
-    (define-key map [mouse-3]              'dired-mouse-find-file)
-    (define-key map [mouse-8]              'dired-up-directory))
+  ;; disable some defaults
+  (undef-key! dired-mode-map
+    :with #'ignore
+    [mouse-1]
+    [mouse-2]
+    [normal-state mouse-2])
+
+  (def-key! dired-mode-map
+    [mouse-3] #'dired-mouse-find-file
+    [mouse-8] #'dired-up-directory)
 
   ;; less verbose output
   (add-hook 'dired-mode-hook #'dired-hide-details-mode))
@@ -807,9 +831,10 @@ set of keyboard binding for programming modes
 
 #+begin_src emacs-lisp
 (after! prog-mode
-  (let ((map prog-mode-map))
-    (define-key map (kbd "C-c c c")   'compile)
-    (define-key map (kbd "C-c c r") 'recompile)))
+  (def-key! prog-mode-map
+    :prefix "C-c"
+    "c" #'compile
+    "r" #'recompile))
 #+end_src
 
 ** tools
@@ -1058,7 +1083,7 @@ in short, the /7 rules/ summarized:
 #+begin_src emacs-lisp
 (straight-use-package 'magit)
 
-(define-key global-map (kbd "C-c g") 'magit-status)
+(def-key! :prefix "C-c" "g" #'magit-status)
 
 (after! magit
   (add-hook 'magit-status-mode-hook #'annt/disable-local-line-numbers))
@@ -1087,12 +1112,12 @@ in short, the /7 rules/ summarized:
 #+begin_src emacs-lisp
 (straight-use-package 'helpful)
 
-(let ((map global-map))
-  (define-key map [remap      describe-key]      'helpful-key)
-  (define-key map [remap   describe-symbol]   'helpful-symbol)
-  (define-key map [remap  describe-command]  'helpful-command)
-  (define-key map [remap describe-function] 'helpful-function)
-  (define-key map [remap describe-variable] 'helpful-variable))
+(def-key!
+ [remap      describe-key] #'helpful-key
+ [remap   describe-symbol] #'helpful-symbol
+ [remap  describe-command] #'helpful-command
+ [remap describe-function] #'helpful-function
+ [remap describe-variable] #'helpful-variable)
 #+end_src
 
 | [[https://github.com/tarsius/hl-todo][hl-todo]] | TODO/FIXME/etc keyword highlighting in comments and strings |
@@ -1143,9 +1168,10 @@ in short, the /7 rules/ summarized:
 
 (vertico-mode)
 
-(let ((map vertico-map))
-  (define-key map (kbd "C-j")     'vertico-next)
-  (define-key map (kbd "C-k") 'vertico-previous))
+(after! vertico
+  (def-key! vertico-map
+    "C-j" #'vertico-next
+    "C-k" #'vertico-previous))
 #+end_src
 
 | [[https://github.com/minad/marginalia][Marginalia]] | annotations in the minibuffer |
@@ -1194,7 +1220,7 @@ in short, the /7 rules/ summarized:
     (add-hook hooks #'yas-minor-mode))
 
 (after! yasnippet
-  (define-key yas-minor-mode-map (kbd "C-<tab>") 'yas-expand)
+  (def-key! yas-minor-mode-map "C-<tab>" #'yas-expand)
   (yas-reload-all))
 #+end_src
 
@@ -1233,7 +1259,7 @@ words.
   (setq flyspell-issue-welcome-flag nil)
   (setq flyspell-issue-message-flag nil)
 
-  (define-key global-map (kbd "M-\"") #'flyspell-buffer))
+  (def-key! "M-\"" #'flyspell-buffer))
 
 (add-hook 'text-mode-hook #'flyspell-mode)
 #+end_src
@@ -1281,7 +1307,6 @@ one of /Emacs/' killer features.
   (setq org-edit-src-content-indentation 0)
   (setq org-startup-folded               t)
   (setq org-confirm-babel-evaluate     nil)
-
 
   ;; list of available exports
   (setq org-export-backends '(ascii
@@ -1352,7 +1377,7 @@ mostly."
   (setq org-image-actual-width nil)
 
   ;; keybinds
-  (define-key org-mode-map (kbd "<f9>") 'org-tree-slide-mode)
+  (def-key! org-mode-map :prefix "C-c" "<f9>" #'org-tree-slide-mode)
 
   (add-hook 'org-tree-slide-play-hook #'annt/org-present-start)
   (add-hook 'org-tree-slide-stop-hook   #'annt/org-present-end))
