@@ -753,8 +753,8 @@ notice.
 (straight-use-package 'keycast)
 
 (after! keycast
-  (setq keycast-mode-line-format          "%k%c%r")
-  (setq keycast-tab-bar-format            "%k%c%r")
+  (setq keycast-mode-line-format "%k%c%r")
+  (setq keycast-tab-bar-format   "%k%c%r")
 
   ;; don't hide rest of the modeline
   (setq keycast-mode-line-remove-tail-elements nil)
@@ -765,7 +765,8 @@ notice.
     (add-to-list 'keycast-substitute-alist `(,ev "..." "Typing…")))
 
   ;; list of events to ignore
-  (dolist (ev '(mouse-event-p
+  (dolist (ev '(ignore
+                mouse-event-p
                 mouse-movement-p
                 mwheel-scroll))
     (add-to-list 'keycast-substitute-alist `(,ev nil))))
