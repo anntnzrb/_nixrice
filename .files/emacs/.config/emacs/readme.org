@@ -422,6 +422,48 @@ clear understanding of core commands such as =define-key=, =global-set-key=,
 etc.  before proceeding to replace them with =package.el=.
 please do read at least the =README= file on the package's repository.
 
+the ultimate goal with this package is to avoid the following:
+
+#+begin_src emacs-lisp :tangle no
+;; this
+(let ((map global-map))
+  (dolist (bind (list
+                 (kbd "C-SPC")
+                 (kbd "C-@")
+                 [mouse-2]
+                 [mouse-3]))
+    (define-key map bind nil)))
+
+;; is equivalent to this
+(undef-key!
+  :with #'ignore
+  "C-SPC"
+  "C-@"
+  [mouse-2]
+  [mouse-3])
+
+;; also this...
+(dolist (map (list
+              evil-insert-state-map evil-normal-state-map
+              evil-replace-state-map evil-visual-state-map))
+  (define-key map [mouse-2] 'nil))
+
+;; ... to this
+(undef-key! '(evil-insert-state-map
+              evil-normal-state-map
+              evil-replace-state-map
+              evil-visual-state-map)
+  :with #'ignore
+  [mouse-2])
+#+end_src
+
+as you can see, it's easier to maintain and read...
+the shipped defaults are great, there's really not many options as this relies
+on function calls rather variables.
+
+for simplicity and consistency the definitions have been aliased, it should be
+intuitive.
+
 #+begin_src emacs-lisp
 (straight-use-package 'general)
 
