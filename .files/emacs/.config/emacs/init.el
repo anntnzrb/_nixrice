@@ -40,11 +40,13 @@
   "Prints MSG and logs it to a file in `user-emacs-directory' directory."
   (message msg)
 
-  ;; log to file
-  (append-to-file
-   (format "[%s] :: %s\n" (current-time-string) msg)
-   nil
-   (expand-file-name "emacs.log" user-emacs-directory)))
+  ;; log to file (suppress stdout)
+  (let ((inhibit-message t)
+        (message-log-max nil))
+    (append-to-file
+     (format "[%s] :: %s\n" (current-time-string) msg)
+     nil
+     (expand-file-name "emacs.log" user-emacs-directory))))
 
 (defun annt/expand-emacs-file-name (file extension)
   "Return canonical path to FILE to Emacs config with EXTENSION."
