@@ -455,6 +455,13 @@ the ultimate goal with this package is to avoid the following:
               evil-visual-state-map)
   :with #'ignore
   [mouse-2])
+
+;; also same...
+(dolist (hooks '(haskell-mode-hook haskell-literate-mode-hook))
+  (add-hook hooks #'lsp-deferred))
+
+;; ... for hooks
+(add-hook! '(haskell-mode-hook haskell-literate-mode-hook) #'lsp-deferred)
 #+end_src
 
 as you can see, it's easier to maintain and read...
@@ -471,6 +478,7 @@ intuitive.
 
 (defalias 'def-key!   #'general-def)
 (defalias 'undef-key! #'general-unbind)
+(defalias 'add-hook!  #'general-add-hook)
 
 (add-hook 'after-init-hook #'general-auto-unbind-keys)
 #+end_src
@@ -570,8 +578,7 @@ however, if set properly this can be a catastrophe saver.
 (global-hl-line-mode) ;; line highlighting
 
 ;; auto-wrapping
-(dolist (hooks '(prog-mode-hook text-mode-hook))
-  (add-hook hooks #'auto-fill-mode))
+(add-hook! '(prog-mode-hook text-mode-hook) #'auto-fill-mode)
 
 ;; delete trailing whitespaces prior saving
 (add-hook 'before-save-hook #'whitespace-cleanup)
@@ -1010,8 +1017,9 @@ settings and style for the /C/ language.
   ;; Flycheck
   (setq flycheck-emacs-lisp-load-path 'inherit)
 
-  (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
-  (add-hook 'emacs-lisp-mode-hook          #'flycheck-mode))
+  (add-hook! 'emacs-lisp-mode-hook (list
+                                    #'aggressive-indent-mode
+                                    #'flycheck-mode)))
 #+end_src
 
 *** Racket
@@ -1022,8 +1030,9 @@ settings and style for the /C/ language.
 
   (after! racket-mode
     ;; Flycheck
-    (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode)
-    (add-hook 'racket-mode-hook              #'flycheck-mode)))
+    (add-hook! 'racket-mode-hook (list
+                                  #'aggressive-indent-mode
+                                  #'flycheck-mode))))
 #+end_src
 
 ** Nix
@@ -1035,8 +1044,8 @@ settings and style for the /C/ language.
   ;; detect Nix files by extension
   (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
 
-  (add-hook 'nix-mode-hook #'lsp-deferred)
-  (add-hook 'nix-mode-hook #'aggressive-indent-mode))
+  (add-hook! 'nix-mode-hook (list #'lsp-deferred
+                                  #'aggressive-indent-mode)))
 #+end_src
 
 ** Haskell
@@ -1049,15 +1058,14 @@ settings and style for the /C/ language.
   (after! (haskell-mode lsp-mode)
     (straight-use-package 'hindent)
 
+    ;; Flycheck
+    (add-hook 'haskell-mode-hook #'flycheck-mode)
+
     ;; LSP for Haskell's modes
     ;; `lsp-haskell' is needed as an extra to `lsp-mode'
     (straight-use-package 'lsp-haskell)
 
-    (dolist (hooks '(haskell-mode-hook haskell-literate-mode-hook))
-      (add-hook hooks #'lsp-deferred))
-
-    ;; Flycheck
-    (add-hook 'haskell-mode-hook #'flycheck-mode)
+    (add-hook! '(haskell-mode-hook haskell-literate-mode-hook) #'lsp-deferred)
 
     ;; format before saving
     (add-hook 'before-save-hook #'hindent-reformat-buffer)))
@@ -1075,8 +1083,8 @@ settings and style for the /C/ language.
   (after! lua-mode
     (setq lua-indent-level 2))
 
-  (add-hook 'lua-mode-hook #'lsp-deferred)
-  (add-hook 'lua-mode-hook #'aggressive-indent-mode))
+  (add-hook! 'lua-mode-hook (list #'lsp-deferred
+                                  #'aggressive-indent-mode)))
 #+end_src
 
 ** YAML
@@ -1168,8 +1176,7 @@ in short, the /7 rules/ summarized:
 #+begin_src emacs-lisp
 (straight-use-package 'hl-todo)
 
-(dolist (hooks '(prog-mode-hook text-mode-hook))
-  (add-hook hooks #'hl-todo-mode))
+(add-hook! '(prog-mode-hook text-mode-hook) #'hl-todo-mode)
 #+end_src
 
 | [[https://github.com/Fanael/rainbow-delimiters][rainbow-delimiters]] | mode which highlights delimiters such as parentheses, brackets or braces according to their depth |
@@ -1259,12 +1266,11 @@ in short, the /7 rules/ summarized:
 #+begin_src emacs-lisp
 (straight-use-package 'yasnippet)
 
-(dolist (hooks '(prog-mode-hook text-mode-hook))
-    (add-hook hooks #'yas-minor-mode))
-
 (after! yasnippet
   (def-key! yas-minor-mode-map "C-<tab>" #'yas-expand)
   (yas-reload-all))
+
+(add-hook! '(prog-mode-hook text-mode-hook) #'yas-minor-mode)
 #+end_src
 
 ** spelling
