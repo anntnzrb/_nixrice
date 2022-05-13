@@ -479,6 +479,7 @@ intuitive.
 (defalias 'def-key!   #'general-def)
 (defalias 'undef-key! #'general-unbind)
 (defalias 'add-hook!  #'general-add-hook)
+(defalias 'after-gui! #'general-after-gui)
 
 (add-hook 'after-init-hook #'general-auto-unbind-keys)
 #+end_src
@@ -698,14 +699,15 @@ under its respective =mode-map=-ing.
 *** fonts
 
 #+begin_src emacs-lisp
-(let ((font-size 12))
+(after-gui!
+  (let ((font-size 12))
 
-  ;; default
-  (set-face-attribute 'default nil
-                      :font (format "Mononoki-%s" font-size))
-  ;; code
-  (set-face-attribute 'fixed-pitch nil
-                      :font (format "FantasqueSansMono-%s" font-size)))
+    ;; default
+    (set-face-attribute 'default nil
+                        :font (format "Mononoki-%s" font-size))
+    ;; code
+    (set-face-attribute 'fixed-pitch nil
+                        :font (format "FantasqueSansMono-%s" font-size))))
 #+end_src
 
 *** themes
@@ -713,30 +715,35 @@ under its respective =mode-map=-ing.
 | [[https://gitlab.com/protesilaos/modus-themes/][Modus themes]] | pair of highly accessible themes that conform with the WCAG AAA standard for colour contrast between background and foreground combinations |
 
 #+begin_src emacs-lisp
-(if (display-graphic-p)
-    (progn
-      (straight-use-package 'modus-themes)
+(after-gui!
+  (straight-use-package 'modus-themes)
 
-      (setq modus-themes-slanted-constructs t)
-      (setq modus-themes-bold-constructs    t)
+  (setq modus-themes-slanted-constructs t)
+  (setq modus-themes-bold-constructs    t)
 
-      ;; modeline
-      (setq modus-themes-subtle-line-numbers t)
+  ;; modeline
+  (setq modus-themes-subtle-line-numbers t)
 
-      ;; org
-      (setq modus-themes-org-blocks 'grayscale)
+  ;; org
+  (setq modus-themes-org-blocks 'grayscale)
 
-      (modus-themes-load-themes)
+  (modus-themes-load-themes)
 
-      (modus-themes-load-vivendi)
-      (def-key! "M-<f5>" #'modus-themes-toggle))
+  (let ((time (string-to-number (format-time-string "%H"))))
+    (if (and (> time 8) (< time 18))
+        (modus-themes-load-operandi)
+      (modus-themes-load-vivendi)))
+
+  (def-key! "M-<f5>" #'modus-themes-toggle))
+
+(unless (display-graphic-p)
   (message "No theme loaded :: Not running from a graphical display."))
 #+end_src
 
 | [[https://github.com/domtronn/all-the-icons.el][all-the-icons]] | collection of various icon fonts |
 
 #+begin_src emacs-lisp
-(when (display-graphic-p)
+(after-gui!
   (straight-use-package 'all-the-icons)
 
   (defun annt/all-the-icons-setup ()
@@ -866,7 +873,7 @@ notice.
 only enable /dired/ icons when using graphical /Emacs/.
 
 #+begin_src emacs-lisp
-(when (display-graphic-p)
+(after-gui!
   (after! dired
     (straight-use-package 'all-the-icons-dired)
 
