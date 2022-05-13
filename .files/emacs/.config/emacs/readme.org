@@ -766,18 +766,23 @@ under its respective =mode-map=-ing.
 (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 
 (after! dashboard
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-show-shortcuts    t)
-  (setq dashboard-center-content    t)
-  (setq dashboard-set-file-icons    t)
-  (setq dashboard-set-init-info     t)
-  (setq dashboard-set-footer        t)
+  (setq dashboard-set-heading-icons  t)
+  (setq dashboard-show-shortcuts     t)
+  (setq dashboard-center-content     t)
+  (setq dashboard-set-file-icons     t)
+  (setq dashboard-set-init-info      t)
+  (setq dashboard-set-footer         t)
+  (setq dashboard-startup-banner 'logo)
 
   (setq dashboard-banner-logo-title "Behold; GNU/Emacs")
 
   (setq dashboard-items '((recents   . 5)
                           (bookmarks . 5)
                           (agenda    . 5)))
+
+  (undef-key! dashboard-mode-map
+    :with #'ignore
+    [remap quit-window])
 
   (add-hook 'dashboard-mode-hook #'annt/disable-local-line-numbers))
 #+end_src
@@ -903,7 +908,10 @@ set of keyboard binding for programming modes
 
 (after! aggressive-indent
   (setq aggressive-indent-comments-too   t)
-  (setq aggressive-indent-sit-for-time 0.5))
+  (setq aggressive-indent-sit-for-time 0.5)
+
+  (def-key! aggressive-indent-mode-map
+    [remap aggressive-indent-indent-defun] #'aggressive-indent-indent-region-and-on))
 #+end_src
 
 | [[https://github.com/emacs-lsp/lsp-mode/][lsp-mode]] | Emacs client/library for the /Language Server Protocol (LSP)/. |
@@ -1171,11 +1179,11 @@ in short, the /7 rules/ summarized:
 (straight-use-package 'helpful)
 
 (def-key!
- [remap      describe-key] #'helpful-key
- [remap   describe-symbol] #'helpful-symbol
- [remap  describe-command] #'helpful-command
- [remap describe-function] #'helpful-function
- [remap describe-variable] #'helpful-variable)
+  [remap      describe-key] #'helpful-key
+  [remap   describe-symbol] #'helpful-symbol
+  [remap  describe-command] #'helpful-command
+  [remap describe-function] #'helpful-function
+  [remap describe-variable] #'helpful-variable)
 #+end_src
 
 | [[https://github.com/tarsius/hl-todo][hl-todo]] | TODO/FIXME/etc keyword highlighting in comments and strings |
