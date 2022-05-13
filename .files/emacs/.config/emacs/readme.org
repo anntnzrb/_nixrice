@@ -1352,16 +1352,18 @@ the following snippet of code gets tangled into the =bookmarks= file, there's
 no need to directly edit it; modify it below instead.
 
 #+begin_src emacs-lisp :tangle "bookmarks"
-;; Emacs Bookmarks -- -*- coding: utf-8-emacs; mode: lisp-data -*-
+;; Emacs Bookmarks --- -*- coding: utf-8-emacs; mode: lisp-data -*-
 ;; -*- End Of Bookmark File Format Version Stamp -*-
 
 (
+ (""
+  (filename . "~/"))
  ("emacs/"
   (filename . "~/.config/emacs/"))
 
  ("shell/"
   (filename . "~/.config/shell/"))
-)
+ )
 #+end_src
 
 ** org
