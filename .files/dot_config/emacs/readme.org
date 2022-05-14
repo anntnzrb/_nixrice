@@ -511,7 +511,8 @@ to "share" itself across new instances (those being graphical or via terminal).
 /Protesilaos/ provides a video tutorial with practical use cases [[https://youtu.be/BjhcmRMF9qs][here]].
 
 #+begin_src emacs-lisp
-(unless (daemonp) (add-hook 'after-init-hook #'server-start))
+(require 'server)
+(unless (server-running-p) (add-hook 'after-init-hook #'server-start))
 #+end_src
 
 *** indentification
