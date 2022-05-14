@@ -8,8 +8,6 @@
 * table of contents :toc:noexport:
 - [[#preamble][preamble]]
 - [[#intro][intro]]
-- [[#overview][overview]]
-  - [[#binscripts][bin/scripts]]
 - [[#installation][installation]]
   - [[#dependencies][dependencies]]
   - [[#instructions][instructions]]
@@ -19,167 +17,49 @@
 
 * preamble
 
-this file was originally created using /GNU Emacs' Org-Mode/, refer to
-=./docs/= for the source code; you may also do so if you're reading thru a
-Markdown/Org renderer.
+this file is originally created using /GNU Emacs' Org-Mode/, refer to =./docs/=
+for the source code; you may also do so if you're reading thru a Markdown/Org
+renderer.
+
+this file generates this /README/ in 2 extra formats:
+
+- *plain-txt* (=ascii=) =./docs/README.txt=
+- *markdown* =./README=
 
 * intro
 
-these /.files/ have accompanied me since /2019/-ish (under VC since 2020), the
-files (scripts) are written with portability in mind, meaning they're meant to
-work across multiple [[https://0x0.st/HNfM][*nix distrubutions]].
-
-* overview
-
-a sneak peek of:
-
-** bin/scripts
-
-#+begin_src shell :exports results
-tree -Fq ../.files/bin/.local/bin/ | head -n -2
-#+end_src
-
-#+RESULTS:
-#+begin_example
-../.files/bin/.local/bin/
-├── compiler*
-├── cpyclip*
-├── dddev*
-├── displayselect*
-├── dmenumount*
-├── dmenupass*
-├── dmenuumount*
-├── dmenuunicode*
-├── editor*
-├── fix-pkgs*
-├── get-battery-cap*
-├── get-brightness*
-├── get-cpu-temp*
-├── get-crypto*
-├── get-epoch*
-├── get-mem-usage*
-├── get-net-traff*
-├── get-torrent*
-├── get-updates*
-├── get-volume*
-├── get-weather*
-├── maimpick*
-├── mkscript*
-├── pfetch*
-├── remaps*
-├── setbg*
-├── shorten-url*
-├── sysfns*
-├── sys-maintenance*
-├── toggle-cmd*
-├── upload-file*
-└── utils/
-    ├── err*
-    ├── fast-git-clone*
-    ├── installed-p*
-    ├── internet-p*
-    ├── README
-    ├── root-p*
-    └── running-p*
-#+end_example
-
-#+begin_src shell :exports results
-tree -Fq ../.files/scripts/.local/scripts/ | head -n -2
-#+end_src
-
-#+RESULTS:
-#+begin_example
-../.files/scripts/.local/scripts/
-├── arch/
-│   └── arch-tweaks*
-├── development/
-│   ├── cheat-sheets*
-│   ├── doom-emacs-setup.sh*
-│   ├── jetbrains-toolbox-setup.sh*
-│   ├── langs/
-│   │   ├── android-dev*
-│   │   ├── c-lang.sh*
-│   │   ├── haskell-lang*
-│   │   ├── java-lang.sh*
-│   │   ├── json-lang*
-│   │   ├── kotlin-lang.sh*
-│   │   ├── markdown-lang*
-│   │   ├── perl-lang*
-│   │   ├── python-lang.sh*
-│   │   ├── rust-lang*
-│   │   ├── sh-lang*
-│   │   └── tex-lang*
-│   ├── paru-setup.sh*
-│   ├── sdkman-setup.sh*
-│   ├── virtualization*
-│   └── vscode-extensions*
-├── emacs-setup*
-├── misc/
-│   ├── gaming-setup*
-│   └── vpn-setup*
-├── nix-setup*
-├── paru-setup*
-├── pkgs/
-│   ├── pkgs.csv
-│   └── pkgs-setup*
-├── signal-setup*
-├── spotify-setup*
-├── woeusb-setup*
-└── xbps-src-setup*
-#+end_example
-
+these /.files/ have accompanied me since /2019/-ish (under VC since /2020/),
+all files/scripts have been written with portability in mind, meaning they're
+meant to work across multiple [[https://0x0.st/HNfM][*nix distrubutions]].
 
 * installation
 
-somewhere around early /2022/ i switched from a bare git repo to using [[https://www.gnu.org/software/stow/][GNU Stow]]
-to properly sync *.files*.
+the following instructions allow you to set up my =.files= with one simple
+command, if you're only looking to copy them you may want to take a look at the
+=./.files/= folder instead.
+
+*NOTE*: do not randomly execute the following command as this can lead to data
+overwritten; it is adviced to backup or attempt what comes in an isolated
+environment.
 
 ** dependencies
 
-| dependencies | description                                               |
-|--------------+-----------------------------------------------------------|
-| [[https://git-scm.com/][Git]]          | (duh)                                                     |
-| [[https://www.gnu.org/software/make/][GNU Make]]     | automation tool that generates builds executable programs |
-| [[https://www.gnu.org/software/stow/][GNU Stow]]     | tool that deploys these dotfiles                          |
+| dependencies | description                    |
+|--------------+--------------------------------|
+| *[[https://www.chezmoi.io/][chezmoi]]     | cross-platform dotfile manager |
+
+\* can be installed on-the-fly, refer to link.
 
 ** instructions
 
-get the repo and =cd= into it:
+the following command will clone this repository and place it under
+=~/.local/share/chezmoi/=.
 
 #+begin_src shell
-git clone --depth 1 'https://gitlab.com/anntnzrb/xnixrice.git' '/tmp/annt-rice'
+chezmoi init --ssh -a 'git@gitlab.com:anntnzrb/xnixrice.git'
 
-cd '/tmp/annt-rice'
-#+end_src
-
-#+RESULTS:
-
-
-*OPTIONAL*: /you may take a look at the =Makefile= and add/remove the folders
-to sync/
-
-install:
-
-#+begin_src shell
-make install
-#+end_src
-
-#+RESULTS:
-
-*NOTE*: /if an existing file is found =make= will throw an error and abort./
-
-uninstall:
-
-#+begin_src shell
-make clean
-#+end_src
-
-#+RESULTS:
-
-update (re-link):
-
-#+begin_src shell
-make reload
+# alternative via https
+chezmoi init -a 'https://gitlab.com/anntnzrb/xnixrice.git'
 #+end_src
 
 #+RESULTS:
@@ -198,7 +78,16 @@ section designed to only track *very remarkable* stuff.
 
 /(descending by date)/
 
-*2022-05-08* - mass repo cleanup
+*2022-05-14* - switch to /chezmoi/.
+
+- after a few weeks with /GNU Stow/ i started having issues with /symlinks/ all
+  over my =~/=.
+
+- there are quite a few reasons why /chezmoi/ is a superior system than /Stow/,
+  to name a few: the template system, secrets, etc...; still does the job
+  though and would stick to it if i didn't this better alternative.
+
+*2022-05-08* - mass repo cleanup.
 
 - due to bad practices, this repo was filled with large blobs of files
   by the extentions ={png,ttf,otf}= (stored a few wallpapers + fonts).  *these
@@ -223,6 +112,7 @@ unless otherwise noted, all code herein is distributed under the terms of the
 # local variables:
 # eval: (add-hook 'after-save-hook 'org-babel-execute-buffer nil t)
 # eval: (add-hook 'after-save-hook 'org-ascii-export-to-ascii nil t)
-# eval: (add-hook 'after-save-hook (lambda () (rename-file "README.txt" "../README" t)) t)
-# eval: (add-hook 'after-save-hook (lambda () (delete-file "README.txt")) t)
+# eval: (add-hook 'after-save-hook 'org-md-export-to-markdown nil t)
+# eval: (add-hook 'after-save-hook (lambda () (rename-file "README.md" "../README.md" t)) t)
+# eval: (add-hook 'after-save-hook (lambda () (delete-file "README.md")) t)
 # end:

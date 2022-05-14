@@ -1,0 +1,105 @@
+#!/bin/sh
+
+# rclone-mount --- Mount a remote repository using rclone
+
+# -----------------------------------------------------------------------------
+# functions
+# -----------------------------------------------------------------------------
+
+_installed_p() {
+    # **
+    # Checks if given command is installed on the system.
+    # *
+
+    # shellcheck disable=2006
+    # backtick notation is portabl
+
+    test -x "`command -v "$1"`"
+}
+
+_internet_p() {
+    # **
+    # Checks if there is an active internet connection
+    # *
+    ping -q -c 1 'example.com' >/dev/null 2>&1
+}
+
+_file_exists_p() {
+    # **
+    # Checks for file existence (size > 0).
+    # *
+
+    test -s "${1}"
+}
+
+_folder_exists_p() {
+    # **
+    # Checks for directory existence.
+    # *
+
+    test -d "${1}"
+}
+
+_remote_exists_p() {
+    # **
+    # Checks if the remote exists in the configuration file.
+    # *
+
+    grep -q "${1}" "${rclone_conf_dir}"
+}
+
+_mounted_p() {
+    # **
+    # Checks if the remote is already mounted.
+    # *
+
+    df | grep -q "${1}"
+}
+
+_err() {
+    # **
+    # Prints a message to stderr.
+    # *
+
+    printf '%s\n' "${@}" >&2
+}
+
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
+
+# already mounted, do nothing
+_mounted_p "${1}" \
+    && printf 'Remote is already mounted, quitting...\n' \
+    && exit 0
+
+# other checks
+! _installed_p 'rclone' && _err 'rclone not installed...' && exit 1
+! _internet_p && err 'No active internet connection...' && exit 1
+
+rclone_conf_dir="${HOME}/.config/rclone/rclone.conf"
+rclone_repo_dir="${HOME}/lib/rclone"
+rclone_repo_remote_dir="${rclone_repo_dir}/${1}"
+
+# quit if no config
+! _file_exists_p "${rclone_conf_dir}" \
+    && _err 'rclone configuration file does not exist' \
+    && exit 1
+
+# quit if remote is not found in config
+! _remote_exists_p "${1}" \
+    && _err 'The specified remote does not exists in the configuration file' \
+    && exit 1
+
+# create respective directories
+! _folder_exists_p "${rclone_repo_dir}" \
+    && mkdir -p "${rclone_repo_dir}" \
+    && printf 'Created rclone repo directory...\n'
+
+! _folder_exists_p "${rclone_repo_remote_dir}" \
+    && mkdir -p "${rclone_repo_remote_dir}" \
+    && printf 'Created rclone repo directory for the specified remote...\n'
+
+# finally mount
+rclone mount --daemon "${1}": "${rclone_repo_remote_dir}"
+printf "'%s' has been mounted @ '%s'\n" "${1}" "${rclone_repo_remote_dir}"

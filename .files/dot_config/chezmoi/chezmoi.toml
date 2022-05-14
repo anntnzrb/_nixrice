@@ -1,0 +1,10 @@
+color = "auto"
+
+[git]
+    autoAdd    = false
+    autoCommit = false
+    autoPush   = false
+
+[edit]
+  command = "emacs"
+  args    = ["-nw"]
