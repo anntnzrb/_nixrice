@@ -764,8 +764,6 @@ under its respective =mode-map=-ing.
 (straight-use-package 'dashboard)
 
 (dashboard-setup-startup-hook) ;; enable dashboard `after-init-hook'
-;; set the dashboard as the initial buffer
-(setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
 
 (after! dashboard
   (setq dashboard-set-heading-icons  t)
@@ -786,7 +784,12 @@ under its respective =mode-map=-ing.
     :with #'ignore
     [remap quit-window])
 
-  (add-hook 'dashboard-mode-hook #'annt/disable-local-line-numbers))
+  (defun annt/dashboard-as-initial-buffer ()
+    "Sets the initial buffer to dashboard."
+    (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*"))))
+
+  (add-hook! 'dashboard-mode-hook (list #'annt/disable-local-line-numbers
+                                        #'annt/dashboard-as-initial-buffer)))
 #+end_src
 
 *** modeline
