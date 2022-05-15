@@ -16,14 +16,13 @@
 
 * preamble
 
-this file is originally created using /GNU Emacs' Org-Mode/, refer to =./docs/=
-for the source code; you may also do so if you're reading thru a Markdown/Org
-renderer.
+this file is created using /GNU Emacs' Org-Mode/, refer to =docs/= for the
+source code; in there you can find different versions of this document.
 
-this file generates this /README/ in 2 extra formats:
+this file gets generates in 2 extra formats:
 
-- *plain-txt* (=ascii=) =./docs/README.txt=
-- *markdown* =./README=
+- *plain-text*
+- *markdown*
 
 * intro
 
