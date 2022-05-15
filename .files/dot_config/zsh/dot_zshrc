@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+# .zshrc --- zsh configuration file
+
 #                 ██
 #                ░██
 #  ██████  ██████░██      ██████  █████
@@ -97,6 +99,14 @@ if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
     add-zle-hook-widget -Uz zle-line-finish zle_application_mode_stop
 fi
 
+
+# -----------------------------------------------------------------------------
+# extra settings
+# -----------------------------------------------------------------------------
+
+for f in $ZDOTDIR/config/*; do
+    test -x "${f}" && . "${f}"
+done
 
 # -----------------------------------------------------------------------------
 # prompt
