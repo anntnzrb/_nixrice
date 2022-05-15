@@ -19,4 +19,4 @@
   unstage = reset --hard HEAD
 
   # function-aliases
-  acp = "!f() { git add -A ; git commit --allow-empty-message -a ; git push; }; f"
+  acp = "!f() { git add -A ; git commit -am \"`date '+%F :: %T (%Z)'`\" ; git push; }; f"
