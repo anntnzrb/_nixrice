@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# ssh --- ssh shell configuration file
+
+# enable ssh-agent && add keys
+test -z "${SSH_AUTH_SOCK}" -a -z "${SSH_AGENT_PID}" \
+    && eval `ssh-agent -s` >/dev/null
+
+# keys
+for f in ${HOME}/.ssh/*; do
+    file -br "${f}" | grep -q 'private' && ssh-add "${f}" >/dev/null 2>&1
+done
