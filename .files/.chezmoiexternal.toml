@@ -1,0 +1,5 @@
+[".local/bin/pfetch"]
+    type          = "file"
+    executable    = true
+    url           = "https://raw.githubusercontent.com/dylanaraps/pfetch/master/pfetch"
+    refreshPeriod = "168h"
