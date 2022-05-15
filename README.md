@@ -1,17 +1,17 @@
 # Table of Contents
 
-1.  [preamble](#org5488a8b)
-2.  [intro](#org27fab30)
-3.  [installation](#org76eedc0)
-    1.  [dependencies](#org82d5db5)
-    2.  [instructions](#org613a4cf)
-4.  [disclaimer](#org62ab583)
-5.  [log](#org8b7d15c)
-6.  [copying](#org0d09cfc)
+1.  [preamble](#org8309553)
+2.  [intro](#org55ce043)
+3.  [installation](#org47ba2a6)
+    1.  [dependencies](#orgef2dc22)
+    2.  [instructions](#org4c6e944)
+4.  [disclaimer](#org0a813bb)
+5.  [log](#org219ac9f)
+6.  [copying](#org8762456)
 
 
 
-<a id="org5488a8b"></a>
+<a id="org8309553"></a>
 
 # preamble
 
@@ -25,7 +25,7 @@ this file generates this *README* in 2 extra formats:
 -   **markdown** `./README`
 
 
-<a id="org27fab30"></a>
+<a id="org55ce043"></a>
 
 # intro
 
@@ -34,7 +34,7 @@ all files/scripts have been written with portability in mind, meaning they're
 meant to work across multiple [\*nix distrubutions](https://0x0.st/HNfM).
 
 
-<a id="org76eedc0"></a>
+<a id="org47ba2a6"></a>
 
 # installation
 
@@ -47,7 +47,7 @@ overwritten; it is adviced to backup or attempt what comes in an isolated
 environment.
 
 
-<a id="org82d5db5"></a>
+<a id="orgef2dc22"></a>
 
 ## dependencies
 
@@ -77,20 +77,34 @@ environment.
 \\\* can be installed on-the-fly, refer to link.
 
 
-<a id="org613a4cf"></a>
+<a id="org4c6e944"></a>
 
 ## instructions
+
+unlock password manager vault before `chezmoi init` so it's not needed to
+re-enter the passsword a bigillion times:
+
+    # my case for Bitwarden
+    bw unlock
+    export BW_SESSION="..."
 
 the following command will clone this repository and place it under
 `~/.local/share/chezmoi/`.
 
-    chezmoi init --ssh -a 'git@gitlab.com:anntnzrb/xnixrice.git'
+    chezmoi init --ssh -a 'git@gitlab.com:anntnzrb/xnixrice'
 
-    # alternative via https
-    chezmoi init -a 'https://gitlab.com/anntnzrb/xnixrice.git'
+    # or via https
+    chezmoi init -a 'https://gitlab.com/anntnzrb/xnixrice'
+
+after the password manager prompt your keys should be imported, but they're not
+added yet&#x2026;
+
+    eval `ssh-agent -s`           # enable ssh-agent
+    ssh-add ~/.ssh/my_key_id_type # add whichever keys to use
+    ssh -T git@github.com         # test keys (github is just an example)
 
 
-<a id="org62ab583"></a>
+<a id="org0a813bb"></a>
 
 # disclaimer
 
@@ -101,7 +115,7 @@ nevertheless feel free to take a look and learn from it, experimenting and
 sharing is always encouraged.
 
 
-<a id="org8b7d15c"></a>
+<a id="org219ac9f"></a>
 
 # log
 
@@ -112,11 +126,10 @@ section designed to only track **very remarkable** stuff.
 **2022-05-14** - switch to *chezmoi*.
 
 -   after a few weeks with *GNU Stow* i started having issues with *symlinks* all
-    over my `~/`.
-
--   there are quite a few reasons why *chezmoi* is a superior system than *Stow*,
-    to name a few: the template system, secrets, etc&#x2026;; still does the job
-    though and would stick to it if i didn't this better alternative.
+    over my `~/`. other than that there are quite a few reasons why *chezmoi* is
+    a superior system than *Stow*, to name a few: the template system, secrets,
+    etc&#x2026;; still does the job though and would stick to it if i didn't this
+    better alternative.
 
 **2022-05-08** - mass repo cleanup.
 
@@ -126,7 +139,7 @@ section designed to only track **very remarkable** stuff.
 
 **2022-04-26** - switch to *GNU Stow*.
 
--   this repository literally emulated the structure of a `~/` directory
+-   this repository emulated the structure of a `~/` directory
     prior to the switch.
 
 **2021-06-02** - License switch *GPLv2* -> *GPLv3*.
@@ -134,7 +147,7 @@ section designed to only track **very remarkable** stuff.
 **2020-11-14** - *GNU Emacs* is introduced.
 
 
-<a id="org0d09cfc"></a>
+<a id="org8762456"></a>
 
 # copying
 
