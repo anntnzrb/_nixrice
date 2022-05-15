@@ -1,31 +1,30 @@
 # Table of Contents
 
-1.  [preamble](#org0336cc9)
-2.  [intro](#orga30a0b5)
-3.  [installation](#org5518bb0)
-    1.  [dependencies](#orgb5e715e)
-    2.  [instructions](#orge0fd879)
-4.  [disclaimer](#org14c4c7b)
-5.  [log](#orgad60c98)
-6.  [copying](#org35f45dd)
+1.  [preamble](#org2b62823)
+2.  [intro](#org80e8a47)
+3.  [installation](#org1d6179e)
+    1.  [dependencies](#org6a7a91f)
+    2.  [instructions](#orga3e33a6)
+4.  [disclaimer](#orga60b53b)
+5.  [log](#org54b595f)
+6.  [copying](#orgd14dd24)
 
 
 
-<a id="org0336cc9"></a>
+<a id="org2b62823"></a>
 
 # preamble
 
-this file is originally created using *GNU Emacs' Org-Mode*, refer to `./docs/`
-for the source code; you may also do so if you're reading thru a Markdown/Org
-renderer.
+this file is created using *GNU Emacs' Org-Mode*, refer to `docs/` for the
+source code; in there you can find different versions of this document.
 
-this file generates this *README* in 2 extra formats:
+this file gets generates in 2 extra formats:
 
--   **plain-txt** (`ascii`) `./docs/README.txt`
--   **markdown** `./README`
+-   **plain-text**
+-   **markdown**
 
 
-<a id="orga30a0b5"></a>
+<a id="org80e8a47"></a>
 
 # intro
 
@@ -34,7 +33,7 @@ all files/scripts have been written with portability in mind, meaning they're
 meant to work across multiple [\*nix distrubutions](https://0x0.st/HNfM).
 
 
-<a id="org5518bb0"></a>
+<a id="org1d6179e"></a>
 
 # installation
 
@@ -47,7 +46,7 @@ overwritten; it is adviced to backup or attempt what comes in an isolated
 environment.
 
 
-<a id="orgb5e715e"></a>
+<a id="org6a7a91f"></a>
 
 ## dependencies
 
@@ -77,7 +76,7 @@ environment.
 \\\* can be installed on-the-fly, refer to link.
 
 
-<a id="orge0fd879"></a>
+<a id="orga3e33a6"></a>
 
 ## instructions
 
@@ -98,7 +97,7 @@ the following command will clone this repository and place it under
     chezmoi init -a 'https://gitlab.com/anntnzrb/xnixrice'
 
 
-<a id="org14c4c7b"></a>
+<a id="orga60b53b"></a>
 
 # disclaimer
 
@@ -109,7 +108,7 @@ nevertheless feel free to take a look and learn from it, experimenting and
 sharing is always encouraged.
 
 
-<a id="orgad60c98"></a>
+<a id="org54b595f"></a>
 
 # log
 
@@ -141,7 +140,7 @@ section designed to only track **very remarkable** stuff.
 **2020-11-14** - *GNU Emacs* is introduced.
 
 
-<a id="org35f45dd"></a>
+<a id="orgd14dd24"></a>
 
 # copying
 
