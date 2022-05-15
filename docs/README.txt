@@ -74,14 +74,32 @@ _________________
 3.2 instructions
 ~~~~~~~~~~~~~~~~
 
+  unlock password manager vault before `chezmoi init' so it's not needed
+  to re-enter the passsword a bigillion times:
+
+  ,----
+  | # my case for Bitwarden
+  | bw unlock
+  | export BW_SESSION="..."
+  `----
+
   the following command will clone this repository and place it under
   `~/.local/share/chezmoi/'.
 
   ,----
-  | chezmoi init --ssh -a 'git@gitlab.com:anntnzrb/xnixrice.git'
+  | chezmoi init --ssh -a 'git@gitlab.com:anntnzrb/xnixrice'
   |
-  | # alternative via https
-  | chezmoi init -a 'https://gitlab.com/anntnzrb/xnixrice.git'
+  | # or via https
+  | chezmoi init -a 'https://gitlab.com/anntnzrb/xnixrice'
+  `----
+
+  after the password manager prompt your keys should be imported, but
+  they're not added yet...
+
+  ,----
+  | eval `ssh-agent -s`           # enable ssh-agent
+  | ssh-add ~/.ssh/my_key_id_type # add whichever keys to use
+  | ssh -T git@github.com         # test keys (github is just an example)
   `----
 
 
@@ -106,12 +124,10 @@ _________________
   *2022-05-14* - switch to /chezmoi/.
 
   - after a few weeks with /GNU Stow/ i started having issues with
-    /symlinks/ all over my `~/'.
-
-  - there are quite a few reasons why /chezmoi/ is a superior system
-    than /Stow/, to name a few: the template system, secrets, etc...;
-    still does the job though and would stick to it if i didn't this
-    better alternative.
+    /symlinks/ all over my `~/'. other than that there are quite a few
+    reasons why /chezmoi/ is a superior system than /Stow/, to name a
+    few: the template system, secrets, etc...; still does the job though
+    and would stick to it if i didn't this better alternative.
 
   *2022-05-08* - mass repo cleanup.
 
@@ -122,8 +138,8 @@ _________________
 
   *2022-04-26* - switch to /GNU Stow/.
 
-  - this repository literally emulated the structure of a `~/' directory
-    prior to the switch.
+  - this repository emulated the structure of a `~/' directory prior to
+    the switch.
 
   *2021-06-02* - License switch /GPLv2/ -> /GPLv3/.
 
