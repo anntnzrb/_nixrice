@@ -79,6 +79,7 @@ _________________
 
   ,----
   | # my case for Bitwarden
+  | bw login
   | bw unlock
   | export BW_SESSION="..."
   `----
@@ -91,15 +92,6 @@ _________________
   |
   | # or via https
   | chezmoi init -a 'https://gitlab.com/anntnzrb/xnixrice'
-  `----
-
-  after the password manager prompt your keys should be imported, but
-  they're not added yet...
-
-  ,----
-  | eval `ssh-agent -s`           # enable ssh-agent
-  | ssh-add ~/.ssh/my_key_id_type # add whichever keys to use
-  | ssh -T git@github.com         # test keys (github is just an example)
   `----
 
 

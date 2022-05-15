@@ -56,6 +56,7 @@ re-enter the passsword a bigillion times:
 
 #+begin_src shell
 # my case for Bitwarden
+bw login
 bw unlock
 export BW_SESSION="..."
 #+end_src
@@ -68,15 +69,6 @@ chezmoi init --ssh -a 'git@gitlab.com:anntnzrb/xnixrice'
 
 # or via https
 chezmoi init -a 'https://gitlab.com/anntnzrb/xnixrice'
-#+end_src
-
-after the password manager prompt your keys should be imported, but they're not
-added yet...
-
-#+begin_src shell
-eval `ssh-agent -s`           # enable ssh-agent
-ssh-add ~/.ssh/my_key_id_type # add whichever keys to use
-ssh -T git@github.com         # test keys (github is just an example)
 #+end_src
 
 * disclaimer
