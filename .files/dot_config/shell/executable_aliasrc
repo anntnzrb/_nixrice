@@ -1,10 +1,10 @@
 #!/bin/sh
 
-# sh-aliases --- Aliases for the shell.
+# aliasrc --- Aliases for the shell
 
 # Commentary:
 
-# This aliases are shell-agnostic with portability in mind.
+# These aliases are shell-agnostic with portability in mind.
 
 # References:
 # - https://wiki.archlinux.org/title/Core_utilities

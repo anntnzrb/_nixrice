@@ -1,18 +1,15 @@
 #!/bin/sh
 
+# profile --- system-wide configuration file for shell login
+
+# Commentary:
+
+# This file runs on shell login; environment variables should be set here.
+
+# Code:
+
 # shellcheck disable=1090
 # follow non-constant sources
-
-#                            ████ ██  ██
-#  ██████                   ░██░ ░░  ░██
-# ░██░░░██ ██████  ██████  ██████ ██ ░██  █████
-# ░██  ░██░░██░░█ ██░░░░██░░░██░ ░██ ░██ ██░░░██
-# ░██████  ░██ ░ ░██   ░██  ░██  ░██ ░██░███████
-# ░██░░░   ░██   ░██   ░██  ░██  ░██ ░██░██░░░░
-# ░██     ░███   ░░██████   ░██  ░██ ███░░██████
-# ░░      ░░░     ░░░░░░    ░░   ░░ ░░░  ░░░░░░
-# runs on login
-# environment variables are set here
 
 # -----------------------------------------------------------------------------
 # preamble
