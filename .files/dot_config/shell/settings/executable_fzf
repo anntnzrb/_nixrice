@@ -2,4 +2,15 @@
 
 # fzf --- fzf shell configuration file
 
-export FZF_DEFAULT_OPTS='--ansi --layout=reverse --border=sharp --tabstop=4 --height 50%'
+# try using `fd` if available
+if test -x "`command -v 'fd'`"; then
+    export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --exclude .git'
+
+    # otherwise fallback to `find`
+else
+    export FZF_DEFAULT_COMMAND="find . -type f -not -path '*/\.git/*'"
+fi
+
+export FZF_DEFAULT_OPTS='--layout=reverse --border=sharp --tabstop=4 --height 50%'
+export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
+export FZF_ALT_C_COMMAND="${FZF_DEFAULT_COMMAND}"
