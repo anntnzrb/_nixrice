@@ -35,12 +35,23 @@ sscreenkey() {
 
     if ! { pgrep -x 'screenkey' >/dev/null; }; then
         setsid -f screenkey --no-systray --vis-shift --bak-mode full \
-            --opacity 0.55 -f FiraCodeRetina -t 2 -p bottom -s small \
-            --show-settings
+               --opacity 0.55 -f FiraCodeRetina -t 2 -p bottom -s small \
+               --show-settings
     else
         # kill if already running
         pkill -15 'screenkey'
     fi
+}
+
+magit() {
+    # **
+    # magit on the terminal
+    # *
+
+    magit_cmd="(magit-status \"`git rev-parse --show-toplevel`\")"
+
+    { ! pgrep 'emacs' && emacs -nw --eval "${magit_cmd}"; } \
+        || emacsclient -nw --eval "${magit_cmd}";
 }
 
 bitrate() {
@@ -74,25 +85,5 @@ gpg_import_key() {
 
     gpg --import "$1"
     printf "\nkeys: %s\n\nuse 'gpg --edit-keys <mail>' to set trust level\n" \
-        "$(gpg --list-keys)"
-}
-
-# -----------------------------------------------------------------------------
-# distro-especific
-# -----------------------------------------------------------------------------
-
-# arch
-
-test -x "$(command -v 'pacman')" && {
-    add_key() {
-        # **
-        # adds a pacman key
-        # TODO: fix multiple use of sudo
-        # *
-
-        sudo pacman-key --recv-keys "$1" &&
-            sudo pacman-key --finger "$1" &&
-            sudo pacman-key --lsign-key "$1" &&
-            sudo pacman --noconfirm -Syy archlinux-keyring
-    }
+           "$(gpg --list-keys)"
 }
