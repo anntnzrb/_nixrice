@@ -148,5 +148,18 @@ JAVA_HOME=$(readlink -f '/usr/bin/java' | sed 's:/bin/java::') \
 # Java apps fix for dwm
 export _JAVA_AWT_WM_NONREPARENTING=1
 
+# -----------------------------------------------------------------------------
+# SSH
+# -----------------------------------------------------------------------------
+
+# enable ssh-agent && add keys
+test -z "${SSH_AUTH_SOCK}" -a -z "${SSH_AGENT_PID}" \
+    && eval `ssh-agent -s` >/dev/null
+
+# keys
+for f in ${HOME}/.ssh/*; do
+    file -br "${f}" | grep -q 'private' && ssh-add "${f}" >/dev/null 2>&1
+done
+
 # start graphical automatically
 #test "$(tty)" = '/dev/tty1' && ! pgrep -x 'Xorg' >/dev/null 2>&1 && exec startx "${XORGDIR}/xinitrc"

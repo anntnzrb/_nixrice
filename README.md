@@ -1,17 +1,17 @@
 # Table of Contents
 
-1.  [preamble](#org8309553)
-2.  [intro](#org55ce043)
-3.  [installation](#org47ba2a6)
-    1.  [dependencies](#orgef2dc22)
-    2.  [instructions](#org4c6e944)
-4.  [disclaimer](#org0a813bb)
-5.  [log](#org219ac9f)
-6.  [copying](#org8762456)
+1.  [preamble](#org0336cc9)
+2.  [intro](#orga30a0b5)
+3.  [installation](#org5518bb0)
+    1.  [dependencies](#orgb5e715e)
+    2.  [instructions](#orge0fd879)
+4.  [disclaimer](#org14c4c7b)
+5.  [log](#orgad60c98)
+6.  [copying](#org35f45dd)
 
 
 
-<a id="org8309553"></a>
+<a id="org0336cc9"></a>
 
 # preamble
 
@@ -25,7 +25,7 @@ this file generates this *README* in 2 extra formats:
 -   **markdown** `./README`
 
 
-<a id="org55ce043"></a>
+<a id="orga30a0b5"></a>
 
 # intro
 
@@ -34,7 +34,7 @@ all files/scripts have been written with portability in mind, meaning they're
 meant to work across multiple [\*nix distrubutions](https://0x0.st/HNfM).
 
 
-<a id="org47ba2a6"></a>
+<a id="org5518bb0"></a>
 
 # installation
 
@@ -47,7 +47,7 @@ overwritten; it is adviced to backup or attempt what comes in an isolated
 environment.
 
 
-<a id="orgef2dc22"></a>
+<a id="orgb5e715e"></a>
 
 ## dependencies
 
@@ -77,7 +77,7 @@ environment.
 \\\* can be installed on-the-fly, refer to link.
 
 
-<a id="org4c6e944"></a>
+<a id="orge0fd879"></a>
 
 ## instructions
 
@@ -85,6 +85,7 @@ unlock password manager vault before `chezmoi init` so it's not needed to
 re-enter the passsword a bigillion times:
 
     # my case for Bitwarden
+    bw login
     bw unlock
     export BW_SESSION="..."
 
@@ -96,15 +97,8 @@ the following command will clone this repository and place it under
     # or via https
     chezmoi init -a 'https://gitlab.com/anntnzrb/xnixrice'
 
-after the password manager prompt your keys should be imported, but they're not
-added yet&#x2026;
 
-    eval `ssh-agent -s`           # enable ssh-agent
-    ssh-add ~/.ssh/my_key_id_type # add whichever keys to use
-    ssh -T git@github.com         # test keys (github is just an example)
-
-
-<a id="org0a813bb"></a>
+<a id="org14c4c7b"></a>
 
 # disclaimer
 
@@ -115,7 +109,7 @@ nevertheless feel free to take a look and learn from it, experimenting and
 sharing is always encouraged.
 
 
-<a id="org219ac9f"></a>
+<a id="orgad60c98"></a>
 
 # log
 
@@ -147,7 +141,7 @@ section designed to only track **very remarkable** stuff.
 **2020-11-14** - *GNU Emacs* is introduced.
 
 
-<a id="org8762456"></a>
+<a id="org35f45dd"></a>
 
 # copying
 
