@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# defaults --- defaults for shell configuration file
+
+# nothing too specific, just to clean up ~/
+export WGETRC="${HOME}/.config/wget/wgetrc"
+export LESSKEY="${HOME}/.config/less/lesskey"
+export LESSHISTFILE='-'

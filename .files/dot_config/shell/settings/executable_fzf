@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# fzf --- fzf shell configuration file
+
+export FZF_DEFAULT_OPTS='--ansi --layout=reverse --border=sharp --tabstop=4 --height 50%'

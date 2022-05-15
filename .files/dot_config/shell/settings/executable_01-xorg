@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# xorg --- X11 shell configuration file
+
+export XDG_DESKTOP_DIR="${HOME}"
+export XDG_CONFIG_HOME="${XDG_DESKTOP_DIR}/.config"
+export XDG_CACHE_HOME="${XDG_DESKTOP_DIR}/.cache"
+export XDG_PUBLICSHARE_DIR="${XDG_DESKTOP_DIR}/lib"
+export XDG_TEMPLATES_DIR="${XDG_PUBLICSHARE_DIR}"
+export XDG_DOCUMENTS_DIR="${XDG_PICTURES_DIR}/docs"
+export XDG_PICTURES_DIR="${XDG_PUBLICSHARE_DIR}/imgs"
+export XDG_VIDEOS_DIR="${XDG_PUBLICSHARE_DIR}/vids"
+export XDG_MUSIC_DIR="${XDG_PUBLICSHARE_DIR}/audio"
+export XDG_DOWNLOAD_DIR="${XDG_DESKTOP_DIR}/downloads"
+export XDG_DATA_HOME="${XDG_DESKTOP_DIR}/.local/share"
+
+export XORGDIR="${XDG_CONFIG_HOME:-$HOME/.config}/xorg"
