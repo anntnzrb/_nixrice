@@ -58,6 +58,7 @@ export FILE='pcmanfm'
 export READER='zathura'
 
 export SHDIR="${XDG_CONFIG_HOME:-$HOME/.config}/shell"
+export BASHDIR="${XDG_CONFIG_HOME:-$HOME/.config}/bash"
 export ZDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
 
 # -----------------------------------------------------------------------------
