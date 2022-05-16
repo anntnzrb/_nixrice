@@ -63,7 +63,7 @@ test -x "${SHDIR}/aliasrc" && . "${SHDIR}/aliasrc"
 test -x "${SHDIR}/functionrc" && . "${SHDIR}/functionrc"
 
 # misc
-for f in ${BASHDIR}/plugins/*; do
+for f in ${SHDIR}/plugins/*; do
     test -x "${f}" && . "${f}"
 done
 
