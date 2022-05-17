@@ -1058,7 +1058,7 @@ settings and style for the /C/ language.
 
 ** Nix
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (when (executable-find "nix")
   (straight-use-package 'nix-mode)
 
@@ -1096,7 +1096,7 @@ settings and style for the /C/ language.
 
 | [[https://github.com/immerrr/lua-mode][lua-mode]] | /Lua/ support for Emacs |
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (when (or (executable-find "awesome")
           (executable-find "lua-language-server"))
   (straight-use-package 'lua-mode)
@@ -1226,7 +1226,7 @@ in short, the /7 rules/ summarized:
 
 | [[https://github.com/oantolin/orderless][orderless]] | completion style that is /order-less/ |
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (straight-use-package 'orderless)
 
 (setq completion-styles '(orderless))
@@ -1247,7 +1247,7 @@ in short, the /7 rules/ summarized:
 
 | [[https://github.com/minad/marginalia][Marginalia]] | annotations in the minibuffer |
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (after! vertico
   (straight-use-package 'marginalia)
 
