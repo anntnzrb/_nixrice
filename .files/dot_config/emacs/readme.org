@@ -924,7 +924,7 @@ set of keyboard binding for programming modes
 | [[https://github.com/emacs-lsp/lsp-mode/][lsp-mode]] | Emacs client/library for the /Language Server Protocol (LSP)/. |
 
 #+begin_src emacs-lisp
-(after! (prog-mode lsp-mode)
+(after! prog-mode
   (straight-use-package 'lsp-mode)
 
   (setq lsp-keymap-prefix          "C-c l")
