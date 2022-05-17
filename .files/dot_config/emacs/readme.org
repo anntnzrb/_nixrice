@@ -53,6 +53,7 @@
   - [[#haskell][Haskell]]
   - [[#lua][Lua]]
   - [[#yaml][YAML]]
+  - [[#html][HTML]]
 - [[#version-control][version control]]
 - [[#applications--utilities][applications & utilities]]
   - [[#completion][completion]]
@@ -1118,6 +1119,19 @@ settings and style for the /C/ language.
 
 (after! yaml-mode
   (setq yaml-indent-offset 2))
+#+end_src
+
+** HTML
+
+#+begin_src emacs-lisp
+(unless (executable-find "npm")
+  (message "npm not installed, cannot install LSP"))
+
+(after! sgml-mode
+  (add-hook! 'sgml-mode-hook (list #'sgml-electric-tag-pair-mode
+                                   #'aggressive-indent-mode))
+  ;; LSP
+  (add-hook 'sgml-mode-hook #'lsp-deferred))
 #+end_src
 
 * version control
