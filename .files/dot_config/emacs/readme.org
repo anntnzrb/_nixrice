@@ -835,7 +835,8 @@ notice.
   (dolist (ev '(ignore
                 mouse-event-p
                 mouse-movement-p
-                mwheel-scroll))
+                mwheel-scroll
+                lsp-ui-doc--handle-mouse-movement))
     (add-to-list 'keycast-substitute-alist `(,ev nil))))
 
 (add-hook 'after-init-hook #'keycast-mode)
