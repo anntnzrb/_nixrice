@@ -327,7 +327,7 @@ The following values are modified: `gc-cons-threshold' and
 
 *** ~straight.el~
 
-| [[https://github.com/raxod502/straight.el][straight.el]] | purely functional package manager |
+| [[https://github.com/raxod502/straight.el][straight]] | purely functional package manager |
 
 a few reasons why i consider =straight.el=:
 
@@ -416,7 +416,7 @@ This is a wrapper around `eval-after-load' that:
   (setq-local display-line-numbers nil))
 #+end_src
 
-| [[https://github.com/noctuid/general.el][general.el]] | powerful package that offers macros and wrappers for key, advice and hook definitions |
+| [[https://github.com/noctuid/general.el][general]] | powerful package that offers macros and wrappers for key, advice and hook definitions |
 
 *NOTE*: the following package drastically impacts the commonly used syntax for
 defining keys/advices/hooks; as stated, these are macros and wrappers around
@@ -716,7 +716,7 @@ under its respective =mode-map=-ing.
 
 *** themes
 
-| [[https://gitlab.com/protesilaos/modus-themes/][Modus themes]] | pair of highly accessible themes that conform with the WCAG AAA standard for colour contrast between background and foreground combinations |
+| [[https://gitlab.com/protesilaos/modus-themes/][modus-themes]] | pair of highly accessible themes that conform with the WCAG AAA standard for colour contrast between background and foreground combinations |
 
 #+begin_src emacs-lisp
 (after-gui!
@@ -1165,7 +1165,7 @@ in short, the /7 rules/ summarized:
 (add-hook 'git-commit-mode-hook #'annt/set-git-fill-column)
 #+end_src
 
-| [[https://github.com/magit/magit][Magit]] | complete text-based user interface to [[https://git-scm.com/][Git]] |
+| [[https://github.com/magit/magit][magit]] | complete text-based user interface to [[https://git-scm.com/][Git]] |
 
 #+begin_src emacs-lisp
 (straight-use-package 'magit)
@@ -1260,7 +1260,7 @@ in short, the /7 rules/ summarized:
     "C-k" #'vertico-previous))
 #+end_src
 
-| [[https://github.com/minad/marginalia][Marginalia]] | annotations in the minibuffer |
+| [[https://github.com/minad/marginalia][marginalia]] | annotations in the minibuffer |
 
 #+begin_src emacs-lisp
 (after! vertico
@@ -1285,7 +1285,7 @@ in short, the /7 rules/ summarized:
 
 *** syntax checking
 
-| [[https://github.com/flycheck/flycheck][Flycheck]] | modern on-the-fly syntax checking |
+| [[https://github.com/flycheck/flycheck][flycheck]] | modern on-the-fly syntax checking |
 
 #+begin_src emacs-lisp
 (straight-use-package 'flycheck)
