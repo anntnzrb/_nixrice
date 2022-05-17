@@ -26,10 +26,10 @@ sscreenkey() {
     # toggles screenkey, with some defaults
     # *
 
-    if ! { pgrep -x 'screenkey' >/dev/null; }; then
-        setsid -f screenkey --no-systray --vis-shift --bak-mode full \
-               --opacity 0.55 -f FiraCodeRetina -t 2 -p bottom -s small \
-               --show-settings
+    if ! { pgrep 'screenkey' >/dev/null; }; then
+        setsid -f screenkey --vis-shift --bak-mode full --mods-mode 'tux'\
+               --opacity 0.6 --compr-cnt 2 -M --mouse-fade 2 \
+               -f FantasqueSansMono -t 2 -p 'bottom' -s 'small' --show-settings
     else
         # kill if already running
         pkill -15 'screenkey'
