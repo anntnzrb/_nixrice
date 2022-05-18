@@ -1239,6 +1239,34 @@ in short, the /7 rules/ summarized:
 
 ** completion
 
+| Abbreviations (Abbrevs) | built-in library for text abbreviations |
+
+#+begin_src emacs-lisp
+(after! abbrev
+  (setq only-global-abbrevs         nil)
+  (setq abbrev-all-caps               t)
+  (setq abbrev-suggest                t)
+  (setq save-abbrevs          'silently)
+  (setq abbrev-suggest-hint-threshold 3)
+  (setq abbrev-file-name (expand-file-name "abbrevs" user-emacs-directory))
+
+  ;; text-mode abbrevs
+  (let ((table text-mode-abbrev-table))
+    (define-abbrev table "mymail" user-mail-address)
+    (define-abbrev table "latex" "LaTeX")
+    (define-abbrev table "html"  "HTML")
+    (define-abbrev table "ghub"  "GitHub")
+    (define-abbrev table "glab"  "GitLab")
+    (define-abbrev table "yt"    "YouTube"))
+
+  ;; binds
+  (def-key! ctl-x-map
+    "a e" #'expand-abbrev
+    "a u" #'unexpand-abbrev))
+
+(add-hook 'text-mode-hook #'abbrev-mode)
+#+end_src
+
 | [[https://github.com/oantolin/orderless][orderless]] | completion style that is /order-less/ |
 
 #+begin_src emacs-lisp
