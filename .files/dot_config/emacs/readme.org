@@ -487,6 +487,12 @@ intuitive.
 (add-hook 'after-init-hook #'general-auto-unbind-keys)
 #+end_src
 
+| [[https://github.com/radian-software/blackout][blackout]] | modeline lighters cleaner |
+
+#+begin_src emacs-lisp
+(straight-use-package 'blackout)
+#+end_src
+
 ** generals
 
 settings that do not belong anywhere specific.
@@ -582,8 +588,9 @@ however, if set properly this can be a catastrophe saver.
 (global-display-fill-column-indicator-mode)
 (global-hl-line-mode) ;; line highlighting
 
-;; auto-wrapping
+
 (add-hook! '(prog-mode-hook text-mode-hook) #'auto-fill-mode)
+(blackout 'auto-fill-mode) ;; disable "Fill" lighter
 
 ;; delete trailing whitespaces prior saving
 (add-hook 'before-save-hook #'whitespace-cleanup)
@@ -622,7 +629,8 @@ me not to seek for /Vi/ emulation everywhere.
 (after! evil
   (straight-use-package 'evil-collection)
 
-  (evil-collection-init))
+  (evil-collection-init)
+  (blackout 'evil-collection-unimpaired-mode))
 #+end_src
 
 | [[https://github.com/emacs-evil/evil-surround][evil-surround]] | [[https://github.com/tpope/vim-surround][vim-surround]] emulation |
@@ -890,7 +898,8 @@ only enable /dired/ icons when using graphical /Emacs/.
   (after! dired
     (straight-use-package 'all-the-icons-dired)
 
-    (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)))
+    (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)
+    (blackout 'all-the-icons-dired-mode)))
 #+end_src
 
 * programming
@@ -1114,7 +1123,7 @@ settings and style for the /C/ language.
 
 #+begin_src emacs-lisp
 (unless (executable-find "npm")
-  (message "npm not installed, cannot install LSP"))
+  (message "HTML :: npm not installed, cannot install LSP"))
 
 (after! sgml-mode
   (add-hook! 'sgml-mode-hook (list #'sgml-electric-tag-pair-mode
@@ -1251,7 +1260,10 @@ in short, the /7 rules/ summarized:
   ;; binds
   (def-key! ctl-x-map
     "a e" #'expand-abbrev
-    "a u" #'unexpand-abbrev))
+    "a u" #'unexpand-abbrev)
+
+;; disable "Abbrev" lighter
+(blackout 'abbrev-mode))
 
 (add-hook 'text-mode-hook #'abbrev-mode)
 #+end_src
@@ -1321,7 +1333,9 @@ in short, the /7 rules/ summarized:
 
 (after! yasnippet
   (def-key! yas-minor-mode-map "C-<tab>" #'yas-expand)
-  (yas-reload-all))
+  (yas-reload-all)
+  ;; disable "yas" lighter
+  (blackout 'yas-minor-mode))
 
 (add-hook! '(prog-mode-hook text-mode-hook) #'yas-minor-mode)
 #+end_src
@@ -1425,6 +1439,9 @@ one of /Emacs/' killer features.
                               texinfo))
 
   (add-hook 'org-mode-hook #'org-indent-mode))
+
+;; disable "Ind" lighter
+(after! org-indent (blackout 'org-indent-mode))
 
 ;; org-babel
 (org-babel-do-load-languages
