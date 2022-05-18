@@ -323,42 +323,7 @@ The following values are modified: `gc-cons-threshold' and
 ;;; Code:
 #+end_src
 
-** package management
-
-*** ~straight.el~
-
-| [[https://github.com/raxod502/straight.el][straight]] | purely functional package manager |
-
-a few reasons why i consider =straight.el=:
-
-- functional
-- reproducible package management
-- packages cloned as /Git/ repos
-- ability to provide own recipes
-- =package.el= loads every package meanwhile =straight.el= only loads whatever
-  is specifically stated on the init file
-
-#+begin_src emacs-lisp
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name
-        "straight/repos/straight.el/bootstrap.el"
-        user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent
-         'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
-(setq straight-repository-branch "master")
-#+end_src
-
-** helpers
+** preamble
 
 the following macro was yoinked from the [[https://github.com/hlissner/doom-emacs][Doom Emacs]]' source code, all credit
 goes to their contributors as i only partially edited them to fit my needs.
@@ -409,6 +374,51 @@ This is a wrapper around `eval-after-load' that:
                (setq body `((after! ,next ,@body)))))
             (`(after! (:and ,@package) ,@body))))))
 #+end_src
+
+** package management
+
+*** ~straight.el~
+
+| [[https://github.com/raxod502/straight.el][straight]] | purely functional package manager |
+
+a few reasons why i consider =straight.el=:
+
+- functional
+- reproducible package management
+- packages cloned as /Git/ repos
+- ability to provide own recipes
+- =package.el= loads every package meanwhile =straight.el= only loads whatever
+  is specifically stated on the init file
+
+#+begin_src emacs-lisp
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent
+         'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(after! straight
+  (setq straight-repository-branch "master")
+
+  ;; do not fully clone repos, it's just not needed
+  (setq straight-vc-git-default-clone-depth 1)
+
+  ;; always prefer native compilation
+  (setq straight-disable-compile nil)
+  (setq straight-disable-native-compilation nil))
+#+end_src
+
+** helpers
 
 #+begin_src emacs-lisp
 (defun annt--disable-local-line-numbers ()
