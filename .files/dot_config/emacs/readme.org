@@ -934,17 +934,6 @@ set of keyboard binding for programming modes
   (setq lsp-headerline-breadcrumb-enable t))
 #+end_src
 
-| [[https://github.com/emacs-lsp/lsp-ui][lsp-ui]] | UI integration for =lsp-mode= |
-
-#+begin_src emacs-lisp
-(after! lsp-mode
-  (straight-use-package 'lsp-ui)
-
-  (setq lsp-ui-doc-position 'bottom)
-
-  (add-hook 'lsp-mode-hook #'lsp-ui-mode))
-#+end_src
-
 ** shell
 
 settings for shell scripts.
