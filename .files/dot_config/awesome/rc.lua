@@ -29,17 +29,17 @@ end
 
 -- Handle runtime errors after startup
 do
-    local in_error = false
-    awesome.connect_signal("debug::error", function (err)
-        -- Make sure we don't go into an endless error loop
-        if in_error then return end
-        in_error = true
+  local in_error = false
+  awesome.connect_signal("debug::error", function (err)
+                           -- Make sure we don't go into an endless error loop
+                           if in_error then return end
+                           in_error = true
 
-        naughty.notify({ preset = naughty.config.presets.critical,
-                         title = "Oops, an error happened!",
-                         text = tostring(err) })
-        in_error = false
-    end)
+                           naughty.notify({ preset = naughty.config.presets.critical,
+                                            title = "Oops, an error happened!",
+                                            text = tostring(err) })
+                           in_error = false
+  end)
 end
 -- }}}
 
@@ -84,6 +84,7 @@ awful.layout.layouts = {
 myawesomemenu = {
   { "hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
   { "restart", awesome.restart },
+  { "run promot", function () awful.screen.focused().mypromptbox:run() end },
   { "quit", function() awesome.quit() end },
 }
 
@@ -280,20 +281,6 @@ globalkeys = gears.table.join(
     end,
     {description = "restore minimized", group = "client"}),
 
-  -- Prompt
-  awful.key({ modkey },            "r",     function () awful.screen.focused().mypromptbox:run() end,
-    {description = "run prompt", group = "launcher"}),
-
-  awful.key({ modkey }, "x",
-    function ()
-      awful.prompt.run {
-        prompt       = "Run Lua code: ",
-        textbox      = awful.screen.focused().mypromptbox.widget,
-        exe_callback = awful.util.eval,
-        history_path = awful.util.get_cache_dir() .. "/history_eval"
-      }
-    end,
-    {description = "lua execute prompt", group = "awesome"}),
   -- Menubar
   awful.key({ modkey }, "p", function() menubar.show() end,
     {description = "show the menubar", group = "launcher"})
@@ -302,12 +289,12 @@ globalkeys = gears.table.join(
 clientkeys = gears.table.join(
   awful.key({modkey, "Shift"}, "f",
     function (c)
-            c.fullscreen = not c.fullscreen
-            c:raise()
-        end,
-        {description = "toggle fullscreen", group = "client"}),
-    awful.key({ modkey, "Shift"   }, "q",      function (c) c:kill()                         end,
-      {description = "close", group = "client"}),
+      c.fullscreen = not c.fullscreen
+      c:raise()
+    end,
+    {description = "toggle fullscreen", group = "client"}),
+  awful.key({ modkey, "Shift"   }, "q",      function (c) c:kill()                         end,
+    {description = "close", group = "client"}),
     awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ,
               {description = "toggle floating", group = "client"}),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
@@ -461,7 +448,7 @@ awful.rules.rules = {
 
     -- Add titlebars to normal clients and dialogs
     { rule_any = {type = { "normal", "dialog" }
-      }, properties = { titlebars_enabled = true }
+                 }, properties = { titlebars_enabled = false }
     },
 
     -- Set Firefox to always map on the tag named "2" on screen 1.
@@ -525,10 +512,13 @@ client.connect_signal("request::titlebars", function(c)
 end)
 
 -- Enable sloppy focus, so that focus follows mouse.
-client.connect_signal("mouse::enter", function(c)
-    c:emit_signal("request::activate", "mouse_enter", {raise = false})
-end)
+-- client.connect_signal("mouse::enter", function(c)
+--     c:emit_signal("request::activate", "mouse_enter", {raise = false})
+-- end)
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
+
+-- Gaps
+beautiful.useless_gap = 5
