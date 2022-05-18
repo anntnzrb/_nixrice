@@ -708,7 +708,7 @@ under its respective =mode-map=-ing.
 
     ;; default
     (set-face-attribute 'default nil
-                        :font (format "Mononoki-%s" font-size))
+                        :font (format "Iosevka-%s" font-size))
     ;; code
     (set-face-attribute 'fixed-pitch nil
                         :font (format "FantasqueSansMono-%s" font-size))))
