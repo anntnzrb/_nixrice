@@ -641,8 +641,10 @@ me not to seek for /Vi/ emulation everywhere.
 (after! evil
   (straight-use-package 'evil-collection)
 
-  (evil-collection-init)
-  (blackout 'evil-collection-unimpaired-mode))
+  (setq evil-collection-want-unimpaired-p nil)
+  ;; emtpy the list of available modes and enable individually; no surprises
+  (setq evil-collection-mode-list nil)
+  (evil-collection-init '(help)))
 #+end_src
 
 | [[https://github.com/emacs-evil/evil-surround][evil-surround]] | [[https://github.com/tpope/vim-surround][vim-surround]] emulation |
@@ -650,7 +652,6 @@ me not to seek for /Vi/ emulation everywhere.
 #+begin_src emacs-lisp
 (after! evil
   (straight-use-package 'evil-surround)
-
   (global-evil-surround-mode))
 #+end_src
 
@@ -896,6 +897,8 @@ notice.
   (def-key! dired-mode-map
     [mouse-3] #'dired-mouse-find-file
     [mouse-8] #'dired-up-directory)
+
+  (evil-collection-init 'dired) ;; vi binds
 
   ;; less verbose output
   (add-hook 'dired-mode-hook #'dired-hide-details-mode))
@@ -1195,6 +1198,7 @@ in short, the /7 rules/ summarized:
 (def-key! :prefix "C-c" "g" #'magit-status)
 
 (after! magit
+  (evil-collection-init 'magit) ;; vi binds
   (add-hook 'magit-status-mode-hook #'annt--disable-local-line-numbers))
 #+end_src
 
@@ -1227,6 +1231,10 @@ in short, the /7 rules/ summarized:
   [remap  describe-command] #'helpful-command
   [remap describe-function] #'helpful-function
   [remap describe-variable] #'helpful-variable)
+
+(after! helpful
+  ;; vi binds
+  (evil-collection-init 'helpful))
 #+end_src
 
 | [[https://github.com/tarsius/hl-todo][hl-todo]] | TODO/FIXME/etc keyword highlighting in comments and strings |
