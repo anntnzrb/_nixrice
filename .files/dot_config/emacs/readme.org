@@ -909,9 +909,9 @@ only enable /dired/ icons when using graphical /Emacs/.
 (after-gui!
   (after! dired
     (straight-use-package 'all-the-icons-dired)
+    (add-hook 'dired-mode-hook #'all-the-icons-dired-mode))
 
-    (add-hook 'dired-mode-hook #'all-the-icons-dired-mode)
-    (blackout 'all-the-icons-dired-mode)))
+  (after! all-the-icons-dired (blackout 'all-the-icons-dired-mode)))
 #+end_src
 
 * programming
