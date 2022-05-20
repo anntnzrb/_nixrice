@@ -20,6 +20,7 @@
     - [[#early-initel][=early-init.el=]]
     - [[#initel][=init.el=]]
   - [[#header][header]]
+  - [[#preamble][preamble]]
   - [[#package-management][package management]]
     - [[#straightel][~straight.el~]]
   - [[#helpers][helpers]]
@@ -49,6 +50,7 @@
   - [[#lispy][Lispy]]
     - [[#emacs-lisp-elisp][Emacs Lisp (Elisp)]]
     - [[#racket][Racket]]
+    - [[#fennel][Fennel]]
   - [[#nix][Nix]]
   - [[#haskell][Haskell]]
   - [[#lua][Lua]]
@@ -1064,6 +1066,18 @@ settings and style for the /C/ language.
     (add-hook! 'racket-mode-hook (list
                                   #'aggressive-indent-mode
                                   #'flycheck-mode))))
+#+end_src
+
+*** Fennel
+
+#+begin_src emacs-lisp
+(when (executable-find "lua")
+  (straight-use-package 'fennel-mode)
+
+  ;; detect Fennel files by extension
+  (add-to-list 'auto-mode-alist '("\\.fnl\\'" . fennel-mode))
+
+  (add-hook 'fennel-mode-hook #'aggressive-indent-mode))
 #+end_src
 
 ** Nix
