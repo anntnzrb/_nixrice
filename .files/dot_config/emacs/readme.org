@@ -1057,62 +1057,77 @@ settings and style for the /C/ language.
 *** Racket
 
 #+begin_src emacs-lisp
-(when (executable-find "racket")
-  (straight-use-package 'racket-mode)
+(defun annt--racket-mode-setup ()
+  "Sets up mode for Racket."
+  (when (executable-find "racket")
+    (straight-use-package 'racket-mode)
 
-  (after! racket-mode
-    ;; Flycheck
-    (add-hook! 'racket-mode-hook (list
-                                  #'aggressive-indent-mode
-                                  #'flycheck-mode))))
+    (after! racket-mode
+      (add-hook! 'racket-mode-hook (list
+                                    #'aggressive-indent-mode
+                                    #'flycheck-mode)))
+    (racket-mode)))
+
+(add-to-list 'auto-mode-alist '("\\.rkt[dl]?\\'" . annt--racket-mode-setup))
 #+end_src
 
 *** Fennel
 
 #+begin_src emacs-lisp
-(when (executable-find "lua")
-  (straight-use-package 'fennel-mode)
+(defun annt--fennel-mode-setup ()
+  "Sets up mode for Fennel."
+  (when (executable-find "lua")
+    (straight-use-package 'fennel-mode)
 
-  ;; detect Fennel files by extension
-  (add-to-list 'auto-mode-alist '("\\.fnl\\'" . fennel-mode))
+    ;; detect Fennel files by extension
+    (after! fennel-mode
+      (add-hook 'fennel-mode-hook #'aggressive-indent-mode))
+    (fennel-mode)))
 
-  (add-hook 'fennel-mode-hook #'aggressive-indent-mode))
+(add-to-list 'auto-mode-alist '("\\.fnl\\'" . annt--fennel-mode-setup))
 #+end_src
 
 ** Nix
 
 #+begin_src emacs-lisp
-(when (executable-find "nix")
-  (straight-use-package 'nix-mode)
+(defun annt--nix-mode-setup ()
+  "Sets up mode for Nix."
+  (when (executable-find "nix")
+    (straight-use-package 'nix-mode)
 
-  ;; detect Nix files by extension
-  (add-to-list 'auto-mode-alist '("\\.nix\\'" . nix-mode))
+    (after! nix-mode
+      (add-hook! 'nix-mode-hook (list #'lsp-deferred
+                                      #'aggressive-indent-mode)))
+    (nix-mode)))
 
-  (add-hook! 'nix-mode-hook (list #'lsp-deferred
-                                  #'aggressive-indent-mode)))
+(add-to-list 'auto-mode-alist '("\\.nix\\'" . annt--nix-mode-setup))
 #+end_src
 
 ** Haskell
 
 #+begin_src emacs-lisp
-(when (or (executable-find "ghc")
-          (executable-find "xmonad"))
-  (straight-use-package 'haskell-mode)
+(defun annt--haskell-mode-setup ()
+  "Sets up mode for Haskell."
+  (when (executable-find "ghc")
+    (straight-use-package 'haskell-mode)
 
-  (after! (haskell-mode lsp-mode)
-    (straight-use-package 'hindent)
+    (after! (haskell-mode lsp-mode)
+      (straight-use-package 'hindent)
 
-    ;; Flycheck
-    (add-hook 'haskell-mode-hook #'flycheck-mode)
+      ;; Flycheck
+      (add-hook 'haskell-mode-hook #'flycheck-mode)
 
-    ;; LSP for Haskell's modes
-    ;; `lsp-haskell' is needed as an extra to `lsp-mode'
-    (straight-use-package 'lsp-haskell)
+      ;; LSP for Haskell's modes
+      ;; `lsp-haskell' is needed as an extra to `lsp-mode'
+      (straight-use-package 'lsp-haskell)
 
-    (add-hook! '(haskell-mode-hook haskell-literate-mode-hook) #'lsp-deferred)
+      (add-hook! '(haskell-mode-hook haskell-literate-mode-hook) #'lsp-deferred)
 
-    ;; format before saving
-    (add-hook 'before-save-hook #'hindent-reformat-buffer)))
+      ;; format before saving
+      (add-hook 'before-save-hook #'hindent-reformat-buffer))
+    (haskell-mode)))
+
+(add-to-list 'auto-mode-alist '("\\.hs\\'" . annt--haskell-mode-setup))
 #+end_src
 
 ** Lua
@@ -1120,15 +1135,18 @@ settings and style for the /C/ language.
 | [[https://github.com/immerrr/lua-mode][lua-mode]] | /Lua/ support for Emacs |
 
 #+begin_src emacs-lisp
-(when (or (executable-find "awesome")
-          (executable-find "lua-language-server"))
+(defun annt--lua-mode-hook ()
+  "Sets up mode for Lua."
   (straight-use-package 'lua-mode)
 
   (after! lua-mode
     (setq lua-indent-level 2))
 
   (add-hook! 'lua-mode-hook (list #'lsp-deferred
-                                  #'aggressive-indent-mode)))
+                                  #'aggressive-indent-mode))
+  (lua-mode))
+
+(add-to-list 'auto-mode-alist '("\\.lua\\'" . annt--haskell-mode-setup))
 #+end_src
 
 ** YAML
@@ -1136,10 +1154,15 @@ settings and style for the /C/ language.
 | [[https://github.com/yoshiki/yaml-mode][yaml-mode]] | support for =.yml= files which are not natively supported |
 
 #+begin_src emacs-lisp
-(straight-use-package 'yaml-mode)
+(defun annt--yaml-mode-setup ()
+  "Sets up mode for YAML."
+  (straight-use-package 'yaml-mode)
 
-(after! yaml-mode
-  (setq yaml-indent-offset 2))
+  (after! yaml-mode
+    (setq yaml-indent-offset 2))
+  (yaml-mode))
+
+(add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . annt--yaml-mode-setup))
 #+end_src
 
 ** HTML
