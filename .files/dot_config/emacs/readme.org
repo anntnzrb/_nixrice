@@ -422,12 +422,6 @@ a few reasons why i consider =straight.el=:
 
 ** helpers
 
-#+begin_src emacs-lisp
-(defun annt--disable-local-line-numbers ()
-  "Disables line numbers from displaying locally."
-  (setq-local display-line-numbers nil))
-#+end_src
-
 | [[https://github.com/noctuid/general.el][general]] | powerful package that offers macros and wrappers for key, advice and hook definitions |
 
 *NOTE*: the following package drastically impacts the commonly used syntax for
@@ -593,13 +587,16 @@ however, if set properly this can be a catastrophe saver.
 (setq-default fill-column               79)
 
 ;; line numbers
-(setq-default display-line-numbers 'relative)
-(setq-default display-fill-column-indicator-column (+ fill-column 1))
+(defun annt--line-numbers-setup ()
+  "Sets up `display-line-numbers' and `display-fill-column-indicator'"
+  (setq display-line-numbers 'relative)
+  (setq display-fill-column-indicator-column (+ fill-column 1)))
+
+(add-hook! '(prog-mode-hook text-mode-hook) #'annt--line-numbers-setup)
 
 ;; display vertical column at line limit
 (global-display-fill-column-indicator-mode)
 (global-hl-line-mode) ;; line highlighting
-
 
 (add-hook! '(prog-mode-hook text-mode-hook) #'auto-fill-mode)
 (blackout 'auto-fill-mode) ;; disable "Fill" lighter
@@ -811,8 +808,7 @@ under its respective =mode-map=-ing.
     "Sets the initial buffer to dashboard."
     (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*"))))
 
-  (add-hook! 'dashboard-mode-hook (list #'annt--disable-local-line-numbers
-                                        #'annt--dashboard-as-initial-buffer)))
+  (add-hook! 'dashboard-mode-hook #'annt--dashboard-as-initial-buffer))
 #+end_src
 
 *** modeline
@@ -1198,8 +1194,8 @@ in short, the /7 rules/ summarized:
 (def-key! :prefix "C-c" "g" #'magit-status)
 
 (after! magit
-  (evil-collection-init 'magit) ;; vi binds
-  (add-hook 'magit-status-mode-hook #'annt--disable-local-line-numbers))
+  ;; vi binds
+  (evil-collection-init 'magit))
 #+end_src
 
 * applications & utilities
