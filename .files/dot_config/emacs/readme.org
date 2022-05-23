@@ -47,7 +47,7 @@
   - [[#makefile][Makefile]]
   - [[#c-like][C-like]]
     - [[#c][C]]
-  - [[#lispy][Lispy]]
+  - [[#lisp-like][Lisp-like]]
     - [[#emacs-lisp-elisp][Emacs Lisp (Elisp)]]
     - [[#racket][Racket]]
     - [[#fennel][Fennel]]
@@ -1037,7 +1037,15 @@ settings and style for the /C/ language.
   (add-hook 'c-mode-hook #'lsp-deferred))
 #+end_src
 
-** Lispy
+** Lisp-like
+
+shared settings for Lisp-like languages.
+
+#+begin_src emacs-lisp
+(after! lisp-mode
+  ;; always aggressive on Lisps
+  (add-hook! '(lisp-mode-hook lisp-data-mode-hook) #'aggressive-indent-mode))
+#+end_src
 
 *** Emacs Lisp (Elisp)
 
@@ -1049,9 +1057,7 @@ settings and style for the /C/ language.
   ;; Flycheck
   (setq flycheck-emacs-lisp-load-path 'inherit)
 
-  (add-hook! 'emacs-lisp-mode-hook (list
-                                    #'aggressive-indent-mode
-                                    #'flycheck-mode)))
+  (add-hook 'emacs-lisp-mode-hook #'flycheck-mode))
 #+end_src
 
 *** Racket
@@ -1063,9 +1069,7 @@ settings and style for the /C/ language.
     (straight-use-package 'racket-mode)
 
     (after! racket-mode
-      (add-hook! 'racket-mode-hook (list
-                                    #'aggressive-indent-mode
-                                    #'flycheck-mode)))
+      (add-hook 'racket-mode-hook #'flycheck-mode))
     (racket-mode)))
 
 (add-to-list 'auto-mode-alist '("\\.rkt[dl]?\\'" . annt--racket-mode-setup))
@@ -1078,10 +1082,6 @@ settings and style for the /C/ language.
   "Sets up mode for Fennel."
   (when (executable-find "lua")
     (straight-use-package 'fennel-mode)
-
-    ;; detect Fennel files by extension
-    (after! fennel-mode
-      (add-hook 'fennel-mode-hook #'aggressive-indent-mode))
     (fennel-mode)))
 
 (add-to-list 'auto-mode-alist '("\\.fnl\\'" . annt--fennel-mode-setup))
