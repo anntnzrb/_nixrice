@@ -40,7 +40,7 @@
 
 [".local/resources/emoji.txt"]
     type          = "file"
-    url           = "https://gitlab.com/anntnzrb/xnixrice/-/snippets/2330732/raw/main/emoji.txt"
+    url           = "https://gitlab.com/-/snippets/2330828/raw/main/emoji.txt"
     refreshPeriod = "168h"
 
 [".local/resources/boxes-demo.txt"]
