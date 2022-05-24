@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: dolist for multiple hooks
-# key: !hooklist
-# --
-
-(dolist (${1:hooks/funcs} '(${2:hooks}))
-  (add-hook $1 #'${0:fun}))

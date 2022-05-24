@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: for loop meant for iterating over arrays
-# key: !forarray
-# --
-
-for (size_t idx = 0, arr_len = ARR_LEN(${1:array}); idx < arr_len; ++idx) {
-    $0;
-}
