@@ -84,7 +84,7 @@ section designed to only track *very remarkable* stuff.
 
 /(descending by date)/
 
-*2022-05-14* - /GNU Emacs/ is removed.
+*2022-05-24* - /GNU Emacs/ configurations removed.
 
 - ~(1 and 1/2) years posterior to introducing /GNU Emacs/ along with these
   .files i farewell its configuration to honour it at its own repository.  as

@@ -1,17 +1,17 @@
 # Table of Contents
 
-1.  [preamble](#org35b8515)
-2.  [intro](#orgd667a16)
-3.  [installation](#org674a8f7)
-    1.  [dependencies](#org62a996e)
-    2.  [instructions](#org7071305)
-4.  [disclaimer](#org94f1d2a)
-5.  [log](#org4d480eb)
-6.  [copying](#org7863969)
+1.  [preamble](#orgc361be5)
+2.  [intro](#orgb995777)
+3.  [installation](#org416d8ba)
+    1.  [dependencies](#org1de26b7)
+    2.  [instructions](#org66759b5)
+4.  [disclaimer](#orga9458aa)
+5.  [log](#org20efec2)
+6.  [copying](#org79e6857)
 
 
 
-<a id="org35b8515"></a>
+<a id="orgc361be5"></a>
 
 # preamble
 
@@ -24,7 +24,7 @@ this file gets generates in 2 extra formats:
 -   **markdown**
 
 
-<a id="orgd667a16"></a>
+<a id="orgb995777"></a>
 
 # intro
 
@@ -33,7 +33,7 @@ all files/scripts have been written with portability in mind, meaning they're
 meant to work across multiple [\*nix distrubutions](https://0x0.st/HNfM).
 
 
-<a id="org674a8f7"></a>
+<a id="org416d8ba"></a>
 
 # installation
 
@@ -46,7 +46,7 @@ overwritten; it is adviced to backup or attempt what comes in an isolated
 environment.
 
 
-<a id="org62a996e"></a>
+<a id="org1de26b7"></a>
 
 ## dependencies
 
@@ -76,7 +76,7 @@ environment.
 \\\* can be installed on-the-fly, refer to link.
 
 
-<a id="org7071305"></a>
+<a id="org66759b5"></a>
 
 ## instructions
 
@@ -97,7 +97,7 @@ the following command will clone this repository and place it under
     chezmoi init -a 'https://gitlab.com/anntnzrb/xnixrice'
 
 
-<a id="org94f1d2a"></a>
+<a id="orga9458aa"></a>
 
 # disclaimer
 
@@ -108,7 +108,7 @@ nevertheless feel free to take a look and learn from it, experimenting and
 sharing is always encouraged.
 
 
-<a id="org4d480eb"></a>
+<a id="org20efec2"></a>
 
 # log
 
@@ -116,7 +116,7 @@ section designed to only track **very remarkable** stuff.
 
 *(descending by date)*
 
-**2022-05-14** - *GNU Emacs* is removed.
+**2022-05-24** - *GNU Emacs* configurations removed.
 
 -   ~(1 and 1/2) years posterior to introducing *GNU Emacs* along with these
     .files i farewell its configuration to honour it at its own repository.  as
@@ -148,7 +148,7 @@ section designed to only track **very remarkable** stuff.
 **2020-11-14** - *GNU Emacs* is introduced.
 
 
-<a id="org7863969"></a>
+<a id="org79e6857"></a>
 
 # copying
 
