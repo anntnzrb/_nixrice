@@ -49,6 +49,7 @@
     - [[#c][C]]
   - [[#lisp-like][Lisp-like]]
     - [[#emacs-lisp-elisp][Emacs Lisp (Elisp)]]
+    - [[#common-lisp][Common Lisp]]
     - [[#racket][Racket]]
     - [[#fennel][Fennel]]
   - [[#nix][Nix]]
@@ -1058,6 +1059,19 @@ shared settings for Lisp-like languages.
   (setq flycheck-emacs-lisp-load-path 'inherit)
 
   (add-hook 'emacs-lisp-mode-hook #'flycheck-mode))
+#+end_src
+
+*** Common Lisp
+
+#+begin_src emacs-lisp
+(after! lisp-mode
+  (straight-use-package 'sly))
+
+(after! sly
+  (setq sly-mrepl-history-file-name  "/tmp/.sly-mrepl-history")
+  (setq sly-enable-evaluate-in-emacs                       nil)
+  (setq sly-init-function                 'sly-init-using-asdf)
+  (setq inferior-lisp-program          (executable-find "sbcl")))
 #+end_src
 
 *** Racket
