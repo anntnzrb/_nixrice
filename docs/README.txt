@@ -113,6 +113,15 @@ _________________
 
   /(descending by date)/
 
+  *2022-05-14* - /GNU Emacs/ is removed.
+
+  - ~(1 and 1/2) years posterior to introducing /GNU Emacs/ along with
+    these .files i farewell its configuration to honour it at its own
+    repository.  as of this writing, this repo has become too polluted
+    with Emacs commits which end up overshadowing the overall commit
+    history only by a single piece of software; deploying should not be
+    an issue with /chezmoi/ anyways.
+
   *2022-05-14* - switch to /chezmoi/.
 
   - after a few weeks with /GNU Stow/ i started having issues with

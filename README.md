@@ -1,17 +1,17 @@
 # Table of Contents
 
-1.  [preamble](#org2b62823)
-2.  [intro](#org80e8a47)
-3.  [installation](#org1d6179e)
-    1.  [dependencies](#org6a7a91f)
-    2.  [instructions](#orga3e33a6)
-4.  [disclaimer](#orga60b53b)
-5.  [log](#org54b595f)
-6.  [copying](#orgd14dd24)
+1.  [preamble](#org35b8515)
+2.  [intro](#orgd667a16)
+3.  [installation](#org674a8f7)
+    1.  [dependencies](#org62a996e)
+    2.  [instructions](#org7071305)
+4.  [disclaimer](#org94f1d2a)
+5.  [log](#org4d480eb)
+6.  [copying](#org7863969)
 
 
 
-<a id="org2b62823"></a>
+<a id="org35b8515"></a>
 
 # preamble
 
@@ -24,7 +24,7 @@ this file gets generates in 2 extra formats:
 -   **markdown**
 
 
-<a id="org80e8a47"></a>
+<a id="orgd667a16"></a>
 
 # intro
 
@@ -33,7 +33,7 @@ all files/scripts have been written with portability in mind, meaning they're
 meant to work across multiple [\*nix distrubutions](https://0x0.st/HNfM).
 
 
-<a id="org1d6179e"></a>
+<a id="org674a8f7"></a>
 
 # installation
 
@@ -46,7 +46,7 @@ overwritten; it is adviced to backup or attempt what comes in an isolated
 environment.
 
 
-<a id="org6a7a91f"></a>
+<a id="org62a996e"></a>
 
 ## dependencies
 
@@ -76,7 +76,7 @@ environment.
 \\\* can be installed on-the-fly, refer to link.
 
 
-<a id="orga3e33a6"></a>
+<a id="org7071305"></a>
 
 ## instructions
 
@@ -97,7 +97,7 @@ the following command will clone this repository and place it under
     chezmoi init -a 'https://gitlab.com/anntnzrb/xnixrice'
 
 
-<a id="orga60b53b"></a>
+<a id="org94f1d2a"></a>
 
 # disclaimer
 
@@ -108,13 +108,21 @@ nevertheless feel free to take a look and learn from it, experimenting and
 sharing is always encouraged.
 
 
-<a id="org54b595f"></a>
+<a id="org4d480eb"></a>
 
 # log
 
 section designed to only track **very remarkable** stuff.
 
 *(descending by date)*
+
+**2022-05-14** - *GNU Emacs* is removed.
+
+-   ~(1 and 1/2) years posterior to introducing *GNU Emacs* along with these
+    .files i farewell its configuration to honour it at its own repository.  as
+    of this writing, this repo has become too polluted with Emacs commits which
+    end up overshadowing the overall commit history only by a single piece of
+    software; deploying should not be an issue with *chezmoi* anyways.
 
 **2022-05-14** - switch to *chezmoi*.
 
@@ -140,7 +148,7 @@ section designed to only track **very remarkable** stuff.
 **2020-11-14** - *GNU Emacs* is introduced.
 
 
-<a id="orgd14dd24"></a>
+<a id="org7863969"></a>
 
 # copying
 
