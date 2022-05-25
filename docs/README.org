@@ -64,10 +64,10 @@ the following command will clone this repository and place it under
 =~/.local/share/chezmoi/=.
 
 #+begin_src shell
-chezmoi init --ssh -a 'git@gitlab.com:anntnzrb/xnixrice'
+chezmoi init --ssh -a 'https://git.sr.ht/~anntnzrb/_nixrice'
 
 # or via https
-chezmoi init -a 'https://gitlab.com/anntnzrb/xnixrice'
+chezmoi init -a 'git@git.sr.ht:~anntnzrb/_nixrice'
 #+end_src
 
 * disclaimer

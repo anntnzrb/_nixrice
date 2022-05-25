@@ -88,10 +88,10 @@ _________________
   `~/.local/share/chezmoi/'.
 
   ,----
-  | chezmoi init --ssh -a 'git@gitlab.com:anntnzrb/xnixrice'
+  | chezmoi init --ssh -a 'https://git.sr.ht/~anntnzrb/_nixrice'
   |
   | # or via https
-  | chezmoi init -a 'https://gitlab.com/anntnzrb/xnixrice'
+  | chezmoi init -a 'git@git.sr.ht:~anntnzrb/_nixrice'
   `----
 
 

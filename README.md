@@ -1,17 +1,17 @@
 # Table of Contents
 
-1.  [preamble](#orgc361be5)
-2.  [intro](#orgb995777)
-3.  [installation](#org416d8ba)
-    1.  [dependencies](#org1de26b7)
-    2.  [instructions](#org66759b5)
-4.  [disclaimer](#orga9458aa)
-5.  [log](#org20efec2)
-6.  [copying](#org79e6857)
+1.  [preamble](#org75c1b83)
+2.  [intro](#orgfa80657)
+3.  [installation](#orgb9857a5)
+    1.  [dependencies](#orgfb845ea)
+    2.  [instructions](#orgbb9afb2)
+4.  [disclaimer](#org499b03c)
+5.  [log](#org61a750d)
+6.  [copying](#org9edc71d)
 
 
 
-<a id="orgc361be5"></a>
+<a id="org75c1b83"></a>
 
 # preamble
 
@@ -24,7 +24,7 @@ this file gets generates in 2 extra formats:
 -   **markdown**
 
 
-<a id="orgb995777"></a>
+<a id="orgfa80657"></a>
 
 # intro
 
@@ -33,7 +33,7 @@ all files/scripts have been written with portability in mind, meaning they're
 meant to work across multiple [\*nix distrubutions](https://0x0.st/HNfM).
 
 
-<a id="org416d8ba"></a>
+<a id="orgb9857a5"></a>
 
 # installation
 
@@ -46,7 +46,7 @@ overwritten; it is adviced to backup or attempt what comes in an isolated
 environment.
 
 
-<a id="org1de26b7"></a>
+<a id="orgfb845ea"></a>
 
 ## dependencies
 
@@ -76,7 +76,7 @@ environment.
 \\\* can be installed on-the-fly, refer to link.
 
 
-<a id="org66759b5"></a>
+<a id="orgbb9afb2"></a>
 
 ## instructions
 
@@ -91,13 +91,13 @@ re-enter the passsword a bigillion times:
 the following command will clone this repository and place it under
 `~/.local/share/chezmoi/`.
 
-    chezmoi init --ssh -a 'git@gitlab.com:anntnzrb/xnixrice'
+    chezmoi init --ssh -a 'https://git.sr.ht/~anntnzrb/_nixrice'
 
     # or via https
-    chezmoi init -a 'https://gitlab.com/anntnzrb/xnixrice'
+    chezmoi init -a 'git@git.sr.ht:~anntnzrb/_nixrice'
 
 
-<a id="orga9458aa"></a>
+<a id="org499b03c"></a>
 
 # disclaimer
 
@@ -108,7 +108,7 @@ nevertheless feel free to take a look and learn from it, experimenting and
 sharing is always encouraged.
 
 
-<a id="org20efec2"></a>
+<a id="org61a750d"></a>
 
 # log
 
@@ -148,7 +148,7 @@ section designed to only track **very remarkable** stuff.
 **2020-11-14** - *GNU Emacs* is introduced.
 
 
-<a id="org79e6857"></a>
+<a id="org9edc71d"></a>
 
 # copying
 
