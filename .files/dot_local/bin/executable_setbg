@@ -27,26 +27,55 @@ get_wp_net() {
     # *
 
     # retrieve online background only if net is available
-    internet-p && {
-        get_screen_res() {
-            # **
-            # Retrieves the primmary connected screen's resolution.
-            # *
+    internet-p || return
 
-            xrandr --current \
-                | grep '*'   \
-                | uniq       \
-                | awk '{print $1}'
-        }
+    get_screen_res() {
+        # **
+        # Retrieves the primmary connected screen's resolution.
+        # *
 
-        # variables
-        res=`get_screen_res | sed 's/x/\//'`
-
-        wget -q -O "${wp_path}" "https://unsplash.it/${res}/?nature"
+        xrandr --current \
+            | grep '*'   \
+            | uniq       \
+            | awk '{print $1}'
     }
+
+    # variables
+    res=`get_screen_res | sed 's/x/\//'`
+
+    wget -q -O "${wp_path}" "https://unsplash.it/${res}/?nature"
 
     # set the wallpaper only if the file exists
     wallpaper_exists_p && ${feh_cmd} "${wp_path}"
+}
+
+pywal_update () {
+    # **
+    # Updates colors using pywal.
+    # *
+
+    # do nothing if 'pywal' is not installed
+    installed-p 'wal' || return
+
+    rm -Rf "${HOME}/.cache/wal" # prevent cached files
+    wal -q -i '/tmp/wallpaper.png'
+
+    pywal_dwm
+}
+
+pywal_dwm() {
+    # **
+    # Copies pywal's dwm configuration to '/tmp/' so my custom build of dwm can
+    # read it.
+    # *
+
+    # do nothing if 'dwm' is not running
+    running-p 'dwm' || return
+
+    cp "${HOME}/.cache/wal/colors-wal-dwm.h" '/tmp/colors-wal-dwm.h'
+
+    # remove urgent colors (if no patch)
+    sed -i.bak '/\[SchemeUrg\]/d' '/tmp/colors-wal-dwm.h'
 }
 
 # get wallpaper from the internet as default if argv[1] is null
@@ -58,3 +87,6 @@ test -f "${1}" && ${feh_cmd} "${1}"
 # if argv[1] is a directory, randomly pick a file from that directory and set
 # is as wallpaper
 test -d "${1}" && ${feh_cmd} -rz "${1}"
+
+# update pywal
+pywal_update
