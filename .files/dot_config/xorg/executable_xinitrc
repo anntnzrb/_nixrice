@@ -42,21 +42,9 @@ test -x "${XORGDIR}/xprofile" && . "${XORGDIR}/xprofile"
 # -----------------------------------------------------------------------------
 
 # default ses
-session=${1:-awesome}
+session=${1:-dwm}
 
 case ${session} in
-i3)
-    unset -v session
-
-    exec i3
-    ;;
-
-awesome)
-    unset -v session
-
-    exec awesome
-    ;;
-
 dwm)
     unset -v session
 
