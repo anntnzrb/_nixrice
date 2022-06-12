@@ -1,10 +1,13 @@
+[init]
+    defaultBranch = main
+
 [user]
   name     = anntnzrb
   username = anntnzrb
   email    = anntnzrb@protonmail.com
 
 [alias]
-  br      = branch -v
+  br      = branch -ailv
   ca      = commit --ammend
   cm      = commit -m
   co      = checkout
