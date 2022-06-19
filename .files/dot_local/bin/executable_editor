@@ -18,8 +18,8 @@ nvim) exec nvim ;;
 
 # fallback editor
 *)
-installed-p 'vi' && exec vi
-installed-p 'nano' && exec nano
+installedp 'vi' && exec vi
+installedp 'nano' && exec nano
 
 # this line will only be reached if those above fail
 err 'no editor was found, try using sed instead.' && exit 1

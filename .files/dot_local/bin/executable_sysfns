@@ -7,7 +7,7 @@
 # *
 
 # check if running with elevated priviledges; elevate if not
-! root-p && err 'This script needs root priviledges' && exit 1
+! rootp && err 'This script needs root priviledges' && exit 1
 
 # init systems
 case "$(readlink -f '/sbin/init')" in

@@ -13,7 +13,7 @@
 # - https://unix.stackexchange.com/a/183920
 
 # check
-! root-p && err 'You need root priviledges to run this.' && exit 1
+! rootp && err 'You need root priviledges to run this.' && exit 1
 test ${#} -ne 2 && err 'Usage: dddev <foo>.iso /dev/<bar>' && exit 1
 
 # flash the iso

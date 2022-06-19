@@ -18,7 +18,7 @@
 # main
 # -----------------------------------------------------------------------------
 
-is_running 'transmission-daemon' &&
+runningp 'transmission-daemon' &&
     transmission-remote -l | grep % |
     sed " # This first sed command is to ensure a desirable order with sort
     s/.*Stopped.*/A/g;

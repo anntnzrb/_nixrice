@@ -8,9 +8,9 @@
 # or even highlighting an area to copy.
 
 # dependencies
-! installed-p 'dmenu' && err "'dmenu' is needed to run this script." && exit 1
-! installed-p 'maim' && err "'maim' is needed to run this script." && exit 1
-! installed-p 'xdotool' && err "'xdtool' is needed to run this script." && exit 1
+! installedp 'dmenu' && err "'dmenu' is needed to run this script." && exit 1
+! installedp 'maim' && err "'maim' is needed to run this script." && exit 1
+! installedp 'xdotool' && err "'xdtool' is needed to run this script." && exit 1
 
 # variables
 output="$(date '+%Y%m%d-%H%M%S').png"
