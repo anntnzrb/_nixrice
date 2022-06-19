@@ -3,7 +3,7 @@
 # setbg --- Utility script to set a background/wallpaper.
 
 # dependencies
-! installed-p 'feh' && err "'feh' is needed to run this script" && exit 1
+! installedp 'feh' && err "'feh' is needed to run this script" && exit 1
 
 # variables
 wp_path='/tmp/wallpaper.png'
@@ -27,7 +27,7 @@ get_wp_net() {
     # *
 
     # retrieve online background only if net is available
-    internet-p || return
+    internetp || return
 
     get_screen_res() {
         # **
@@ -55,7 +55,7 @@ pywal_update () {
     # *
 
     # do nothing if 'pywal' is not installed
-    installed-p 'wal' || return
+    installedp 'wal' || return
 
     rm -Rf "${HOME}/.cache/wal" # prevent cached files
     wal -q -i '/tmp/wallpaper.png'
@@ -70,7 +70,7 @@ pywal_dwm() {
     # *
 
     # do nothing if 'dwm' is not running
-    running-p 'dwm' || return
+    runningp 'dwm' || return
 
     cp "${HOME}/.cache/wal/colors-wal-dwm.h" '/tmp/colors-wal-dwm.h'
 

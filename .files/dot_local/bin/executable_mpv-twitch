@@ -10,14 +10,14 @@
 # Code:
 
 # do nothing if no net or no dependencies
-! internet-p && err 'No active network connection, quitting...' && exit 1
-installed-p 'streamlink' \
+! internetp && err 'No active network connection, quitting...' && exit 1
+installedp 'streamlink' \
     || { err "Dependency 'streamlink' not found" && exit 1; }
 
 # launch player
 setsid -f streamlink --url "https://twitch.tv/${1}"
 
 # launch chat
-! installed-p 'chatterino' \
+! installedp 'chatterino' \
     && printf "Chatterino is not installed, not launching chat...\n" && exit 0
 setsid -f chatterino --channels "t:${1}"

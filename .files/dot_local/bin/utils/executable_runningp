@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# NOTE: 'pgrep' behaviour is extremely odd
+# (maybe i don't know how to use properly), 'pidof' downside is it's usually
+# not installed everywhere, i.e: 'pgrep' is more portable.
+# 'pidof' seems to be more consistent and supposedly faster.
+cmd='pidof'
+case "${cmd}" in
+    pgrep) pgrep -x "${1}" >/dev/null ;;
+    pidof) pidof -s "${1}" >/dev/null ;;
+    *) exit 1 ;;
+esac

@@ -9,7 +9,7 @@
 # checks
 test ${#} -eq 0 && err 'Usage: get-crypto <crypto> [currency]' && exit 1
 test ${#} -gt 2 && err 'Usage: get-crypto <crypto> [currency]' && exit 1
-! internet-p && err 'N/A' && exit 1
+! internetp && err 'N/A' && exit 1
 
 # use $4 as currency, if not passed in use "usd" as default
 crypto="${1}"

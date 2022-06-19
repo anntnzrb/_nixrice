@@ -25,13 +25,13 @@
 ! is_installed "$1" && die "'$1' is not installed..."
 
 # kill if running
-if is_running "$1"; then
+if runningp "$1"; then
     pkill -15 "$1"
 
     # notify via dunst if running X
-    is_running 'Xorg' && notify-send "'$1' terminated"
+    runningp 'Xorg' && notify-send "'$1' terminated"
 else
     # start if not running
     "$1" &
-    is_running 'Xorg' && notify-send "'$1' now running"
+    runningp 'Xorg' && notify-send "'$1' now running"
 fi
