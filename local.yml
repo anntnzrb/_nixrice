@@ -14,7 +14,7 @@
   - { role: bin,       tags: [ 'core' ] }
   - { role: resources, tags: [ 'core' ] }
   - { role: scripts,   tags: [ 'core' ] }
-  - { role: ssh,       tags: [ 'core' ] }
+  - { role: ssh,       tags: [ 'core', 'ssh' ] }
 
   #- { role: emacs, tags: [ 'editor' ] }
   - { role: vim,    tags: [ 'editor' ] }
