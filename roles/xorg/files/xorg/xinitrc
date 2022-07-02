@@ -50,10 +50,10 @@ dwm)
 
     # the following is for switching between local version of dwm* instead of
     # another default one (e.g: NixOS' directories)
-    dwm_local_p=1
+    dwm_local_p=
     dwm=dwm
     dwmblocks=dwmblocks
-    test "{dwm_local_p}" \
+    test "${dwm_local_p}" \
         && dwm='/usr/local/bin/dwm' && dwmblocks='/usr/local/bin/dwmblocks'
 
     # statusbar
