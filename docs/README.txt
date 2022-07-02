@@ -65,6 +65,8 @@ _________________
   ----------------------------------------
    [ansible]     software deployment tool
 
+  *NOTE*: If you're on /Nix/ take a look at `./default.nix'.
+
 
 [ansible] <https://repology.org/project/ansible/versions>
 
@@ -80,10 +82,14 @@ _________________
   | export BW_SESSION=$(bw unlock --raw)
   `----
 
-  deploy the files with:
+  deploy files with:
 
   ,----
-  | ansible-pull -U https://git.sr.ht/~anntnzrb/_nixrice
+  | ansible-pull -U 'https://git.sr.ht/~anntnzrb/_nixrice'
+  |
+  | # if above fails, clone & install manually
+  | git clone 'https://git.sr.ht/~anntnzrb/_nixrice' && cd '_nixrice'
+  | ansible-playbook -i localhost local.yml
   `----
 
 
