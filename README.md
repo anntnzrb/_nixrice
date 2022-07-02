@@ -1,17 +1,17 @@
 # Table of Contents
 
-1.  [preamble](#org443617e)
-2.  [intro](#orgeddcf44)
-3.  [installation](#orgb3a3c4e)
-    1.  [dependencies](#org07fde17)
-    2.  [instructions](#org9f23d62)
-4.  [disclaimer](#orgef66348)
-5.  [log](#orga97dcc5)
-6.  [copying](#org6dce26e)
+1.  [preamble](#org0dca8b8)
+2.  [intro](#orgfc99488)
+3.  [installation](#org9072bfd)
+    1.  [dependencies](#org98d985c)
+    2.  [instructions](#org341c90f)
+4.  [disclaimer](#orgeb8dc68)
+5.  [log](#orgb08ea2d)
+6.  [copying](#org34b8a2c)
 
 
 
-<a id="org443617e"></a>
+<a id="org0dca8b8"></a>
 
 # preamble
 
@@ -24,7 +24,7 @@ this file gets generates in 2 extra formats:
 -   **markdown**
 
 
-<a id="orgeddcf44"></a>
+<a id="orgfc99488"></a>
 
 # intro
 
@@ -33,7 +33,7 @@ all files/scripts have been written with portability in mind, meaning they're
 meant to work across multiple [\*nix distrubutions](https://0x0.st/HNfM).
 
 
-<a id="orgb3a3c4e"></a>
+<a id="org9072bfd"></a>
 
 # installation
 
@@ -46,7 +46,7 @@ overwritten data; it is adviced to backup or attempt what comes in an isolated
 environment.
 
 
-<a id="org07fde17"></a>
+<a id="org98d985c"></a>
 
 ## dependencies
 
@@ -73,8 +73,10 @@ environment.
 </tbody>
 </table>
 
+**NOTE**: If you're on *Nix* take a look at `./default.nix`.
 
-<a id="org9f23d62"></a>
+
+<a id="org341c90f"></a>
 
 ## instructions
 
@@ -83,12 +85,16 @@ unlock password manager vault before deployment so info can be retrieved:
     # my case for Bitwarden
     export BW_SESSION=$(bw unlock --raw)
 
-deploy the files with:
+deploy files with:
 
-    ansible-pull -U https://git.sr.ht/~anntnzrb/_nixrice
+    ansible-pull -U 'https://git.sr.ht/~anntnzrb/_nixrice'
+
+    # if above fails, clone & install manually
+    git clone 'https://git.sr.ht/~anntnzrb/_nixrice' && cd '_nixrice'
+    ansible-playbook -i localhost local.yml
 
 
-<a id="orgef66348"></a>
+<a id="orgeb8dc68"></a>
 
 # disclaimer
 
@@ -99,7 +105,7 @@ nevertheless feel free to take a look and learn from it, experimenting and
 sharing is always encouraged.
 
 
-<a id="orga97dcc5"></a>
+<a id="orgb08ea2d"></a>
 
 # log
 
@@ -144,7 +150,7 @@ section designed to only track **very remarkable** stuff.
 **2020-11-14** - *GNU Emacs* is introduced.
 
 
-<a id="org6dce26e"></a>
+<a id="org34b8a2c"></a>
 
 # copying
 

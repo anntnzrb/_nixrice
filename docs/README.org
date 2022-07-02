@@ -46,6 +46,8 @@ environment.
 |--------------+--------------------------|
 | [[https://repology.org/project/ansible/versions][ansible]]      | software deployment tool |
 
+*NOTE*: If you're on /Nix/ take a look at =./default.nix=.
+
 ** instructions
 
 unlock password manager vault before deployment so info can be retrieved:
@@ -55,10 +57,14 @@ unlock password manager vault before deployment so info can be retrieved:
 export BW_SESSION=$(bw unlock --raw)
 #+end_src
 
-deploy the files with:
+deploy files with:
 
 #+begin_src shell
-ansible-pull -U https://git.sr.ht/~anntnzrb/_nixrice
+ansible-pull -U 'https://git.sr.ht/~anntnzrb/_nixrice'
+
+# if above fails, clone & install manually
+git clone 'https://git.sr.ht/~anntnzrb/_nixrice' && cd '_nixrice'
+ansible-playbook -i localhost local.yml
 #+end_src
 
 * disclaimer
