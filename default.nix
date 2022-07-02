@@ -2,7 +2,7 @@
 
 pkgs.mkShell {
   nativeBuildInputs = with pkgs; [
-    git chezmoi
+    git ansible
   ];
 
   shellHook = ''

@@ -1,0 +1,7 @@
+---
+
+- name: Link cfgs
+  file:
+    src: "{{ role_path }}/files/streamlink/"
+    dest: "{{ cfg_dir }}/streamlink"
+    state: link

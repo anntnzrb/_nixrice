@@ -1,0 +1,27 @@
+---
+
+- name: Create ~/.ssh/ folder (special permissions)
+  file:
+    dest: "{{ ssh_dir }}"
+    state: directory
+    mode: 0700
+
+# -----------------------------------------------------------------------------
+# Git keys
+# -----------------------------------------------------------------------------
+
+- name: Set up keys for Git (public)
+  block:
+    - name: Retrieve Git key (public)
+      shell: bw get notes 'ssh-pub-git' > "{{ ssh_dir }}/id_ed25519_git.pub"
+
+    - name: Ensure Git key permissions (private)
+      file: dest="{{ ssh_dir }}/id_ed25519_git.pub" mode=0644
+
+- name: Set up keys for Git (private)
+  block:
+    - name: Retrieve Git key (public)
+      shell: bw get notes 'ssh-pri-git' > "{{ ssh_dir }}/id_ed25519_git"
+
+    - name: Ensure Git key permissions (private)
+      file: dest="{{ ssh_dir }}/id_ed25519_git" mode=0600

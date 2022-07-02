@@ -1,0 +1,7 @@
+---
+
+- name: Link cfgs
+  file:
+    src: "{{ role_path }}/files/sxhkd/"
+    dest: "{{ cfg_dir }}/sxhkd"
+    state: link

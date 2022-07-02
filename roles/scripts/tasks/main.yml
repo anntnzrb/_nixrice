@@ -1,0 +1,7 @@
+---
+
+- name: Link ~/.local/scripts/
+  file:
+    src: "{{ role_path }}/files/scripts/"
+    dest: "{{ local_dir }}/scripts"
+    state: link

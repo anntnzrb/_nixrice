@@ -1,0 +1,17 @@
+---
+
+- name: Link ~/.local/bin/ scripts
+  file:
+    src: "{{ role_path }}/files/bin/"
+    dest: "{{ local_dir }}/bin"
+    state: link
+
+# -----------------------------------------------------------------------------
+# external resources
+# -----------------------------------------------------------------------------
+
+- name: script --- pfetch
+  get_url:
+    url: "https://raw.githubusercontent.com/dylanaraps/pfetch/master/pfetch"
+    dest: "{{ local_dir }}/bin/pfetch"
+    mode: 0755

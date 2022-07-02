@@ -1,0 +1,7 @@
+---
+
+- name: Link cfgs
+  file:
+    src: "{{ role_path }}/files/htop/"
+    dest: "{{ cfg_dir }}/htop"
+    state: link

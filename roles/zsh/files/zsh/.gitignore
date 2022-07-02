@@ -1,0 +1,7 @@
+# ignore everything except for self and a few files
+/*
+!.gitignore
+
+!/config
+
+!.zshrc
