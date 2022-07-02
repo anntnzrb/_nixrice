@@ -1,0 +1,6 @@
+---
+
+- name: Install personal GNU Emacs cfg
+  git:
+    repo: "https://git.sr.ht/~anntnzrb/.emacs.d"
+    dest: "{{ cfg_dir }}/emacs/"

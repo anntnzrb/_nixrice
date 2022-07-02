@@ -1,17 +1,17 @@
 # Table of Contents
 
-1.  [preamble](#org75c1b83)
-2.  [intro](#orgfa80657)
-3.  [installation](#orgb9857a5)
-    1.  [dependencies](#orgfb845ea)
-    2.  [instructions](#orgbb9afb2)
-4.  [disclaimer](#org499b03c)
-5.  [log](#org61a750d)
-6.  [copying](#org9edc71d)
+1.  [preamble](#org443617e)
+2.  [intro](#orgeddcf44)
+3.  [installation](#orgb3a3c4e)
+    1.  [dependencies](#org07fde17)
+    2.  [instructions](#org9f23d62)
+4.  [disclaimer](#orgef66348)
+5.  [log](#orga97dcc5)
+6.  [copying](#org6dce26e)
 
 
 
-<a id="org75c1b83"></a>
+<a id="org443617e"></a>
 
 # preamble
 
@@ -24,7 +24,7 @@ this file gets generates in 2 extra formats:
 -   **markdown**
 
 
-<a id="orgfa80657"></a>
+<a id="orgeddcf44"></a>
 
 # intro
 
@@ -33,20 +33,20 @@ all files/scripts have been written with portability in mind, meaning they're
 meant to work across multiple [\*nix distrubutions](https://0x0.st/HNfM).
 
 
-<a id="orgb9857a5"></a>
+<a id="orgb3a3c4e"></a>
 
 # installation
 
 the following instructions allow you to set up my `.files` with one simple
 command, if you're only looking to copy them you may want to take a look at the
-`./.files/` folder instead.
+`./.roles/` folder instead.
 
-**NOTE**: do not randomly execute the following command as this can lead to data
-overwritten; it is adviced to backup or attempt what comes in an isolated
+**NOTE**: do not randomly execute the following commands as this can lead to
+overwritten data; it is adviced to backup or attempt what comes in an isolated
 environment.
 
 
-<a id="orgfb845ea"></a>
+<a id="org07fde17"></a>
 
 ## dependencies
 
@@ -67,37 +67,28 @@ environment.
 
 <tbody>
 <tr>
-<td class="org-left">*<a href="https://www.chezmoi.io/">chezmoi</a></td>
-<td class="org-left">cross-platform dotfile manager</td>
+<td class="org-left"><a href="https://repology.org/project/ansible/versions">ansible</a></td>
+<td class="org-left">software deployment tool</td>
 </tr>
 </tbody>
 </table>
 
-\\\* can be installed on-the-fly, refer to link.
 
-
-<a id="orgbb9afb2"></a>
+<a id="org9f23d62"></a>
 
 ## instructions
 
-unlock password manager vault before `chezmoi init` so it's not needed to
-re-enter the passsword a bigillion times:
+unlock password manager vault before deployment so info can be retrieved:
 
     # my case for Bitwarden
-    bw login
-    bw unlock
-    export BW_SESSION="..."
+    export BW_SESSION=$(bw unlock --raw)
 
-the following command will clone this repository and place it under
-`~/.local/share/chezmoi/`.
+deploy the files with:
 
-    chezmoi init --ssh -a 'https://git.sr.ht/~anntnzrb/_nixrice'
-
-    # or via https
-    chezmoi init -a 'git@git.sr.ht:~anntnzrb/_nixrice'
+    ansible-pull -U https://git.sr.ht/~anntnzrb/_nixrice
 
 
-<a id="org499b03c"></a>
+<a id="orgef66348"></a>
 
 # disclaimer
 
@@ -108,13 +99,18 @@ nevertheless feel free to take a look and learn from it, experimenting and
 sharing is always encouraged.
 
 
-<a id="org61a750d"></a>
+<a id="orga97dcc5"></a>
 
 # log
 
 section designed to only track **very remarkable** stuff.
 
 *(descending by date)*
+
+**2022-07-02** - switch to *Ansible*.
+
+-   moved over to *ansible* as it is conceptually the same as *chezmoi* with extra
+    features, allows extra customization as *chezmoi* aims to make it simple.
 
 **2022-05-24** - *GNU Emacs* configurations removed.
 
@@ -148,7 +144,7 @@ section designed to only track **very remarkable** stuff.
 **2020-11-14** - *GNU Emacs* is introduced.
 
 
-<a id="org9edc71d"></a>
+<a id="org6dce26e"></a>
 
 # copying
 

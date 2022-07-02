@@ -51,47 +51,39 @@ _________________
 
   the following instructions allow you to set up my `.files' with one
   simple command, if you're only looking to copy them you may want to
-  take a look at the `./.files/' folder instead.
+  take a look at the `./.roles/' folder instead.
 
-  *NOTE*: do not randomly execute the following command as this can lead
-  to data overwritten; it is adviced to backup or attempt what comes in
-  an isolated environment.
+  *NOTE*: do not randomly execute the following commands as this can
+  lead to overwritten data; it is adviced to backup or attempt what
+  comes in an isolated environment.
 
 
 3.1 dependencies
 ~~~~~~~~~~~~~~~~
 
    dependencies  description
-  ----------------------------------------------
-   *[chezmoi]    cross-platform dotfile manager
-
-  \* can be installed on-the-fly, refer to link.
+  ----------------------------------------
+   [ansible]     software deployment tool
 
 
-[chezmoi] <https://www.chezmoi.io/>
+[ansible] <https://repology.org/project/ansible/versions>
 
 
 3.2 instructions
 ~~~~~~~~~~~~~~~~
 
-  unlock password manager vault before `chezmoi init' so it's not needed
-  to re-enter the passsword a bigillion times:
+  unlock password manager vault before deployment so info can be
+  retrieved:
 
   ,----
   | # my case for Bitwarden
-  | bw login
-  | bw unlock
-  | export BW_SESSION="..."
+  | export BW_SESSION=$(bw unlock --raw)
   `----
 
-  the following command will clone this repository and place it under
-  `~/.local/share/chezmoi/'.
+  deploy the files with:
 
   ,----
-  | chezmoi init --ssh -a 'https://git.sr.ht/~anntnzrb/_nixrice'
-  |
-  | # or via https
-  | chezmoi init -a 'git@git.sr.ht:~anntnzrb/_nixrice'
+  | ansible-pull -U https://git.sr.ht/~anntnzrb/_nixrice
   `----
 
 
@@ -112,6 +104,12 @@ _________________
   section designed to only track *very remarkable* stuff.
 
   /(descending by date)/
+
+  *2022-07-02* - switch to /Ansible/.
+
+  - moved over to /ansible/ as it is conceptually the same as /chezmoi/
+    with extra features, allows extra customization as /chezmoi/ aims to
+    make it simple.
 
   *2022-05-24* - /GNU Emacs/ configurations removed.
 

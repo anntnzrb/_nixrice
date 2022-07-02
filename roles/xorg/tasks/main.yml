@@ -1,0 +1,25 @@
+---
+
+- name: Link cfgs
+  file:
+    src: "{{ role_path }}/files/xorg/"
+    dest: "{{ cfg_dir }}/xorg"
+    state: link
+
+- name: Link share/application cfgs
+  file:
+    src: "{{ role_path }}/files/applications/"
+    dest: "{{ local_dir }}/share/applications"
+    state: link
+
+- name: Link XDG-user cfgs
+  file:
+    src: "{{ role_path }}/files/user-dirs.dirs"
+    dest: "{{ cfg_dir }}/user-dirs.dirs"
+    state: link
+
+- name: Link mime-apps cfgs
+  file:
+    src: "{{ role_path }}/files/mimeapps.list"
+    dest: "{{ cfg_dir }}/mimeapps.list"
+    state: link
