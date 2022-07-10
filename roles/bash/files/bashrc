@@ -21,15 +21,18 @@
 # do nothing if not running interactively
 [[ ${-} != *i* ]] && return
 
-setup_posix() {
+nix_shell_p() {
     # **
-    # sets up POSIX mode if available.
+    # check if running via nix-shell
     # *
 
-    test -z "${IN_NIX_SHELL}" && set -o posix
+    test -n "${IN_NIX_SHELL}"
 }
 
-setup_posix ; unset -f setup_posix
+# use POSIX mode if NOT running via nix-shell (unsupported)
+nix_shell_p || set -o posix
+
+nix_shell_p && export NIX_SHELL_PRESERVE_PROMPT=1;
 
 # update the values of LINES and COLUMNS
 test -n "${DISPLAY}" && shopt -s checkwinsize
@@ -71,4 +74,7 @@ done
 # prompt
 # -----------------------------------------------------------------------------
 
-PS1="\[\e[0;1;2;38;5;33m\][\[\e[0;38;5;197m\]\u\[\e[0;1;2;38;5;68m\]::\[\e[0;38;5;250m\]\h\[\e[0;1;2;38;5;33m\]] \[\e[0;1;2;38;5;33m\]@ \[\e[0;38;5;226m\]\w\n\[\e[0;1;2;38;5;33m\]╚══ \[\e[0;1;2;53;38;5;214m\]$? \[\e[0;38;5;192m\]$(__git_ps1 "(%s)") \[\e[0;1;2;38;5;46m\]\$ \[\e[0m\]"
+PS1="\[\e[0;1;2;38;5;33m\][\[\e[0;38;5;197m\]\u\[\e[0;1;2;38;5;68m\]::\[\e[0;38;5;250m\]\h\[\e[0;1;2;38;5;33m\]] \[\e[0;1;2;38;5;33m\]@ \[\e[0;38;5;226m\]\w\n\[\e[0;1;2;38;5;33m\]╚══ \[\e[0;1;2;53;38;5;214m\]${?} \[\e[0;38;5;192m\]`__git_ps1 "(%s)"` \[\e[0;1;2;38;5;46m\]\$ \[\e[0m\]"
+
+# cleanup
+unset -f nix_shell_p
