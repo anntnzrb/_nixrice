@@ -90,3 +90,6 @@ test -d "${1}" && ${feh_cmd} -rz "${1}"
 
 # update pywal
 pywal_update
+
+# REVIEW: pywal creates a ~/.fehbg (waiting for dev patch); remove it
+{ sleep 10 && test -e "${HOME}/.fehbg" && rm -f "${HOME}/.fehbg"; } &
