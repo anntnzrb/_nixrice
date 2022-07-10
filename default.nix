@@ -6,6 +6,8 @@ pkgs.mkShell {
   ];
 
   shellHook = ''
+    export BW_SESSION=`bw unlock --raw`
+
    printf "=> nix-shell: set-up for dotfiles management\n"
   '';
 }
