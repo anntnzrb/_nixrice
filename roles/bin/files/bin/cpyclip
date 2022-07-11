@@ -4,12 +4,13 @@
 
 # Commentary:
 
-# Requires xclip
+# Requires xclip & running Xorg session.
 
 # Code:
 
 # checks
 ! installedp 'xclip' && err "'xclip' is not installed, unable to copy." && exit 1
+! runningp 'Xorg' && err 'This script needs Xorg to be running' && exit 1
 test ${#} -ne 1 && err 'Usage: cpyclip <file>' && exit 1
 
 xclip -sil -sel clip -i "${1}"
