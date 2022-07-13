@@ -1,39 +1,47 @@
 #!/bin/sh
 
-# **
-# gets the current battery capacity
-# only tested with one battery attached
-# *
+# get-battery-cap --- Retrieve battery information if any
+
+# Commentary:
+
+# Does not retrieve any data if no battery is present.
+
+# Code:
+
+# do nothing if no battery
+test -z "`ls -A '/sys/class/power_supply'`" && exit 0
 
 # loop through all batteries
 for batt in /sys/class/power_supply/BAT?; do
-    CAPACITY=$(cat "$batt"/capacity)
-    STATUS=$(cat "$batt"/status)
+    read -r capacity < "${batt}/capacity"
+    read -r status < "${batt}/status"
 
-    if [ "$STATUS" = "Discharging" ] || [ "$STATUS" = "Charging" ] ||
-        [ "$STATUS" = "Unknown" ] || [ "$STATUS" = "Not charging" ]; then
+    if test "${status}" = "Discharging" \
+        -o "${status}" = "Charging"     \
+        -o "${status}" = "Unknown"      \
+        -o "${status}" = "Not charging"; then
         # pick icon depending on the amount of battery
         # shellcheck disable=2086
-        # comparing between integers
-        if [ $CAPACITY -ge 80 ]; then
+        # comparison between integers
+        if test ${capacity} -ge 80 ; then
             icon=""
-        elif [ $CAPACITY -ge 60 ]; then
+        elif test ${capacity} -ge 60; then
             icon=""
-        elif [ $CAPACITY -ge 30 ]; then
+        elif test ${capacity} -ge 30; then
             icon=""
-        elif [ $CAPACITY -ge 15 ]; then
+        elif test ${capacity} -ge 15; then
             icon=""
-        elif [ $CAPACITY -lt 15 ]; then
+        elif test ${capacity} -lt 15; then
             icon=""
         fi
 
         # if charging, plug icon + %
-        [ "$STATUS" = "Charging" ] && icon="🔌"
-        [ "$STATUS" = "Not charging" ] && icon=" "
+        test "${status}" = "Charging" && icon="🔌"
+        test "${status}" = "Not charging" && icon=" "
 
-        printf '%s %s%%' "$icon" "$CAPACITY"
+        printf '%s %s%%\n' "${icon}" "${capacity}"
     else
         icon="🔌"
-        printf '🟢%s' "$icon"
+        printf '🟢%s' "${icon}"
     fi
 done
