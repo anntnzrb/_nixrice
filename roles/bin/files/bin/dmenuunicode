@@ -1,19 +1,42 @@
 #!/bin/sh
 
-# **
-# dmenu dropdown to copy emojis
-# *
+# dmenuunicode --- dmenu dropdown menu for unicode/emojis
 
-# get location of emoji file
-CHOSEN=$(cut -d ';' -f1 "$HOME"/.local/resources/emoji | dmenu -i -l 30 |
-    sed "s/ .*//")
+# shellcheck disable=SC2006,SC2312
 
-# Exit if none chosen.
-[ -z "$CHOSEN" ] && exit 0
+# Code:
 
-# if you run this command with an argument, the character will be inserted;
-# otherwise, show a message that the emoji has been copied.
-{ [ -n "$1" ] && xdotool type "$CHOSEN"; } || {
-    echo "$CHOSEN" | tr -d '\n' | xclip -selection clipboard
-    notify-send "$CHOSEN copied to clipboard"
+usage() {
+    tee <<! >&2
+Usage:
+  dmenuunicode [file]
+!
+
+    exit 1
 }
+
+log() {
+    msg="' ${1} ' copied to clipboard"
+
+    printf '%s\n' "${msg}"
+    test -x "`command -v 'notify-send'`" && notify-send "${msg}"
+}
+
+# checks
+test ${#} -gt 1 && usage
+test -z "`pidof -s 'Xorg'`" && usage
+
+# location of file
+file="${1:-${HOME}/.local/resources/emoji.txt}"
+
+# do nothing if ${file} is not an actual file
+test ! -e "${file}" && usage
+
+# choose from dmenu
+chosen=`cut -d ';' -f1 "${file}" | dmenu -i -l 30 | sed "s/ .*//"`
+
+printf '%s' "${chosen}" | tr -d '\n' | xclip -sel clip
+
+log "${chosen}"
+
+exit 0
