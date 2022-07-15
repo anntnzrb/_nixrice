@@ -6,29 +6,55 @@
 
 # Based off Luke Smith's sb-price script; tweaked by anntnzrb
 
-# checks
-test ${#} -eq 0 && err 'Usage: get-crypto <crypto> [currency]' && exit 1
-test ${#} -gt 2 && err 'Usage: get-crypto <crypto> [currency]' && exit 1
-! internetp && err 'N/A' && exit 1
+# Code:
 
-# use $4 as currency, if not passed in use "usd" as default
-crypto="${1}"
-currency="${2:-usd}"
-interval='@14d'    # History contained in chart preceded by '@' (7d = 7 days)
-dir='/tmp/crypto-prices'
-pricefile="${dir}/${crypto}-${currency}"
-chartfile="${dir}/${crypto}-${currency}-chart"
+# shellcheck disable=SC2006,SC2312
+
+# ----------------------------------------------------------------------------
+# preamble / functions
+# ----------------------------------------------------------------------------
+
+usage() {
+    tee <<! >&2
+Usage:
+  $ get-crypto CRYPTO [CURRENCY]
+
+Examples:
+  $ get-crypto ada eur
+  $ get-crypto eth
+!
+
+    exit 1
+}
+
+# checks
+test ${#} -eq 0 && usage
+test ${#} -gt 2 && usage
+! internetp && err 'N/A' && exit 1
 
 update_price() {
     curl -Sfs "${currency}.rate.sx/1${crypto}" > "${pricefile}"
     curl -Sfs "${currency}.rate.sx/${crypto}${interval}" > "${chartfile}"
 }
 
+# ----------------------------------------------------------------------------
+# main
+# ----------------------------------------------------------------------------
+
+# use $4 as currency, if not passed in use "usd" as default
+crypto="${1}"
+currency="${2:-usd}"
+interval='@14d'
+
+dir='/tmp/crypto-prices'
+pricefile="${dir}/${crypto}-${currency}"
+chartfile="${dir}/${crypto}-${currency}-chart"
+
 # create directory if not present
 test -d "${dir}" || mkdir -p "${dir}"
 
 # update the price only if it hasn't been updated today
-[ "$(stat -c %x "${pricefile}" 2>/dev/null | cut -d' ' -f1)" != "$(date '+%Y-%m-%d')" ] \
+test "`stat -c %x "${pricefile}" 2>/dev/null | cut -d' ' -f1`" != "`date '+%Y-%m-%d'`" \
     && update_price "${crypto}"
 
 case "${currency}" in
@@ -45,4 +71,6 @@ case "${crypto}" in
     *) crypto_symb="❔"  ;;
 esac
 
-printf "${crypto_symb}↔${curr_symb}%0.2f\\n" "$(cat "${pricefile}")"
+printf "${crypto_symb} ↔ ${curr_symb}%0.2f\\n" "`cat "${pricefile}"`"
+
+exit 0

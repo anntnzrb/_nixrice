@@ -23,7 +23,7 @@ for batt in /sys/class/power_supply/BAT?; do
         # pick icon depending on the amount of battery
         # shellcheck disable=2086
         # comparison between integers
-        if test ${capacity} -ge 80 ; then
+        if test ${capacity} -ge 80; then
             icon=""
         elif test ${capacity} -ge 60; then
             icon=""
@@ -45,3 +45,5 @@ for batt in /sys/class/power_supply/BAT?; do
         printf '🟢%s' "${icon}"
     fi
 done
+
+ exit 0

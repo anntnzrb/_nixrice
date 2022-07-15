@@ -1,7 +1,9 @@
 #!/bin/sh
 
-# **
-# gets the currently used ram memory
-# *
+# get-mem-usage --- Retrieves currently using RAM
 
-printf ' %s\n' "$(free --si -h | awk '/Mem/ { print $3 }')"
+# Code:
+
+printf ' %s\n' "`free --si -h | awk '/Mem/ { print $3 }'`"
+
+exit 0
