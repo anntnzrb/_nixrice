@@ -1,11 +1,18 @@
 #!/bin/sh
 
-# **
-# gets brightness level of your screen
-# *
+# get-brightness --- Retrieves screen brightness
+
+# Code:
+
+# do nothing if no display
+backlight_dir='/sys/class/power_supply'
+test -z "`ls -A "${backlight_dir}"`" && exit 0
 
 # loop through displays
-for display in /sys/class/backlight/*; do
-	read -r ACTUAL_BRIGHTNESS <"$display/actual_brightness"
+for d in ${backlight_dir}/*; do
+	read -r brightness < "${d}/actual_brightness"
 done
-printf '☀ %s%%\n' "$ACTUAL_BRIGHTNESS"
+
+printf '☀ %s%%\n' "${brightness}"
+
+exit 0

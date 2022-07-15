@@ -1,7 +1,9 @@
 #!/bin/sh
 
-# **
-# prints formatted date
-# *
+# get-epoch --- Prints current date, stylized
 
-printf '🕓 %s' "$(date '+%a, %d %b @ %H:%M ')"
+# Code:
+
+printf '🕓 %s\n' "`date '+%a, %d %b @ %H:%M'`"
+
+exit 0
