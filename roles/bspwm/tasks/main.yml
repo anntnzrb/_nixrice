@@ -1,0 +1,7 @@
+---
+
+- name: Link cfgs
+  file:
+    src: "{{ role_path }}/files/bspwm/"
+    dest: "{{ cfg_dir }}/bspwm"
+    state: link
