@@ -25,8 +25,8 @@ sxhkd -m 1 -t 2 -a 'Escape' -c "${HOME}/.config/sxhkd/sxhkdrc" &
 # dunst
 dunst &
 
-# hide mouse when idle
-unclutter -grab &
+# hide mouse when typing
+xbanish & 
 
 # light filter
 redshift -l \
