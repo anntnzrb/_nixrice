@@ -5,10 +5,10 @@
 
   # global variables
   vars:
-    home: "$HOME"
-    local_dir: "$HOME/.local"
-    cfg_dir: "$HOME/.config"
-    ssh_dir: "$HOME/.ssh"
+    home: "${HOME}"
+    local_dir: "${HOME}/.local"
+    cfg_dir: "${HOME}/.config"
+    ssh_dir: "${HOME}/.ssh"
 
   roles:
   - { role: bin,       tags: [ 'core' ] }
@@ -16,18 +16,19 @@
   - { role: scripts,   tags: [ 'core' ] }
   - { role: ssh,       tags: [ 'core', 'ssh' ] }
 
-  #- { role: emacs, tags: [ 'editor' ] }
+ #- { role: emacs,  tags: [ 'editor' ] }
   - { role: vim,    tags: [ 'editor' ] }
   - { role: nvim,   tags: [ 'editor' ] }
 
-  - { role: awesome,  tags: [ 'xorg', 'wm' ] }
-  - { role: bspwm,    tags: [ 'xorg', 'wm' ] }
-  - { role: stumpwm,  tags: [ 'xorg', 'wm' ] }
-  - { role: dunst,    tags: [ 'xorg' ] }
-  - { role: picom,    tags: [ 'xorg' ] }
-  - { role: redshift, tags: [ 'xorg' ] }
-  - { role: sxhkd,    tags: [ 'xorg' ] }
-  - { role: xorg,     tags: [ 'xorg' ] }
+  - { role: awesome,  tags: [ 'ui', 'wm' ] }
+  - { role: bspwm,    tags: [ 'ui', 'wm' ] }
+  - { role: stumpwm,  tags: [ 'ui', 'wm' ] }
+  - { role: polybar,  tags: [ 'ui', 'wm' ] }
+  - { role: dunst,    tags: [ 'ui' ] }
+  - { role: picom,    tags: [ 'ui' ] }
+  - { role: redshift, tags: [ 'ui' ] }
+  - { role: sxhkd,    tags: [ 'ui' ] }
+  - { role: xorg,     tags: [ 'ui' ] }
 
   - { role: bash,  tags: [ 'sh' ] }
   - { role: shell, tags: [ 'sh' ] }
