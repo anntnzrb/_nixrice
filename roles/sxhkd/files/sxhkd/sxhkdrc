@@ -60,9 +60,10 @@ super + d; {d,m,u,v,grave}
 # - 'z' -- suspend
 # - 'w' -- simulate alt + F4 (kill active window)
 # - 'x' -- kill Xorg session
+# - '/' -- reload sxhkd
 
-super + Escape ; {p,r,z,w,x}
-  {poweroff,reboot,systemctl suspend,kill -15 "$(xdotool getactivewindow getwindowpid)",pkill -15 'X'}
+super + Escape ; {p,r,z,w,x,slash}
+  {poweroff,reboot,systemctl suspend,kill -15 `xdotool getactivewindow getwindowpid`,pkill -15 'X',pkill -USR1 'sxhkd'}
 
 # -----------------------------------------------------------------------------
 # audio
