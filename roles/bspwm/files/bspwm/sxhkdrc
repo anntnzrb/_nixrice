@@ -6,7 +6,7 @@ super + {1-9}
   bspc desktop -f 'focused:^{1-9}'
 
 super + shift + {1-9}
-  bspc node -d 'focused:^{1-9}
+  bspc node -d 'focused:^{1-9}'
 
 # -----------------------------------------------------------------------------
 # nodes

@@ -2,7 +2,18 @@
 
 # shellcheck disable=SC2006,SC2312
 
+bar="${HOME}/.config/polybar/polylaunch"
+binds="${HOME}/.config/bspwm/sxhkdrc"
+
 bspcfg='bspc config'
+
+# -----------------------------------------------------------------------------
+# preamble
+# -----------------------------------------------------------------------------
+
+# run bar (reloads on file change; see script)
+${bar} &
+sxhkd -m 1 -t 2 -a 'Escape' -c "${binds}" &
 
 # -----------------------------------------------------------------------------
 # general
@@ -44,7 +55,7 @@ ${bspcfg} focused_border_color "#800000"
 
 # borders
 ${bspcfg} border_width   4
-${bspcfg} top_padding    32 # reserve for bar
+${bspcfg} top_padding    0
 ${bspcfg} bottom_padding 0
 ${bspcfg} left_padding   0
 ${bspcfg} right_padding  0
