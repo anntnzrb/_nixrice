@@ -21,6 +21,7 @@
   - { role: nvim,   tags: [ 'editor' ] }
 
   - { role: awesome,  tags: [ 'xorg', 'wm' ] }
+  - { role: bspwm,    tags: [ 'xorg', 'wm' ] }
   - { role: stumpwm,  tags: [ 'xorg', 'wm' ] }
   - { role: dunst,    tags: [ 'xorg' ] }
   - { role: picom,    tags: [ 'xorg' ] }
