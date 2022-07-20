@@ -48,7 +48,6 @@ case ${session} in
 bspwm)
     unset -v session
 
-    sxhkd -m 1 -t 2 -a 'Escape' -c "${HOME}/.config/bspwm/sxhkdrc" &
     exec bspwm
     ;;
 
