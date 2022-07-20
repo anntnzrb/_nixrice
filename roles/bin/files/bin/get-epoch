@@ -4,6 +4,6 @@
 
 # Code:
 
-printf '🕓 %s\n' "`date '+%a, %d %b @ %H:%M'`"
+printf ' %s\n' "`date '+%a, %d %b @ %H:%M'`"
 
 exit 0
