@@ -54,15 +54,15 @@ alias \
     rm='rm -v'                       \
     rmfr='rm -Rfv'                   \
     tree='tree --dirsfirst -CFlq '   \
-    treea='tree --dirsfirst -CFalq '   \
+    treea='tree --dirsfirst -CFalq ' \
     treed='tree --dirsfirst -CFdlq ' \
     zip='zip -rv'
 
 # shortcuts
 alias \
-    eed='${EDITOR:?}'              \
-    seed='sudo ${EDITOR:?}'        \
-    sx11='startx ${HOME}/.config/xorg/xinitrc' \
+    eed='${EDITOR:?}'                      \
+    seed='sudo ${EDITOR:?}'                \
+    sx11="startx \"${XORGDIR:?}/xinitrc\"" \
     kx11="pkill -15 'X'"
 
 # -----------------------------------------------------------------------------
@@ -70,9 +70,9 @@ alias \
 # -----------------------------------------------------------------------------
 
 alias \
-    ascii="toilet -t -f '3d'"                                                      \
-    tnet="ping 'example.com'"                                                      \
-    tnetspeed='speedtest-cli'                                                      \
+    ascii="toilet -t -f '3d'"                                                  \
+    tnet="ping 'example.com'"                                                  \
+    tnetspeed='speedtest-cli'                                                  \
     yt='yt-dlp --restrict-filenames'                                           \
     ytf='yt-dlp -F'                                                            \
     ytt='yt-dlp --restrict-filenames --skip-download --write-thumbnail'        \
