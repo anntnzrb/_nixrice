@@ -5,7 +5,9 @@
 bar="${HOME}/.config/polybar/polylaunch"
 binds="${HOME}/.config/bspwm/sxhkdrc"
 
-bspcfg='bspc config'
+bspcfg() {
+    bspc config "${@}"
+}
 
 # -----------------------------------------------------------------------------
 # preamble
@@ -20,17 +22,17 @@ sxhkd -m 1 -t 2 -a 'Escape' -c "${binds}" &
 # -----------------------------------------------------------------------------
 
 # nodes/windows
-${bspcfg} pointer_modifier      'mod4'
-${bspcfg} focus_follows_pointer true
-${bspcfg} pointer_follows_focus true
+bspcfg pointer_modifier      'mod4'
+bspcfg focus_follows_pointer true
+bspcfg pointer_follows_focus true
 
 # -----------------------------------------------------------------------------
 # workspaces/tags/desktops
 # -----------------------------------------------------------------------------
 
 # monitors
-${bspcfg} remove_disabled_monitors  true
-${bspcfg} remove_unplugged_monitors true
+bspcfg remove_disabled_monitors  true
+bspcfg remove_unplugged_monitors true
 
 # loop trough the available monitors & create 1..9 tags
 for m in `bspc query -M --names`; do
@@ -41,24 +43,44 @@ done
 # rules
 # -----------------------------------------------------------------------------
 
+bsp_rule() {
+    bspc rule -a "${@}"
+}
+
+bsp_rules_float() {
+    # **
+    # takes a pseudo-array of space-separated class-names and applies
+    # the floating-state rule to each.
+    # *
+
+    for p in ${1}; do
+        bsp_rule "${p}" state=floating
+    done
+}
+
 # reset
 bspc rule -r "*"
+
+# all nodes are tild
+bsp_rule "*" state=tiled
+
+bsp_rules_float 'mpv zoom '
 
 # -----------------------------------------------------------------------------
 # node decorations
 # -----------------------------------------------------------------------------
 
 # colors
-${bspcfg} normal_border_color  "#696969"
-${bspcfg} active_border_color  "#696969"
-${bspcfg} focused_border_color "#800000"
+bspcfg normal_border_color  "#696969"
+bspcfg active_border_color  "#696969"
+bspcfg focused_border_color "#800000"
 
 # borders
-${bspcfg} border_width   4
-${bspcfg} top_padding    0
-${bspcfg} bottom_padding 0
-${bspcfg} left_padding   0
-${bspcfg} right_padding  0
+bspcfg border_width   4
+bspcfg top_padding    0
+bspcfg bottom_padding 0
+bspcfg left_padding   0
+bspcfg right_padding  0
 
 # gaps
-${bspcfg} window_gap 16
+bspcfg window_gap 16
