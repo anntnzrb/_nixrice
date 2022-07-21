@@ -17,11 +17,11 @@
 location=`curl -Sfs 'ifconfig.co/city'`
 
 # get weather status
-weather=`curl -Sfs "https://wttr.in/${location}?format=+%t" | tr -d '[:space:]'`
+weather=`curl -Sfs "https://wttr.in/${location}?format=%c+%t" | tr -d '[:space:]'`
 
 # check if retrieved weather is valid
 printf '%s' "${weather}" | grep -q 'known' && printf '☀ N/A\n' && exit 1
 
-printf ' %s\n' "${weather}"
+printf '%s\n' "${weather}"
 
 exit 0

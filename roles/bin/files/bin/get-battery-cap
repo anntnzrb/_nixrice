@@ -1,49 +1,49 @@
 #!/bin/sh
 
-# get-battery-cap --- Retrieve battery information if any
+# get-battery-cap --- Retrieve battery info if any
 
 # Commentary:
 
-# Does not retrieve any data if no battery is present.
+# If no battery, a 'plugged' icon will be displayed.
+# This loops through the connected devices with included batteries; meaning
+# multiple results.
 
 # Code:
 
+# shellcheck disable=SC2006,SC2312
+
+pow_supp_dir='/sys/class/power_supply'
+
 # do nothing if no battery
-test -z "`ls -A '/sys/class/power_supply'`" && exit 0
+test -z "`ls -A "${pow_supp_dir}"`" && printf '🔌\n' && exit 0
 
 # loop through all batteries
-for batt in /sys/class/power_supply/BAT?; do
+for batt in "${pow_supp_dir}"/*; do
     read -r capacity < "${batt}/capacity"
-    read -r status < "${batt}/status"
+    read -r status   < "${batt}/status"
+    read -r name     < "${batt}/model_name"
 
-    if test "${status}" = "Discharging" \
-        -o "${status}" = "Charging"     \
-        -o "${status}" = "Unknown"      \
-        -o "${status}" = "Not charging"; then
+    if test "${status}" = 'Discharging' \
+        -o "${status}"  = 'Charging'    \
+        -o "${status}"  = 'Unknown'     \
+        -o "${status}"  = 'Not charging'; then
+
         # pick icon depending on the amount of battery
         # shellcheck disable=2086
         # comparison between integers
-        if test ${capacity} -ge 80; then
-            icon=""
-        elif test ${capacity} -ge 60; then
-            icon=""
-        elif test ${capacity} -ge 30; then
-            icon=""
-        elif test ${capacity} -ge 15; then
-            icon=""
-        elif test ${capacity} -lt 15; then
-            icon=""
+        if   test ${capacity} -ge 80; then icon=''
+        elif test ${capacity} -ge 60; then icon=''
+        elif test ${capacity} -ge 30; then icon=''
+        elif test ${capacity} -ge 15; then icon=''
+        elif test ${capacity} -lt 15; then icon=''
         fi
 
         # if charging, plug icon + %
-        test "${status}" = "Charging" && icon="🔌"
-        test "${status}" = "Not charging" && icon=" "
+        test "${status}" = 'Charging' && icon=''
+        test "${status}" = 'Not charging' && icon=' '
 
-        printf '%s %s%%\n' "${icon}" "${capacity}"
-    else
-        icon="🔌"
-        printf '🟢%s' "${icon}"
+        printf '(%s) %s %s%%\n' "${name}" "${icon}" "${capacity}"
     fi
 done
 
- exit 0
+exit 0

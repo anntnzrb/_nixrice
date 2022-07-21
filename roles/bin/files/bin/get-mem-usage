@@ -4,6 +4,6 @@
 
 # Code:
 
-printf ' %s\n' "`free --si -h | awk '/Mem/ { print $3 }'`"
+printf ' %s\n' "`free --si -h | awk '/Mem/ { print $3 }'`"
 
 exit 0
