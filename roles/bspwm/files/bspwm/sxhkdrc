@@ -79,11 +79,12 @@ super + shift + t ; {m,t}
 # -----------------------------------------------------------------------------
 # chord: super + x
 
-# c     - correctly closes the focused frame
-# k     - forces killing the frame (unsafe, but sometimes required)
-# r     - restart wm
-# f     - toggle full-screen
-# space - toggle floating
+# c      - correctly closes the focused frame
+# k      - forces killing the frame (unsafe, but sometimes required)
+# f      - toggle full-screen
+# space  - toggle floating
+# r      - restart wm
+# escape - quit wm
 
 super + x ; {q,k}
   bspc node -{c,k}
@@ -93,3 +94,6 @@ super + x ; {f,space}
 
 super + x ; r
   bspc wm -r && pkill -USR1 'sxhkd'
+
+super + x ; Escape
+  bspc quit 0
