@@ -1,8 +1,33 @@
 #!/bin/sh
 
-# **
-# gets CPU temperature
-# checks for the first "Core" on `sensors`
-# *
+# get-cpu-temp --- Retrieve CPU temperature info
 
-printf ' %s\n' "$(sensors | awk '/Core 0/ { print $3 }' | sed 's/+// ; s/\..//')"
+# Code:
+
+# shellcheck disable=SC2006,SC2312
+
+thermal_dir='/sys/class/thermal'
+thermal_devices="${thermal_dir}/thermal_zone*"
+
+# loop through thermal devices
+for dev in ${thermal_devices}; do
+    read -r type < "${dev}/type"
+    read -r temp < "${dev}/temp"
+
+    temp=`printf '%s' "${temp}" | cut -c1-2`
+
+    # shellcheck disable=2086
+    # integer comparison
+    if   test ${temp} -ge 80; then icon=''
+    elif test ${temp} -ge 60; then icon=''
+    elif test ${temp} -ge 40; then icon=''
+    elif test ${temp} -ge 30; then icon=''
+    elif test ${temp} -lt 25; then icon=''
+    fi
+
+    # REVIEW: test for other non-needed devices
+    test "${type}" != 'acpitz' \
+        && printf '%s %s°C\n' "${icon}" "${temp}"
+done
+
+exit 0

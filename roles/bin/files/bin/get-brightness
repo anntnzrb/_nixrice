@@ -4,15 +4,15 @@
 
 # Code:
 
+# shellcheck disable=SC2006,SC2312
+
 # do nothing if no display
-backlight_dir='/sys/class/power_supply'
+backlight_dir='/sys/class/backlight'
 test -z "`ls -A "${backlight_dir}"`" && exit 0
 
 # loop through displays
-for d in ${backlight_dir}/*; do
-	read -r brightness < "${d}/actual_brightness"
+for d in "${backlight_dir}"/*; do
+    printf '☀ %s%%\n' "${d}/actual_brightness"
 done
-
-printf '☀ %s%%\n' "${brightness}"
 
 exit 0
