@@ -1,46 +1,71 @@
 #!/bin/sh
 
-#                                       ████ ██  ██
-#             ██████                   ░██░ ░░  ░██
-#     ██   ██░██░░░██ ██████  ██████  ██████ ██ ░██  █████
-#    ░░██ ██ ░██  ░██░░██░░█ ██░░░░██░░░██░ ░██ ░██ ██░░░██
-#     ░░███  ░██████  ░██ ░ ░██   ░██  ░██  ░██ ░██░███████
-#  ██  ██░██ ░██░░░   ░██   ░██   ░██  ░██  ░██ ░██░██░░░░
-# ░██ ██ ░░██░██     ░███   ░░██████   ░██  ░██ ███░░██████
-# ░░ ░░   ░░ ░░      ░░░     ░░░░░░    ░░   ░░ ░░░  ░░░░░░
-# ░░░░ runs on tty / dm login
+# xinitrc --- Xorg initialization file
 
-# personal keyboard settings
-remaps &
+# Commentary:
 
-# sets the background with `setbg` script
-setbg &
+# This file runs when the display server is invoked, the following are executed
+# before the WM/DE is launched.
 
-# compositor
-picom -b &
+# Code:
 
-# global keybindings
-sxhkd -m 1 -t 2 -a 'Escape' -c "${HOME}/.config/sxhkd/sxhkdrc" &
+# shellcheck disable=SC2006,SC2312
 
-# dunst
-dunst &
+# -----------------------------------------------------------------------------
+# configuration
+# -----------------------------------------------------------------------------
+# '1' -> true ; blank -> false
 
-# hide mouse when typing
-xbanish & 
+use_tray=1
+use_xrdb=
 
-# light filter
-redshift -l \
-         "$(curl -Ss \
-         https://location.services.mozilla.com/v1/geolocate?key=geoclue \
-         | awk 'OFS=":" { print $3,$5 }' | tr -d ',}')" &
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
 
-# system monitor
-"${TERMINAL:?}" -e 'htop' &
+{
+    # **
+    # Apps to be launched when a graphical session is started.
+    # *
 
-# applets (requires a bar which supports them)
-# NetworkManager
-nm-applet &
-pasystray &
+    "${TERMINAL:?}" -e 'htop' & # system monitor
 
-# dmenu display select prompt (wait a bit for prompt)
-{ sleep 5 && displayselect; } &
+    remaps   & # keyboard settings
+    setbg    & # wallpaper
+    picom -b & # compositor
+    dunst    & # notification daemon
+    xbanish  & # hide mouse when typing
+
+    # global keybindings
+    sxhkd -m 1 -t 2 -a 'Escape' -c "${HOME}/.config/sxhkd/sxhkdrc" &
+
+    # light filter
+    redshift -l "`curl -Ss 'https://location.services.mozilla.com/v1/geolocate?key=geoclue' \
+                    | awk 'OFS=":" { print $3,$5 }' | tr -d ',}'`" &
+}
+
+{
+    # **
+    # Applets require a bar/panel which supports & displays them.
+    # *
+
+    test "${use_tray}" || return 0
+
+    nm-applet & # NetworkManager
+    pasystray & # audio (pulseaudio/pipewire)
+}
+
+{
+    # **
+    # Xorg settings: DPI, timeouts, etc...
+    # *
+
+    xrandr --dpi 92    & # DPI defaulted to 1920x1080 24" screen
+    xset s off         & # disable screensaver
+    xset dpms 0 0 900  & # off-screen time
+
+    # Xresources
+    test "${use_xrdb}" || return 0
+
+    xrdb "${XORGDIR:?}/Xresources"
+}
