@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+# bspwm-cfgs --- BSPWM settings.
+
+# Commentary:
+
+# Refer to parent script 'bspwmrc'.
+
+# Code:
+
+# -----------------------------------------------------------------------------
+# functions
+# -----------------------------------------------------------------------------
+
+bsp_set_cfg() {
+    # **
+    # takes a hash and applies specified rules.
+    #
+    # key:   class/instance
+    # value: rules
+    # *
+
+    local -n cfg=${1}
+
+    for k in "${!cfg[@]}"; do
+        bspc config "${k}" "${cfg[${k}]}"
+    done
+}
+
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
+
+declare -A cfg
+cfg=( \
+    # -------------------------------------------------------------------------
+    # general
+    # -------------------------------------------------------------------------
+
+    # nodes/windows
+    [pointer_modifier]='mod4'    \
+    [focus_follows_pointer]=true \
+    [pointer_follows_focus]=true \
+
+    # -------------------------------------------------------------------------
+    # monitors
+    # -------------------------------------------------------------------------
+
+    [remove_disabled_monitors]=true  \
+    [remove_unplugged_monitors]=true \
+
+    # -------------------------------------------------------------------------
+    # node decorations
+    # -------------------------------------------------------------------------
+
+    # colors
+    [normal_border_color]='#696969'  \
+    [active_border_color]='#696969'  \
+    [focused_border_color]='#800000' \
+    
+    # borders
+    [border_width]=4   \
+    [top_padding]=0    \
+    [bottom_padding]=0 \
+    [left_padding]=0   \
+    [right_padding]=0  \
+    
+    # gaps
+    [window_gap]=16 \
+) && bsp_set_cfg cfg
+
+exit 0

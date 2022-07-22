@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# bspwm-workspaces --- BSPWM workspaces.
+
+# Commentary:
+
+# Refer to parent script 'bspwmrc'.
+
+# Code:
+
+# shellcheck disable=SC2006
+
+# -----------------------------------------------------------------------------
+# settings
+# -----------------------------------------------------------------------------
+
+# name of the workspaces
+names='i ii iii ix v vi vii viii ix'
+
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
+
+# loop trough the available monitors & create 1..9 tags
+monitors="`bspc query -M --names`"
+for m in ${monitors}; do
+    # needs to be specifically unquoted
+    # shellcheck disable=SC2086
+    bspc monitor "${m}" -d ${names}
+done
+
+exit 0
