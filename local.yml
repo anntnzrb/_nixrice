@@ -16,14 +16,15 @@
   - { role: scripts,   tags: [ 'core' ] }
   - { role: ssh,       tags: [ 'core', 'ssh' ] }
 
- #- { role: emacs,  tags: [ 'editor' ] }
-  - { role: vim,    tags: [ 'editor' ] }
-  - { role: nvim,   tags: [ 'editor' ] }
+ #- { role: emacs, tags: [ 'editor' ] }
+  - { role: vim,   tags: [ 'editor' ] }
+  - { role: nvim,  tags: [ 'editor' ] }
 
-  - { role: awesome,  tags: [ 'ui', 'wm' ] }
-  - { role: bspwm,    tags: [ 'ui', 'wm' ] }
-  - { role: stumpwm,  tags: [ 'ui', 'wm' ] }
-  - { role: polybar,  tags: [ 'ui', 'wm' ] }
+  - { role: awesome, tags: [ 'ui', 'wm' ] }
+  - { role: bspwm,   tags: [ 'ui', 'wm' ] }
+  - { role: stumpwm, tags: [ 'ui', 'wm' ] }
+  - { role: polybar, tags: [ 'ui', 'wm' ] }
+
   - { role: dunst,    tags: [ 'ui' ] }
   - { role: picom,    tags: [ 'ui' ] }
   - { role: redshift, tags: [ 'ui' ] }
@@ -43,4 +44,5 @@
   - { role: onedrive,    tags: [ ] }
   - { role: pcmanfm,     tags: [ ] }
   - { role: streamlink,  tags: [ ] }
+  - { role: wget,        tags: [ ] }
   - { role: zathura,     tags: [ ] }
