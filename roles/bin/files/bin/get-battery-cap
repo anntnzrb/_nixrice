@@ -19,6 +19,9 @@ test -z "`ls -A "${pow_supp_dir}"`" && printf '🔌\n' && exit 0
 
 # loop through all batteries
 for batt in "${pow_supp_dir}"/*; do
+    # skip if device does not have a capacity
+    test ! -e "${batt}/capacity" && continue
+
     read -r capacity < "${batt}/capacity"
     read -r status   < "${batt}/status"
     read -r name     < "${batt}/model_name"
@@ -42,8 +45,9 @@ for batt in "${pow_supp_dir}"/*; do
         test "${status}" = 'Charging' && icon=''
         test "${status}" = 'Not charging' && icon=' '
 
-        printf '(%s) %s %s%%\n' "${name}" "${icon}" "${capacity}"
+        printf '(%s) %s %s%% ' "${name}" "${icon}" "${capacity}"
     fi
 done
+printf '\n'
 
 exit 0
