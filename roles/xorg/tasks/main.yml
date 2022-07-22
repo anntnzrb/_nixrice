@@ -6,12 +6,6 @@
     dest: "{{ cfg_dir }}/xorg"
     state: link
 
-- name: Link share/application cfgs
-  file:
-    src: "{{ role_path }}/files/applications/"
-    dest: "{{ local_dir }}/share/applications"
-    state: link
-
 - name: Link XDG-user cfgs
   file:
     src: "{{ role_path }}/files/user-dirs.dirs"
@@ -22,4 +16,14 @@
   file:
     src: "{{ role_path }}/files/mimeapps.list"
     dest: "{{ cfg_dir }}/mimeapps.list"
+    force: yes
+    state: link
+
+- name: Ensure {{ local_dir }}/share dir exists
+  file: path={{ local_dir }}/share state=directory
+
+- name: Link share/application cfgs
+  file:
+    src: "{{ role_path }}/files/applications/"
+    dest: "{{ local_dir }}/share/applications"
     state: link
