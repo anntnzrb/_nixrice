@@ -2,77 +2,25 @@
 # workspaces
 # -----------------------------------------------------------------------------
 
-super + {1-9}
-  bspc desktop -f 'focused:^{1-9}'
+# super + n         - focus workspaces n
+# super + shift + n - send focused node to workspace n
+#
+# where 'n' is a keyboard number from 1..9
 
-super + shift + {1-9}
-  bspc node -d 'focused:^{1-9}'
+super + {_,shift +} {1-9}
+	bspc {desktop -f,node -d} '^{1-9}'
 
 # -----------------------------------------------------------------------------
 # nodes
 # -----------------------------------------------------------------------------
 
-super + {_,shift} + {h,j,k,l}
+# super + d         - switch focus to direction d
+# super + shift + d - move focused node to direction d
+#
+# where 'd' is a direction (N/S/E/W) [vi binds]
+
+super + {_,shift +} {h,j,k,l}
   bspc node -{f,s} {west,south,north,east}
-
-# resizing nodes
-
-# expand/contract outwards/inwards
-
-# + after the =super + shift + r= chord, hold any of these keys to expand a node by moving one of its side outwards:
-#  + =h= :: left outwards
-#  + =j= :: down outwards
-#  + =k= :: up outwards
-#  + =l= :: right outwards
-
-
-super + shift + r : {h,j,k,l}
-  bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
-
-
-
-# + after the =super + shift + r= chord, hold any of these keys to contract a node by moving one of its side inwards:
-#  + =h= :: left inwards
-#  + =j= :: down inwards
-#  + =k= :: up inwards
-#  + =l= :: right inwards
-
-
-super + shift + alt + r : {h,j,k,l}
-  bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
-
-# resizing gaps
-
-# gap presets
-
-# + after the =super + shift + g= chord, hold either:
-#  + =\= :: set gaps to =0=
-#  + =-= :: set gaps to =5=
-#  + === :: set gaps to =75=
-
-# defaults can be found at [[borders & gaps]]
-
-
-super + shift + g : {backslash,minus,equal}
-  bspc config window_gap {0,5,75}
-
-
-
-# dynamic increase & decrease gaps
-
-# + after the =super + shift + g= chord, hold either:
-#  + ={= :: to decrease gaps
-#  + =}= :: to increase gaps
-
-
-super + shift + g : bracket{left,right}
-  bspc config window_gap "$(($(bspc config -d focused window_gap) {-,+} 5 ))"
-
-# layouts
-
-
-super + shift + t ; {m,t}
-  bspc desktop -l {monocle,tiled}
 
 # -----------------------------------------------------------------------------
 # state

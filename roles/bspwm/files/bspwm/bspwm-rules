@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+# bspwm-rules --- BSPWM rules.
+
+# Commentary:
+
+# Refer to parent script 'bspwmrc'.
+
+# Code:
+
+# -----------------------------------------------------------------------------
+# functions
+# -----------------------------------------------------------------------------
+
+bsp_set_rules() {
+    # **
+    # takes a hash and applies specified rules.
+    #
+    # key:   class/instance
+    # value: rules
+    # *
+
+    local -n rules=${1}
+
+    for k in "${!rules[@]}"; do
+        bspc rule -a "${k}" "${rules[${k}]}"
+    done
+}
+
+# -----------------------------------------------------------------------------
+# main
+# -----------------------------------------------------------------------------
+
+bspc rule -r "*" # reset rules before anything
+
+declare -A rules
+rules=( \
+    # all nodes are tiled by default
+    ["*"]='state=tiled'       \
+
+    ['mpv']='state=floating'  \
+    ['zoom']='state=floating' \
+    ['Microsoft Teams - Preview']='state=floating' \
+) && bsp_set_rules rules
+
+exit 0
