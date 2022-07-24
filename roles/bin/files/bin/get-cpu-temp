@@ -14,6 +14,9 @@ for dev in ${thermal_devices}; do
     read -r type < "${dev}/type"
     read -r temp < "${dev}/temp"
 
+    # REVIEW: discard other devices
+    test "${type}" != 'x86_pkg_temp' && continue
+
     temp=`printf '%s' "${temp}" | cut -c1-2`
 
     # shellcheck disable=2086
@@ -25,9 +28,7 @@ for dev in ${thermal_devices}; do
     elif test ${temp} -lt 25; then icon=''
     fi
 
-    # REVIEW: test for other non-needed devices
-    test "${type}" != 'acpitz' \
-        && printf '%s %s°C\n' "${icon}" "${temp}"
+    printf '%s %s°C\n' "${icon}" "${temp}"
 done
 
 exit 0
