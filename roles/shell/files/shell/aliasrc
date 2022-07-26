@@ -46,6 +46,8 @@ else
 fi
 
 alias \
+    ..='cd ..'                                   \
+    cd..='cd ..'                                 \
     cp='cp -Riv'                                 \
     diff='diff --color=auto'                     \
     mkdir='mkdir -pv'                            \
@@ -72,7 +74,6 @@ alias \
 alias \
     ascii="toilet -t -f '3d'"                                                  \
     tnet="ping 'example.com'"                                                  \
-    tnetspeed='speedtest-cli'                                                  \
     yt='yt-dlp --restrict-filenames'                                           \
     ytf='yt-dlp -F'                                                            \
     ytt='yt-dlp --restrict-filenames --skip-download --write-thumbnail'        \
