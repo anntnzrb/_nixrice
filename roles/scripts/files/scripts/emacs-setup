@@ -10,17 +10,16 @@
 
 # References: https://github.com/emacs-mirror/emacs
 
-# shellcheck disable=2046
-# disable for numbers instead of strings
+# Code:
 
 # checks
-! root-p && err 'This scripts needs root access.' && exit 1
+! rootp && err 'This scripts needs root access' && exit 1
 
 # -----------------------------------------------------------------------------
 # variables
 # -----------------------------------------------------------------------------
 
-branch='emacs-28'
+branch='master'
 
 # debug ./configure options before installing
 debug_configure=
@@ -60,7 +59,7 @@ clone_emacs() {
     # *
 
     printf 'Cloning Emacs repository...\n'
-    fast-git-clone -b "${branch}" 'https://github.com/emacs-mirror/emacs' '/tmp/emacs/'
+    git-clone-fast-b "${branch}" 'https://github.com/emacs-mirror/emacs' '/tmp/emacs/'
 
     cd '/tmp/emacs/' || { err 'Cannot cd into dir.' && exit 1; }
 }
@@ -91,41 +90,42 @@ install() {
     # Install GNU Emacs to the system.
     # *
 
-    make -j$(nproc)
-    make -j$(nproc) install
+    # shellcheck disable=2046
+    # these are numbers
+    make -j`nproc`
+    make -j`nproc` install
+}
+
+dependencies() {
+    printf 'Installing dependencies...\n'
+
+    # Debian-like
+    if installedp 'apt-get'; then
+        apt install -y         \
+            'autoconf'         \
+            'gnutls-dev'       \
+            'libgccjit-10-dev' \
+            'libgif-dev'       \
+            'libgtk-3-dev'     \
+            'libjpeg-dev'      \
+            'libncurses-dev'   \
+            'libpng-dev'       \
+            'libtiff-dev'      \
+            'libxpm-dev'       \
+            'texinfo'
+    elif installedp 'pacman'; then
+        pacman --needed --noconfirm -Syu \
+               'base-devel'              \
+               'libgccjit'               \
+               'webkit2gtk'
+    fi
 }
 
 # -----------------------------------------------------------------------------
 # main
 # -----------------------------------------------------------------------------
 
-printf 'Installing dependencies...\n'
-# Debian-like
-if installed-p 'apt-get'; then
-    apt install -y \
-        'autoconf' \
-        'gnutls-dev' \
-        'libgccjit-10-dev' \
-        'libgif-dev' \
-        'libgtk-3-dev' \
-        'libjpeg-dev' \
-        'libncurses-dev' \
-        'libpng-dev' \
-        'libtiff-dev' \
-        'libxpm-dev' \
-        'texinfo'
-
-    clone_emacs
-    configure
-    install
-
-elif installed-p 'pacman'; then
-    pacman --needed --noconfirm -Syu \
-           'base-devel' \
-           'libgccjit' \
-           'webkit2gtk'
-
-    clone_emacs
-    configure
-    install
-fi
+dependencies
+clone_emacs
+configure
+install
