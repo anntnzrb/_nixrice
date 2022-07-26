@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# arch-tweaks --- A few tweaks for Arch-based distributions.
+# arch-tweaks --- Collection of tweaks for Arch-based distributions
 
 # Commentary:
 
@@ -9,16 +9,19 @@
 # - Parallel downloads for pacman
 # - Enable all cores when compiling
 
+# Code:
+
 # checks
-! root-p && err 'This scripts needs root access.' && exit 1
+! rootp && err 'This script needs root access.' && exit 1
+! installed 'pacman' && err 'This script only works on Arch-based systems' && exit 1
 
 # variables
 pacman_conf='/etc/pacman.conf'
 makepkg_conf='/etc/makepkg.conf'
 
 # backup
-cp "${pacman_conf}" "${pacman_conf}-$(date '+%Y%m%d-%H%M%S').bak"
-cp "${makepkg_conf}" "${makepkg_conf}-$(date '+%Y%m%d-%H%M%S').bak"
+cp "${pacman_conf}" "${pacman_conf}-`date '+%Y%m%d-%H%M%S'`.bak"
+cp "${makepkg_conf}" "${makepkg_conf}-`date '+%Y%m%d-%H%M%S'`.bak"
 
 # pacman colors
 sed -i "/^#Color$/a ILoveCandy" "${pacman_conf}"
@@ -28,7 +31,7 @@ sed -i "/^#Color$/s/#//" "${pacman_conf}"
 sed -Ei "s/^#(ParallelDownloads\s=\s).*/\110/" "${pacman_conf}"
 
 # use all cores for compilation
-sed -Ei "s/^#(MAKEFLAGS=-j).*/\1$(nproc)/" "${makepkg_conf}"
+sed -Ei "s/^#(MAKEFLAGS=-j).*/\1`nproc`/" "${makepkg_conf}"
 
 # reload pacman
 pacman -Syy

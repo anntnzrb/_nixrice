@@ -13,7 +13,7 @@ save_dir="${HOME}/lib/"
 printf 'Installing dependencies...\n'
 
 # arch-based
-if installed-p 'pacman'; then
+if installedp 'pacman'; then
     sudo pacman --needed --noconfirm -Syu 'parted' 'wimlib'
 fi
 
@@ -24,7 +24,7 @@ test -r "${save_dir}/woeusb" \
     && err "WoeUSB is already downloaded at '${save_dir}'." \
     && exit 1
 
-fast-git-clone "${git_repo}" '/tmp/woeusb/'
+git-clone-fast "${git_repo}" '/tmp/woeusb/'
 
 cp '/tmp/woeusb/sbin/woeusb' "${save_dir}"
 

@@ -14,25 +14,26 @@
 # preamble
 # -----------------------------------------------------------------------------
 
+die() {
+    printf '%s\n' "${@}" >&2
+    exit 1
+}
+
 # quit if not running an arch-based distro
-! installed-p 'pacman' && err 'Not running an Arch-based distribution' && exit 1
-root-p && err 'This CANNOT be run as root...' && exit 1
+! installedp 'pacman' && die 'Not running an Arch-based distribution'
+rootp && die 'This CANNOT be ran as root'
 
 # -----------------------------------------------------------------------------
 # main
 # -----------------------------------------------------------------------------
 
 # only download & install if 'paru' is not installed already
-if ! installed-p 'paru'; then
+if ! installedp 'paru'; then
     dest='/tmp/paru/'
 
-    fast-git-clone 'https://aur.archlinux.org/paru.git' "${dest}"
-    cd "${dest}" || { err 'Could not cd, exiting...' && exit 1; }
+    git-clone-fast 'https://aur.archlinux.org/paru.git' "${dest}"
+    cd "${dest}" || die 'Could not cd, exiting...'
     makepkg --needed --noconfirm -Ccirs
-
-    # cleanup
-    unset -v dest
-
 else
-    err "'paru' is already installed..." && exit 1
+    die "'paru' is already installed"
 fi
