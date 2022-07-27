@@ -46,18 +46,19 @@ else
 fi
 
 alias \
-    ..='cd ..'                                   \
-    cd..='cd ..'                                 \
-    cp='cp -Riv'                                 \
-    diff='diff --color=auto'                     \
-    mkdir='mkdir -pv'                            \
-    lsblk='lsblk -ap'                            \
-    mv='mv -iv'                                  \
-    rm='rm -v'                                   \
-    rmfr='rm -Rfv'                               \
-    tree='exa --color=automatic --icons -FTgh'   \
-    treea='exa --color=automatic --icons -FTagh' \
-    treed='exa --color=automatic --icons -DFTgh' \
+    ..='cd ..'                                                                \
+    cd..='cd ..'                                                              \
+    cp='cp -Riv'                                                              \
+    diff='diff --color=auto'                                                  \
+    mkdir='mkdir -pv'                                                         \
+    lsblk='lsblk -ap'                                                         \
+    mv='mv -iv'                                                               \
+    rm='rm -v'                                                                \
+    rmfr='rm -Rfv'                                                            \
+    tree='exa --color=automatic --group-directories-first --icons -FTgh'      \
+    treea='exa --color=automatic --group-directories-first --icons -FTagh'    \
+    treed='exa --color=automatic --icons -DFTgh'                              \
+    wget='wget --no-hsts'                                                     \
     zip='zip -rv'
 
 # shortcuts
