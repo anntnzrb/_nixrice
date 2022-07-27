@@ -3,22 +3,23 @@
 # langs --- languages shell configuration file
 
 # -----------------------------------------------------------------------------
-# rust (cargo)
+# Rust (cargo)
 # -----------------------------------------------------------------------------
 
-test -f "${HOME}/.cargo/env" && . "${HOME}/.cargo/env"
+test -e "${HOME}/.cargo/env" && . "${HOME}/.cargo/env"
 
 # -----------------------------------------------------------------------------
-# haskell (ghcup)
+# Haskell (ghcup)
 # -----------------------------------------------------------------------------
 
-test -d "${HOME}/.ghcup/" && . "${HOME}/.ghcup/env"
+test -e "${HOME}/.ghcup/env" && . "${HOME}/.ghcup/env"
 
 # -----------------------------------------------------------------------------
-# java (sdkman)
+# Java (sdkman)
 # -----------------------------------------------------------------------------
 
-test -d "${HOME}/.sdkman/" && . "${HOME}/.sdkman/bin/sdkman-init.sh"
+test -e "${HOME}/.sdkman/bin/sdkman-init.sh" && \
+    . "${HOME}/.sdkman/bin/sdkman-init.sh"
 
 # Java apps fix for dwm
 export _JAVA_AWT_WM_NONREPARENTING=1

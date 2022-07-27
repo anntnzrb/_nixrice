@@ -43,7 +43,7 @@ get_wp_net() {
     # variables
     res=`get_screen_res | sed 's/x/\//'`
 
-    wget -q -O "${wp_path}" "https://unsplash.it/${res}/?nature"
+    wget --no-hsts -q -O "${wp_path}" "https://unsplash.it/${res}/?nature"
 
     # set the wallpaper only if the file exists
     wallpaper_exists_p && ${feh_cmd} "${wp_path}"

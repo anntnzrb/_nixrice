@@ -125,6 +125,9 @@ PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magent
 # misc
 # -----------------------------------------------------------------------------
 
+# some programs overlook "${ZDOTDIR}" and create a ~/.zshrc, really annoying
+test -e "${HOME}/.zshrc" && rm -f "${HOME}/.zshrc"
+
 # source direnv (must be around the end)
 test -x "`command -v 'direnv'`" && eval "`direnv hook zsh`"
 

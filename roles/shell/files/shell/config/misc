@@ -1,8 +1,12 @@
 #!/bin/sh
 
-# android --- android shell configuration file
+# misc --- mostly for cleanup
 
+# android
 export ANDROID_SDK_HOME="${HOME}/.config/android"
 export ANDROID_AVD_HOME="${HOME}/.local/share/android"
 export ANDROID_EMULATOR_HOME="${HOME}/.local/share/android"
 export ADB_VENDOR_KEY="${HOME}/.config/android"
+
+# ansible
+export ANSIBLE_HOME="${HOME}/.config/ansible"
