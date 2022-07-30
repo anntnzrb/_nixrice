@@ -6,6 +6,12 @@
     state: directory
     mode: 0700
 
+- name: Link cfgs
+  file:
+    src: "{{ role_path }}/files/ssh/README"
+    dest: "~/.ssh/README"
+    state: link
+
 # -----------------------------------------------------------------------------
 # Git keys
 # -----------------------------------------------------------------------------
