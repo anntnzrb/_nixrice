@@ -23,4 +23,5 @@
 
   # function-aliases
   cp  = "!f() { git commit -m \"`date '+%F :: %T (%Z)'`\" ; git push; }; f"
+  ac  = "!f() { git add -A ; git commit -am \"`date '+%F :: %T (%Z)'`\"; }; f"
   acp = "!f() { git add -A ; git commit -am \"`date '+%F :: %T (%Z)'`\" ; git push; }; f"
