@@ -4,26 +4,37 @@
 
 # Commentary:
 
-# Creates the file only if it does not exist in the current directory already.
-# Makes it executable.
+# Creates an executable file if it does not already exist (current dir).
+# Defaults to POSIX shell script if ${2} is nil.
 
 # checks
 test -z "${1}" && printf 'You did not provide a name for the script.\n' >&2 \
     && exit 1
-test -f "${1}" && printf 'The script already exists.\n' >&2 && exit 1
+test -e "${1}" && printf 'The file already exists.\n' >&2 && exit 1
+
+# shebang chooser
+case ${2} in
+bash) shebang='/usr/bin/env bash' ;;
+perl) shebang='/usr/bin/env perl' ;;
+
+# Default: POSIX shell script
+*) shebang='/bin/sh'
+esac
 
 # create the script and its skeleton
-touch "${1}"
-chmod 0755 "${1}"
-tee "${1}" <<! >/dev/null
-#!/bin/sh
+touch "${1}" && chmod 0755 "${1}"
+tee "${1}" <<EOF >/dev/null
+#!${shebang}
 
-# $1 --- <desc>
+# ${1} --- TODO: desc
 
 # Commentary:
 
-# <desc>
+# TODO: desc
 
-!
-printf "The script '%s' has been created:\n" "${1}"
-file "${1}"
+# Code:
+
+#exit 0
+EOF
+
+printf 'Script created:\n' && file "${1}"
