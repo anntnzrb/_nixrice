@@ -55,6 +55,7 @@ alias \
     mv='mv -iv'                                                               \
     rm='rm -v'                                                                \
     rmfr='rm -Rfv'                                                            \
+    rmfrs='rm -Rf >/dev/null'                                                 \
     tree='exa --color=automatic --group-directories-first --icons -FTgh'      \
     treea='exa --color=automatic --group-directories-first --icons -FTagh'    \
     treed='exa --color=automatic --icons -DFTgh'                              \
@@ -80,3 +81,6 @@ alias \
     ytt='yt-dlp --restrict-filenames --skip-download --write-thumbnail'        \
     yta="yt-dlp --restrict-filenames --prefer-ffmpeg --audio-format 'best' -x" \
     ytv="yt-dlp --restrict-filenames -f 'best'"
+
+# [n]vi[m] -> nano
+alias v="nvim || vim || vi || nano"
