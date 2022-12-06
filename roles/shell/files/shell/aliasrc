@@ -83,4 +83,4 @@ alias \
     ytv="yt-dlp --restrict-filenames -f 'best'"
 
 # [n]vi[m] -> nano
-alias v="nvim || vim || vi || nano"
+alias v='nvim'
