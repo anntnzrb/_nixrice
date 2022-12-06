@@ -1,6 +1,11 @@
 ---
 
-- name: Install personal GNU Emacs cfg
+- name: Install personal GNU Emacs configuration
   git:
     repo: "https://git.sr.ht/~anntnzrb/.emacs.d"
-    dest: "{{ cfg_dir }}/emacs/"
+    dest: "{{ cfg_dir }}/emacs.vanilla/"
+
+- name: Install personal Doom GNU Emacs configuration
+  git:
+    repo: "https://git.sr.ht/~anntnzrb/.doom.d"
+    dest: "{{ cfg_dir }}/doom.bak/"
