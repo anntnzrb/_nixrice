@@ -1,8 +1,5 @@
 ---
 
-- name: Ensure {{ local_dir }}/resources dir exists
-  file: path={{ local_dir }}/resources state=directory
-
 - name: emojis
   get_url:
     url: "https://gitlab.com/-/snippets/2330828/raw/main/emoji.txt"

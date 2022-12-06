@@ -11,12 +11,14 @@
     ssh_dir: "${HOME}/.ssh"
 
   roles:
+  - { role: base, tags: [ 'core' ] }
+
   - { role: bin,       tags: [ 'core' ] }
   - { role: resources, tags: [ 'core' ] }
   - { role: scripts,   tags: [ 'core' ] }
   - { role: ssh,       tags: [ 'core', 'ssh' ] }
 
- #- { role: emacs, tags: [ 'editor' ] }
+# - { role: emacs, tags: [ 'editor' ] }
   - { role: vim,   tags: [ 'editor' ] }
   - { role: nvim,  tags: [ 'editor' ] }
 

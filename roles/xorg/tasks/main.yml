@@ -19,9 +19,6 @@
     force: yes
     state: link
 
-- name: Ensure {{ local_dir }}/share dir exists
-  file: path={{ local_dir }}/share state=directory
-
 - name: Link share/application cfgs
   file:
     src: "{{ role_path }}/files/applications/"
