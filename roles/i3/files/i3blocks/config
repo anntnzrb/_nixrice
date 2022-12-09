@@ -1,0 +1,37 @@
+# config --- i3blocks
+
+# globals
+command=/usr/share/i3blocks/$BLOCK_NAME
+separator_block_width=20
+
+# battery
+[battery]
+command=get-battery-cap
+interval=30
+
+# volume
+[volume]
+label=🔉
+instance=Master
+interval=once
+signal=10
+
+# memory
+[memory]
+command=get-mem-usage
+interval=10
+
+# weather
+[net]
+command=get-weather
+interval=3600
+
+# date
+[net]
+command=get-net-traff
+interval=2
+
+# date
+[time]
+command=get-epoch
+interval=45

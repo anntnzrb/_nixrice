@@ -1,8 +1,13 @@
 ---
 
+- name: Remove old files
+  file:
+    dest: "{{ home }}/.bash*"
+    state: absent
+
 - name: Link cfgs
   file:
-    dest: ~/.{{ item | basename }}
+    dest: "{{ home }}/.{{ item | basename }}"
     src: "{{ item }}"
     state: link
   with_fileglob:

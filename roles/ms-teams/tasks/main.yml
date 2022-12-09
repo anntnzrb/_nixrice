@@ -1,0 +1,7 @@
+---
+
+- name: Install (.deb)
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    deb: 'https://go.microsoft.com/fwlink/p/?LinkID=2112886&clcid=0x409&culture=en-us&country=US'

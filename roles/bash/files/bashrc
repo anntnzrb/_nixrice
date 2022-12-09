@@ -47,10 +47,6 @@ shopt -s cdspell
 # -----------------------------------------------------------------------------
 
 # history
-set -o history
-shopt -s histappend # append to history
-shopt -s cmdhist    # save multiline commands as one
-
 export HISTFILE="${HOME}/.local/bash_history"
 export HISTCONTROL='ignoreboth'       # keep duplicates off
 export HISTIGNORE='cd:ls:ll:exit:pwd' # commands to be ignored in history
@@ -144,6 +140,3 @@ cprompt() {
 
 # source direnv (must be around the end)
 test -x "`command -v 'direnv'`" && eval "`direnv hook bash`"
-
-# cleanup
-unset -f nix_shell_p

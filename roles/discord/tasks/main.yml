@@ -1,0 +1,7 @@
+---
+
+- name: Install (.deb)
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    deb: 'https://dl.discordapp.net/apps/linux/0.0.22/discord-0.0.22.deb'

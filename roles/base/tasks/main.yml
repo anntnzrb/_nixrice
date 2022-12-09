@@ -11,3 +11,30 @@
 
 - name: Ensure {{ cfg_dir }} dir exists
   file: path={{ cfg_dir }} state=directory
+
+- name: System upgrade
+  become: true
+  ansible.builtin.apt:
+    update_cache: yes
+    upgrade: full
+
+- name: Install pkgs
+  become: true
+  ansible.builtin.apt:
+    state: latest
+    pkg:
+      - curl
+      - wget
+      - git
+
+      # coreutils
+      - bat
+      - fd-find
+      - exa
+      - ripgrep
+
+      # archiving
+      - atool
+      - zip
+      - unzip
+      - p7zip

@@ -1,26 +1,43 @@
 ---
 
 - name: Link cfgs
-  file:
-    src: "{{ role_path }}/files/xorg/"
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/.config/xorg/"
     dest: "{{ cfg_dir }}/xorg"
     state: link
 
 - name: Link XDG-user cfgs
-  file:
-    src: "{{ role_path }}/files/user-dirs.dirs"
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/.config/user-dirs.dirs"
     dest: "{{ cfg_dir }}/user-dirs.dirs"
     state: link
 
 - name: Link mime-apps cfgs
-  file:
-    src: "{{ role_path }}/files/mimeapps.list"
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/.config/mimeapps.list"
     dest: "{{ cfg_dir }}/mimeapps.list"
     force: yes
     state: link
 
 - name: Link share/application cfgs
-  file:
-    src: "{{ role_path }}/files/applications/"
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/.config/applications/"
     dest: "{{ local_dir }}/share/applications"
     state: link
+
+- name: Link Xorg cfg
+  become: true
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/xorg.conf.d/50-mouse-acceleration.conf"
+    dest: '/etc/X11/xorg.conf.d/50-mouse-acceleration.conf'
+    state: link
+
+- name: Install pkgs
+  become: true
+  ansible.builtin.apt:
+    state: latest
+    pkg:
+      - xserver-xorg-core
+      - xinit
+      - xdotool
+      - xbanish
