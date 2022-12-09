@@ -52,9 +52,7 @@ shopt -s histappend # append to history
 shopt -s cmdhist    # save multiline commands as one
 
 export HISTFILE="${HOME}/.local/bash_history"
-export HISTSIZE=-1
-export HISTFILESIZE=-1
-export HISTCONTROL='erasedups'        # keep duplicates off
+export HISTCONTROL='ignoreboth'       # keep duplicates off
 export HISTIGNORE='cd:ls:ll:exit:pwd' # commands to be ignored in history
 
 # -----------------------------------------------------------------------------
