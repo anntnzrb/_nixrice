@@ -1,0 +1,18 @@
+---
+
+- name: config
+  become: true
+  ansible.builtin.copy:
+    src: "{{ role_path }}/files/grub"
+    dest: '/etc/default/grub'
+
+- name: Install
+  become: true
+  ansible.builtin.apt:
+    state: latest
+    pkg:
+      - os-prober
+
+- name: Update
+  become: true
+  ansible.builtin.shell: update-grub

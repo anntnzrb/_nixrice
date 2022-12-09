@@ -1,0 +1,7 @@
+GRUB_DEFAULT=0
+GRUB_TIMEOUT=3
+GRUB_DISTRIBUTOR=`lsb_release -is 2> /dev/null || printf 'GNU/Linux\n'`
+GRUB_CMDLINE_LINUX_DEFAULT="quiet"
+
+# detect other OS
+GRUB_DISABLE_OS_PROBER=false

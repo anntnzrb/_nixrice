@@ -5,3 +5,9 @@
     src: "{{ role_path }}/files/redshift/"
     dest: "{{ cfg_dir }}/redshift"
     state: link
+
+- name: Install
+  become: true
+  ansible.builtin.apt:
+    state: latest
+    name: redshift

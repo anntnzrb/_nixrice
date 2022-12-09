@@ -38,7 +38,7 @@ dwm)
     while :; do ${dwm} 2>"/tmp/dwm.log" >&2; done
     ;;
 *)
-    exec bspwm
+    exec i3
 
     printf '\n\nError loading WM/DE\n' >&2
     exit 1

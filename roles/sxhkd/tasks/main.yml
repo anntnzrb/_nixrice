@@ -5,3 +5,9 @@
     src: "{{ role_path }}/files/sxhkd/"
     dest: "{{ cfg_dir }}/sxhkd"
     state: link
+
+- name: Install
+  become: true
+  ansible.builtin.apt:
+    name: sxhkd
+    state: latest

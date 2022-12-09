@@ -9,3 +9,8 @@
   git:
     repo: "https://git.sr.ht/~anntnzrb/.doom.d"
     dest: "{{ cfg_dir }}/doom.bak/"
+
+- name: Install
+  become: true
+  ansible.builtin.apt:
+    name: emacs>=28.2

@@ -1,0 +1,16 @@
+---
+
+- name: Install
+  become: true
+  ansible.builtin.apt:
+    state: latest
+    pkg:
+      - network-manager
+      - network-manager-gnome # nm-applet
+
+- name: Enable service
+  become: true
+  ansible.builtin.service:
+    name: NetworkManager
+    enabled: true
+    state: started

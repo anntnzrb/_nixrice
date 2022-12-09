@@ -5,3 +5,9 @@
     src: "{{ role_path }}/files/picom/"
     dest: "{{ cfg_dir }}/picom"
     state: link
+
+- name: Install
+  become: true
+  ansible.builtin.apt:
+    state: latest
+    name: picom

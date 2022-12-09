@@ -5,3 +5,9 @@
     src: "{{ role_path }}/files/htop/"
     dest: "{{ cfg_dir }}/htop"
     state: link
+
+- name: Install
+  become: true
+  ansible.builtin.apt:
+    state: latest
+    name: htop

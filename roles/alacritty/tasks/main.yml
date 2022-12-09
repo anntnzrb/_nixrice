@@ -5,3 +5,9 @@
     src: "{{ role_path }}/files/alacritty/"
     dest: "{{ cfg_dir }}/alacritty"
     state: link
+
+- name: Install
+  become: true
+  ansible.builtin.apt:
+    state: latest
+    name: alacritty

@@ -3,5 +3,5 @@
 !.gitignore
 
 !xinitrc
-!profile
+!xprofile
 !Xresources

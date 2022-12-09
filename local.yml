@@ -8,43 +8,65 @@
     home: "${HOME}"
     local_dir: "${HOME}/.local"
     cfg_dir: "${HOME}/.config"
+    fonts_dir: "${HOME}/.local/share/fonts"
     ssh_dir: "${HOME}/.ssh"
+    bw_dir: '/opt/bitwarden'
 
   roles:
-  - { role: base, tags: [ 'core' ] }
+  - { role: base, tags: [ 'core', 'base' ] }
 
-  - { role: bin,       tags: [ 'core' ] }
-  - { role: resources, tags: [ 'core' ] }
-  - { role: scripts,   tags: [ 'core' ] }
+  # vault
+  - { role: bitwarden, tags: [ 'core', 'bitwarden' ] }
+
+  - { role: bin,       tags: [ 'core', 'bin' ] }
+  - { role: resources, tags: [ 'core', 'resources' ] }
+  - { role: scripts,   tags: [ 'core', 'scripts' ] }
   - { role: ssh,       tags: [ 'core', 'ssh' ] }
 
-  - { role: emacs, tags: [ 'editor' ] }
-  - { role: vim,   tags: [ 'editor' ] }
-  - { role: nvim,  tags: [ 'editor' ] }
 
-  - { role: awesome, tags: [ 'ui', 'wm' ] }
-  - { role: bspwm,   tags: [ 'ui', 'wm' ] }
-  - { role: stumpwm, tags: [ 'ui', 'wm' ] }
-  - { role: polybar, tags: [ 'ui', 'wm' ] }
+  - { role: emacs, tags: [ 'editor', 'emacs' ] }
+  - { role: vim,   tags: [ 'editor', 'vim' ] }
+  - { role: nvim,  tags: [ 'editor', 'nvim' ] }
 
-  - { role: dunst,    tags: [ 'ui' ] }
-  - { role: picom,    tags: [ 'ui' ] }
-  - { role: redshift, tags: [ 'ui' ] }
-  - { role: sxhkd,    tags: [ 'ui' ] }
-  - { role: xorg,     tags: [ 'ui' ] }
+  - { role: awesome, tags: [ 'ui', 'wm', 'awesome' ] }
+  - { role: bspwm,   tags: [ 'ui', 'wm', 'bspwm' ] }
+  - { role: stumpwm, tags: [ 'ui', 'wm', 'stumpwm' ] }
+  - { role: i3,      tags: [ 'ui', 'wm', 'i3' ] }
+  - { role: polybar, tags: [ 'ui', 'wm', 'polybar' ] }
 
-  - { role: bash,  tags: [ 'sh' ] }
-  - { role: shell, tags: [ 'sh' ] }
-  - { role: zsh,   tags: [ 'sh' ] }
+  - { role: dunst,    tags: [ 'core', 'ui', 'dunst' ] }
+  - { role: picom,    tags: [ 'core', 'ui', 'picom' ] }
+  - { role: feh,      tags: [ 'core', 'ui', 'feh' ] }
+  - { role: redshift, tags: [ 'core', 'ui', 'redshift' ] }
+  - { role: sxhkd,    tags: [ 'core', 'ui', 'sxhkd' ] }
+  - { role: xorg,     tags: [ 'core', 'ui', 'xorg' ] }
+  - { role: fonts,    tags: [ 'core', 'ui', 'fonts' ] }
 
-  - { role: alacritty,   tags: [ ] }
-  - { role: git,         tags: [ ] }
-  - { role: htop,        tags: [ ] }
-  - { role: libreoffice, tags: [ ] }
-  - { role: neofetch,    tags: [ ] }
-  - { role: newsboat,    tags: [ ] }
-  - { role: onedrive,    tags: [ ] }
-  - { role: pcmanfm,     tags: [ ] }
-  - { role: streamlink,  tags: [ ] }
-  - { role: wget,        tags: [ ] }
-  - { role: zathura,     tags: [ ] }
+  - { role: bash,  tags: [ 'core', 'sh', 'bash' ] }
+  - { role: shell, tags: [ 'core', 'sh', 'shell' ] }
+  - { role: zsh,   tags: [ 'core', 'sh', 'zsh' ] }
+
+  - { role: alacritty,   tags: [ 'alacritty' ] }
+  - { role: git,         tags: [ 'git' ] }
+  - { role: htop,        tags: [ 'htop' ] }
+  - { role: libreoffice, tags: [ 'libreoffice' ] }
+  - { role: neofetch,    tags: [ 'neofetch' ] }
+  - { role: newsboat,    tags: [ 'newsboat' ] }
+  - { role: onedrive,    tags: [ 'onedrive' ] }
+  - { role: pcmanfm,     tags: [ 'pcmanfm' ] }
+  - { role: streamlink,  tags: [ 'streamlink' ] }
+  - { role: wget,        tags: [ 'wget' ] }
+  - { role: zathura,     tags: [ 'zathura' ] }
+  - { role: woeusb,      tags: [ 'woeusb' ] }
+
+  - { role: chromium, tags: [ 'browsers', 'chromium' ] }
+  - { role: discord,  tags: [ 'discord' ] }
+
+  # other tools
+  - { role: ms-teams,          tags: [ 'ms-teams' ] }
+  - { role: jetbrains-toolbox, tags: [ 'jb-toolbox' ] }
+
+  # system
+  - { role: grub,    tags: [ 'grub' ] }
+  - { role: network, tags: [ 'network' ] }
+  - { role: audio,   tags: [ 'audio' ] }
