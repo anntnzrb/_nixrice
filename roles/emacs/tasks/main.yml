@@ -3,14 +3,15 @@
 - name: Install personal GNU Emacs configuration
   git:
     repo: "https://git.sr.ht/~anntnzrb/.emacs.d"
-    dest: "{{ cfg_dir }}/emacs.vanilla/"
+    dest: "{{ cfg_dir }}/emacs/"
 
 - name: Install personal Doom GNU Emacs configuration
   git:
     repo: "https://git.sr.ht/~anntnzrb/.doom.d"
-    dest: "{{ cfg_dir }}/doom.bak/"
+    dest: "{{ cfg_dir }}/doom/"
 
 - name: Install
   become: true
-  ansible.builtin.apt:
-    name: emacs>=28.2
+  ansible.builtin.command: ./setup-emacs.sh
+  args:
+    chdir: "{{ role_path }}/files/"

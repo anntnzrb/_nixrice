@@ -1,0 +1,13 @@
+build-essential
+autoconf
+gnutls-dev
+libgccjit-12-dev
+libgif-dev
+libgtk-3-dev
+libjpeg-dev
+libncurses-dev
+libpng-dev
+libwebkit2gtk-4.0-dev
+libx11-dev
+libxpm-dev
+texinfo
