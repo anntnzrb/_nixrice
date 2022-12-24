@@ -24,15 +24,15 @@
   - { role: ssh,       tags: [ 'core', 'ssh' ] }
 
 
-  - { role: emacs, tags: [ 'editor', 'emacs' ] }
-  - { role: vim,   tags: [ 'editor', 'vim' ] }
-  - { role: nvim,  tags: [ 'editor', 'nvim' ] }
+  - { role: emacs, tags: [ 'core', 'editor', 'emacs' ] }
+  - { role: vim,   tags: [ 'core', 'editor', 'vim' ] }
+  - { role: nvim,  tags: [ 'core', 'editor', 'nvim' ] }
 
-  - { role: awesome, tags: [ 'ui', 'wm', 'awesome' ] }
-  - { role: bspwm,   tags: [ 'ui', 'wm', 'bspwm' ] }
-  - { role: stumpwm, tags: [ 'ui', 'wm', 'stumpwm' ] }
-  - { role: i3,      tags: [ 'ui', 'wm', 'i3' ] }
-  - { role: polybar, tags: [ 'ui', 'wm', 'polybar' ] }
+  - { role: awesome, tags: [ 'core', 'ui', 'wm', 'awesome' ] }
+  - { role: bspwm,   tags: [ 'core', 'ui', 'wm', 'bspwm' ] }
+  - { role: stumpwm, tags: [ 'core', 'ui', 'wm', 'stumpwm' ] }
+  - { role: i3,      tags: [ 'core', 'ui', 'wm', 'i3' ] }
+  - { role: polybar, tags: [ 'core', 'ui', 'wm', 'polybar' ] }
 
   - { role: dunst,    tags: [ 'core', 'ui', 'dunst' ] }
   - { role: picom,    tags: [ 'core', 'ui', 'picom' ] }
@@ -46,25 +46,26 @@
   - { role: shell, tags: [ 'core', 'sh', 'shell' ] }
   - { role: zsh,   tags: [ 'core', 'sh', 'zsh' ] }
 
-  - { role: alacritty,   tags: [ 'alacritty' ] }
-  - { role: git,         tags: [ 'git' ] }
-  - { role: htop,        tags: [ 'htop' ] }
-  - { role: libreoffice, tags: [ 'libreoffice' ] }
-  - { role: neofetch,    tags: [ 'neofetch' ] }
-  - { role: newsboat,    tags: [ 'newsboat' ] }
-  - { role: onedrive,    tags: [ 'onedrive' ] }
-  - { role: pcmanfm,     tags: [ 'pcmanfm' ] }
-  - { role: streamlink,  tags: [ 'streamlink' ] }
-  - { role: wget,        tags: [ 'wget' ] }
-  - { role: zathura,     tags: [ 'zathura' ] }
-  - { role: woeusb,      tags: [ 'woeusb' ] }
-
-  - { role: chromium, tags: [ 'browsers', 'chromium' ] }
-  - { role: discord,  tags: [ 'discord' ] }
+  - { role: alacritty,   tags: [ 'core', 'alacritty' ] }
+  - { role: chromium,    tags: [ 'core', 'browsers', 'chromium' ] }
+  - { role: git,         tags: [ 'core', 'git' ] }
+  - { role: htop,        tags: [ 'core', 'htop' ] }
+  - { role: libreoffice, tags: [ 'core', 'libreoffice' ] }
+  - { role: neofetch,    tags: [ 'core', 'neofetch' ] }
+  - { role: newsboat,    tags: [ 'core', 'newsboat' ] }
+  - { role: onedrive,    tags: [ 'core', 'onedrive' ] }
+  - { role: pcmanfm,     tags: [ 'core', 'pcmanfm' ] }
+  - { role: streamlink,  tags: [ 'core', 'streamlink' ] }
+  - { role: wget,        tags: [ 'core', 'wget' ] }
+  - { role: woeusb,      tags: [ 'core', 'woeusb' ] }
+  - { role: zathura,     tags: [ 'core', 'zathura' ] }
 
   # other tools
-  - { role: ms-teams,          tags: [ 'ms-teams' ] }
-  - { role: jetbrains-toolbox, tags: [ 'jb-toolbox' ] }
+  - { role: jetbrains-toolbox, tags: [ 'core',  'jb-toolbox' ] }
+
+  # extras
+  - { role: ms-teams, tags: [ 'extra', 'ms-teams' ] }
+  - { role: discord,  tags: [ 'extra', 'discord' ] }
 
   # system
   - { role: grub,    tags: [ 'grub' ] }

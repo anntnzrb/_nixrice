@@ -26,6 +26,8 @@
       - curl
       - wget
       - git
+      - man-db
+      - manpages
 
       # coreutils
       - bat

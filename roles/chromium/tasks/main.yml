@@ -4,4 +4,4 @@
   become: true
   ansible.builtin.apt:
     state: latest
-    name: chromium
+    name: chromium-browser

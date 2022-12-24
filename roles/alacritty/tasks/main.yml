@@ -6,6 +6,11 @@
     dest: "{{ cfg_dir }}/alacritty"
     state: link
 
+- name: Add aslatter repo
+  become: true
+  ansible.builtin.apt_repository:
+    repo: ppa:aslatter/ppa
+
 - name: Install
   become: true
   ansible.builtin.apt:
