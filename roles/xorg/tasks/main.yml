@@ -31,13 +31,3 @@
     src: "{{ role_path }}/files/xorg.conf.d/50-mouse-acceleration.conf"
     dest: '/etc/X11/xorg.conf.d/50-mouse-acceleration.conf'
     state: link
-
-- name: Install pkgs
-  become: true
-  ansible.builtin.apt:
-    state: latest
-    pkg:
-      - xserver-xorg-core
-      - xinit
-      - xdotool
-      - xbanish

@@ -6,13 +6,6 @@
     src: "{{ role_path }}/files/grub"
     dest: '/etc/default/grub'
 
-- name: Install
-  become: true
-  ansible.builtin.apt:
-    state: latest
-    pkg:
-      - os-prober
-
 - name: Update
   become: true
-  ansible.builtin.shell: update-grub
+  ansible.builtin.shell: grub-mkconfig -o /boot/grub/grub.cfg

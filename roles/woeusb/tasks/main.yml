@@ -1,11 +1,5 @@
 ---
 
-- name: Install dependencies
-  become: true
-  ansible.builtin.apt:
-    state: latest
-    name: wimtools
-
 - name: Install
   become: true
   ansible.builtin.get_url:
