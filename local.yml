@@ -36,7 +36,6 @@
 
   - { role: dunst,    tags: [ 'core', 'ui', 'dunst' ] }
   - { role: picom,    tags: [ 'core', 'ui', 'picom' ] }
-  - { role: feh,      tags: [ 'core', 'ui', 'feh' ] }
   - { role: redshift, tags: [ 'core', 'ui', 'redshift' ] }
   - { role: sxhkd,    tags: [ 'core', 'ui', 'sxhkd' ] }
   - { role: xorg,     tags: [ 'core', 'ui', 'xorg' ] }
@@ -47,7 +46,6 @@
   - { role: zsh,   tags: [ 'core', 'sh', 'zsh' ] }
 
   - { role: alacritty,   tags: [ 'core', 'alacritty' ] }
-  - { role: chromium,    tags: [ 'core', 'browsers', 'chromium' ] }
   - { role: git,         tags: [ 'core', 'git' ] }
   - { role: htop,        tags: [ 'core', 'htop' ] }
   - { role: libreoffice, tags: [ 'core', 'libreoffice' ] }
@@ -63,11 +61,5 @@
   # other tools
   - { role: jetbrains-toolbox, tags: [ 'core',  'jb-toolbox' ] }
 
-  # extras
-  - { role: ms-teams, tags: [ 'extra', 'ms-teams' ] }
-  - { role: discord,  tags: [ 'extra', 'discord' ] }
-
   # system
-  - { role: grub,    tags: [ 'grub' ] }
-  - { role: network, tags: [ 'network' ] }
-  - { role: audio,   tags: [ 'audio' ] }
+  - { role: grub, tags: [ 'grub' ] }

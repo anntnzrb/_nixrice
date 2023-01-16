@@ -5,9 +5,3 @@
     src: "{{ role_path }}/files/neofetch/"
     dest: "{{ cfg_dir }}/neofetch"
     state: link
-
-- name: Install
-  become: true
-  ansible.builtin.apt:
-    state: latest
-    name: neofetch

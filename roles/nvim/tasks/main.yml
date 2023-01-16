@@ -5,9 +5,3 @@
     src: "{{ role_path }}/files/nvim/"
     dest: "{{ cfg_dir }}/nvim"
     state: link
-
-- name: Install
-  become: true
-  ansible.builtin.apt:
-    name: neovim
-    state: latest
