@@ -45,7 +45,7 @@ for batt in "${pow_supp_dir}"/*; do
         test "${status}" = 'Charging' && icon=''
         test "${status}" = 'Not charging' && icon=' '
 
-        printf '(%s) %s %s%% ' "${name}" "${icon}" "${capacity}"
+        printf '%s %s%% ' "${icon}" "${capacity}"
     fi
 done
 printf '\n'
