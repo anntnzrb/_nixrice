@@ -3,15 +3,14 @@
 # -----------------------------------------------------------------------------
 # chord: Super + Return
 
-# - 'a'         -- pulsemixer
-# - 'e'         -- $EDITOR
-# - 'i'         -- system monitor
-# - 'n'         -- network manager
-# - 'BackSpace' -- show this file
+# - 'Return' -- $TERMINAL
+# - 'a'      -- pulsemixer
+# - 'e'      -- $EDITOR
+# - 'i'      -- system monitor
 
 # terminal emulator
-super + Return ; {Return,a,e,i,n,BackSpace}
-  $TERMINAL {_,-e 'pulsemixer',-e $EDITOR,-e 'htop',-e 'nmtui',-e less $HOME/.config/sxhkd/sxhkdrc}
+super + Return ; {Return,a,e,i}
+  $TERMINAL {_,-e 'pulsemixer',-e $EDITOR,-e 'htop'}
 
 # -----------------------------------------------------------------------------
 # apps
@@ -26,25 +25,14 @@ super + w ; {e,f,w}
   {emacs,$FILE,$BROWSER}
 
 # -----------------------------------------------------------------------------
-# GNU Emacs
-# -----------------------------------------------------------------------------
-# chord: Super + e
-
-# - 'e' -- runemacs
-# - 'k' -- kill all Emacs processes
-
-super + e ; {e,k}
-  {runemacs,kill -15 `pidof -s 'emacs'`}
-
-# -----------------------------------------------------------------------------
 # dmenu
 # -----------------------------------------------------------------------------
 # chord: Super + d
 
-# - 'd' -- a run dialog/app launcher
-# - 'm' -- mount device
-# - 'u' -- umount device
-# - 'v' -- display selector dropdown
+# - 'd'     -- a run dialog/app launcher
+# - 'm'     -- mount device
+# - 'u'     -- umount device
+# - 'v'     -- display selector dropdown
 # - 'grave' -- display selector dropdown
 
 super + d; {d,m,u,v,grave}
@@ -80,7 +68,7 @@ XF86Audio{Lower,Raise}Volume
 # brightness
 # increase/decrease
 XF86MonBrightness{Down,Up}
-  xbacklight -{dec,inc} 10
+  brightnessctl set {5%-,+5%}
 
 # screenshot utility dropdown
 Print
