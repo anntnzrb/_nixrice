@@ -30,7 +30,8 @@ Examples:
 # checks
 test ${#} -eq 0 && usage
 test ${#} -gt 2 && usage
-! internetp && err 'N/A' && exit 1
+! ping -q -c 1 'example.com' >/dev/null 2>&1 \
+    && printf 'N/A\n' >&2 && exit 1
 
 update_price() {
     curl -Sfs "${currency}.rate.sx/1${crypto}" > "${pricefile}"

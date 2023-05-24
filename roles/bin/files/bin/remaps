@@ -5,7 +5,7 @@
 # Commentary:
 
 # This script should be called when starting the graphical environment;
-# that is `xprofile` (or equivalent).
+# that is, `xprofile` (or equivalent).
 
 # set key repeat delay and key repeat respectively
 xset r rate 220 50

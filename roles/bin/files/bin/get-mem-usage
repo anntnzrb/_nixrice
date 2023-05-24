@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# get-mem-usage --- Retrieves currently using RAM
+# get-mem-usage --- Retrieves current amount of RAM used
 
 # Code:
 
