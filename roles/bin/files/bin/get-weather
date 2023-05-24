@@ -10,8 +10,9 @@
 
 # shellcheck disable=SC2006,SC2312
 
-# do nothing if no internet
-! internetp && err '📡❌' && exit 1
+# do nothing if no net
+! ping -q -c 1 'example.com' >/dev/null 2>&1 \
+    && printf '📡❌\n' >&2 && exit 1
 
 # set-up location
 location=`curl -Sfs 'ifconfig.co/city'`

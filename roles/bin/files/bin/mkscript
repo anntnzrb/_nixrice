@@ -38,3 +38,5 @@ tee "${1}" <<EOF >/dev/null
 EOF
 
 printf 'Script created:\n' && file "${1}"
+
+exit 0

@@ -1,0 +1,60 @@
+#!/bin/sh
+
+# sshoot --- Utility to take screenshots.
+
+# Commentary:
+
+# Allows choosing the kind of screenshot to take, including copying the image.
+#
+# Script inspired by Luke Smith's 'maimpick' script.
+
+# Code:
+
+# checks
+deps='dmenu maim xdotool'
+for p in ${deps}; do
+    ! test -x "`command -v "${p}"`" \
+    && printf "'%s' is required but it is not installed\n" "${p}" >&2 \
+    && exit 1
+done
+
+# variables
+output="$(date '+%Y%m%d-%H%M%S').png"
+maim_cmd='maim -B -m 1'
+xclip_cmd='xclip -sel clip -t image/png'
+xdotool_cmd='$(xdotool getactivewindow)'
+get_active_window="$(xdotool getactivewindow getwindowclassname)"
+
+# menu items
+menu_items='a selected area
+current window
+full screen
+a selected area (copy)
+current window (copy)
+full screen (copy)'
+
+# dmenu user prompt
+case "$(printf "${menu_items}" | dmenu -l 6 -i -p "Screenshot which area?")" in
+  "a selected area")
+    ${maim_cmd} -s pic-selected-"${output}"
+    ;;
+  "current window")
+    ${maim_cmd} -q -d 0.2 -i "${xdotool_cmd}" pic-window-"${get_active_window}"-"${output}"
+    ;;
+  "full screen")
+    ${maim_cmd} -q -d 0.2 pic-full-"${output}"
+    ;;
+  "a selected area (copy)")
+    ${maim_cmd} -s | ${xclip_cmd}
+    ;;
+  "current window (copy)")
+    ${maim_cmd} -q -d 0.2 -i "${xdotool_cmd}" | ${xclip_cmd}
+    ;;
+  "full screen (copy)")
+    ${maim_cmd} -q -d 0.2 | ${xclip_cmd}
+    ;;
+esac
+
+printf 'The screenshot was taken.\n'
+
+exit 0

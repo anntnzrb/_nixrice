@@ -2,5 +2,10 @@
 
 # upload-file --- Uploads given files to a file hosting service
 
+# checks
+! test -x "`command -v "xclip"`" \
+    && printf "xclip' is required but it is not installed\n" >&2 \
+    && exit 1
+
 { curl -Ss -F "file=@$*" 'https://0x0.st' | xclip -sel clip; } || return 1
 printf 'link(s) copied to clipboard\n'
