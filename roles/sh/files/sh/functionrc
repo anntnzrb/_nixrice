@@ -8,7 +8,7 @@
 
 loop_ip() {
     # **
-    # loop thru public IP address
+    # loop public IP address; optionally pass a delay as parameter
     # *
 
     while :; do
@@ -34,7 +34,7 @@ sscreenkey() {
 
 magit() {
     # **
-    # magit on the terminal
+    # magit on the terminal (via emacs)
     # *
 
     magit_cmd="(magit-status \"`git rev-parse --show-toplevel`\")"
@@ -45,7 +45,7 @@ magit() {
 
 bitrate() {
     # **
-    # retrieves the bitrate of a file (audio)
+    # retrieves the bitrate of an audio file
     # *
 
     ffprobe "$1" 2>&1 | grep 'rate'

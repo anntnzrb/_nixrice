@@ -2,11 +2,12 @@
 
 # ssh --- ssh shell configuration file
 
-# enable ssh-agent && add keys
+# check if ssh-agent is not running and if there are no keys added
 test -z "${SSH_AUTH_SOCK}" -a -z "${SSH_AGENT_PID}" \
     && eval `ssh-agent -s` >/dev/null
 
-# keys
+# iterate through all the files in the ~/.ssh directory and check if the file
+# contains 'private', if so, add it
 for f in ${HOME}/.ssh/*; do
     file -br "${f}" | grep -q 'private' && ssh-add "${f}" >/dev/null 2>&1
 done

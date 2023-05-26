@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# defaults --- defaults for shell configuration file
+
+export TERMINAL='alacritty'
+export EDITOR="neovim"
+export BROWSER='opera'
+export FILE='pcmanfm'
+
+export SH_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/sh"
+export BASH_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/bash"
+
+#------------------------------------------------------------------------------
+# clean-up
+#------------------------------------------------------------------------------
+# nothing too specific, just for cleaning up ~/
+
+export WGETRC="${HOME}/.config/wget/wgetrc"
+export LESSKEY="${HOME}/.config/less/lesskey"
+export LESSHISTFILE='-'
+
+# GTK
+export GTK_RC_FILES="${HOME}/.config/gtk-1.0/gtkrc"
+export GTK2_RC_FILES="${HOME}/.config/gtk-2.0/gtkrc"
+
+# Android
+export ANDROID_SDK_HOME="${HOME}/.config/android"
+export ANDROID_AVD_HOME="${HOME}/.local/share/android"
+export ANDROID_EMULATOR_HOME="${HOME}/.local/share/android"
+export ADB_VENDOR_KEY="${HOME}/.config/android"
+
+# Ansible
+export ANSIBLE_HOME="${HOME}/.config/ansible"

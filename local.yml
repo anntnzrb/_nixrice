@@ -41,9 +41,9 @@
   - { role: xorg,     tags: [ 'core', 'ui', 'xorg' ] }
   - { role: fonts,    tags: [ 'core', 'ui', 'fonts' ] }
 
-  - { role: bash,  tags: [ 'core', 'sh', 'bash' ] }
-  - { role: shell, tags: [ 'core', 'sh', 'shell' ] }
-  - { role: zsh,   tags: [ 'core', 'sh', 'zsh' ] }
+  - { role: bash,  tags: [ 'core', 'bash' ] }
+  - { role: sh,    tags: [ 'core', 'shell' ] }
+  - { role: zsh,   tags: [ 'core', 'zsh' ] }
 
   - { role: alacritty,   tags: [ 'core', 'alacritty' ] }
   - { role: git,         tags: [ 'core', 'git' ] }

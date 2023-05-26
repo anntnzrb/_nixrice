@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# xinitrc --- Xorg setup
+# xinitrc --- X session configuration
 
 # Commentary:
 
@@ -12,7 +12,7 @@
 # shellcheck disable=SC1091
 
 # load Xorg preamble
-test -x "${XORGDIR:?}/xprofile" && . "${XORGDIR:?}/xprofile"
+test -x "${XORG_DIR:?}/xprofile" && . "${XORG_DIR:?}/xprofile"
 
 # -----------------------------------------------------------------------------
 # window manager/desktop environment
@@ -22,6 +22,9 @@ test -x "${XORGDIR:?}/xprofile" && . "${XORGDIR:?}/xprofile"
 session=${1}
 
 case ${session} in
+awesome)
+    exec awesome
+   ;;
 dwm)
     # the following is for switching between local version of dwm* instead of
     # another default one (e.g: NixOS' directories)
