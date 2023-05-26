@@ -2,7 +2,7 @@
 
 # fzf --- fzf shell configuration file
 
-# try using `fd` if available
+# use `fd` if available
 if test -x "`command -v 'fd'`"; then
     export FZF_DEFAULT_COMMAND='fd --type file --follow --hidden --exclude .git'
 

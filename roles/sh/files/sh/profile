@@ -25,7 +25,7 @@ append_path() {
     esac
 }
 
-# load profiles from /etc/profile.d/
+# load profiles from /etc/profile.d/ (os-dependant)
 if test -d '/etc/profile.d/'; then
     for p in /etc/profile.d/*.sh; do
         test -r "${p}" && . "${p}"
@@ -38,37 +38,22 @@ append_path '/usr/local/bin/'
 append_path '/usr/local/sbin/'
 append_path '/usr/sbin/'
 
-# '~/.local/bin'
+# ~/.local/bin
 append_path "${HOME}/.local/bin/"
-
-# utilities
-append_path "${HOME}/.local/bin/utils"
 
 # ... finally export
 export PATH
 
 # -----------------------------------------------------------------------------
-# defaults
+# sourcing
 # -----------------------------------------------------------------------------
+# NOTE: ORDER MATTERS!
 
-export EDITOR="editor"
-export TERMINAL='alacritty'
-export BROWSER='chromium'
-export FILE='pcmanfm'
-export READER='zathura'
+# this is the only envvar that should be declared here
+export SH_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/sh"
 
-export SHDIR="${XDG_CONFIG_HOME:-$HOME/.config}/shell"
-export BASHDIR="${XDG_CONFIG_HOME:-$HOME/.config}/bash"
-export ZDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
-
-# -----------------------------------------------------------------------------
-# extra settings
-# -----------------------------------------------------------------------------
-# settings are modularized in separe files for sourcing
-
-for f in ${SHDIR}/config/*; do
-    test -x "${f}" && . "${f}"
-done
-
-# start graphical automatically
-#test "$(tty)" = '/dev/tty1' && ! pgrep -x 'Xorg' >/dev/null 2>&1 && exec startx "${XORGDIR}/xinitrc"
+. "${SH_DIR}/lib/defaults"
+. "${SH_DIR}/lib/ssh"
+. "${SH_DIR}/lib/xorg"
+. "${SH_DIR}/lib/fzf"
+. "${SH_DIR}/lib/langs"

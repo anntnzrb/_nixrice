@@ -47,7 +47,6 @@ fi
 
 alias \
     ..='cd ..'                                                                \
-    cd..='cd ..'                                                              \
     cp='cp -Riv'                                                              \
     diff='diff --color=auto'                                                  \
     mkdir='mkdir -pv'                                                         \
@@ -64,9 +63,7 @@ alias \
 
 # shortcuts
 alias \
-    eed='${EDITOR:?}'                      \
-    seed='sudo ${EDITOR:?}'                \
-    sx11="startx \"${XORGDIR:?}/xinitrc\"" \
+    sx11="startx \"${XORG_DIR:?}/xinitrc\"" \
     kx11="pkill -15 'X'"
 
 # -----------------------------------------------------------------------------
@@ -81,6 +78,3 @@ alias \
     ytt='yt-dlp --restrict-filenames --skip-download --write-thumbnail'        \
     yta="yt-dlp --restrict-filenames --prefer-ffmpeg --audio-format 'best' -x" \
     ytv="yt-dlp --restrict-filenames -f 'best'"
-
-# [n]vi[m] -> nano
-alias v='nvim'
