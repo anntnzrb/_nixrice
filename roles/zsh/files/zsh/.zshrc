@@ -104,8 +104,8 @@ fi
 # sourcing
 # -----------------------------------------------------------------------------
 
-. ${SHDIR}/aliasrc
-. ${SHDIR}/functionrc
+. ${SH_DIR}/aliasrc
+. ${SH_DIR}/functionrc
 
 for f in $ZDOTDIR/config/*; do
     test -x "${f}" && . "${f}"
