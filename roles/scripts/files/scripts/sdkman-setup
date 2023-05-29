@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# sdkman-setup --- SDKMAN setup
+
+# Commentary:
+
+# This installation script is distro-agnostic.
+
+# References: https://sdkman.io
+
+# Code:
+
+# only download & install if sdk is not installed
+test -x "`command -v 'sdk'`"  && {
+    curl -s "https://get.sdkman.io" | bash
+} || {
+    printf 'SDKMAN already installed\n' 2>&1
+    exit 1
+}
