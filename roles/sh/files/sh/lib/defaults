@@ -3,7 +3,7 @@
 # defaults --- defaults for shell configuration file
 
 export TERMINAL='alacritty'
-export EDITOR="neovim"
+export EDITOR="nvim"
 export BROWSER='opera'
 export FILE='pcmanfm'
 
