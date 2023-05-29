@@ -19,7 +19,7 @@ test -x "${XORG_DIR:?}/xprofile" && . "${XORG_DIR:?}/xprofile"
 # -----------------------------------------------------------------------------
 
 # default
-session=${1}
+session=${1:-awesome}
 
 case ${session} in
 awesome)
