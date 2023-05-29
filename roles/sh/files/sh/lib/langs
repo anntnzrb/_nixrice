@@ -21,7 +21,7 @@ test -x "${HOME}/.ghcup/env" && . "${HOME}/.ghcup/env"
 # -----------------------------------------------------------------------------
 
 # sdkman
-test -x "${HOME}/.sdkman/bin/sdkman-init.sh" && \
+test -e "${HOME}/.sdkman/bin/sdkman-init.sh" && \
     . "${HOME}/.sdkman/bin/sdkman-init.sh"
 
 # fix for dwm
