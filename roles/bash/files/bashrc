@@ -5,15 +5,6 @@
 # shellcheck disable=1090
 # follow non-constant sources
 
-#  ██                        ██
-# ░██                       ░██
-# ░██       ██████    ██████░██      ██████  █████
-# ░██████  ░░░░░░██  ██░░░░ ░██████ ░░██░░█ ██░░░██
-# ░██░░░██  ███████ ░░█████ ░██░░░██ ░██ ░ ░██  ░░
-# ░██  ░██ ██░░░░██  ░░░░░██░██  ░██ ░██   ░██   ██
-# ░██████ ░░████████ ██████ ░██  ░██░███   ░░█████
-# ░░░░░    ░░░░░░░░ ░░░░░░  ░░   ░░ ░░░     ░░░░░
-
 # -----------------------------------------------------------------------------
 # preamble
 # -----------------------------------------------------------------------------
@@ -81,9 +72,9 @@ export PROMPT_COMMAND=cprompt
 
 cprompt() {
     local exit_status=${PIPESTATUS[-1]} # needs to be first
-    PS1=
+    PS1=""
 
-    ## colors
+    # colors
     local res='\[\e[0m\]' # text/color reset
 
     # regular                   # bold
@@ -96,37 +87,19 @@ cprompt() {
     local cya='\[\e[0;36m\]';   local b_cya='\[\e[1;36m\]';
     local whi='\[\e[0;37m\]';   local b_whi='\[\e[1;37m\]';
 
-    # decor '['
+    # prompt
     PS1+="${blu}[${res}"
-
-    ## user
     PS1+="${red}\u${res}"
-
-    # decor '::'
     PS1+="${b_whi}::${res}"
-
-    ## host
     PS1+="${cya}\h${res}"
-
-    # decor ']'
     PS1+="${blu}]${res}"
-
-    # decor ' @ '
     PS1+="${pur} @ ${res}"
-
-    ## working dir
     PS1+="${b_yel}\w${res}"
-
-    ## git
     PS1+=" ${cya}`__git_ps1 "(%s)"`${res}"
-
-    # newline
     PS1+='\n'
-
-    # decor '╚══'
     PS1+="${blu}╚══ ${res}"
 
-    ## exit status
+    # exit status
     # display exit status code only if non-zero
     test 0 -ne ${exit_status} && PS1+="${b_red}${exit_status} ${res}"
 
@@ -140,3 +113,5 @@ cprompt() {
 
 # source direnv (must be around the end)
 test -x "`command -v 'direnv'`" && eval "`direnv hook bash`"
+
+return 0
