@@ -46,6 +46,8 @@ export HISTIGNORE='cd:ls:ll:exit:pwd' # commands to be ignored in history
 # sourcing
 # -----------------------------------------------------------------------------
 
+test -f "${HOME}/.config/sh/profile" && . "${HOME}/.config/sh/profile"
+
 # prompt, aliases, functions...
 test -x "${SH_DIR}/aliasrc" && . "${SH_DIR}/aliasrc"
 test -x "${SH_DIR}/functionrc" && . "${SH_DIR}/functionrc"
