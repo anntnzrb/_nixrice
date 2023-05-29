@@ -3,5 +3,4 @@
 # shellcheck disable=1090
 # follow non-constant sources
 
-test -f "${HOME}/.config/sh/profile" && . "${HOME}/.config/sh/profile"
 test -f "${HOME}/.bashrc" && . "${HOME}/.bashrc"
