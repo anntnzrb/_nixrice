@@ -101,12 +101,15 @@ cprompt() {
     PS1+='\n'
     PS1+="${blu}╚══ ${res}"
 
+    # nix-shell indicator
+    nix_shell_p && PS1+="${blu}(nix) ${res}"
+
     # exit status
     # display exit status code only if non-zero
     test 0 -ne ${exit_status} && PS1+="${b_red}${exit_status} ${res}"
 
     # decor '$'
-    PS1+="${b_gre}$ ${res}"
+    PS1+="${b_gre}\$ ${res}"
 }
 
 # -----------------------------------------------------------------------------
