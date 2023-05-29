@@ -2,13 +2,13 @@
 
 - name: Link cfgs
   file:
-    src: "{{ role_path }}/files/s/"
+    src: "{{ role_path }}/files/sh/"
     dest: "{{ cfg_dir }}/sh"
     state: link
 
 - name: Symlink ~/.profile (ZSH)
   file:
-    src: "{{ role_path }}/files/s/profile"
+    src: "{{ role_path }}/files/sh/profile"
     dest: "{{ home }}/.zprofile"
     state: link
 
