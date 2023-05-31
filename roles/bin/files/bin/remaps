@@ -4,14 +4,28 @@
 
 # Commentary:
 
-# This script should be called when starting the graphical environment;
-# that is, `xprofile` (or equivalent).
+# Configures the keyboard variant, layout and other settings. This script
+# should be called when starting the graphical environment.
 
-# set key repeat delay and key repeat respectively
-xset r rate 220 50
+# -----------------------------------------------------------------------------
+# config
+# -----------------------------------------------------------------------------
+# '1' -> true ; blank -> false
 
-# altgr for accented letters, etc.
-setxkbmap -layout 'us' -variant 'altgr-intl'
+kb_repeat_delay=220
+kb_repeat_rate=50
+kb_layout='us'
+kb_variant='altgr-intl' # altgr for accented letters, etc.
+
+# will remap to ESC
+caps_lock_disable=1
+
+# -----------------------------------------------------------------------------
+
+xset r rate ${kb_repeat_delay} ${kb_repeat_rate}
+setxkbmap -layout "${kb_layout}" -variant "${kb_variant}"
 
 # map the CAPS-LOCK key to SUPER
-setxkbmap -option 'caps:escape'
+test -n "${caps_lock_disable}" && setxkbmap -option 'caps:escape'
+
+exit 0
