@@ -15,6 +15,7 @@ export BASH_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/bash"
 #------------------------------------------------------------------------------
 # nothing too specific, just for cleaning up ~/
 
+export GNUPGHOME="${HOME}/.config/gnupg"
 export WGETRC="${HOME}/.config/wget/wgetrc"
 export LESSKEY="${HOME}/.config/less/lesskey"
 export LESSHISTFILE='-'
@@ -31,3 +32,11 @@ export ADB_VENDOR_KEY="${HOME}/.config/android"
 
 # Ansible
 export ANSIBLE_HOME="${HOME}/.config/ansible"
+export ANSIBLE_CONFIG="${ANSIBLE_HOME}/ansible.cfg"
+export ANSIBLE_GALAXY_CACHE_DIR="${ANSIBLE_HOME}/galaxy_cache"
+
+# JVM-related
+export LEIN_HOME="${HOME}/.config/lein"
+
+# Web
+export NPM_CONFIG_USERCONFIG="${HOME}/.config/npm/npmrc"
