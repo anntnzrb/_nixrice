@@ -168,6 +168,7 @@ end
 -- battery
 local w_battery = create_widget("get-battery-cap", 20)
 local w_nettraff = create_widget("get-net-traff", 1)
+local w_memusage = create_widget("get-mem-usage", 10)
 
 awful.screen.connect_for_each_screen(function(s)
     -- Each screen has its own tag table.
@@ -220,6 +221,7 @@ awful.screen.connect_for_each_screen(function(s)
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
             w_battery,
+            w_memusage,
             w_nettraff,
             mykeyboardlayout,
             wibox.widget.systray(),
