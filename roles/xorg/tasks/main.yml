@@ -25,6 +25,9 @@
     dest: "{{ local_dir }}/share/applications"
     state: link
 
+- name: Ensure '/etc/X11/xorg.conf.d/' dir exists
+  file: path='/etc/X11/xorg.conf.d/' state=directory
+
 - name: Link Xorg cfg
   become: true
   ansible.builtin.file:
