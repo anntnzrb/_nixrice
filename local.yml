@@ -24,7 +24,7 @@
   - { role: ssh,       tags: [ 'core', 'ssh' ] }
 
 
-  - { role: emacs, tags: [ 'core', 'editor', 'emacs' ] }
+# - { role: emacs, tags: [ 'core', 'editor', 'emacs' ] }
   - { role: vim,   tags: [ 'core', 'editor', 'vim' ] }
   - { role: nvim,  tags: [ 'core', 'editor', 'nvim' ] }
 
