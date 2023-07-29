@@ -26,6 +26,7 @@
     state: link
 
 - name: Ensure '/etc/X11/xorg.conf.d/' dir exists
+  become: true
   file: path='/etc/X11/xorg.conf.d/' state=directory
 
 - name: Link Xorg cfg
