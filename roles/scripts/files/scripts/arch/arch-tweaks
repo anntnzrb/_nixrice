@@ -12,8 +12,10 @@
 # Code:
 
 # checks
-! rootp && err 'This script needs root access.' && exit 1
-! installed 'pacman' && err 'This script only works on Arch-based systems' && exit 1
+test `id -u` -ne 0 && printf 'This script needs root access.\n' >&2 && exit 1
+test ! -x "`command -v 'pacman'`" \
+    && printf 'This script only works on Arch-based systems.\n' \
+    && exit 1
 
 # variables
 pacman_conf='/etc/pacman.conf'
