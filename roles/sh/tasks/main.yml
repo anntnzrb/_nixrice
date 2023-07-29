@@ -6,21 +6,3 @@
     dest: "{{ cfg_dir }}/sh"
     state: link
 
-- name: Symlink ~/.profile (ZSH)
-  file:
-    src: "{{ role_path }}/files/sh/profile"
-    dest: "{{ home }}/.zprofile"
-    state: link
-
-# -----------------------------------------------------------------------------
-# plugins
-# -----------------------------------------------------------------------------
-
-- name: Ensure {{ cfg_dir}}/sh/plugins dir exists
-  file: path={{ cfg_dir }}/sh/plugins state=directory
-
-- name: plugin --- git-prompt
-  get_url:
-    url: "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh"
-    dest: "{{ cfg_dir }}/sh/plugins/git-prompt.sh"
-    mode: 0755

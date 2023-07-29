@@ -1,43 +1,27 @@
 #!/usr/bin/env bash
 
 # .bashrc --- Bash shell configuration file
-
+#
+# Code:
+#
 # shellcheck disable=1090
 # follow non-constant sources
 
-# -----------------------------------------------------------------------------
-# preamble
-# -----------------------------------------------------------------------------
-
 # do nothing if not running interactively
 [[ ${-} != *i* ]] && return
-
-nix_shell_p() {
-    # **
-    # check if running via nix-shell
-    # *
-
-    test -n "${IN_NIX_SHELL}"
-}
-
-# use POSIX mode if NOT running via nix-shell (unsupported)
-nix_shell_p || set -o posix
-
-nix_shell_p && export NIX_SHELL_PRESERVE_PROMPT=1;
-
-# update the values of LINES and COLUMNS
-test -n "${DISPLAY}" && shopt -s checkwinsize
-shopt -s globstar      # allow ** to match recursively
-shopt -s nocaseglob    # match globs case-insensitively
-# attempt to correct directory names
-shopt -s dirspell
-shopt -s cdspell
 
 # -----------------------------------------------------------------------------
 # settings
 # -----------------------------------------------------------------------------
 
-# history
+# update the values of LINES and COLUMNS
+test -n "${DISPLAY}" && shopt -s checkwinsize
+
+## history
+# clean up
+test -e "${HOME}/.bash_history" \
+    && rm "${HOME}/.bash_history" >/dev/null 2>&1
+
 export HISTFILE="${HOME}/.local/bash_history"
 export HISTCONTROL='ignoreboth'       # keep duplicates off
 export HISTIGNORE='cd:ls:ll:exit:pwd' # commands to be ignored in history
@@ -45,78 +29,11 @@ export HISTIGNORE='cd:ls:ll:exit:pwd' # commands to be ignored in history
 # -----------------------------------------------------------------------------
 # sourcing
 # -----------------------------------------------------------------------------
+# aliases, functions...
 
 test -f "${HOME}/.config/sh/profile" && . "${HOME}/.config/sh/profile"
+test -x "${SH_DIR}/aliasrc"          && . "${SH_DIR}/aliasrc"
+test -x "${SH_DIR}/functionrc"       && . "${SH_DIR}/functionrc"
 
-# prompt, aliases, functions...
-test -x "${SH_DIR}/aliasrc" && . "${SH_DIR}/aliasrc"
-test -x "${SH_DIR}/functionrc" && . "${SH_DIR}/functionrc"
-
-# misc
-for f in ${SH_DIR}/plugins/*; do
-    test -x "${f}" && . "${f}"
-done
-
-# git-prompt settings
-export GIT_PS1_SHOWDIRTYSTATE=1
-export GIT_PS1_SHOWSTASHSTATE=1
-export GIT_PS1_SHOWUNTRACKEDFILES=1
-export GIT_PS1_SHOWUPSTREAM='auto'
-export GIT_PS1_SHOWUPSTREAM='verbose'
-export GIT_PS1_DESCRIBE_STYLE='branch'
-export GIT_PS1_SHOWCOLORHINTS=1
-
-# -----------------------------------------------------------------------------
-# prompt
-# -----------------------------------------------------------------------------
-
-export PROMPT_COMMAND=cprompt
-
-cprompt() {
-    local exit_status=${PIPESTATUS[-1]} # needs to be first
-    PS1=""
-
-    # colors
-    local res='\[\e[0m\]' # text/color reset
-
-    # regular                   # bold
-    local bla='\[\e[0;30m\]';   local b_bla='\[\e[1;30m\]';
-    local red='\[\e[0;31m\]';   local b_red='\[\e[1;31m\]';
-    local gre='\[\e[0;32m\]';   local b_gre='\[\e[1;32m\]';
-    local yel='\[\e[0;33m\]';   local b_yel='\[\e[1;33m\]';
-    local blu='\[\e[0;34m\]';   local b_blu='\[\e[1;34m\]';
-    local pur='\[\e[0;35m\]';   local b_pur='\[\e[1;35m\]';
-    local cya='\[\e[0;36m\]';   local b_cya='\[\e[1;36m\]';
-    local whi='\[\e[0;37m\]';   local b_whi='\[\e[1;37m\]';
-
-    # prompt
-    PS1+="${blu}[${res}"
-    PS1+="${red}\u${res}"
-    PS1+="${b_whi}::${res}"
-    PS1+="${cya}\h${res}"
-    PS1+="${blu}]${res}"
-    PS1+="${pur} @ ${res}"
-    PS1+="${b_yel}\w${res}"
-    PS1+=" ${cya}`__git_ps1 "(%s)"`${res}"
-    PS1+='\n'
-    PS1+="${blu}╚══ ${res}"
-
-    # nix-shell indicator
-    nix_shell_p && PS1+="${blu}(nix) ${res}"
-
-    # exit status
-    # display exit status code only if non-zero
-    test 0 -ne ${exit_status} && PS1+="${b_red}${exit_status} ${res}"
-
-    # decor '$'
-    PS1+="${b_gre}\$ ${res}"
-}
-
-# -----------------------------------------------------------------------------
-# misc
-# -----------------------------------------------------------------------------
-
-# source direnv (must be around the end)
-test -x "`command -v 'direnv'`" && eval "`direnv hook bash`"
-
-return 0
+export STARSHIP_CONFIG="${HOME}/.config/starship/starship.toml"
+eval "`starship init bash`"
