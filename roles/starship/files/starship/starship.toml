@@ -1,4 +1,5 @@
 format = '''
+
 $username@$hostname $os $directory$all$time $shell$cmd_duration $character'''
 
 add_newline = false
