@@ -19,9 +19,13 @@ die() {
     exit 1
 }
 
+installedp() {
+    test -x "`command -v "${1}"`"
+}
+
 # quit if not running an arch-based distro
 ! installedp 'pacman' && die 'Not running an Arch-based distribution'
-rootp && die 'This CANNOT be ran as root'
+test `id -u` -eq 0 && die 'This CANNOT be ran as root'
 
 # -----------------------------------------------------------------------------
 # main
@@ -31,7 +35,7 @@ rootp && die 'This CANNOT be ran as root'
 if ! installedp 'paru'; then
     dest='/tmp/paru/'
 
-    git-clone-fast 'https://aur.archlinux.org/paru.git' "${dest}"
+    git clone --depth 1 --single-branch --no-tags 'https://aur.archlinux.org/paru.git' "${dest}"
     cd "${dest}" || die 'Could not cd, exiting...'
     makepkg --needed --noconfirm -Ccirs
 else
