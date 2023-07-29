@@ -25,7 +25,7 @@ use_xrdb=
 
 {
     # **
-    # Apps to be launched when a graphical session is started.
+    # Apps: launched when graphical session is started.
     # *
 
     "${TERMINAL:?}" -e 'htop' & # system monitor
@@ -46,7 +46,7 @@ use_xrdb=
 
 {
     # **
-    # Applets require a bar/panel which supports & displays them.
+    # Applets: require a bar/panel which supports & displays them.
     # *
 
     test "${use_tray}" || return 0
@@ -57,7 +57,18 @@ use_xrdb=
 
 {
     # **
-    # Xorg settings: DPI, timeouts, etc...
+    # Audio
+    # *
+
+    pipewire       &
+    pipewire-pulse &
+    wireplumber    &
+    pasystray      &
+}
+
+{
+    # **
+    # Xorg: DPI, timeouts, etc...
     # *
 
     xrandr --dpi 92    & # DPI defaulted to 1920x1080 24" screen
