@@ -1,18 +1,19 @@
 ---
 
-- name: Ensure {{ bw_dir }} dir exists
-  become: true
-  file: path={{ bw_dir }} state=directory
+- name: Set variables
+  set_fact:
+    bw_zip: '/tmp/bw.zip'
+    bw_dir: '/usr/local/bin'
 
 - name: Download
-  become: true
   ansible.builtin.get_url:
     url: 'https://vault.bitwarden.com/download/?app=cli&platform=linux'
-    dest: "{{ bw_dir }}/bw.zip"
+    dest: "{{ bw_zip }}"
 
-- name: Extract
+- name: Install
   become: true
   ansible.builtin.unarchive:
-    src: "{{ bw_dir }}/bw.zip"
-    dest: '/usr/local/bin'
+    src: "{{ bw_zip }}"
+    dest: "{{ bw_dir }}"
     mode: 0755
+

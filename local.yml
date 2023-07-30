@@ -10,7 +10,6 @@
     cfg_dir: "${HOME}/.config"
     fonts_dir: "${HOME}/.local/share/fonts"
     ssh_dir: "${HOME}/.ssh"
-    bw_dir: '/opt/bitwarden'
 
   roles:
   - { role: base, tags: [ 'core', 'base' ] }
