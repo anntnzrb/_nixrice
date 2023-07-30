@@ -2,10 +2,10 @@
 
 # defaults --- defaults for shell configuration file
 
-export TERMINAL='alacritty'
-export EDITOR="nvim"
-export BROWSER='opera'
+export EDITOR="eeddiittoor"
+export BROWSER='brave'
 export FILE='pcmanfm'
+export TERMINAL='alacritty'
 
 export SH_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/sh"
 export BASH_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/bash"
