@@ -1,11 +1,11 @@
 #!/bin/sh
 
 # setbg --- Utility script to set a background/wallpaper.
-
+#
 # Commentary:
-
+#
 # Currently works for Xorg only.
-
+#
 # Code:
 
 # variables
@@ -58,7 +58,7 @@ get_wp_net() {
     # variables
     res=`get_screen_res | sed 's/x/\//'`
 
-    wget --no-hsts -q -O "${wp_path}" "https://unsplash.it/${res}/?nature"
+    curl -LSfs -o "${wp_path}" "https://unsplash.it/${res}/?nature"
 
     # set the wallpaper only if the file exists
     wallpaper_exists_p && ${feh_cmd} "${wp_path}"
@@ -96,10 +96,6 @@ pywal_dwm() {
 # -----------------------------------------------------------------------------
 # main
 # -----------------------------------------------------------------------------
-
-# checks
-#! runningp 'Xorg' && printf "A Xorg session must be running\n" >2&1 \
-#! installedp 'feh' && printf "'feh' is needed to run this script\n" >2&1 && exit 1
 
 # get wallpaper from the internet as default if argv[1] is null
 test -z "${1}" && get_wp_net
