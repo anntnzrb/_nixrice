@@ -1,66 +1,70 @@
-#core
-extra/gnome-keyring
-extra/ntfs-3g
-extra/pacman-contrib
-extra/wget
-system/base-devel
-system/curl
-system/gnupg
-system/man-db
-system/man-pages
-system/openssh
-system/usbutils
+# core
+A,extra/atool
+A,extra/gnome-keyring
+A,extra/ntfs-3g
+A,extra/pacman-contrib
+A,extra/unzip
+A,extra/wget
+A,extra/zip
+A,system/base-devel
+A,system/curl
+A,system/gnupg
+A,system/man-db
+A,system/man-pages
+A,system/openssh
+A,system/usbutils
 
-#core-utils
-extra/bat
-extra/exa
-extra/fd
-extra/ripgrep
+# core-utils
+C,bat
+C,exa
+C,fd-find
+C,ripgrep
 
-#main packages
-aur/xbanish
-extra/alacritty
-extra/atool
-extra/dunst
-extra/feh
-extra/htop
-extra/libnotify
-extra/maim
-extra/mpv
-extra/neofetch
-extra/network-manager-applet
-extra/pcmanfm
-extra/picom
-extra/redshift
-extra/unzip
-extra/zathura
-extra/zathura-pdf-mupdf
-extra/zip
+# main packages
+A,aur/xbanish
+A,extra/dunst
+A,extra/feh
+A,extra/htop
+A,extra/libnotify
+A,extra/maim
+A,extra/mpv
+A,extra/neofetch
+A,extra/network-manager-applet
+A,extra/pcmanfm
+A,extra/picom
+A,extra/redshift
+A,extra/zathura
+A,extra/zathura-pdf-mupdf
+C,alacritty
 
-#X11 (graphical environment)
-extra/awesome
-extra/sxhkd
-extra/xclip
-extra/xdg-user-dirs
-extra/xdotool
-extra/xorg-server
-extra/xorg-setxkbmap
-extra/xorg-xinit
-extra/xorg-xkill
-extra/xorg-xprop
-extra/xorg-xrandr
-extra/xorg-xrdb
-extra/xorg-xset
-extra/xorg-xsetroot
+# tools
+C,gitui
+C,rtx-cli
 
-#hardware-specific
-extra/intel-ucode
-extra/bluez
-extra/bluez-utils
-extra/blueman
+# X11 (graphical environment)
+A,extra/awesome
+A,extra/sxhkd
+A,extra/xclip
+A,extra/xdg-user-dirs
+A,extra/xdotool
+A,extra/xorg-server
+A,extra/xorg-setxkbmap
+A,extra/xorg-xinit
+A,extra/xorg-xkill
+A,extra/xorg-xprop
+A,extra/xorg-xrandr
+A,extra/xorg-xrdb
+A,extra/xorg-xset
+A,extra/xorg-xsetroot
 
-world/wireplumber
-world/pipewire-alsa
-world/pipewire-pulse
-extra/pulsemixer
-extra/pasystray
+# hardware-specific
+A,extra/blueman
+A,extra/bluez
+A,extra/bluez-utils
+A,extra/intel-ucode
+
+A,extra/pasystray
+A,extra/pulsemixer
+A,world/pipewire-alsa
+A,world/pipewire-pulse
+A,world/wireplumber
