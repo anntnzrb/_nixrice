@@ -46,24 +46,25 @@ else
 fi
 
 alias \
-    ..='cd ..'                                                                \
-    cp='cp -Riv'                                                              \
-    diff='diff --color=auto'                                                  \
-    mkdir='mkdir -pv'                                                         \
-    lsblk='lsblk -ap'                                                         \
-    mv='mv -iv'                                                               \
-    rm='rm -v'                                                                \
-    rmfr='rm -Rfv'                                                            \
-    rmfrs='rm -Rf >/dev/null'                                                 \
-    tree='exa --color=automatic --group-directories-first --icons -FTgh'      \
-    treea='exa --color=automatic --group-directories-first --icons -FTagh'    \
-    treed='exa --color=automatic --icons -DFTgh'                              \
-    wget='wget --no-hsts'                                                     \
+    ..='cd ..'                                                                 \
+    cp='cp -Riv'                                                               \
+    diff='diff --color=auto'                                                   \
+    mkdir='mkdir -pv'                                                          \
+    lsblk='lsblk -ap'                                                          \
+    mv='mv -iv'                                                                \
+    rm='rm -v'                                                                 \
+    rmfr='rm -Rfv'                                                             \
+    rmfrs='rm -Rf >/dev/null'                                                  \
+    tree='exa --color=automatic --group-directories-first --icons -FTgh'       \
+    treea='exa --color=automatic --group-directories-first --icons -FTagh'     \
+    treed='exa --color=automatic --icons -DFTgh'                               \
+    wget='wget --no-hsts'                                                      \
     zip='zip -rv'
 
 # shortcuts
 alias \
-    sx11="startx \"${XORG_DIR:?}/xinitrc\"" \
+    v="${EDITOR}"                                                              \
+    sx11="startx \"${XORG_DIR:?}/xinitrc\""                                    \
     kx11="pkill -15 'X'"
 
 # -----------------------------------------------------------------------------
@@ -73,6 +74,7 @@ alias \
 alias \
     ascii="toilet -t -f '3d'"                                                  \
     tnet="ping 'example.com'"                                                  \
+    gt="gitui"                                                                 \
     yt='yt-dlp --restrict-filenames'                                           \
     ytf='yt-dlp -F'                                                            \
     ytt='yt-dlp --restrict-filenames --skip-download --write-thumbnail'        \
