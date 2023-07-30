@@ -38,6 +38,7 @@ Artix = '🐧'
 [shell]
 disabled = false
 bash_indicator = 'bash'
+fish_indicator = 'fish'
 format = '[\($indicator\)](bold blue)'
 
 [time]
