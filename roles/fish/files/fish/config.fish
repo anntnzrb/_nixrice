@@ -57,5 +57,7 @@ command -q 'rtx'; and rtx activate fish | source
 # ------------------------------------------------------------------------------
 
 # keep at last
-set -x STARSHIP_CONFIG "$HOME/.config/starship/starship.toml"
-starship init fish | source
+if command -q 'starship'
+    set -x STARSHIP_CONFIG "$HOME/.config/starship/starship.toml"
+    starship init fish | source
+end
