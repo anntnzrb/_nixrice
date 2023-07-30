@@ -1,7 +1,15 @@
 ---
+- name: Set vars
+  set_fact:
+    install_script: '/tmp/starship-install.sh'
 
-- name: Link cfgs
-  file:
-    src: "{{ role_path }}/files/starship/"
-    dest: "{{ cfg_dir }}/starship"
-    state: link
+- name: Download install script
+  ansible.builtin.get_url:
+    url: 'https://starship.rs/install.sh'
+    dest: "{{ install_script }}"
+    mode: 0755
+
+- name: Install
+  ansible.builtin.shell:
+    cmd: 'sh {{ install_script }} --yes'
+
