@@ -1,9 +1,0 @@
-" vimrc --- Vim configuration file
-
-" set RTP to personal config
-let $RTP=split(&runtimepath, ',')[0]
-
-" source files
-exe 'source' "$RTP/config/core.vim"
-exe 'source' "$RTP/config/editing.vim"
-exe 'source' "$RTP/config/visual.vim"
