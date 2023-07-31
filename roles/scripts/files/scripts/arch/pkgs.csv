@@ -1,11 +1,5 @@
 # core
 A,extra/atool
-A,extra/gnome-keyring
-A,extra/ntfs-3g
-A,extra/pacman-contrib
-A,extra/unzip
-A,extra/wget
-A,extra/zip
 A,system/base-devel
 A,system/curl
 A,system/gnupg
@@ -13,6 +7,12 @@ A,system/man-db
 A,system/man-pages
 A,system/openssh
 A,system/usbutils
+A,world/gnome-keyring
+A,world/ntfs-3g
+A,world/pacman-contrib
+A,world/unzip
+A,world/wget
+A,world/zip
 
 # core-utils
 C,bat
@@ -22,19 +22,19 @@ C,ripgrep
 
 # main packages
 A,aur/xbanish
-A,extra/dunst
-A,extra/feh
-A,extra/htop
-A,extra/libnotify
-A,extra/maim
-A,extra/mpv
-A,extra/neofetch
-A,extra/network-manager-applet
-A,extra/pcmanfm
-A,extra/picom
-A,extra/redshift
-A,extra/zathura
-A,extra/zathura-pdf-mupdf
+A,world/dunst
+A,world/feh
+A,world/htop
+A,world/libnotify
+A,world/maim
+A,world/mpv
+A,world/neofetch
+A,world/network-manager-applet
+A,world/pcmanfm
+A,world/picom
+A,world/redshift
+A,world/zathura
+A,world/zathura-pdf-mupdf
 C,alacritty
 
 # tools
@@ -43,26 +43,26 @@ C,rtx-cli
 C,zellij
 
 # X11 (graphical environment)
-A,extra/awesome
-A,extra/sxhkd
-A,extra/xclip
-A,extra/xdg-user-dirs
-A,extra/xdotool
-A,extra/xorg-server
-A,extra/xorg-setxkbmap
-A,extra/xorg-xinit
-A,extra/xorg-xkill
-A,extra/xorg-xprop
-A,extra/xorg-xrandr
-A,extra/xorg-xrdb
-A,extra/xorg-xset
-A,extra/xorg-xsetroot
+A,world/awesome
+A,world/sxhkd
+A,world/xclip
+A,world/xdg-user-dirs
+A,world/xdotool
+A,world/xorg-server
+A,world/xorg-setxkbmap
+A,world/xorg-xinit
+A,world/xorg-xkill
+A,world/xorg-xprop
+A,world/xorg-xrandr
+A,world/xorg-xrdb
+A,world/xorg-xset
+A,world/xorg-xsetroot
 
 # hardware-specific
 A,extra/blueman
-A,extra/bluez
-A,extra/bluez-utils
-A,extra/intel-ucode
+A,world/bluez
+A,world/bluez-utils
+A,world/intel-ucode
 
 A,extra/pasystray
 A,extra/pulsemixer
