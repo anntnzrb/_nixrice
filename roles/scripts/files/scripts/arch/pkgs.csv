@@ -40,6 +40,7 @@ C,alacritty
 # tools
 C,gitui
 C,rtx-cli
+C,zellij
 
 # X11 (graphical environment)
 A,extra/awesome

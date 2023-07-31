@@ -22,7 +22,6 @@
   - { role: scripts,   tags: [ 'core', 'scripts' ] }
   - { role: ssh,       tags: [ 'core', 'ssh' ] }
 
-
 # - { role: emacs, tags: [ 'core', 'editor', 'emacs' ] }
   - { role: nvim,  tags: [ 'core', 'editor', 'nvim' ] }
 
@@ -40,9 +39,9 @@
   - { role: fonts,    tags: [ 'core', 'ui', 'fonts' ] }
 
   - { role: sh,       tags: [ 'core', 'shell' ] }
-  - { role: starship, tags: [ 'core', 'starship' ] }
   - { role: bash,     tags: [ 'core', 'bash' ] }
   - { role: fish,     tags: [ 'core', 'fish' ] }
+  - { role: starship, tags: [ 'core', 'starship' ] }
 
   - { role: alacritty,   tags: [ 'core', 'alacritty' ] }
   - { role: git,         tags: [ 'core', 'git' ] }
@@ -58,7 +57,8 @@
   - { role: zathura,     tags: [ 'core', 'zathura' ] }
 
   # other tools
-  - { role: jetbrains-toolbox, tags: [ 'core',  'jb-toolbox' ] }
+# - { role: jetbrains-toolbox, tags: [ 'core',  'jb-toolbox' ] }
+  - { role: zellij,            tags: [ 'core',  'zellij' ] }
 
   # system
   - { role: grub, tags: [ 'grub' ] }
