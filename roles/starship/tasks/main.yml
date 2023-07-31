@@ -13,3 +13,8 @@
   ansible.builtin.shell:
     cmd: 'sh {{ install_script }} --yes'
 
+- name: Link cfgs
+  ansible.builtin.file:
+    src: "{{ role_path }}/files/starship/"
+    dest: "{{ cfg_dir }}/starship"
+    state: link
