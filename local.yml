@@ -43,7 +43,6 @@
   - { role: starship, tags: [ 'core', 'starship' ] }
   - { role: bash,     tags: [ 'core', 'bash' ] }
   - { role: fish,     tags: [ 'core', 'fish' ] }
-  - { role: zsh,      tags: [ 'core', 'zsh' ] }
 
   - { role: alacritty,   tags: [ 'core', 'alacritty' ] }
   - { role: git,         tags: [ 'core', 'git' ] }
