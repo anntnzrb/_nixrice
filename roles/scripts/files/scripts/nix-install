@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# nix-install --- Install the Nix Package Manager
+#
+# Commentary:
+#
+# This installation script is distro-agnostic.
+#
+# References: https://nixos.org/manual/nix/stable/
+#
+# Code:
+
+# only download & install if '/nix/' folder is absent
+test ! -d '/nix/' && {
+    curl -L 'https://nixos.org/nix/install' \
+        | sh -s -- --yes --no-daemon --no-modify-profile
+} || {
+    printf "'/nix/' is present, Nix is probably installed already...\n" 2>&1
+    exit 1
+}
