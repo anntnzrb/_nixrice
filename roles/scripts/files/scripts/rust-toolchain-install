@@ -15,7 +15,10 @@ curl --proto '=https' --tlsv1.2 -Sfs 'https://sh.rustup.rs' \
     --component 'rust-src' 'rust-analyzer'
 
 # install binaries via cargo
-cargo install --locked 'cargo-quickinstall'
+cargo install --locked 'cargo-binstall'
+
+# helps compilation time
+cargo binstall --no-confirm --locked 'sccache'
 
 exit 0
 
