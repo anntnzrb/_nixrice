@@ -47,6 +47,7 @@
   - { role: git,         tags: [ 'core', 'git' ] }
   - { role: htop,        tags: [ 'core', 'htop' ] }
   - { role: libreoffice, tags: [ 'core', 'libreoffice' ] }
+  - { role: mpv,         tags: [ 'core', 'mpv' ] }
   - { role: neofetch,    tags: [ 'core', 'neofetch' ] }
   - { role: newsboat,    tags: [ 'core', 'newsboat' ] }
   - { role: onedrive,    tags: [ 'core', 'onedrive' ] }

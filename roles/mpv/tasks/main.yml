@@ -1,0 +1,7 @@
+---
+
+- name: Link cfgs
+  file:
+    src: "{{ role_path }}/files/mpv/"
+    dest: "{{ cfg_dir }}/mpv"
+    state: link
