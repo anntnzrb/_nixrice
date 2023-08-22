@@ -1,8 +1,0 @@
----
-
-- name: Install
-  become: true
-  ansible.builtin.get_url:
-    url: 'https://github.com/WoeUSB/WoeUSB/releases/download/v5.2.4/woeusb-5.2.4.bash'
-    dest: '/usr/local/bin/woeusb'
-    mode: 0755
