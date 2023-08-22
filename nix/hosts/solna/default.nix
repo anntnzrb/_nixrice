@@ -44,9 +44,9 @@ in
   };
 
   home-manager = {
-    extraSpecialArgs = { inherit self hostInfo inputs; };
+    extraSpecialArgs = { inherit self me hostInfo inputs; };
     users = {
-      ${hostInfo.user} = import "${me.nixHosts}/${hostInfo.hostName}";
+      ${hostInfo.user} = import "${me.nixHomes}/${hostInfo.hostName}";
     };
   };
 

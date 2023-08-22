@@ -4,7 +4,7 @@
 , ...
 }:
 let
-  sharedImports = map (m: "${nixHomes}/shared/${m}") [
+  sharedImports = map (m: "${me.nixHomes}/shared/${m}") [
     "cli/direnv"
     "cli/git"
     "cli/neofetch"
