@@ -1,0 +1,3 @@
+{
+  programs.ssh.enableAskPassword = false;
+}
