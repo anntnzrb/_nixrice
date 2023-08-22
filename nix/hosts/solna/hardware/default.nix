@@ -44,6 +44,6 @@
 
   powerManagement = {
     enable = true;
-    cpuFreqGovernor = "powersave";
+    cpuFreqGovernor = "performance";
   };
 }
