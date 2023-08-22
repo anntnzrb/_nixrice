@@ -1,4 +1,5 @@
-{ config
+{ me
+, config
 , ...
 }:
 {
@@ -31,6 +32,15 @@
         publicShare = "${libDir}/public";
         templates = "${libDir}/templates";
         videos = "${libDir}/vids";
+      };
+
+      configFile = {
+        "sx" = {
+          enable = true;
+          target = "sx";
+          recursive = true;
+          source = "${me.dotfilesDir}/sx";
+        };
       };
     };
 }

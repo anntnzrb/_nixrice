@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# pick for available profile
+autorandr -c &
+
+# audio applet
+pasystray &
+
+# hotkeys
+sxhkd -m 1 &
+
+# wm
+exec awesome
