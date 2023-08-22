@@ -7,9 +7,6 @@
 * table of contents :toc:noexport:
 - [[#preamble][preamble]]
 - [[#intro][intro]]
-- [[#installation][installation]]
-  - [[#dependencies][dependencies]]
-  - [[#instructions][instructions]]
 - [[#disclaimer][disclaimer]]
 - [[#log][log]]
 - [[#copying][copying]]
@@ -17,55 +14,13 @@
 * preamble
 
 this file is created using /GNU Emacs' Org-Mode/, refer to =docs/= for the
-source code; in there you can find different versions of this document.
-
-this file gets generates in 2 extra formats:
-
-- *plain-text*
-- *markdown*
+source code.
 
 * intro
 
 these /.files/ have accompanied me since /2019/-ish (under VC since /2020/),
 all files/scripts have been written with portability in mind, meaning they're
 meant to work across multiple [[https://0x0.st/HNfM][*nix distrubutions]].
-
-* installation
-
-the following instructions allow you to set up my =.files= with one simple
-command, if you're only looking to copy them you may want to take a look at the
-=./.roles/= folder instead.
-
-*NOTE*: do not randomly execute the following commands as this can lead to
-overwritten data; it is adviced to backup or attempt what comes in an isolated
-environment.
-
-** dependencies
-
-| dependencies | description              |
-|--------------+--------------------------|
-| [[https://repology.org/project/ansible/versions][ansible]]      | software deployment tool |
-
-*NOTE*: If you're on /Nix/ take a look at =./default.nix=.
-
-** instructions
-
-unlock password manager vault before deployment so info can be retrieved:
-
-#+begin_src shell
-# my case for Bitwarden
-export BW_SESSION=$(bw unlock --raw)
-#+end_src
-
-deploy files with:
-
-#+begin_src shell
-ansible-pull -U 'https://git.sr.ht/~anntnzrb/_nixrice'
-
-# if above fails, clone & install manually
-git clone 'https://git.sr.ht/~anntnzrb/_nixrice' && cd '_nixrice'
-ansible-playbook -i localhost local.yml
-#+end_src
 
 * disclaimer
 
@@ -77,9 +32,13 @@ sharing is always encouraged.
 
 * log
 
-section designed to only track *very remarkable* stuff.
+section designed to only track *very remarkable* events.
 
 /(descending by date)/
+
+*2023-08-21* - drop /Ansible/.
+
+- simplified to favor Nix configuration.
 
 *2022-07-02* - switch to /Ansible/.
 
@@ -123,11 +82,3 @@ refer to the [[./COPYING][COPYING]] file for licensing information.
 
 unless otherwise noted, all code herein is distributed under the terms of the
 [[https://www.gnu.org/licenses/gpl-3.0.en.html][GNU General Public License Version 3 or later]].
-
-# local variables:
-# eval: (add-hook 'after-save-hook 'org-babel-execute-buffer nil t)
-# eval: (add-hook 'after-save-hook 'org-ascii-export-to-ascii nil t)
-# eval: (add-hook 'after-save-hook 'org-md-export-to-markdown nil t)
-# eval: (add-hook 'after-save-hook (lambda () (rename-file "README.md" "../README.md" t)) t)
-# eval: (add-hook 'after-save-hook (lambda () (delete-file "README.md")) t)
-# end:

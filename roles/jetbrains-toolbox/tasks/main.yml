@@ -1,8 +1,0 @@
----
-
-- name: Install
-  become: true
-  ansible.builtin.unarchive:
-    src: 'https://download.jetbrains.com/toolbox/jetbrains-toolbox-1.27.1.13673.tar.gz'
-    dest: '/opt/'
-    remote_src: yes

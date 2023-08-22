@@ -1,7 +1,0 @@
----
-
-- name: Link cfg
-  file:
-    src: "{{ role_path }}/files/nvim/"
-    dest: "{{ cfg_dir }}/nvim"
-    state: link
