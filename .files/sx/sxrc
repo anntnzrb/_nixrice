@@ -6,6 +6,9 @@ autorandr -c &
 # audio applet
 pasystray &
 
+# net applet
+nm-applet &
+
 # hotkeys
 sxhkd -m 1 &
 
