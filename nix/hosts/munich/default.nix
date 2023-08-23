@@ -13,6 +13,7 @@ let
     "global"
     "keyring"
     "virtualisation/docker"
+    "shh"
   ];
 
   imports = sharedImports ++ [
