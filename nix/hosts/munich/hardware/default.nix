@@ -1,14 +1,17 @@
-{ config, lib, pkgs, modulesPath, ... }:
+{ lib
+, inputs
+, modulesPath
+, ...
+}: {
+  imports = [
+    (modulesPath + "/installer/scan/not-detected.nix")
 
-{
-  imports =
-    [
-      (modulesPath + "/installer/scan/not-detected.nix")
+    inputs.nixos-hardware.nixosModules.common-pc-ssd
 
-      ./cpu.nix
-      ./gpu.nix
-      ./kernel.nix
-    ];
+    ./cpu.nix
+    ./gpu.nix
+    ./kernel.nix
+  ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
