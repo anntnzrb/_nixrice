@@ -1,6 +1,5 @@
-{ config
-, lib
+{ inputs
 , ...
 }: {
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+   imports = [ inputs.nixos-hardware.nixosModules.common-cpu-intel-cpu-only ];
 }

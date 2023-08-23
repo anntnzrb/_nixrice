@@ -1,6 +1,5 @@
-{ config
+{ inputs
 , lib
-, pkgs
 , modulesPath
 , ...
 }: {
@@ -8,7 +7,11 @@
     [
       (modulesPath + "/installer/scan/not-detected.nix")
 
+      inputs.nixos-hardware.nixosModules.common-pc-laptop
+      inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
+
       ./cpu.nix
+      ./gpu.nix
       ./kernel.nix
     ];
 
