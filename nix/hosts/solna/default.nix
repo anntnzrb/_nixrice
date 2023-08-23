@@ -12,6 +12,7 @@ let
     "audio"
     "global"
     "keyring"
+    "ssh"
   ];
 
   imports = sharedImports ++ [
