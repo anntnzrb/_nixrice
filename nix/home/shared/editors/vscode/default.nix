@@ -1,8 +1,9 @@
-{ pkgs, ... }:
-{
+{ pkgs
+, ...
+}: {
   programs.vscode = {
     enable = true;
-    package = pkgs.vscode; # non-free
+    package = pkgs.vscode-fhs; # non-free
 
     enableUpdateCheck = true;
     enableExtensionUpdateCheck = true;
