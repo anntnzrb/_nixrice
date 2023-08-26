@@ -9,6 +9,8 @@
 }:
 let
   sharedImports = map (m: "${me.nixHosts}/shared/${m}") [
+    "security/sudo_doas"
+
     "audio"
     "global"
     "keyring"
