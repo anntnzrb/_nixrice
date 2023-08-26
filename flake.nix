@@ -7,7 +7,7 @@
 
     home-manager = {
       url = "github:nix-community/home-manager/release-23.05";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
@@ -16,11 +16,12 @@
   outputs =
     { self
     , nixpkgs-stable
+    , nixpkgs-unstable
     , ...
     }@inputs:
     let
       inherit (self) outputs;
-      forAllSystems = nixpkgs-stable.lib.genAttrs [ "x86_64-linux" ];
+      forAllSystems = nixpkgs-unstable.lib.genAttrs [ "x86_64-linux" ];
     in
     rec {
       # globals
@@ -32,7 +33,7 @@
       };
 
       devShells = forAllSystems (system:
-        let pkgs = nixpkgs-stable.legacyPackages.${system};
+        let pkgs = nixpkgs-unstable.legacyPackages.${system};
         in import "${self}/shell.nix" { inherit pkgs; }
       );
 
@@ -44,7 +45,8 @@
           me
           inputs
           outputs
-          nixpkgs-stable;
+          nixpkgs-stable
+          nixpkgs-unstable;
       };
     };
 }
