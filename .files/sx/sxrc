@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# pick for available profile
+# pick first available profile
 autorandr -c &
 
 # audio applet
@@ -11,6 +11,9 @@ nm-applet &
 
 # hotkeys
 sxhkd -m 1 &
+
+# compositor (X11)
+picom -b
 
 # wm
 exec awesome
