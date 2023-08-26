@@ -29,7 +29,7 @@ jobs:
       - name: Update Flake Inputs
         run: |
           nix flake update
-          git commit -m "chore(flake): bump flake inputs" flake.lock || true
+          git commit -m "chore(flake): bump inputs" flake.lock || true
 
       - name: Push Updates
         run: |
