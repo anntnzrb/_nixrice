@@ -69,6 +69,10 @@ in
       isNormalUser = true;
       extraGroups = [ "wheel" "docker" ];
       initialPassword = " ";
+
+      openssh.authorizedKeys.keyFiles = [
+        "${me.dotfilesDir}/ssh/id_ed25519_git.pub"
+      ];
     };
   };
 }
