@@ -14,11 +14,12 @@ let
     "desktop/alacritty"
     "desktop/awesome"
     "desktop/chromium"
+    "desktop/firefox"
     "desktop/mpv"
     "desktop/pcmanfm"
     "desktop/rofi"
-    "desktop/themes"
     "desktop/sxhkd"
+    "desktop/themes"
     "desktop/xorg"
 
     "editors/emacs"
