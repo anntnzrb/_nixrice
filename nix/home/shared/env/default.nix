@@ -1,6 +1,6 @@
 {
   home.sessionVariables = {
-    BROWSER = "chromium";
+    BROWSER = "firefox";
     EDITOR = "nvim";
     FILE = "pcmanfm";
     TERMINAL = "alacritty";

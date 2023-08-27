@@ -1,6 +1,6 @@
 {
   programs.chromium = {
-    enable = true;
+    enable = false;
     commandLineArgs = [
       "--force-dark-mode"
     ];
