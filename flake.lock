@@ -8,19 +8,19 @@
         ]
       },
       "locked": {
-        "dir": "pkgs/firefox-addons",
-        "lastModified": 1693065351,
-        "narHash": "sha256-mN40XsCbRHj6eNDlMK7aeZniM78r7z3dy1yWr8l8NPo=",
-        "owner": "rycee",
-        "repo": "nur-expressions",
-        "rev": "2d4c897a3311b7fb045fbccc0ca5bc403e4a462e",
-        "type": "gitlab"
+        "dir": "repos/rycee/pkgs/firefox-addons",
+        "lastModified": 1693118524,
+        "narHash": "sha256-IqU0cexuCFnpGJG00dRePbnhN005Hv+UzkF3E+xI2HA=",
+        "owner": "nix-community",
+        "repo": "nur-combined",
+        "rev": "20856e2e3a414a5fae8782a6c6b02490f674a9f0",
+        "type": "github"
       },
       "original": {
-        "dir": "pkgs/firefox-addons",
-        "owner": "rycee",
-        "repo": "nur-expressions",
-        "type": "gitlab"
+        "dir": "repos/rycee/pkgs/firefox-addons",
+        "owner": "nix-community",
+        "repo": "nur-combined",
+        "type": "github"
       }
     },
     "flake-compat": {
