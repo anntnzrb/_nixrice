@@ -1,4 +1,5 @@
 { pkgs
+, inputs
 , hostInfo
 , ...
 }: {
@@ -6,9 +7,9 @@
     enable = true;
     package = pkgs.firefox;
 
-    profiles."${hostInfo.user}" = {
+    profiles.default = {
       id = 0; # default
-      name = "${hostInfo.user}";
+      name = "default";
 
       search = {
         default = "DuckDuckGo";
@@ -70,8 +71,13 @@
             };
           };
 
-        # extensions = [];
       };
+
+      extensions = with inputs.firefox-addons.packages.${pkgs.system}; [
+        ublock-origin
+        bitwarden
+        tridactyl
+      ];
     };
   };
 }
