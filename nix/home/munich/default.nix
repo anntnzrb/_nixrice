@@ -15,11 +15,12 @@ let
     "desktop/awesome"
     "desktop/chromium"
     "desktop/discord"
+    "desktop/firefox"
     "desktop/mpv"
     "desktop/pcmanfm"
     "desktop/rofi"
-    "desktop/themes"
     "desktop/sxhkd"
+    "desktop/themes"
     "desktop/xorg"
 
     "editors/emacs"
