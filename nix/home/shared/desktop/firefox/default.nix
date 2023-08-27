@@ -78,6 +78,10 @@
         bitwarden
         tridactyl
       ];
+
+      settings = {
+        "browser.startup.page" = 3;
+      };
     };
   };
 }
