@@ -5,6 +5,8 @@
 }:
 let
   sharedImports = map (m: "${me.nixHomes}/shared/${m}") [
+    "nix"
+
     "cli/direnv"
     "cli/git"
     "cli/neofetch"
