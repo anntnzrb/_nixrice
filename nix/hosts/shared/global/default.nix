@@ -5,6 +5,5 @@
 
   environment.systemPackages = with pkgs; [
     git # needed system-wide for flakes
-    tree
   ];
 }

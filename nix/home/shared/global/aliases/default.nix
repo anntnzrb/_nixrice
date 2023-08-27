@@ -1,8 +1,14 @@
 {
   home.shellAliases = {
     ".." = "cd ..";
-
-    "ls" = "ls --color=auto --group-directories-first -AFhq";
-    "ll" = "ls --color=auto --group-directories-first -AFhlq";
+    cp = "cp -Riv";
+    diff = "diff --color=auto";
+    mkdir = "mkdir -pv";
+    lsblk = "lsblk -ai";
+    mv = "mv -iv";
+    rm = "rm -v";
+    rmfr = "rm -Rfv";
+    wget = "wget --no-hsts";
+    zip = "zip -rv";
   };
 }
