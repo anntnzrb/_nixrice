@@ -12,11 +12,16 @@
       size = 28;
     };
 
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.papirus-icon-theme;
+    };
+
     theme = {
-      name = "Catppuccin-Mocha-Compact-Blue-Dark";
+      name = "Catppuccin-Mocha-Compact-Mauve-dark";
       package = pkgs.catppuccin-gtk.override {
+        accents = [ "mauve" ];
         size = "compact";
-        accents = [ "blue" ];
         variant = "mocha";
       };
     };
