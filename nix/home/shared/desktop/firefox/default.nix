@@ -80,7 +80,16 @@
       ];
 
       settings = {
-        "browser.startup.page" = 3;
+	"browser.fullscreen.autohide" = true;
+	"browser.sessionstore.interval" = 45; # save session every X seconds
+	"browser.urlbar.clickSelectsAll" = true;
+        "browser.startup.page" = 3; # continue where left off
+
+	"network.prefetch-next" = false;
+
+	"layout.spellcheckDefault" = 2;
+
+	"extensions.checkCompatibility" = false;
       };
     };
   };
