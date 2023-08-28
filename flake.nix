@@ -2,30 +2,28 @@
   description = "The core of it all, careful.";
 
   inputs = {
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.05";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-23.05";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     firefox-addons = {
       url = "github:nix-community/nur-combined?dir=repos/rycee/pkgs/firefox-addons";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   outputs =
     { self
-    , nixpkgs-stable
-    , nixpkgs-unstable
+    , nixpkgs
     , ...
     }@inputs:
     let
       inherit (self) outputs;
-      forAllSystems = nixpkgs-unstable.lib.genAttrs [ "x86_64-linux" ];
+      forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
     in
     rec {
       # globals
@@ -37,7 +35,7 @@
       };
 
       devShells = forAllSystems (system:
-        let pkgs = nixpkgs-unstable.legacyPackages.${system};
+        let pkgs = nixpkgs.legacyPackages.${system};
         in import "${self}/shell.nix" { inherit pkgs; }
       );
 
@@ -49,8 +47,7 @@
           me
           inputs
           outputs
-          nixpkgs-stable
-          nixpkgs-unstable;
+          nixpkgs;
       };
     };
 }

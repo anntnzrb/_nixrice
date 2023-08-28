@@ -2,11 +2,11 @@
 , me
 , inputs
 , outputs
-, nixpkgs-unstable
+, nixpkgs
 , ...
 }:
 let
-  mkHost = hostInfo: nixpkgs-unstable.lib.nixosSystem {
+  mkHost = hostInfo: nixpkgs.lib.nixosSystem {
     specialArgs = { inherit self me hostInfo inputs outputs; };
     modules = [ "${me.nixHosts}/${hostInfo.hostName}" ];
   };
