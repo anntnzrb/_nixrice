@@ -43,4 +43,6 @@ in
   imports = [
     ../default.nix
   ] ++ sharedImports;
+
+  home.stateVersion = "23.05";
 }
