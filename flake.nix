@@ -11,11 +11,6 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    snowfall-flake = {
-      url = "github:snowfallorg/flake";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-
     firefox-addons = {
       url = "github:nix-community/nur-combined?dir=repos/rycee/pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
