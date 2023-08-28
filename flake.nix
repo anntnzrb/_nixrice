@@ -41,7 +41,7 @@
 
       #overlays = import "${me.nixOverlays}" { inherit inputs; };
 
-      nixosConfigurations = import "${me.nixHosts}" {
+      nixosConfigurations = import "${me.nixHosts}/hosts.nix" {
         inherit
           self
           me

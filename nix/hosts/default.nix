@@ -1,18 +1,35 @@
 { self
 , me
+, hostInfo
+, pkgs
+, lib
+, config
 , inputs
-, outputs
-, nixpkgs
 , ...
-}:
-let
-  mkHost = hostInfo: nixpkgs.lib.nixosSystem {
-    specialArgs = { inherit self me hostInfo inputs outputs; };
-    modules = [ "${me.nixHosts}/${hostInfo.hostName}" ];
+}: {
+  nix = {
+    registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
+    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
+
+    settings = {
+      experimental-features = "nix-command flakes";
+      auto-optimise-store = true;
+    };
   };
-in
-{
-  munich = mkHost { hostName = "munich"; user = "annt"; };
-  solna = mkHost { hostName = "solna"; user = "annt"; };
-  zadar = mkHost { hostName = "zadar"; user = "annt"; };
+
+  nixpkgs = {
+    config = {
+      allowUnfree = true;
+    };
+  };
+
+  boot.loader.systemd-boot.enable = true;
+  networking.hostName = "${hostInfo.hostName}";
+
+  home-manager = {
+    extraSpecialArgs = { inherit self me hostInfo inputs; };
+    users = {
+      ${hostInfo.user} = import "${me.nixHomes}/${hostInfo.hostName}";
+    };
+  };
 }
