@@ -1,5 +1,7 @@
 { pkgs, ... }:
 {
+  boot.tmp.cleanOnBoot = true;
+
   # REVIEW: this might change in the future to suppress annoying db warning
   programs.command-not-found.enable = false;
 
