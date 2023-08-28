@@ -6,7 +6,7 @@
       add_newline = false;
 
       format = ''
-        $username@$hostname $os $directory$all$time$shell$cmd_duration $character
+        $username@$hostname $os $directory$all$time $shell$cmd_duration $character
       '';
 
       character = {
@@ -51,7 +51,7 @@
         disabled = false;
         bash_indicator = "bash";
         fish_indicator = "fish";
-        format = "[\($indicator\)](bold blue)";
+        format = "[\\($indicator\\)](bold blue)";
       };
 
       time = {
