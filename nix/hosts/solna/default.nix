@@ -1,10 +1,8 @@
 { self
-, me
-, inputs
-, lib
-, config
 , pkgs
+, me
 , hostInfo
+, inputs
 , ...
 }:
 let
@@ -17,48 +15,23 @@ let
     "ssh"
   ];
 
-  imports = sharedImports ++ [
+  imports = [
+    ../default.nix
+
     inputs.home-manager.nixosModules.home-manager
 
     ./hardware
     ./network.nix
     ./display.nix
-  ];
+  ] ++ sharedImports;
 in
 {
   inherit imports;
 
   system.stateVersion = "23.05";
 
-  nix = {
-    registry = lib.mapAttrs (_: value: { flake = value; }) inputs;
-    nixPath = lib.mapAttrsToList (key: value: "${key}=${value.to.path}") config.nix.registry;
-
-    settings = {
-      experimental-features = "nix-command flakes";
-      auto-optimise-store = true;
-    };
-  };
-
-  nixpkgs = {
-    config = {
-      allowUnfree = true;
-    };
-  };
-
-  home-manager = {
-    extraSpecialArgs = { inherit self me hostInfo inputs; };
-    users = {
-      ${hostInfo.user} = import "${me.nixHomes}/${hostInfo.hostName}";
-    };
-  };
-
-  # ---------------------------------------------------------------------------
-
   time.timeZone = "America/Guayaquil";
   i18n.defaultLocale = "en_US.UTF-8";
-  networking.hostName = "${hostInfo.hostName}";
-  boot.loader.systemd-boot.enable = true;
 
   programs.fish.enable = true; # needed dupe
   users.users = {
