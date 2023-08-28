@@ -24,8 +24,7 @@
     let
       inherit (self) outputs;
       forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
-    in
-    rec {
+
       # globals
       me = {
         nixHosts = "${self}/nix/hosts";
@@ -33,7 +32,8 @@
 
         dotfilesDir = "${self}/.files";
       };
-
+    in
+    rec {
       devShells = forAllSystems (system:
         let pkgs = nixpkgs.legacyPackages.${system};
         in import "${self}/shell.nix" { inherit pkgs; }
