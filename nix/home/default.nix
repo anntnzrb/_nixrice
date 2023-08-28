@@ -3,8 +3,6 @@
 , hostInfo
 , ...
 }: {
-  home.stateVersion = "23.05";
-
   # home-manager handles itself
   programs.home-manager.enable = true;
 
