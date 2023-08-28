@@ -35,6 +35,7 @@ let
 
     "fonts"
 
+    "shell/bash"
     "shell/fish"
 
     # common env
