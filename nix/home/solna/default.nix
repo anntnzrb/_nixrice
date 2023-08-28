@@ -1,6 +1,4 @@
-{ self
-, me
-, hostInfo
+{ me
 , ...
 }:
 let
@@ -40,32 +38,9 @@ let
     # common env
     "env"
   ];
-
-  imports = sharedImports ++ [
-    #
-  ];
 in
 {
-  inherit imports;
-
-  home.stateVersion = "23.05";
-
-  nixpkgs = {
-    overlays = [ ];
-    config = {
-      allowUnfree = true;
-      allowUnfreePredicate = (_: true);
-    };
-  };
-
-  home = {
-    username = "${hostInfo.user}";
-    homeDirectory = "/home/${hostInfo.user}";
-  };
-
-  # let home-manager handle itself
-  programs.home-manager.enable = true;
-
-  # reload services on switch
-  systemd.user.startServices = "sd-switch";
+  imports = [
+    ../default.nix
+  ] ++ sharedImports;
 }
