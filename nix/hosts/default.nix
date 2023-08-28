@@ -14,4 +14,5 @@ in
 {
   munich = mkHost { hostName = "munich"; user = "annt"; };
   solna = mkHost { hostName = "solna"; user = "annt"; };
+  zadar = mkHost { hostName = "zadar"; user = "annt"; };
 }
