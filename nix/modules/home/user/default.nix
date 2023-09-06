@@ -47,6 +47,11 @@ in {
       };
     };
 
+    xsession = {
+      profilePath = ".config/xprofile-hm";
+      scriptPath = ".config/xsession-hm";
+    };
+
     systemd.user.startServices = "sd-switch";
   };
 }

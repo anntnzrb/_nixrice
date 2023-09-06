@@ -22,9 +22,7 @@ in {
     home.packages = with pkgs; [
       (writeShellApplication {
         name = "awesome-start";
-        runtimeInputs = [sx];
-
-        text = "sx ${config.liberion.user.homeDirectory}/.config/awesome/autostart.sh";
+        text = "startx ${config.xdg.configHome}/xsession-hm";
       })
     ];
 

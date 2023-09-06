@@ -4,7 +4,6 @@
   pkgs,
   ...
 }: let
-  inherit (lib) types;
   inherit (lib.liberion) mkOpt' mkOptBool';
 
   cfg = config.liberion.desktop.sxhkd;
@@ -12,12 +11,13 @@ in {
   options.liberion.desktop.sxhkd = {
     enable = mkOptBool' false;
 
-    keybinds = mkOpt' (types.attrsOf (types.nullOr (types.oneOf [types.str types.path]))) {};
+    keybinds = with lib.types; mkOpt' (attrsOf (nullOr (oneOf [str path]))) {};
   };
 
   config = lib.mkIf cfg.enable {
     services.sxhkd = {
       enable = true;
+      extraOptions = ["-m 1"];
       keybindings =
         {
           "super + Return ; {Return}" = "$TERMINAL {_}";
