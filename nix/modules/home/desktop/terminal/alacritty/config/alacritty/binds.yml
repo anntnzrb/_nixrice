@@ -1,0 +1,67 @@
+# binds.yml --- Alacritty mouse & keyboard bind configuration.
+
+# - `key`: Identifier of the key pressed
+#
+#    A full list with available key codes can be found here:
+#    https://docs.rs/winit/*/winit/event/enum.VirtualKeyCode.html#variants
+#
+# - `command`: Fork and execute a specified command plus arguments
+#
+#    The `command` field must be a map containing a `program` string and an
+#    `args` array of command line parameter strings. For example:
+#       `{ program: "alacritty", args: ["-e", "vttest"] }`
+#
+# - `mods`: Key modifiers to filter binding actions
+#
+#    - Command
+#    - Control
+#    - Option
+#    - Super
+#    - Shift
+#    - Alt
+#
+#    Multiple `mods` can be combined using `|` like this:
+#       `mods: Control|Shift`.
+#    Whitespace and capitalization are relevant and must match the example.
+#
+# - `mode`: Indicate a binding for only specific terminal reported modes
+#
+#    This is mainly used to send applications the correct escape sequences
+#    when in different modes.
+#
+#    - AppCursor
+#    - AppKeypad
+#    - Search
+#    - Alt
+#    - Vi
+#
+#    A `~` operator can be used before a mode to apply the binding whenever
+#    the mode is *not* active, e.g. `~Alt`.
+#
+# Bindings are always filled by default, but will be replaced when a new
+# binding with the same triggers is defined. To unset a default binding, it can
+# be mapped to the `ReceiveChar` action. Alternatively, you can use `None` for
+# a no-op if you do not wish to receive input characters for that binding.
+#
+# If the same trigger is assigned to multiple actions, all of them are executed
+# in the order they were defined in.
+key_bindings:
+  - { key: C, mods: Alt, action: Copy  }
+  - { key: V, mods: Alt, action: Paste }
+
+  # Search Mode
+  - { key: K, mods: Alt, mode: Search, action: SearchHistoryPrevious }
+  - { key: J, mods: Alt, mode: Search, action: SearchHistoryNext     }
+
+# Mouse bindings
+#
+# - `mouse`:
+#
+#   - Middle
+#   - Left
+#   - Right
+#   - Numeric identifier such as `5`
+#
+mouse_bindings:
+  - { mouse: Right,  action: ExpandSelection }
+  - { mouse: Middle, action: PasteSelection  }

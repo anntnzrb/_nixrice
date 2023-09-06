@@ -1,12 +1,19 @@
 {
-  description = "The core of it all, careful.";
+  description = "Liberion's Core";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05";
+    unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-23.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    snowfall-lib = {
+      url = "github:snowfallorg/lib/dev";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -14,40 +21,29 @@
       url = "github:nix-community/nur-combined?dir=repos/rycee/pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    emacs-overlay = {
+      url = "github:nix-community/emacs-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs =
-    { self
-    , nixpkgs
-    , ...
-    }@inputs:
-    let
-      inherit (self) outputs;
-      forAllSystems = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
+  outputs = inputs:
+    inputs.snowfall-lib.mkFlake {
+      inherit inputs;
 
-      # globals
-      me = {
-        nixHosts = "${self}/nix/hosts";
-        nixHomes = "${self}/nix/home";
+      src = ./nix;
 
-        dotfilesDir = "${self}/.files";
+      snowfall = {
+        namespace = "liberion";
       };
-    in
-    rec {
-      devShells = forAllSystems (system:
-        let pkgs = nixpkgs.legacyPackages.${system};
-        in import "${self}/shell.nix" { inherit pkgs; }
-      );
 
-      #overlays = import "${me.nixOverlays}" { inherit inputs; };
+      overlays = with inputs; [
+        emacs-overlay.overlay
+      ];
 
-      nixosConfigurations = import "${me.nixHosts}/hosts.nix" {
-        inherit
-          self
-          me
-          inputs
-          outputs
-          nixpkgs;
+      channels-config = {
+        allowUnfree = true;
       };
     };
 }
