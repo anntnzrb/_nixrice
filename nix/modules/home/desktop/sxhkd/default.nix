@@ -17,7 +17,7 @@ in {
   config = lib.mkIf cfg.enable {
     services.sxhkd = {
       enable = true;
-      extraOptions = ["-m 1"];
+      extraOptions = ["-m 1" "-t 3" "-a 'Escape'"];
       keybindings =
         {
           "super + Return ; {Return}" = "$TERMINAL {_}";
