@@ -17,7 +17,7 @@ in {
     services.xserver = {
       enable = true;
       autorun = false;
-      displayManager.sx.enable = true;
+      displayManager.startx.enable = true;
       excludePackages = [pkgs.xterm];
 
       libinput = {
