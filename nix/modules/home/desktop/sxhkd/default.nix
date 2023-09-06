@@ -26,7 +26,7 @@ in {
           "super + w ; {f,w}" = "{$FILE,$BROWSER}";
           "super + Escape ; {slash,x}" = "{pkill -USR1 'sxhkd', pkill -15 'X'}";
 
-          "Print" = "flameshot gui";
+          "Print" = "\{ flameshot & \} && sleep 0.5s && flameshot gui";
 
           "XF86AudioMute" = "pamixer -t";
           "XF86Audio{Lower,Raise}Volume" = "pamixer -{d,i} 5";
