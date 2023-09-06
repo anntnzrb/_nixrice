@@ -18,12 +18,20 @@ in {
     services.sxhkd = {
       enable = true;
       extraOptions = ["-m 1" "-t 3" "-a 'Escape'"];
-      keybindings =
+      keybindings = let
+        envvars = config.home.sessionVariables;
+
+        env = {
+          terminal = "${envvars.TERMINAL}";
+          file = "${envvars.FILE}";
+          browser = "${envvars.BROWSER}";
+        };
+      in
         {
-          "super + Return ; {Return}" = "$TERMINAL {_}";
+          "super + Return ; {Return}" = "${env.terminal} {_}";
           "super + d ; {d}" = "{rofi -show run}";
 
-          "super + w ; {f,w}" = "{$FILE,$BROWSER}";
+          "super + w ; {f,w}" = "{${env.file},${env.browser}}";
           "super + Escape ; {slash,x}" = "{pkill -USR1 'sxhkd', pkill -15 'X'}";
 
           "Print" = "\{ flameshot & \} && sleep 0.5s && flameshot gui";
