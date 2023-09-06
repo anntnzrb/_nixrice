@@ -28,5 +28,7 @@ in {
         };
       };
     };
+
+    environment.systemPackages = [pkgs.xclip];
   };
 }
