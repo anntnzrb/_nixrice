@@ -19,8 +19,8 @@ in {
       windowManager.awesome.enable = true;
     };
 
-    home.packages = with pkgs; [
-      (writeShellApplication {
+    home.packages = [
+      (pkgs.writeShellApplication {
         name = "awesome-start";
         text = "startx ${config.xdg.configHome}/xsession-hm";
       })
