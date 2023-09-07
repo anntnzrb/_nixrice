@@ -4,7 +4,6 @@
   pkgs,
   ...
 }: let
-  inherit (lib) mkIf;
   inherit (lib.liberion) mkOptBool';
 
   cfg = config.liberion.cli.neofetch;
@@ -13,7 +12,7 @@ in {
     enable = mkOptBool' false;
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home.packages = [pkgs.neofetch];
 
     xdg.configFile = {
