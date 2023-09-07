@@ -52,6 +52,8 @@ in {
       scriptPath = ".config/xsession-hm";
     };
 
+    services.pasystray.enable = true;
+
     systemd.user.startServices = "sd-switch";
   };
 }

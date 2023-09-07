@@ -25,7 +25,6 @@ in {
     environment.systemPackages = with pkgs; [
       pamixer
       pulsemixer
-      pasystray
     ];
   };
 }
