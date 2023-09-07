@@ -92,6 +92,52 @@ in {
               updateInterval = weekInMs;
             };
 
+            "Git: nixpkgs" = {
+              definedAliases = ["@gnixp"];
+              urls = [
+                {
+                  template = "https://github.com/search";
+
+                  params = [
+                    {
+                      name = "q";
+                      value = "repo:NixOS/nixpkgs {searchTerms}";
+                    }
+                    {
+                      name = "type";
+                      value = "code";
+                    }
+                  ];
+                }
+              ];
+
+              iconUpdateURL = "https://nixos.wiki/favicon.png";
+              updateInterval = weekInMs;
+            };
+
+            "Git: Home-Manager" = {
+              definedAliases = ["@gnixhm"];
+              urls = [
+                {
+                  template = "https://github.com/search";
+
+                  params = [
+                    {
+                      name = "q";
+                      value = "repo:nix-community/home-manager {searchTerms}";
+                    }
+                    {
+                      name = "type";
+                      value = "code";
+                    }
+                  ];
+                }
+              ];
+
+              iconUpdateURL = "https://nixos.wiki/favicon.png";
+              updateInterval = weekInMs;
+            };
+
             "NixOS Wiki" = {
               definedAliases = ["@nixw"];
               urls = [
