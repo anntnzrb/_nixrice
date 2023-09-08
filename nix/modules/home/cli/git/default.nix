@@ -25,15 +25,14 @@ in {
         co = "checkout";
         cob = "checkout -b";
         d = "diff";
-        last = "log -1 HEAD";
-        lg = "log --graph --decorate --stat";
-        lga = "log --all --graph --decorate --stat";
+        lg = "log --all --graph --decorate --stat";
         ls = "ls-files";
         ps = "push";
         st = "status -sb";
-        unstage = "reset --hard HEAD";
 
         # function-aliases
+        wipe = "!f() { git reset --hard && git clean -fdx }; f";
+
         cp = "!f() { git commit -m \"`date '+%F :: %T (%Z)'`\" ; git push; }; f";
         ac = "!f() { git add -A ; git commit -am \"`date '+%F :: %T (%Z)'`\"; }; f";
         acp = "!f() { git add -A ; git commit -am \"`date '+%F :: %T (%Z)'`\" ; git push; }; f";
