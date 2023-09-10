@@ -92,7 +92,7 @@ in {
               updateInterval = weekInMs;
             };
 
-            "Git: nixpkgs" = {
+            "GitHub: nixpkgs" = {
               definedAliases = ["@gnixp"];
               urls = [
                 {
@@ -115,7 +115,7 @@ in {
               updateInterval = weekInMs;
             };
 
-            "Git: Home-Manager" = {
+            "GitHub: Home-Manager" = {
               definedAliases = ["@gnixhm"];
               urls = [
                 {
@@ -147,6 +147,24 @@ in {
                     {
                       name = "search";
                       value = "{searchTerms}";
+                    }
+                  ];
+                }
+              ];
+
+              iconUpdateURL = "https://nixos.wiki/favicon.png";
+              updateInterval = weekInMs;
+            };
+            "Hoogle" = {
+              definedAliases = ["@hoogle"];
+              urls = [
+                {
+                  template = "https://hoogle.haskell.org";
+
+                  params = [
+                    {
+                      name = "hoogle";
+                      value = "%2Bbase {searchTerms}";
                     }
                   ];
                 }
