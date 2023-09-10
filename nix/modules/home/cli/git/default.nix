@@ -20,7 +20,7 @@ in {
 
       aliases = {
         br = "branch -ailv";
-        ca = "commit --ammend";
+        ca = "commit --amend";
         cm = "commit -m";
         co = "checkout";
         cob = "checkout -b";
