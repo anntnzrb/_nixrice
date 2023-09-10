@@ -170,7 +170,7 @@ in {
                 }
               ];
 
-              iconUpdateURL = "https://nixos.wiki/favicon.png";
+              iconUpdateURL = "https://www.haskell.org/img/favicon.ico";
               updateInterval = weekInMs;
             };
           };
