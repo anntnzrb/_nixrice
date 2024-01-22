@@ -27,7 +27,7 @@ rec {
           enable = true;
           primary = true;
           position = "0x0";
-          dpi = "${main.dpi}";
+          dpi = main.dpi;
           mode = "${main.resolution}";
           rate = "${main.refreshRate}";
         };
@@ -44,7 +44,7 @@ rec {
           enable = true;
           primary = true;
           position = "0x0";
-          dpi = "${external.dpi}";
+          dpi = external.dpi;
           mode = "${external.resolution}";
           rate = "${external.refreshRate}";
         };
@@ -62,7 +62,7 @@ rec {
           enable = true;
           primary = true;
           position = "0x0";
-          dpi = "${main.dpi}";
+          dpi = main.dpi;
           mode = "${main.resolution}";
           rate = "${main.refreshRate}";
         };
@@ -71,7 +71,7 @@ rec {
           enable = true;
           primary = true;
           position = "1920x0";
-          dpi = "${external.dpi}";
+          dpi = external.dpi;
           mode = "${external.resolution}";
           rate = "${external.refreshRate}";
         };

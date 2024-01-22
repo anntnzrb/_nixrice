@@ -20,7 +20,7 @@ rec {
           enable = true;
           primary = true;
           position = "0x0";
-          dpi = "${main.dpi}";
+          dpi = main.dpi;
           mode = "${main.resolution}";
           rate = "${main.refreshRate}";
         };
