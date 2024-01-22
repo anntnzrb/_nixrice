@@ -1,5 +1,0 @@
-#!/bin/sh
-
-# shellcheck disable=2046
-# disable for numbers instead of strings
-git clone --depth 1 --single-branch --no-tags --jobs $(nproc) "${@}"

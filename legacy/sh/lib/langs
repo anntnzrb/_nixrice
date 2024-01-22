@@ -1,6 +1,0 @@
-#!/bin/sh
-
-# langs --- languages shell configuration file
-
-# Rust
-test -f "${HOME}/.cargo/env" && . "${HOME}/.cargo/env"

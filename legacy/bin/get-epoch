@@ -1,9 +1,0 @@
-#!/bin/sh
-
-# get-epoch --- Prints current date, stylized
-
-# Code:
-
-printf ' %s\n' "`date '+%a, %d %b @ %H:%M'`"
-
-exit 0

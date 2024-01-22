@@ -1,6 +1,0 @@
-#!/bin/sh
-
-# shellcheck disable=2006
-# backtick notation is portable
-
-test -x "`command -v "${1}"`"

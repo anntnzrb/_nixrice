@@ -1,9 +1,0 @@
-# general
-player='mpv'
-player-args='--volume=50' '--cache=yes' '--demuxer-max-bytes=4096Kib'
-default-stream=best,720p,480p
-title={author} ({category}) - {url}
-
-# Twitch
-twitch-disable-ads
-twitch-low-latency
