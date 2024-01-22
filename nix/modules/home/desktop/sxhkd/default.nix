@@ -1,47 +1,53 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}: let
-  inherit (lib.liberion) mkOpt' mkOptBool';
-
+{ lib
+, pkgs
+, config
+, ...
+}:
+let
   cfg = config.liberion.desktop.sxhkd;
-in {
-  options.liberion.desktop.sxhkd = {
-    enable = mkOptBool' false;
 
-    keybinds = with lib.types; mkOpt' (attrsOf (nullOr (oneOf [str path]))) {};
+in
+{
+  options.liberion.desktop.sxhkd = {
+    enable = lib.mkEnableOption "sxhkd";
+
+    timeout = lib.mkOption {
+      type = lib.types.ints.unsigned;
+      default = 3;
+    };
+
+    cancelKey = lib.mkOption {
+      type = lib.types.str;
+      default = "Escape";
+    };
   };
 
   config = lib.mkIf cfg.enable {
     services.sxhkd = {
       enable = true;
-      extraOptions = ["-m 1" "-t 3" "-a 'Escape'"];
-      keybindings = let
-        envvars = config.home.sessionVariables;
 
-        env = {
-          terminal = "${envvars.TERMINAL}";
-          file = "${envvars.FILE}";
-          browser = "${envvars.BROWSER}";
-        };
-      in
-        {
-          "super + Return ; {Return}" = "${env.terminal} {_}";
-          "super + d ; {d}" = "{rofi -show run}";
+      extraOptions = [ "-m 1" "-t ${builtins.toString cfg.timeout}" "-a ${cfg.cancelKey}" ];
+      keybindings = with config.home.sessionVariables;{
+        "super + Return ; {Return}" = "${TERMINAL} {_}";
+        "super + Return ; {e,i}" = "${TERMINAL} -e {${EDITOR},btop}";
 
-          "super + w ; {f,w}" = "{${env.file},${env.browser}}";
-          "super + Escape ; {slash,x}" = "{pkill -USR1 'sxhkd', pkill -15 'X'}";
+        "super + d ; {d}" = "{bemenu-run}";
 
-          "Print" = "\{ flameshot & \} && sleep 0.5s && flameshot gui";
+        "super + w ; {f,w,e}" = "{${FILE},${BROWSER},emacs}";
 
-          "XF86AudioMute" = "pamixer -t";
-          "XF86Audio{Lower,Raise}Volume" = "pamixer -{d,i} 5";
+        "Print" = "\{ flameshot & \} && sleep 0.5s && flameshot gui";
 
-          "XF86MonBrightness{Down,Up}" = "brightnessctl set {2%-,+2%}";
-        }
-        // cfg.keybinds;
+        "XF86AudioMute" = "pamixer -t";
+        "XF86Audio{Lower,Raise}Volume" = "pamixer -{d,i} 5";
+
+        "XF86MonBrightness{Down,Up}" = "brightnessctl set {2%-,+2%}";
+
+        "super + Escape ; {x}" = "{pkill -15 'X'}";
+      };
+    };
+
+    home.activation = {
+      reloadSxhkd = config.lib.dag.entryAfter [ "writeBoundary" ] "${pkgs.procps}/bin/pkill -USR1 sxhkd || :";
     };
   };
 }

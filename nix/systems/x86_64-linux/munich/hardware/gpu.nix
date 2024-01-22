@@ -1,25 +1,39 @@
+{ config
+, lib
+, pkgs
+, ...
+}:
+let
+  hyprlandEnabled = config.programs.hyprland.enable;
+in
 {
-  pkgs,
-  inputs,
-  ...
-}: {
-  imports = [inputs.nixos-hardware.nixosModules.common-gpu-nvidia-nonprime];
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
+  };
 
-  hardware = {
-    opengl = {
-      enable = true;
+  # driver for both Xorg and Wayland
+  #services.xserver.videoDrivers = [ "nvidia" ];
 
-      # accelerated OpenGL rendering (Direct Rendering Interface) [DRI]
-      driSupport = true;
-      driSupport32Bit = true;
-    };
+  hardware.nvidia = {
+    open = false;
+    nvidiaSettings = true;
 
-    nvidia = {
-      # ensure pkg follows corresponding kernel
-      package = pkgs.linuxKernel.packages.linux_zen.nvidia_x11;
+    # NOTE: match the kernel
+    package = pkgs.linuxPackages_xanmod_latest.nvidia_x11;
 
-      # do not use nouveau, use non-free driver
-      open = false;
-    };
+    modesetting.enable = true;
+  };
+
+  # misc
+  programs.hyprland.enableNvidiaPatches = hyprlandEnabled;
+  environment.sessionVariables = lib.mkIf hyprlandEnabled {
+    "__GLX_VENDOR_LIBRARY_NAME" = "nvidia";
+    LIBVA_DRIVER_NAME = "nvidia";
+    XDG_SESSION_TYPE = "wayland";
+    GBM_BACKEND = "nvidia-drm";
+    WLR_NO_HARDWARE_CURSORS = "1";
+    NIXOS_OZONE_WL = "1";
   };
 }

@@ -1,21 +1,20 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}: let
-  inherit (lib) mkIf;
-  inherit (lib.liberion) mkOptBool';
-
+{ config
+, lib
+, pkgs
+, ...
+}:
+let
   cfg = config.liberion.network.networkmanager;
-in {
+in
+{
   options.liberion.network.networkmanager = {
-    enable = mkOptBool' false;
+    enable = lib.mkEnableOption "NetworkManager";
   };
 
-  config = mkIf cfg.enable {
-    networking.networkmanager.enable = true;
+  config = lib.mkIf cfg.enable {
+    networking.useDHCP = false;
 
-    environment.systemPackages = [pkgs.networkmanagerapplet];
+    networking.networkmanager.enable = true;
+    environment.systemPackages = [ pkgs.networkmanagerapplet ];
   };
 }

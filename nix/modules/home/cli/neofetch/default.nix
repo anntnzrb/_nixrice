@@ -1,19 +1,18 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}: let
-  inherit (lib.liberion) mkOptBool';
-
+{ config
+, pkgs
+, lib
+, ...
+}:
+let
   cfg = config.liberion.cli.neofetch;
-in {
+in
+{
   options.liberion.cli.neofetch = {
-    enable = mkOptBool' false;
+    enable = lib.mkEnableOption "neofetch";
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [pkgs.neofetch];
+    home.packages = [ pkgs.neofetch ];
 
     xdg.configFile = {
       "neofetch" = {

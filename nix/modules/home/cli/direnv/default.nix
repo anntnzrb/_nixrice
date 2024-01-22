@@ -1,15 +1,13 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}: let
-  inherit (lib.liberion) mkOptBool';
-
+{ config
+, lib
+, ...
+}:
+let
   cfg = config.liberion.cli.direnv;
-in {
+in
+{
   options.liberion.cli.direnv = {
-    enable = mkOptBool' false;
+    enable = lib.mkEnableOption "direnv";
   };
 
   config = lib.mkIf cfg.enable {

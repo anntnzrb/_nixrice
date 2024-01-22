@@ -1,19 +1,16 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}: let
-  inherit (lib) mkIf;
-  inherit (lib.liberion) mkOptBool';
-
+{ config
+, lib
+, ...
+}:
+let
   cfg = config.liberion.cli.starship;
-in {
+in
+{
   options.liberion.cli.starship = {
-    enable = mkOptBool' false;
+    enable = lib.mkEnableOption "starship";
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     programs.starship = {
       enable = true;
 
@@ -44,7 +41,7 @@ in {
         };
 
         git_branch = {
-          ignore_branches = [];
+          ignore_branches = [ ];
         };
 
         hostname = {

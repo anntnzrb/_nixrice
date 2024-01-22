@@ -1,7 +1,6 @@
-{
-  modulesPath,
-  inputs,
-  ...
+{ modulesPath
+, inputs
+, ...
 }: {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -11,24 +10,31 @@
     ./kernel.nix
     ./cpu.nix
     ./gpu.nix
-    ./display.nix
   ];
 
-  fileSystems = let
-    bootLabel = "NIX-BOOT";
-    rootLabel = "NIX-ROOT";
-  in {
-    "/" = {
-      device = "/dev/disk/by-label/${rootLabel}";
-      label = "${rootLabel}";
-      fsType = "btrfs";
-      options = ["commit=120" "discard=async" "noatime" "space_cache=v2" "ssd"];
+  fileSystems =
+    let
+      bootLabel = "NIX-BOOT";
+      rootLabel = "NIX-ROOT";
+    in
+    {
+      "/" = {
+        device = "/dev/disk/by-label/${rootLabel}";
+        label = "${rootLabel}";
+        fsType = "btrfs";
+        options = [ "commit=120" "discard=async" "noatime" "space_cache=v2" "ssd" ];
+      };
+
+      "/boot" = {
+        device = "/dev/disk/by-label/${bootLabel}";
+        label = "${bootLabel}";
+        fsType = "vfat";
+      };
     };
 
-    "/boot" = {
-      device = "/dev/disk/by-label/${bootLabel}";
-      label = "${bootLabel}";
-      fsType = "vfat";
-    };
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";
+    memoryPercent = 40; # ~12GB
   };
 }

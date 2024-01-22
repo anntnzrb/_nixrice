@@ -1,12 +1,17 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}: let
+{ config
+, lib
+, ...
+}:
+let
   cfg = config.liberion.cli.git;
-in {
-  config = {
+in
+{
+
+  options.liberion.cli.git = {
+    enable = lib.mkEnableOption "git";
+  };
+
+  config = lib.mkIf cfg.enable {
     programs.git = {
       enable = true;
       userName = "anntnzrb";

@@ -1,3 +1,3 @@
-{inputs, ...}: {
-  imports = [inputs.nixos-hardware.nixosModules.common-cpu-intel-cpu-only];
+{ ... }: {
+  hardware.cpu.intel.updateMicrocode = true;
 }

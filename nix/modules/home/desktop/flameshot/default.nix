@@ -1,15 +1,13 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}: let
-  inherit (lib.liberion) mkOptBool';
-
+{ lib
+, config
+, ...
+}:
+let
   cfg = config.liberion.desktop.flameshot;
-in {
+in
+{
   options.liberion.desktop.flameshot = {
-    enable = mkOptBool' false;
+    enable = lib.mkEnableOption "flameshot";
   };
 
   config = lib.mkIf cfg.enable {
