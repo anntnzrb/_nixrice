@@ -1,54 +1,105 @@
+{ pkgs
+, lib
+, ...
+}:
+
+with lib.liberion; let
+  autoStart = [
+    "nm-applet"
+    "pasystray"
+    "redshift-gtk"
+    "\${TERMINAL} -e btop"
+  ];
+in
 {
-  lib,
-  pkgs,
-  inputs,
-  ...
-}: let
-  inherit (lib.liberion) on;
-in {
-  home.stateVersion = "23.05";
-
   liberion = {
-    user.username = "annt";
+    home.packages = with pkgs; [
+      git # example
+    ];
 
-    desktop = {
-      discord = on;
-      feh = on;
-      flameshot = on;
-      fonts = on;
-      mpv = on;
-      pcmanfm = on;
-      picom = on;
-      redshift = on;
-      rofi = on;
-      sxhkd = on;
-      window-manager.awesome = on;
+    shells = {
+      defaults = on;
+      altCoreUtils = on;
 
-      browser = {
-        firefox = on;
+      sessionVariables = {
+        BROWSER = "firefox";
+        EDITOR = "nvim";
+        FILE = "pcmanfm";
+        TERMINAL = "alacritty";
       };
 
-      themes = {
-        enable = true;
-      };
-    };
-
-    shell = {
       bash = on;
-      fish = on;
     };
 
     cli = {
+      btop = on;
       direnv = on;
+      fzf = on;
+      git = on;
       neofetch = on;
-      rust-utils = on;
+      simple-mtpfs = on;
       starship = on;
+      yt-dlp = on;
     };
 
-    editor = {
-      emacs = on;
+    editors = {
+      emacs = {
+        enable = true;
+        pgtk = false;
+      };
+
       neovim = on;
-      vscode = on;
+    };
+
+    desktop = {
+      sxhkd = {
+        enable = true;
+        timeout = 3;
+        cancelKey = "Escape";
+      };
+
+      launchers = {
+        wofi = off;
+        bemenu = on;
+      };
+
+      window-managers = {
+        wayland = {
+          hyprland = {
+            enable = false;
+            waybar = on;
+            autoStartApps = autoStart;
+            monitor = [ "HDMI-A-2, 1366x768, 1920x0, 1" "HDMI-A-3, 1920x1080, 0x0, 1" ];
+            keyboard = {
+              layout = "us";
+              variant = "altgr-intl";
+            };
+          };
+        };
+
+        xorg = {
+          awesomewm = {
+            enable = true;
+            inherit autoStart;
+            autorandr.enable = true;
+          };
+        };
+      };
+
+      browsers.firefox = on;
+      discord = on;
+      feh = on;
+      file-managers.pcmanfm = on;
+      flameshot = on;
+      mpv = on;
+      obs = on;
+      redshift = on;
+      terminal-emulators.alacritty = on;
+
+      ui = {
+        themes = on;
+        fonts = on;
+      };
     };
   };
 }

@@ -1,7 +1,7 @@
-{pkgs}:
+{ pkgs }:
 pkgs.mkShell {
   nativeBuildInputs = with pkgs; [
-    alejandra
-    nixd
+    nixpkgs-fmt
+    nil
   ];
 }

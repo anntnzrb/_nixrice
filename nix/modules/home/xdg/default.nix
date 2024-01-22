@@ -1,13 +1,12 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}: let
-  homeDir = "${config.liberion.user.homeDirectory}";
+{ config
+, ...
+}:
+let
+  homeDir = "${config.home.homeDirectory}";
   libDir = "${homeDir}/lib";
   localDir = "${homeDir}/.local";
-in {
+in
+{
   config = {
     xdg = {
       enable = true;

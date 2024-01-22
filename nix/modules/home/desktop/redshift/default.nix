@@ -1,29 +1,34 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}: let
-  inherit (lib.liberion) mkOpt' mkOptBool';
-
+{ lib
+, config
+, ...
+}:
+let
   cfg = config.liberion.desktop.redshift;
-in {
-  options.liberion.desktop.redshift = with lib.types; {
-    enable = mkOptBool' false;
+in
+{
+  options.liberion.desktop.redshift = with lib; {
+    enable = mkEnableOption "redshift";
 
-    latitude = mkOpt' (nullOr float) (-2.0);
-    longitude = mkOpt' (nullOr float) (-81.0);
+    latitude = with types; mkOption {
+      type = (nullOr float);
+      default = (-2.0);
+    };
 
-    tray = mkOptBool' true;
+    longitude = with types; mkOption {
+      type = (nullOr float);
+      default = (-81.0);
+    };
+
+    tray = mkEnableOption "use system tray?";
   };
 
   config = lib.mkIf cfg.enable {
     services.redshift = {
       enable = true;
-      latitude = cfg.latitude;
-      longitude = cfg.longitude;
+
+      inherit (cfg) latitude longitude tray;
+
       provider = "manual";
-      tray = cfg.tray;
       temperature = {
         day = 5700;
         night = 3500;

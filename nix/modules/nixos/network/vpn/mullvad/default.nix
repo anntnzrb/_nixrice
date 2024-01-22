@@ -1,21 +1,21 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}: let
-  inherit (lib.liberion) mkOptBool';
-
+{ config
+, lib
+, pkgs
+, ...
+}:
+let
   cfg = config.liberion.network.vpn.mullvad;
-in {
+in
+{
   options.liberion.network.vpn.mullvad = {
-    enable = mkOptBool' false;
+    enable = lib.mkEnableOption "mullvad";
   };
 
   config = lib.mkIf cfg.enable {
     services.mullvad-vpn = {
       enable = true;
       package = pkgs.mullvad-vpn;
+      enableExcludeWrapper = false;
     };
   };
 }

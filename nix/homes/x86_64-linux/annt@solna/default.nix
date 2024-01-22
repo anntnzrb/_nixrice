@@ -1,47 +1,78 @@
-{lib, ...}: let
-  inherit (lib.liberion) on;
-in {
-  home.stateVersion = "23.05";
+{ lib
+, ...
+}:
 
+with lib.liberion; let
+  autoStart = [
+    "nm-applet"
+    "pasystray"
+    "redshift-gtk"
+    "\${TERMINAL} -e btop"
+  ];
+in
+{
   liberion = {
-    user.username = "annt";
+    shells = {
+      defaults = on;
+      altCoreUtils = on;
 
-    desktop = {
-      feh = on;
-      flameshot = on;
-      fonts = on;
-      mpv = on;
-      pcmanfm = on;
-      picom = on;
-      redshift = on;
-      rofi = on;
-      sxhkd = on;
-      window-manager.awesome = on;
-
-      browser = {
-        firefox = on;
+      sessionVariables = {
+        BROWSER = "firefox";
+        EDITOR = "nvim";
+        FILE = "pcmanfm";
+        TERMINAL = "alacritty";
       };
 
-      themes = {
-        enable = true;
-      };
-    };
-
-    shell = {
       bash = on;
-      fish = on;
     };
 
     cli = {
+      btop = on;
       direnv = on;
+      fzf = on;
+      git = on;
       neofetch = on;
+      simple-mtpfs = on;
       starship = on;
-      rust-utils = on;
+      yt-dlp = on;
     };
 
-    editor = {
+    editors = {
+      emacs = {
+        enable = true;
+        pgtk = false;
+      };
+
       neovim = on;
-      vscode = on;
+    };
+
+    desktop = {
+      sxhkd = {
+        enable = true;
+        timeout = 3;
+        cancelKey = "Escape";
+      };
+
+      launchers.bemenu = on;
+
+      window-managers.xorg.awesomewm = {
+        enable = true;
+        inherit autoStart;
+        autorandr.enable = true;
+      };
+
+      browsers.firefox = on;
+      feh = on;
+      file-managers.pcmanfm = on;
+      flameshot = on;
+      mpv = on;
+      redshift = on;
+      terminal-emulators.alacritty = on;
+
+      ui = {
+        themes = on;
+        fonts = on;
+      };
     };
   };
 }

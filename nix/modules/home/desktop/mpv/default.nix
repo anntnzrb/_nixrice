@@ -1,19 +1,16 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}: let
-  inherit (lib) mkIf;
-  inherit (lib.liberion) mkOptBool';
-
+{ config
+, lib
+, ...
+}:
+let
   cfg = config.liberion.desktop.mpv;
-in {
+in
+{
   options.liberion.desktop.mpv = {
-    enable = mkOptBool' false;
+    enable = lib.mkEnableOption "mpv";
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     programs.mpv = {
       enable = true;
       bindings = {

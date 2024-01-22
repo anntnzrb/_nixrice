@@ -1,15 +1,14 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}: let
-  inherit (lib.liberion) mkOptBool';
-
+{ lib
+, config
+, pkgs
+, ...
+}:
+let
   cfg = config.liberion.desktop.feh;
-in {
+in
+{
   options.liberion.desktop.feh = {
-    enable = mkOptBool' false;
+    enable = lib.mkEnableOption "feh";
   };
 
   config = lib.mkIf cfg.enable {
@@ -21,8 +20,8 @@ in {
       name = "feh";
       genericName = "Image Viewer";
       exec = "${lib.getExe pkgs.feh} --auto-zoom --scale-down -B black -PVd %F";
-      categories = ["Application"];
-      mimeType = ["image/png" "image/jpg" "image/svg+xml"];
+      categories = [ "Application" ];
+      mimeType = [ "image/png" "image/jpg" "image/svg+xml" ];
     };
   };
 }

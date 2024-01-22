@@ -1,26 +1,47 @@
-{lib, ...}: let
-  inherit (lib.liberion) on;
-in {
-  imports = [
-    ./hardware
-  ];
+{ lib
+, ...
+}:
 
-  system.stateVersion = "23.05";
+{
+  imports = [ ./hardware ];
 
-  time.timeZone = "America/Guayaquil";
-  i18n.defaultLocale = "en_US.UTF-8";
+  liberion = with lib.liberion; {
+    nixos = {
+      user = {
+        name = "annt";
+        isNormalUser = true;
+        extraGroups = [ "wheel" ];
+      };
 
-  services.xserver = {
-    layout = "us";
-    xkbVariant = "altgr-intl";
-    xkbOptions = "caps:none";
-  };
+      time.timeZone = "America/Guayaquil";
 
-  liberion = {
-    user.shell = "fish";
+      user.authorizedKeys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHoPWVoRBmvoWF445a0vTnV2ASk+5Gy/XDTEPPjEDd8/ git"
+      ];
+    };
 
-    audio = on;
+    boot.bootloader.systemd-boot = on;
 
-    desktop.xserver = on;
+    hardware = {
+      audio.pipewire = on;
+      keyboard.keyd = on;
+    };
+
+    network = {
+      ssh = on;
+      networkmanager = on;
+    };
+
+    # refer to hm
+    common = {
+      xorg = {
+        enable = true;
+        keyboard = {
+          variant = "altgr-intl";
+        };
+      };
+
+      displays = on;
+    };
   };
 }
