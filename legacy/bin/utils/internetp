@@ -1,3 +1,0 @@
-#!/bin/sh
-
-ping -q -c 1 'example.com' >/dev/null 2>&1

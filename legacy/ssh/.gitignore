@@ -1,6 +1,0 @@
-# ignore everything except for self and a few files
-/*
-!.gitignore
-!README
-
-!id_ed25519_git.pub
