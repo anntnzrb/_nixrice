@@ -4,81 +4,22 @@
 
 #+property: header-args :exports code :results output verbatim
 
-* table of contents :toc:noexport:
-- [[#preamble][preamble]]
-- [[#intro][intro]]
-- [[#disclaimer][disclaimer]]
-- [[#log][log]]
-- [[#copying][copying]]
+* Introduction
 
-* preamble
+The following /.files/ have accompanied me since /2019/-ish and have been under
+*VC* since /2020/.
 
-this file is created using /GNU Emacs' Org-Mode/, refer to =docs/= for the
-source code.
+* Disclaimer
 
-* intro
-
-these /.files/ have accompanied me since /2019/-ish (under VC since /2020/),
-all files/scripts have been written with portability in mind, meaning they're
-meant to work across multiple [[https://0x0.st/HNfM][*nix distrubutions]].
-
-* disclaimer
-
-this repository serves as a laboratory. it's meant for experimentation and
+This repository serves as a laboratory. It is meant for experimentation and
 should be considered /unstable/, /biased/ and sometimes even /untested/.
 
-nevertheless feel free to take a look and learn from it, experimenting and
-sharing is always encouraged.
+Nevertheless feel free to take a look and learn from it, experimenting and
+sharing is encouraged.
 
-* log
+* COPYING
 
-section designed to only track *very remarkable* events.
+Refer to the [[./COPYING][COPYING]] file for licensing information.
 
-/(descending by date)/
-
-*2023-08-21* - drop /Ansible/.
-
-- simplified to favor Nix configuration.
-
-*2022-07-02* - switch to /Ansible/.
-
-- moved over to /ansible/ as it is conceptually the same as /chezmoi/ with extra
-  features, allows extra customization as /chezmoi/ aims to make it simple.
-
-*2022-05-24* - /GNU Emacs/ configurations removed.
-
-- ~(1 and 1/2) years posterior to introducing /GNU Emacs/ along with these
-  .files i farewell its configuration to honour it at its own repository.  as
-  of this writing, this repo has become too polluted with Emacs commits which
-  end up overshadowing the overall commit history only by a single piece of
-  software; deploying should not be an issue with /chezmoi/ anyways.
-
-*2022-05-14* - switch to /chezmoi/.
-
-- after a few weeks with /GNU Stow/ i started having issues with /symlinks/ all
-  over my =~/=. other than that there are quite a few reasons why /chezmoi/ is
-  a superior system than /Stow/, to name a few: the template system, secrets,
-  etc...; still does the job though and would stick to it if i didn't this
-  better alternative.
-
-*2022-05-08* - mass repo cleanup.
-
-- due to bad practices, this repo was filled with large blobs of files
-  by the extentions ={png,ttf,otf}= (stored a few wallpapers + fonts).  *these
-  blobs were pruned at the cost of the whole commit history being rewritten*.
-
-*2022-04-26* - switch to /GNU Stow/.
-
-- this repository emulated the structure of a =~/= directory
-  prior to the switch.
-
-*2021-06-02* - License switch /GPLv2/ -> /GPLv3/.
-
-*2020-11-14* - /GNU Emacs/ is introduced.
-
-* copying
-
-refer to the [[./COPYING][COPYING]] file for licensing information.
-
-unless otherwise noted, all code herein is distributed under the terms of the
+Unless otherwise noted, all code herein is distributed under the terms of the
 [[https://www.gnu.org/licenses/gpl-3.0.en.html][GNU General Public License Version 3 or later]].
