@@ -7,6 +7,7 @@ let
 
   profiles = {
     munich = import ./munich.nix;
+    solna = import ./solna.nix;
   };
 in
 {
