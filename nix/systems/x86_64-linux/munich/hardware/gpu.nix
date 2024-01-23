@@ -4,8 +4,6 @@
 {
   hardware.opengl = {
     enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
   };
 
   # driver for both Xorg and Wayland
