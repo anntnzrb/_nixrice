@@ -6,8 +6,8 @@ let
   cfg = config.liberion.hardware.keyboard.keyd;
 in
 {
-  options.liberion.hardware.keyboard.keyd = {
-    enable = lib.mkEnableOption "keyd";
+  options.liberion.hardware.keyboard.keyd = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

@@ -7,47 +7,25 @@ let
   cfg = config.liberion.desktop.window-managers.wayland.hyprland;
 in
 {
-  options.liberion.desktop.window-managers.wayland.hyprland = with lib; {
-    enable = mkEnableOption "hyprland";
+  options.liberion.desktop.window-managers.wayland.hyprland = with lib.liberion; with lib.types; {
+    enable = mkOptBool';
+
     keyboard = {
-      layout = mkOption {
-        type = types.str;
-        default = "us";
-      };
-
-      variant = mkOption {
-        type = types.str;
-        default = "altgr-intl";
-      };
+      layout = mkOpt' str "us";
+      variant = mkOpt' str "altgr-intl";
     };
 
-    monitor = mkOption {
-      type = with types; listOf str;
-      default = [ ",preferred,auto,1" ];
-    };
-
-    autoStartApps = mkOption {
-      type = with types; listOf str;
-      default = [ ];
-    };
-
-    waybar = {
-      enable = mkEnableOption "waybar";
-    };
+    monitor = mkOpt' (listOf str) [ ",preferred,auto,1" ];
+    autoStartApps = mkOpt' (listOf str) [ ];
+    waybar = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {
     home = {
       shellAliases = {
         Hyprland = "printf 'Do not use this command. To launch Hyprland use the 'wm-exec-hypr' wrapper.\n' >&2";
+        wm-exec-hypr = "\Hyrpland";
       };
-
-      packages = [
-        (pkgs.writeShellApplication {
-          name = "wm-exec-hypr";
-          text = "Hyprland";
-        })
-      ];
     };
 
     wayland.windowManager.hyprland = {

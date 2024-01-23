@@ -6,8 +6,8 @@ let
   cfg = config.liberion.cli.direnv;
 in
 {
-  options.liberion.cli.direnv = {
-    enable = lib.mkEnableOption "direnv";
+  options.liberion.cli.direnv = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

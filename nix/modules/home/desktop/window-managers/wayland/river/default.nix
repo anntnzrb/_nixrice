@@ -7,8 +7,8 @@ let
   cfg = config.liberion.desktop.window-managers.wayland.river;
 in
 {
-  options.liberion.desktop.window-managers.wayland.river = {
-    enable = lib.mkEnableOption "river";
+  options.liberion.desktop.window-managers.wayland.river = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

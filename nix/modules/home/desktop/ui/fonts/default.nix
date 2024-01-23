@@ -7,8 +7,8 @@ let
   cfg = config.liberion.desktop.ui.fonts;
 in
 {
-  options.liberion.desktop.ui.fonts = {
-    enable = lib.mkEnableOption "fonts";
+  options.liberion.desktop.ui.fonts = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

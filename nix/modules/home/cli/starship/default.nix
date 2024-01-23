@@ -6,8 +6,8 @@ let
   cfg = config.liberion.cli.starship;
 in
 {
-  options.liberion.cli.starship = {
-    enable = lib.mkEnableOption "starship";
+  options.liberion.cli.starship = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

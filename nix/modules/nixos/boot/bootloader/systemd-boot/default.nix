@@ -6,8 +6,8 @@ let
   cfg = config.liberion.boot.bootloader.systemd-boot;
 in
 {
-  options.liberion.boot.bootloader.systemd-boot = {
-    enable = lib.mkEnableOption "systemd-boot";
+  options.liberion.boot.bootloader.systemd-boot = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

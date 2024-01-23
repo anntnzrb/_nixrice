@@ -7,30 +7,27 @@ let
   cfg = config.liberion.shells;
 in
 {
-  options.liberion.shells = {
+  options.liberion.shells = with lib.liberion; with lib.types; {
     defaults = {
-      enable = lib.mkEnableOption "sane shell defaults";
+      enable = mkOptBool';
     };
 
-    sessionVariables = lib.mkOption {
-      type = with lib.types; attrsOf str;
-      description = "Environment variables to always set at login. Refer to home.sessionVariables";
-    };
+    sessionVariables = mkOpt' (attrsOf str) { };
 
     altCoreUtils = {
-      enable = lib.mkEnableOption "alternative core utilities";
+      enable = mkOptBool';
     };
   };
 
-  config = {
+  config = with lib; {
     home = {
       sessionVariables =
         let
-          defaults = lib.mkIf cfg.defaults.enable {
+          defaults = mkIf cfg.defaults.enable {
             NIX_SHELL_PRESERVE_PROMPT = "1";
           };
         in
-        lib.mkMerge [
+        mkMerge [
           { }
           defaults
           cfg.sessionVariables
@@ -38,7 +35,7 @@ in
 
       shellAliases =
         let
-          defaults = lib.mkIf cfg.defaults.enable {
+          defaults = mkIf cfg.defaults.enable {
             ".." = "cd ..";
             cp = "cp -Riv";
             diff = "diff --color=auto";
@@ -54,7 +51,7 @@ in
             manhm = "man home-configuration.nix";
           };
 
-          altCoreUtils = lib.mkIf cfg.altCoreUtils.enable {
+          altCoreUtils = mkIf cfg.altCoreUtils.enable {
             # ls/tree => eza
             ls = "eza --color=automatic --group-directories-first --icons --sort=Name -Fagh";
             ll = "eza --color=automatic --group-directories-first --icons --sort=Name -Faglh";
@@ -71,13 +68,13 @@ in
             less = "bat --color=auto --theme='Monokai Extended Origin' --style=full";
           };
         in
-        lib.mkMerge [
+        mkMerge [
           { }
           defaults
           altCoreUtils
         ];
 
-      packages = with pkgs; lib.mkIf cfg.altCoreUtils.enable [
+      packages = with pkgs; mkIf cfg.altCoreUtils.enable [
         bat
         du-dust
         eza

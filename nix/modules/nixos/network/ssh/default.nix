@@ -7,8 +7,8 @@ let
   cfg = config.liberion.network.ssh;
 in
 {
-  options.liberion.network.ssh = {
-    enable = lib.mkEnableOption "ssh";
+  options.liberion.network.ssh = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

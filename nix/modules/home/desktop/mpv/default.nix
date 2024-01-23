@@ -6,8 +6,8 @@ let
   cfg = config.liberion.desktop.mpv;
 in
 {
-  options.liberion.desktop.mpv = {
-    enable = lib.mkEnableOption "mpv";
+  options.liberion.desktop.mpv = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

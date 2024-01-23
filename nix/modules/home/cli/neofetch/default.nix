@@ -7,8 +7,8 @@ let
   cfg = config.liberion.cli.neofetch;
 in
 {
-  options.liberion.cli.neofetch = {
-    enable = lib.mkEnableOption "neofetch";
+  options.liberion.cli.neofetch = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

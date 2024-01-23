@@ -6,8 +6,8 @@ let
   cfg = config.liberion.boot.bootloader.grub;
 in
 {
-  options.liberion.boot.bootloader.grub = {
-    enable = lib.mkEnableOption "grub";
+  options.liberion.boot.bootloader.grub = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

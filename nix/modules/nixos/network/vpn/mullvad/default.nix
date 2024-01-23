@@ -7,8 +7,8 @@ let
   cfg = config.liberion.network.vpn.mullvad;
 in
 {
-  options.liberion.network.vpn.mullvad = {
-    enable = lib.mkEnableOption "mullvad";
+  options.liberion.network.vpn.mullvad = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

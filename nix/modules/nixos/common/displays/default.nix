@@ -11,14 +11,10 @@ let
   };
 in
 {
-  options.liberion.common.displays = with lib;{
-    enable = mkEnableOption "displays";
+  options.liberion.common.displays = with lib.liberion; with lib.types; {
+    enable = mkOptBool';
 
-    profile = mkOption {
-      type = types.str;
-      default = config.networking.hostName;
-      description = "The display profile to use.";
-    };
+    profile = mkOpt' str config.networking.hostName;
   };
 
   config = lib.mkIf cfg.enable {

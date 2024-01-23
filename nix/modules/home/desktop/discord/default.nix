@@ -7,8 +7,8 @@ let
   cfg = config.liberion.desktop.discord;
 in
 {
-  options.liberion.desktop.discord = {
-    enable = lib.mkEnableOption "discord";
+  options.liberion.desktop.discord = with lib.liberion; {
+    enable = mkOptBool';
   };
   config = lib.mkIf cfg.enable {
     home.packages = [ pkgs.discord ];

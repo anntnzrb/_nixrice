@@ -7,10 +7,10 @@ let
   cfg = config.liberion.editors.emacs;
 in
 {
-  options.liberion.editors.emacs = {
-    enable = lib.mkEnableOption "emacs";
+  options.liberion.editors.emacs = with lib.liberion; {
+    enable = mkOptBool';
 
-    pgtk = lib.mkEnableOption "emacs with pgtk?";
+    pgtk = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

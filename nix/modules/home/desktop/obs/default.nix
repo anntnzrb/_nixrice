@@ -6,8 +6,8 @@ let
   cfg = config.liberion.desktop.obs;
 in
 {
-  options.liberion.desktop.obs = {
-    enable = lib.mkEnableOption "obs";
+  options.liberion.desktop.obs = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

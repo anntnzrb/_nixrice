@@ -7,30 +7,16 @@ let
   cfg = config.liberion.desktop.ui.themes;
 in
 {
-  options.liberion.desktop.ui.themes = with lib; {
-    enable = mkEnableOption "themes";
+  options.liberion.desktop.ui.themes = with lib.liberion; with lib.types; {
+    enable = mkOptBool';
 
     cursor = {
-      theme = mkOption {
-        type = types.str;
-        default = "macOS-BigSur";
-      };
-
-      size = mkOption {
-        type = types.ints.u8;
-        default = 28;
-      };
+      theme = mkOpt' str "macOS-BigSur";
+      size = mkOpt' ints.u8 28;
     };
 
-    iconTheme = mkOption {
-      type = types.str;
-      default = "Papirus-Dark";
-    };
-
-    theme = mkOption {
-      type = types.str;
-      default = "Dracula";
-    };
+    iconTheme = mkOpt' str "Papirus-Dark";
+    theme = mkOpt' str "dracula";
   };
 
   config = with lib; mkIf cfg.enable {
