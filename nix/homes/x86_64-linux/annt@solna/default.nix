@@ -6,7 +6,7 @@ with lib.liberion; let
   autoStart = [
     "nm-applet"
     "pasystray"
-    "redshift-gtk"
+    "gammastep-indicator"
     "\${TERMINAL} -e btop"
   ];
 in
@@ -66,7 +66,7 @@ in
       file-managers.pcmanfm = on;
       flameshot = on;
       mpv = on;
-      redshift = on;
+      gammastep = on;
       terminal-emulators.alacritty = on;
 
       ui = {
