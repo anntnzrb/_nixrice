@@ -4,11 +4,6 @@
 
 #+property: header-args :exports code :results output verbatim
 
-* Introduction
-
-The following /.files/ have accompanied me since /2019/-ish and have been under
-*VC* since /2020/.
-
 * Disclaimer
 
 This repository serves as a laboratory. It is meant for experimentation and
@@ -16,6 +11,55 @@ should be considered /unstable/, /biased/ and sometimes even /untested/.
 
 Nevertheless feel free to take a look and learn from it, experimenting and
 sharing is encouraged.
+
+* Introduction
+
+The journey begins around 2019-ish, back when I was a complete novice in the
+/*nix/ world. The way I used to manage my configurations originally was by
+emulating the =~/= directory structure in the git repository; plain =cp=.  *Luke
+Smith* was the individual who introduced me the /*nix/ world via his [[https://www.youtube.com/watch?v=DB6UWGeNePk][humurous]],
+[[https://www.youtube.com/watch?v=GJ_v31qktSk][sarcastic]] yet [[https://www.youtube.com/watch?v=NzD2UdQl5Gc][informational]] videos hosted on [[https://www.youtube.com/@LukeSmithxyz/videos][his YouTube channel]], also hosted at
+any /libre-whatever/ platform. More on this on the [[Acknoledgments][Acknoledgments]] section.
+
+#+begin_quote
+The following /.files/ have accompanied me since /2019/-ish and have been under
+*VC* since /2020/.
+#+end_quote
+
+** Dotfile Configuration Systems (stow, chezmio, ansible, ...)
+
+After some time using a traditional approach to manage my configurations I went
+on and tried [[https://www.gnu.org/software/stow/][GNU Stow]], which is a symlink farm manager. It was nice being able
+to edit the managed configuration files the normal way to also affecting the
+source files.
+
+/Stow/ did not last long before I tried [[https://www.chezmoi.io/][chezmoi]] for even less time. It offered
+me everything /Stow/ did but with the added benefit of being able to use
+placeholders and templates, among other few things.
+
+I settled using [[https://www.ansible.com/][Ansible]] for a while, which is a configuration management tool
+developed by *RedHat*. This convinced me to believe this project was more solid
+than the previously mentioned ones, because of *RedHat* being a big company.
+And in fact, it is true, until this day I still recommend using /Ansible/ even
+though I do not use it anymore.
+
+I transformed my whole configuration into /Ansible/ playbooks, which gave a lot
+of flexibility and the ability to not only manage my configurations, but also to
+install some programs. This ended up reducing a lot manual intervention I had to
+deal with previously. To accomplish this, I followed *LearnLinuxTV*'s excellent
+[[https://youtube.com/playlist?list=PLT98CRl2KxKEUHie1m24-wkyHpEsa4Y70&si=O5xxvPiCyK_C1m7P][playlist]] on the matter.
+
+# TODO: finish
+Around mid-late 2022 I entered the world of [[https://nixos.org/][NixOS]] and /Nix/
+
+#+begin_quote
+I encourage the reader to browse through this repository's commit history to see
+how the structured of it has evolved over time.
+#+end_quote
+
+Consider reading [[Disclaimer][Disclaimer]] section before proceeding.
+
+* TODO Acknoledgments
 
 * COPYING
 
