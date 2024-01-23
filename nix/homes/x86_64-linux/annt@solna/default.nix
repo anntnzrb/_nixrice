@@ -47,18 +47,20 @@ in
     };
 
     desktop = {
-      sxhkd = {
-        enable = true;
-        timeout = 3;
-        cancelKey = "Escape";
-      };
-
       launchers.bemenu = on;
 
-      window-managers.xorg.awesomewm = {
+      window-managers.wayland.sway = {
         enable = true;
+
         inherit autoStart;
-        autorandr.enable = true;
+
+        output = {
+          HDMI-A-1 = {
+            mode = "1366x768@60.000Hz";
+            pos = "0,0";
+            scale = "1.000";
+          };
+        };
       };
 
       browsers.firefox = on;

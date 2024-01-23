@@ -32,16 +32,8 @@
       networkmanager = on;
     };
 
-    # refer to hm
     common = {
-      xorg = {
-        enable = true;
-        keyboard = {
-          variant = "altgr-intl";
-        };
-      };
-
-      displays = on;
+      desktop = on;
     };
   };
 }
