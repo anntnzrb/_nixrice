@@ -3,11 +3,11 @@
 , ...
 }:
 let
-  cfg = config.liberion.desktop.redshift;
+  cfg = config.liberion.desktop.gammastep;
 in
 {
-  options.liberion.desktop.redshift = with lib; {
-    enable = mkEnableOption "redshift";
+  options.liberion.desktop.gammastep = with lib; {
+    enable = mkEnableOption "gammastep";
 
     latitude = with types; mkOption {
       type = (nullOr float);
@@ -23,7 +23,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    services.redshift = {
+    services.gammastep = {
       enable = true;
 
       inherit (cfg) latitude longitude tray;
