@@ -45,7 +45,7 @@ in
     editors = {
       emacs = {
         enable = true;
-        pgtk = false;
+        pgtk = true;
       };
 
       neovim = on;
@@ -53,7 +53,7 @@ in
 
     desktop = {
       sxhkd = {
-        enable = true;
+        enable = false;
         timeout = 3;
         cancelKey = "Escape";
       };
@@ -65,6 +65,26 @@ in
 
       window-managers = {
         wayland = {
+          sway = {
+            enable = true;
+
+            inherit autoStart;
+
+            output = {
+              HDMI-A-1 = {
+                mode = "1920x1080@60.000Hz";
+                pos = "0,0";
+                scale = "1.000";
+              };
+
+              HDMI-A-3 = {
+                mode = "1920x1080@60.000Hz";
+                pos = "1920,0";
+                scale = "1.500";
+              };
+            };
+          };
+
           hyprland = {
             enable = false;
             waybar = on;
@@ -74,14 +94,6 @@ in
               layout = "us";
               variant = "altgr-intl";
             };
-          };
-        };
-
-        xorg = {
-          awesomewm = {
-            enable = true;
-            inherit autoStart;
-            autorandr.enable = true;
           };
         };
       };

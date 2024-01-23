@@ -29,9 +29,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    services.gnome.gnome-keyring.enable = true;
-    programs.dconf.enable = true;
-
     services.xserver = {
       enable = true;
       autorun = false;
