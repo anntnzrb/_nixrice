@@ -8,8 +8,8 @@ let
   cfg = config.liberion.desktop.browsers.firefox;
 in
 {
-  options.liberion.desktop.browsers.firefox = {
-    enable = lib.mkEnableOption "firefox";
+  options.liberion.desktop.browsers.firefox = with lib.liberion; {
+    enable = mkOptBool';
   };
   config = lib.mkIf cfg.enable {
     programs.firefox = {

@@ -6,8 +6,8 @@ let
   cfg = config.liberion.shells.bash;
 in
 {
-  options.liberion.shells.bash = {
-    enable = lib.mkEnableOption "bash";
+  options.liberion.shells.bash = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

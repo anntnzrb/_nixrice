@@ -11,16 +11,13 @@ let
 in
 with lib;
 {
-  options.liberion.common.xorg = {
-    enable = mkEnableOption "xorg defaults";
+  options.liberion.common.xorg = with lib.liberion; with lib.types; {
+    enable = mkOptBool';
 
-    autoStart = mkOption {
-      type = with types; listOf str;
-      default = [ ];
-    };
+    autoStart = mkOpt' (listOf str) [ ];
 
     autorandr = {
-      enable = mkEnableOption "use autorandr?";
+      enable = mkOptBool';
     };
   };
 

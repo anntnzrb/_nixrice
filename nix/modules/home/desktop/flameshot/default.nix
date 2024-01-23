@@ -6,8 +6,8 @@ let
   cfg = config.liberion.desktop.flameshot;
 in
 {
-  options.liberion.desktop.flameshot = {
-    enable = lib.mkEnableOption "flameshot";
+  options.liberion.desktop.flameshot = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

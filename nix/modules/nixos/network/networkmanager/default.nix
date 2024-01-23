@@ -7,8 +7,8 @@ let
   cfg = config.liberion.network.networkmanager;
 in
 {
-  options.liberion.network.networkmanager = {
-    enable = lib.mkEnableOption "NetworkManager";
+  options.liberion.network.networkmanager = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

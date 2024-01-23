@@ -7,8 +7,8 @@ let
   cfg = config.liberion.desktop.feh;
 in
 {
-  options.liberion.desktop.feh = {
-    enable = lib.mkEnableOption "feh";
+  options.liberion.desktop.feh = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

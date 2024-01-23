@@ -6,8 +6,8 @@ let
   cfg = config.liberion.network.dhcp;
 in
 {
-  options.liberion.network.dhcp = {
-    enable = lib.mkEnableOption "dhcp";
+  options.liberion.network.dhcp = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

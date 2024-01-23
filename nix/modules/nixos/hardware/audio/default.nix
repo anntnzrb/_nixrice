@@ -7,9 +7,9 @@ let
   cfg = config.liberion.hardware.audio;
 in
 {
-  options.liberion.hardware.audio = {
+  options.liberion.hardware.audio = with lib.liberion; {
     pipewire = {
-      enable = lib.mkEnableOption "audio via pipewire";
+      enable = mkOptBool';
     };
   };
 

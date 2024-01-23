@@ -7,12 +7,11 @@ let
   cfg = config.liberion.desktop.launchers.bemenu;
 in
 {
-  options.liberion.desktop.launchers.bemenu = {
-    enable = lib.mkEnableOption "bemenu";
+  options.liberion.desktop.launchers.bemenu = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {
-
     home = {
       packages = [ pkgs.bemenu ];
 

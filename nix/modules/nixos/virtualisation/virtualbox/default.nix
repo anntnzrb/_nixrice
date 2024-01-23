@@ -6,9 +6,9 @@ let
   cfg = config.liberion.virtualisation.virtualbox;
 in
 {
-  options.liberion.virtualisation.virtualbox = {
-    enable = lib.mkEnableOption "virtualbox";
-    enableExtensionPack = lib.mkEnableOption "virtualbox extension pack?";
+  options.liberion.virtualisation.virtualbox = with lib.liberion; {
+    enable = mkOptBool';
+    enableExtensionPack = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {
@@ -16,7 +16,7 @@ in
       host = {
         enable = true;
 
-        inherit (cfg) enableExtensionPack; # cause recompilation
+        inherit (cfg) enableExtensionPack; # causes recompilation
       };
     };
 

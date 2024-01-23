@@ -6,25 +6,13 @@ let
   cfg = config.liberion.common.xorg;
 in
 {
-  options.liberion.common.xorg = with lib;{
-    enable = lib.mkEnableOption "xorg defaults";
-
+  options.liberion.common.xorg = with lib.liberion; with lib.types; {
+    enable = mkOptBool';
 
     keyboard = {
-      layout = mkOption {
-        type = types.str;
-        default = "us";
-      };
-
-      model = mkOption {
-        type = types.str;
-        default = "pc104";
-      };
-
-      variant = mkOption {
-        type = types.commas;
-        default = "";
-      };
+      layout = mkOpt' str "us";
+      model = mkOpt' str "pc104";
+      variant = mkOpt' str "";
     };
   };
 

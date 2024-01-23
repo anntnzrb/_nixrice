@@ -6,11 +6,8 @@ let
   cfg = config.liberion.home;
 in
 {
-  options.liberion.home = with lib; {
-    packages = mkOption {
-      type = with types; listOf package;
-      default = [ ];
-    };
+  options.liberion.home = with lib.liberion; with lib.types; {
+    packages = mkOpt' (listOf package) [ ];
   };
 
   config = {

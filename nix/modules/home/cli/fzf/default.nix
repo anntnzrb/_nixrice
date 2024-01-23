@@ -7,8 +7,8 @@ let
   cfg = config.liberion.cli.fzf;
 in
 {
-  options.liberion.cli.fzf = {
-    enable = lib.mkEnableOption "fzf";
+  options.liberion.cli.fzf = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

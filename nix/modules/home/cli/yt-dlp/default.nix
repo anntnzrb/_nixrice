@@ -6,8 +6,8 @@ let
   cfg = config.liberion.cli.yt-dlp;
 in
 {
-  options.liberion.cli.yt-dlp = {
-    enable = lib.mkEnableOption "yt-dlp";
+  options.liberion.cli.yt-dlp = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {
@@ -15,20 +15,20 @@ in
       enable = true;
 
       settings = {
-	# multistreams
-	audio-multistreams = true;
-	video-multistreams = true;
+        # multistreams
+        audio-multistreams = true;
+        video-multistreams = true;
 
-	# formats
-	format-sort = "quality,filesize";
-	format = "bestvideo*+bestaudio*/best";
+        # formats
+        format-sort = "quality,filesize";
+        format = "bestvideo*+bestaudio*/best";
 
-	# cleanup
+        # cleanup
         no-keep-fragments = true;
         no-keep-video = true;
         post-overwrites = true;
 
-	# misc
+        # misc
         continue = true;
         no-playlist = true;
         no-write-comments = true;

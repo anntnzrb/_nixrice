@@ -7,8 +7,8 @@ let
 in
 {
 
-  options.liberion.cli.git = {
-    enable = lib.mkEnableOption "git";
+  options.liberion.cli.git = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

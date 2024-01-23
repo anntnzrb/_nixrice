@@ -6,8 +6,8 @@ let
   cfg = config.liberion.cli.btop;
 in
 {
-  options.liberion.cli.btop = {
-    enable = lib.mkEnableOption "btop";
+  options.liberion.cli.btop = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

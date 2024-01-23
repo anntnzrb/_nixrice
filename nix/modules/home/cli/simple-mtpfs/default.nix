@@ -8,8 +8,8 @@ let
 in
 {
 
-  options.liberion.cli.simple-mtpfs = {
-    enable = lib.mkEnableOption "simple-mtpfs";
+  options.liberion.cli.simple-mtpfs = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

@@ -8,18 +8,11 @@ let
 
 in
 {
-  options.liberion.desktop.sxhkd = {
-    enable = lib.mkEnableOption "sxhkd";
+  options.liberion.desktop.sxhkd = with lib.liberion; with lib.types; {
+    enable = mkOptBool';
 
-    timeout = lib.mkOption {
-      type = lib.types.ints.unsigned;
-      default = 3;
-    };
-
-    cancelKey = lib.mkOption {
-      type = lib.types.str;
-      default = "Escape";
-    };
+    timeout = mkOpt' ints.unsigned 3;
+    cancelKey = mkOpt' str "Escape";
   };
 
   config = lib.mkIf cfg.enable {

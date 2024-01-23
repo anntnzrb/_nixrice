@@ -6,8 +6,8 @@ let
   cfg = config.liberion.desktop.launchers.wofi;
 in
 {
-  options.liberion.desktop.launchers.wofi = {
-    enable = lib.mkEnableOption "wofi";
+  options.liberion.desktop.launchers.wofi = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

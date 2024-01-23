@@ -6,20 +6,17 @@ let
   cfg = config.liberion.desktop.window-managers.xorg.awesomewm;
 in
 {
-  options.liberion.desktop.window-managers.xorg.awesomewm = with lib; {
-    enable = lib.mkEnableOption "awesome";
+  options.liberion.desktop.window-managers.xorg.awesomewm = with lib.liberion; with lib.types; {
+    enable = mkOptBool';
 
     # -------------------------------------------------------------------------
     # xorg
     # -------------------------------------------------------------------------
 
-    autoStart = mkOption {
-      type = with types; listOf str;
-      default = [ ];
-    };
+    autoStart = mkOpt' (listOf str) [ ];
 
     autorandr = {
-      enable = lib.mkEnableOption "use autorandr?";
+      enable = mkOptBool';
     };
   };
 

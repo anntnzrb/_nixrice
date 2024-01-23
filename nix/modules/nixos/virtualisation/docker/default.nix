@@ -6,9 +6,9 @@ let
   cfg = config.liberion.virtualisation.docker;
 in
 {
-  options.liberion.virtualisation.docker = {
-    enable = lib.mkEnableOption "docker";
-    enableOnBoot = lib.mkEnableOption "docker at boot?";
+  options.liberion.virtualisation.docker = with lib.liberion; {
+    enable = mkOptBool';
+    enableOnBoot = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

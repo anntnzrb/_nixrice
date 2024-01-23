@@ -7,8 +7,8 @@ let
   cfg = config.liberion.desktop.terminal-emulators.alacritty;
 in
 {
-  options.liberion.desktop.terminal-emulators.alacritty = {
-    enable = lib.mkEnableOption "alacritty";
+  options.liberion.desktop.terminal-emulators.alacritty = with lib.liberion; {
+    enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {
