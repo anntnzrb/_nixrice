@@ -6,7 +6,6 @@ with lib.liberion; let
   autoStart = [
     "nm-applet"
     "pasystray"
-    "gammastep-indicator"
     "\${TERMINAL} -e btop"
   ];
 in
