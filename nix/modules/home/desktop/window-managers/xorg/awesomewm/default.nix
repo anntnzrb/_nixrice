@@ -27,14 +27,5 @@ in
     };
 
     xsession.windowManager.awesome.enable = true;
-
-    xdg.configFile = {
-      "awesome" = {
-        enable = true;
-        source = ./config;
-        target = "awesome";
-        recursive = true;
-      };
-    };
   };
 }
