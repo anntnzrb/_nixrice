@@ -31,7 +31,15 @@ in
   config = {
     system.stateVersion = "22.05";
 
-    nix.settings.trusted-users = [ "root" "@wheel" ];
+    nix = {
+      settings.trusted-users = [ "root" "@wheel" ];
+
+      gc = {
+        automatic = true;
+        dates = "weekly";
+        randomizedDelaySec = "45min";
+      };
+    };
 
     time = {
       inherit (cfg.time) timeZone hardwareClockInLocalTime;
