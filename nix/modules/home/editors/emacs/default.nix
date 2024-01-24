@@ -26,18 +26,22 @@ in
       };
     };
 
-    home.packages = with pkgs; [
-      emacsPackages.vterm
+    home = {
+      sessionPath = [ "${config.xdg.configHome}/emacs/bin" ];
 
-      # extras
-      mlocate
-      (ripgrep.override { withPCRE2 = true; })
-      fd
-      nodejs # for LSPs
+      packages = with pkgs; [
+        emacsPackages.vterm
 
-      # lookup
-      sqlite
-      wordnet
-    ];
+        # extras
+        mlocate
+        (ripgrep.override { withPCRE2 = true; })
+        fd
+        nodejs # for LSPs
+
+        # lookup
+        sqlite
+        wordnet
+      ];
+    };
   };
 }
