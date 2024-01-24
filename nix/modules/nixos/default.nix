@@ -47,8 +47,10 @@ in
 
     environment = {
       systemPackages = with pkgs; [
+        # liberion packages
         liberion.liberion
 
+        # tools
         git
 
         # archiving
@@ -61,6 +63,7 @@ in
 
         # misc
         kmon
+        cachix
       ] ++ cfg.systemPackages;
 
       inherit (cfg) variables;
