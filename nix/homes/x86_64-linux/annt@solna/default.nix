@@ -30,7 +30,7 @@ in
       direnv = on;
       fzf = on;
       git = on;
-      neofetch = on;
+      fastfetch = on;
       simple-mtpfs = on;
       starship = on;
       tldr = on;
