@@ -16,26 +16,26 @@ in
     };
 
     iconTheme = mkOpt' str "Papirus-Dark";
-    theme = mkOpt' str "dracula";
+    theme = mkOpt' str "Dracula";
   };
 
-  config = with lib; mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     gtk = {
       enable = true;
       gtk2.configLocation = "${config.xdg.configHome}/gtk-2.0/gtkrc";
 
-      cursorTheme = mkIf (cfg.cursor.theme == "macOS-BigSur") {
+      cursorTheme = {
         name = cfg.cursor.theme;
         package = pkgs.apple-cursor;
         size = cfg.cursor.size;
       };
 
-      iconTheme = mkIf (cfg.iconTheme == "Papirus-Dark") {
+      iconTheme = {
         name = cfg.iconTheme;
         package = pkgs.papirus-icon-theme;
       };
 
-      theme = mkIf (cfg.theme == "Dracula") {
+      theme = {
         name = cfg.theme;
         package = pkgs.dracula-theme;
       };
