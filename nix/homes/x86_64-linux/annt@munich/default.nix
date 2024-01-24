@@ -38,6 +38,7 @@ in
       neofetch = on;
       simple-mtpfs = on;
       starship = on;
+      tldr = on;
       yt-dlp = on;
     };
 
