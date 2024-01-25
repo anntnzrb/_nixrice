@@ -40,7 +40,7 @@ in
     editors = {
       emacs = {
         enable = true;
-        pgtk = false;
+        pgtk = true;
       };
 
       neovim = on;
