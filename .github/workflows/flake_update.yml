@@ -1,9 +1,9 @@
 name: Nix Flake Update
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 0 1 * *"
-  workflow_dispatch:
 
 permissions:
   contents: write
@@ -13,13 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Install Nix
-        uses: cachix/install-nix-action@v25
-        with:
-          nix_path: nixpkgs=channel:nixos-unstable
+        uses: DeterminateSystems/nix-installer-action@main
 
       - name: Configure Git
         run: |
@@ -28,7 +26,7 @@ jobs:
 
       - name: Update Flake Inputs
         run: |
-          nix flake update || exit 1
+          nix flake update --commit-lock-file || exit 1
           git commit -m "chore(flake): bump inputs" flake.lock || :
 
       - name: Push Updates
