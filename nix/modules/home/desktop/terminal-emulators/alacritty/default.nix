@@ -18,46 +18,42 @@ in
       settings = {
         live_config_reload = true;
         working_directory = "None";
-        blink_interval = 300;
-        blink_timeout = 0;
-        unfocused_hollow = true;
-        vi_mode_style = "Block";
 
-        font = {
-          size = 15.0;
-          builtin_box_drawing = false;
+        font =
+          let
+            _fantasque = "Fantasque Sans Mono";
+            codeNewRoman = "CodeNewRoman Nerd Font";
+          in
+          {
+            size = 15.0;
+            builtin_box_drawing = false;
 
-          normal = {
-            family = "Fantasque Sans Mono";
-            style = "Regular";
+            normal = {
+              family = codeNewRoman;
+              style = "Regular";
+            };
+
+            bold = {
+              family = codeNewRoman;
+              style = "Bold";
+            };
+
+            italic = {
+              family = codeNewRoman;
+              style = "Italic";
+            };
+
+            bold_italic = {
+              family = codeNewRoman;
+              style = "Bold Italic";
+            };
           };
-
-          bold = {
-            family = "Fantasque Sans Mono";
-            style = "Bold";
-          };
-
-          italic = {
-            family = "Fantasque Sans Mono";
-            style = "Italic";
-          };
-
-          bold_italic = {
-            family = "Fantasque Sans Mono";
-            style = "Bold Italic";
-          };
-        };
 
         window = {
           opacity = 0.9;
           dynamic_title = true;
           decorations_theme_variant = "None";
           resize_increments = true;
-
-          class = {
-            instance = "Alacritty";
-            general = "Alacritty";
-          };
         };
 
         cursor = {
@@ -65,6 +61,10 @@ in
             shape = "Beam";
             blinking = "Always";
           };
+
+          blink_interval = 300;
+          blink_timeout = 0;
+          unfocused_hollow = true;
         };
 
         scrolling = {
@@ -72,15 +72,23 @@ in
           multiplier = 1;
         };
 
-        key_bindings = [
+        keyboard.bindings = [
+          # copy/paste
           { key = "C"; mods = "Control|Shift"; action = "Copy"; }
           { key = "V"; mods = "Control|Shift"; action = "Paste"; }
+
+          # search
+          { key = "/"; mods = "Control"; action = "SearchForward"; }
         ];
 
-        mouse_bindings = [
-          { mouse = "Right"; action = "ExpandSelection"; }
-          { mouse = "Middle"; action = "PasteSelection"; }
-        ];
+        mouse = {
+          hide_when_typing = true;
+
+          bindings = [
+            { mouse = "Right"; action = "ExpandSelection"; }
+            { mouse = "Middle"; action = "PasteSelection"; }
+          ];
+        };
       };
     };
 
