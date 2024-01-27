@@ -17,8 +17,10 @@ in
     home.packages = with pkgs; [
       apl386
       dejavu_fonts
-      nerdfonts
+      font-awesome
       mononoki
+      nerdfonts
+      noto-fonts-color-emoji
 
       iosevka-comfy.comfy
       iosevka-comfy.comfy-duo
