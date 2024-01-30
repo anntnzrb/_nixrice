@@ -72,6 +72,12 @@ cmd_clean() {
     ${CMD_SU} nix store optimise --verbose
 }
 
+cmd_repair() {
+    println 'Repairing the Nix Store...'
+
+    nix-store --verify --check-contents --repair
+}
+
 cmd_usage() {
     cat <<EOF
 Usage: ${PROGRAM_NAME} [command]
@@ -82,6 +88,7 @@ Commands:
 
   update, u     Update flake.lock
   clean, c      Clean and optimize the Nix Store
+  repair, r     Repair the Nix Store (corruption)
 
   help          Display this help message
 EOF
@@ -110,6 +117,10 @@ main() {
         clean | c)
             shift
             cmd_clean
+            ;;
+        repair | r)
+            shift
+            cmd_repair
             ;;
         help | --help)
             shift
