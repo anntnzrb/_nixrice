@@ -99,7 +99,10 @@ in
         };
       };
 
-      browsers.firefox = on;
+      browsers = {
+        firefox = on;
+        qutebrowser = on;
+      };
       discord = on;
       feh = on;
       file-managers.pcmanfm = on;
