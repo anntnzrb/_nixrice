@@ -21,7 +21,7 @@ in
 
     home = {
       shellAliases = {
-        wm-exec-xmonad = "startx ~/${config.xsession.scriptPath}";
+        wm-exec-xmonad = "command startx ~/${config.xsession.scriptPath}";
       };
 
       packages = with pkgs; [
