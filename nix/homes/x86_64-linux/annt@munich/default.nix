@@ -46,7 +46,7 @@ in
     editors = {
       emacs = {
         enable = true;
-        pgtk = true;
+        pgtk = false;
       };
 
       neovim = on;
@@ -65,23 +65,30 @@ in
       };
 
       window-managers = {
+        xorg = {
+          xmonad = {
+            enable = true;
+            autoStart = autoStart ++ [ "xrandr --output HDMI-3 --mode 1366x768 --pos 1920x0 --output HDMI-1-1 --primary --mode 1920x1080 --pos 0x0 --rate 60.00" ];
+          };
+        };
+
         wayland = {
           sway = {
-            enable = true;
+            enable = false;
 
             inherit autoStart;
 
             output = {
-              HDMI-A-1 = {
-                mode = "1920x1080@60.000Hz";
-                pos = "0,0";
-                scale = "1.000";
-              };
-
               HDMI-A-3 = {
                 mode = "1920x1080@60.000Hz";
                 pos = "1920,0";
                 scale = "1.500";
+              };
+
+              HDMI-A-1 = {
+                mode = "1920x1080@60.000Hz";
+                pos = "0,0";
+                scale = "1.000";
               };
             };
           };

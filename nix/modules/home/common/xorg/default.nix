@@ -7,7 +7,6 @@ let
   cfg = config.liberion.common.xorg;
 
   parseAutoStartList = xs: builtins.concatStringsSep "\n" (map (x: x + " &") xs);
-
 in
 with lib;
 {
@@ -15,26 +14,27 @@ with lib;
     enable = mkOptBool';
 
     autoStart = mkOpt' (listOf str) [ ];
-
-    autorandr = {
-      enable = mkOptBool';
-    };
   };
 
   config = mkIf cfg.enable {
     xsession = {
       enable = true;
+      #windowManager.command = lib.mkForce "";
 
-      initExtra = parseAutoStartList (cfg.autoStart ++ optional cfg.autorandr.enable "autorandr -c");
+      initExtra = parseAutoStartList cfg.autoStart;
       profilePath = ".config/xprofile-hm";
       scriptPath = ".config/xsession-hm";
     };
 
-    home.packages = [
-      (pkgs.writeShellApplication {
-        name = "wm-exec";
-        text = "startx ~/${config.xsession.scriptPath}";
-      })
-    ];
+    home = {
+      shellAliases = {
+        startx = "printf 'Do not use this command. Use the appropiate wrapper for launching the graphic environment.\n' >2&1";
+      };
+
+      packages = with pkgs; [
+        xclip
+        arandr
+      ];
+    };
   };
 }
