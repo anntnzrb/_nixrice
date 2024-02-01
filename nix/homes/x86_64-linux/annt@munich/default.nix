@@ -54,7 +54,7 @@ in
 
     desktop = {
       sxhkd = {
-        enable = false;
+        enable = true;
         timeout = 3;
         cancelKey = "Escape";
       };
@@ -66,8 +66,13 @@ in
 
       window-managers = {
         xorg = {
-          xmonad = {
+          awesomewm = {
             enable = true;
+            autoStart = autoStart ++ [ "xrandr --output HDMI-3 --mode 1920x1080 --right-of HDMI-1-1 --auto --output HDMI-1-1 --primary --mode 1920x1080 --auto" ];
+          };
+
+          xmonad = {
+            enable = false;
             autoStart = autoStart ++ [ "xrandr --output HDMI-3 --mode 1366x768 --pos 1920x0 --output HDMI-1-1 --primary --mode 1920x1080 --pos 0x0 --rate 60.00" ];
           };
         };
@@ -75,9 +80,7 @@ in
         wayland = {
           sway = {
             enable = false;
-
             inherit autoStart;
-
             output = {
               HDMI-A-3 = {
                 mode = "1920x1080@60.000Hz";
