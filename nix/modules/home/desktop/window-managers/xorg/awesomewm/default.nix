@@ -1,5 +1,6 @@
 { config
 , lib
+, pkgs
 , ...
 }:
 let
@@ -9,23 +10,38 @@ in
   options.liberion.desktop.window-managers.xorg.awesomewm = with lib.liberion; with lib.types; {
     enable = mkOptBool';
 
-    # -------------------------------------------------------------------------
-    # xorg
-    # -------------------------------------------------------------------------
-
     autoStart = mkOpt' (listOf str) [ ];
-
-    autorandr = {
-      enable = mkOptBool';
-    };
   };
 
   config = lib.mkIf cfg.enable {
     liberion.common.xorg = {
       enable = true;
-      inherit (cfg) autorandr autoStart;
+      inherit (cfg) autoStart;
+
+     picom.enable = true;
+    };
+
+    home = {
+      shellAliases = {
+        wm-exec-awesome = "command startx ~/${config.xsession.scriptPath}";
+      };
+
+      packages = with pkgs; [
+        lua
+        stylua
+        lua-language-server
+      ];
     };
 
     xsession.windowManager.awesome.enable = true;
+
+    xdg.configFile = {
+      awesomewm = {
+        enable = true;
+        source = ./awesome;
+        target = "awesome";
+        recursive = true;
+      };
+    };
   };
 }
