@@ -43,5 +43,14 @@ in
         enableContribAndExtras = true;
       };
     };
+
+    xdg.configFile = {
+      xmonad = {
+        enable = true;
+        source = ./xmonad;
+        target = "xmonad";
+        recursive = true;
+      };
+    };
   };
 }
