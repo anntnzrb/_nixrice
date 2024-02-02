@@ -40,25 +40,26 @@ in
     editors = {
       emacs = {
         enable = true;
-        pgtk = true;
+        pgtk = false;
       };
 
       neovim = on;
     };
 
     desktop = {
+      sxhkd = {
+        enable = true;
+        timeout = 3;
+        cancelKey = "Escape";
+      };
+
       launchers.bemenu = on;
 
-      window-managers.wayland.sway = {
-        enable = true;
-
-        inherit autoStart;
-
-        output = {
-          HDMI-A-1 = {
-            mode = "1366x768@60.000Hz";
-            pos = "0,0";
-            scale = "1.000";
+      window-managers = {
+        xorg = {
+          awesomewm = {
+            enable = true;
+            inherit autoStart;
           };
         };
       };
