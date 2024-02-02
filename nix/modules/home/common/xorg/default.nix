@@ -34,6 +34,7 @@ with lib;
       packages = with pkgs; [
         xclip
         arandr
+        xorg.xev
       ];
     };
   };
