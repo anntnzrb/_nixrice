@@ -63,13 +63,17 @@ in
         };
       };
 
-      browsers.firefox = on;
+      browsers = {
+        firefox = on;
+        qutebrowser = on;
+      };
       feh = on;
       file-managers.pcmanfm = on;
       flameshot = on;
       mpv = on;
       gammastep = on;
       terminal-emulators.alacritty = on;
+      zathura = on;
 
       ui = {
         themes = on;
