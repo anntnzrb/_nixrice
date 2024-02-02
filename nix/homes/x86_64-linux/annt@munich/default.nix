@@ -117,10 +117,11 @@ in
       feh = on;
       file-managers.pcmanfm = on;
       flameshot = on;
+      gammastep = on;
       mpv = on;
       obs = on;
-      gammastep = on;
       terminal-emulators.alacritty = on;
+      zathura = on;
 
       ui = {
         themes = on;
