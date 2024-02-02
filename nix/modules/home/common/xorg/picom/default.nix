@@ -26,7 +26,7 @@ in
 
       # animations
       fade = true;
-      fadeDelta = 6;
+      fadeDelta = 5;
 
       # shadows
       shadow = true;
