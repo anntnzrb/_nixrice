@@ -33,6 +33,7 @@
     };
 
     common = {
+      xorg = on;
       desktop = on;
     };
   };
