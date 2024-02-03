@@ -408,6 +408,15 @@ do
             },
         },
 
+        {
+            rule_any = {
+                class = {
+                    "Pcmanfm",
+                },
+            },
+            properties = { floating = true },
+        },
+
         -- tag 1 clients
         {
             rule_any = {
