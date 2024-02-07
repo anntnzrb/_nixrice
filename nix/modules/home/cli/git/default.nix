@@ -15,7 +15,7 @@ in
     programs.git = {
       enable = true;
       userName = "anntnzrb";
-      userEmail = "anntnzrb@protonmail.com";
+      userEmail = "anntnzrb@proton.me";
 
       extraConfig = {
         init = {
