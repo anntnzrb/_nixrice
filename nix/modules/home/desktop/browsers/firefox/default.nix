@@ -1,7 +1,8 @@
 { config
-, pkgs
 , inputs
 , lib
+, pkgs
+, system
 , ...
 }:
 let
@@ -175,7 +176,7 @@ in
             };
         };
 
-        extensions = with inputs.firefox-addons.packages.${pkgs.system}; [
+        extensions = with inputs.firefox-addons.packages.${system}; [
           bitwarden # pw manager
           darkreader
           tridactyl # vi keybinds
