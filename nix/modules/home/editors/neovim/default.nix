@@ -1,5 +1,7 @@
 { config
+, inputs
 , lib
+, system
 , ...
 }:
 let
@@ -11,16 +13,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.neovim = {
-      enable = true;
-
-      withNodeJs = false;
-      withPython3 = false;
-      withRuby = false;
-
-      extraConfig = ''
-        set clipboard=unnamedplus
-      '';
-    };
+    home.packages = [ inputs.neovim-annt.packages.${system}.neovim ];
   };
 }
