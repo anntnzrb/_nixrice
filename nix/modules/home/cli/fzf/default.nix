@@ -15,7 +15,7 @@ in
     programs.fzf =
       let
         catCmd = "bat --color=auto -P";
-        treeCmd = "eza --color=automatic --icons -FT";
+        treeCmd = "eza --color=automatic --icons -T";
       in
       rec {
         enable = true;
