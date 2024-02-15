@@ -29,7 +29,6 @@
     # Neovim
     neovim-annt.url = "github:anntnzrb/nixvim";
     neovim-annt.inputs.nixpkgs.follows = "nixpkgs-unstable"; # NOTE: must use nixpkgs-unstable
-    neovim-annt.inputs.home-manager.follows = "home-manager";
   };
 
   outputs = inputs:
