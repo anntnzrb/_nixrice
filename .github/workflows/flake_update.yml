@@ -1,9 +1,9 @@
 name: Nix Flake Update
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # manual triggering
   schedule:
-    - cron: "0 0 1 * *"
+  - cron: "0 0 1 * *" # run 1st of each month
 
 permissions:
   contents: write
@@ -26,8 +26,7 @@ jobs:
 
       - name: Update Flake Inputs
         run: |
-          nix flake update --commit-lock-file || exit 1
-          git commit -m "chore(flake): bump inputs" flake.lock || :
+          nix flake update --commit-lock-file --commit-lockfile-summary 'chore(flake): update lockfile'
 
       - name: Push Updates
         run: |
