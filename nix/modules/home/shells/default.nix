@@ -53,12 +53,12 @@ in
 
           altCoreUtils = mkIf cfg.altCoreUtils.enable {
             # ls/tree => eza
-            ls = "eza --color=automatic --group-directories-first --icons --sort=Name -Fagh";
-            ll = "eza --color=automatic --group-directories-first --icons --sort=Name -Faglh";
+            ls = "eza --color=automatic --group-directories-first --icons --sort=Name -agh";
+            ll = "eza --color=automatic --group-directories-first --icons --sort=Name -aglh";
 
-            tree = "eza --color=automatic --group-directories-first --icons -FTgh";
-            treea = "eza --color=automatic --group-directories-first --icons -FTagh";
-            treed = "eza --color=automatic --icons -DFTgh";
+            tree = "eza --color=automatic --group-directories-first --icons -Tgh";
+            treea = "eza --color=automatic --group-directories-first --icons -Tagh";
+            treed = "eza --color=automatic --icons -DTgh";
 
             # grep => rg
             grep = "rg --color=auto --column --hidden -Hin";
