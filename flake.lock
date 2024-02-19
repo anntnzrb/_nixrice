@@ -9,16 +9,17 @@
       },
       "locked": {
         "dir": "repos/rycee/pkgs/firefox-addons",
-        "lastModified": 1707979458,
-        "narHash": "sha256-eaBOExjq7RqGLxgtJsy6fgu0TIE1Gy66o9T3HBP326Q=",
+        "lastModified": 1708322991,
+        "narHash": "sha256-d+5n88vO2CGRepETzDfxa77SO5KiS4PStkgFL/11qIg=",
         "owner": "nix-community",
         "repo": "nur-combined",
-        "rev": "e2189d19c67323a48eac01a0b41d1f3ba49eb3de",
+        "rev": "790765e32240e98bdca357b05128b87322704f2a",
         "type": "github"
       },
       "original": {
         "dir": "repos/rycee/pkgs/firefox-addons",
         "owner": "nix-community",
+        "ref": "master",
         "repo": "nur-combined",
         "type": "github"
       }
@@ -218,15 +219,16 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1707976845,
-        "narHash": "sha256-0BInJzA7RW0AeJNGnZFrZhv6PlOBaQDkepvH0GdOIi8=",
+        "lastModified": 1708035831,
+        "narHash": "sha256-rE8NJcCQMbcjS6+INfU30PVXdQ80DkBL2YCbEIfW4fk=",
         "owner": "anntnzrb",
         "repo": "nixvim",
-        "rev": "5bf1ce07ad48ec8ff14aae06e36f7109234c5d14",
+        "rev": "44e74e44fb4fbe5bbba11620a12d9a0c01e5aed1",
         "type": "github"
       },
       "original": {
         "owner": "anntnzrb",
+        "ref": "main",
         "repo": "nixvim",
         "type": "github"
       }
@@ -285,21 +287,23 @@
       },
       "original": {
         "owner": "nix-community",
+        "ref": "master",
         "repo": "nixos-generators",
         "type": "github"
       }
     },
     "nixos-hardware": {
       "locked": {
-        "lastModified": 1707842204,
-        "narHash": "sha256-M+HAq1qWQBi/gywaMZwX0odU+Qb/XeqVeANGKRBDOwU=",
+        "lastModified": 1708091350,
+        "narHash": "sha256-o28BJYi68qqvHipT7V2jkWxDiMS1LF9nxUsou+eFUPQ=",
         "owner": "NixOS",
         "repo": "nixos-hardware",
-        "rev": "f1b2f71c86a5b1941d20608db0b1e88a07d31303",
+        "rev": "106d3fec43bcea19cb2e061ca02531d54b542ce3",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
+        "ref": "master",
         "repo": "nixos-hardware",
         "type": "github"
       }
@@ -459,6 +463,7 @@
       },
       "original": {
         "owner": "snowfallorg",
+        "ref": "main",
         "repo": "lib",
         "type": "github"
       }
