@@ -18,7 +18,7 @@ in
       enable = true;
       inherit (cfg) autoStart;
 
-     picom.enable = true;
+      picom.enable = true;
     };
 
     home = {

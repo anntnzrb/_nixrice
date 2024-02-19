@@ -11,16 +11,16 @@ in
     enable = mkOptBool';
   };
 
-  config = lib.mkIf cfg.enable {
-    programs.fzf =
+  config = with lib; mkIf cfg.enable {
+    programs.fzf = with pkgs;
       let
-        catCmd = "bat --color=auto -P";
-        treeCmd = "eza --color=automatic --icons -T";
+        catCmd = "${getExe bar} --color=auto -P";
+        treeCmd = "${getExe eza} --color=automatic --icons -T";
       in
       rec {
         enable = true;
 
-        defaultCommand = "fd --type f";
+        defaultCommand = "${getExe fd} --type f";
 
         # CTL-R
         historyWidgetOptions = [ "--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'" ];
@@ -30,20 +30,13 @@ in
         fileWidgetOptions = [ "--preview '${catCmd} {} 2>/dev/null || ${treeCmd} {}'" ];
 
         # ALT-C
-        changeDirWidgetCommand = "fd --type d";
+        changeDirWidgetCommand = "${getExe fd} --type d";
         changeDirWidgetOptions = [ "--preview '${treeCmd} {}'" ];
       };
 
-    home = {
-      packages = with pkgs; [
-        fd
-        eza
-      ];
-
-      # NOTE: this might be a future module option
-      sessionVariables = {
-        FZF_COMPLETION_TRIGGER = ".";
-      };
+    # NOTE: this might be a future module option
+    home.sessionVariables = {
+      FZF_COMPLETION_TRIGGER = ".";
     };
   };
 }
