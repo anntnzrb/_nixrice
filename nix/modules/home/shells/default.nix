@@ -33,7 +33,7 @@ in
           cfg.sessionVariables
         ];
 
-      shellAliases =
+      shellAliases = with pkgs;
         let
           defaults = mkIf cfg.defaults.enable {
             ".." = "cd ..";
@@ -44,29 +44,33 @@ in
             mv = "mv -iv";
             rm = "rm -v";
             rmfr = "rm -Rfv";
-            wget = "wget --no-hsts";
-            zip = "zip -rv";
+            wget = "${getExe wget} --no-hsts";
+            zip = "${getExe zip} -rv";
 
-            mannixos = "man configuration.nix";
-            manhm = "man home-configuration.nix";
+            mannixos = "${getExe man} configuration.nix";
+            manhm = "${getExe man} home-configuration.nix";
           };
 
-          altCoreUtils = mkIf cfg.altCoreUtils.enable {
-            # ls/tree => eza
-            ls = "eza --color=automatic --group-directories-first --icons --sort=Name -agh";
-            ll = "eza --color=automatic --group-directories-first --icons --sort=Name -aglh";
+          altCoreUtils =
+            let
+              commonFlags = "--color=auto --group-directories-first --icons";
+            in
+            mkIf cfg.altCoreUtils.enable {
+              # ls/tree => eza
+              ls = "${getExe eza} ${commonFlags} --sort=Name -agh";
+              ll = "${getExe eza} ${commonFlags} --sort=Name -aglh";
 
-            tree = "eza --color=automatic --group-directories-first --icons -Tgh";
-            treea = "eza --color=automatic --group-directories-first --icons -Tagh";
-            treed = "eza --color=automatic --icons -DTgh";
+              tree = "${getExe eza} ${commonFlags} --icons -Tgh";
+              treea = "${getExe eza} ${commonFlags} --icons -Tagh";
+              treed = "${getExe eza} --color=automatic --icons -DTgh";
 
-            # grep => rg
-            grep = "rg --color=auto --column --hidden -Hin";
+              # grep => rg (ripgrep
+              grep = "${getExe ripgrep} --color=auto --column --hidden -Hin";
 
-            # cat/less => bat
-            cat = "bat --color=auto --theme='Monokai Extended Origin' --style=full -P";
-            less = "bat --color=auto --theme='Monokai Extended Origin' --style=full";
-          };
+              # cat/less => bat
+              cat = "${getExe bat} --color=auto --theme='Monokai Extended Origin' --style=full -P";
+              less = "${getExe bat} --color=auto --theme='Monokai Extended Origin' --style=full";
+            };
         in
         mkMerge [
           { }

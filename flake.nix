@@ -7,19 +7,19 @@
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    # Flake framework
+    # flake framework
     snowfall-lib.url = "github:snowfallorg/lib/main";
     snowfall-lib.inputs.nixpkgs.follows = "nixpkgs-stable";
 
-    # Collection of hardware modules for systems
+    # collection of hardware modules for systems
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
-    # Generate NixOS images (iso, sd, amazon, ...)
+    # generate NixOS images (iso, sd, amazon, ...)
     nixos-generators.url = "github:nix-community/nixos-generators/master";
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs-stable";
 
-    # User environment manager
-    home-manager.url = "github:nix-community/home-manager/release-23.11"; # NOTE: match nixpkgs
+    # user environment manager
+    home-manager.url = "github:nix-community/home-manager/release-23.11"; # NOTE: match NixOS
     home-manager.inputs.nixpkgs.follows = "nixpkgs-stable";
 
     # Firefox extensions (add-ons)

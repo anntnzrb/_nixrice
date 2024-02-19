@@ -1,5 +1,6 @@
 { config
 , lib
+, pkgs
 , ...
 }:
 let
@@ -12,7 +13,7 @@ in
 
   config = lib.mkIf cfg.enable {
     home.shellAliases = {
-      tldr = "tldr --color=always";
+      tldr = "${lib.getExe pkgs.tldr} --color=always";
     };
 
     programs.tealdeer = {
