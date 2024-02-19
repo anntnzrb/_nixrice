@@ -26,6 +26,8 @@ The following /.files/ have accompanied me since /2019/-ish and have been under
 *VC* since /2020/.
 #+end_quote
 
+*NOTE*: Consider reading the [[Disclaimer][Disclaimer]] section.
+
 ** Dotfile Configuration Systems (stow, chezmio, ansible, ...)
 
 After some time using a traditional approach to manage my configurations I went
@@ -50,16 +52,35 @@ deal with previously. To accomplish this, I followed *LearnLinuxTV*'s excellent
 [[https://youtube.com/playlist?list=PLT98CRl2KxKEUHie1m24-wkyHpEsa4Y70&si=O5xxvPiCyK_C1m7P][playlist]] on the matter.
 
 # TODO: finish
-Around mid-late 2022 I entered the world of [[https://nixos.org/][NixOS]] and /Nix/
+Around mid-late 2022 I entered the world of [[https://nixos.org/][NixOS]], ...
 
 #+begin_quote
 I encourage the reader to browse through this repository's commit history to see
 how the structured of it has evolved over time.
 #+end_quote
 
-Consider reading [[Disclaimer][Disclaimer]] section before proceeding.
+* Acknowledgments
 
-* TODO Acknoledgments
+** People
+
+- [[https://github.com/lukesmithxyz][Luke Smith]]
+- [[https://www.youtube.com/@DistroTube][Derek Taylor (DistroTube)]]
+- [[https://www.youtube.com/@protesilaos][Protesilaos Stavrou]]
+- [[https://www.youtube.com/@SystemCrafters][David Wilson (SystemCrafters)]]
+- [[https://www.youtube.com/@BrodieRobertson][Brodie Robertson]]
+- [[https://www.youtube.com/@jakehamiltondev][Jake Hamilton]]
+- [[https://www.youtube.com/@bugswriter_][Suraj Kushwah (bugswriter)]]
+- [[https://www.youtube.com/@GavinFreeborn][Gavin Freeborn]]
+- [[https://www.youtube.com/@gotbletu][gotbletu]]
+
+** Resources
+
+- [[https://github.com/xero/dotfiles][xero's dotfiles]]
+- [[https://github.com/lukesmithxyz/voidrice][Luke Smith's dotfiles]]
+- [[https://gitlab.com/dwt1/dotfiles][Derek Taylor's dotfiles]]
+- [[https://github.com/daviwil/dotfiles][David Wilson's dotfiles]]
+- [[https://github.com/hlissner/dotfiles][Henrik Lissner's dotfiles]]
+- [[https://github.com/jakehamilton/config][Jake Hamilton's dotfiles]]
 
 * COPYING
 
