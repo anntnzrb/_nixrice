@@ -28,8 +28,9 @@
     };
 
     network = {
-      ssh = on;
       networkmanager = on;
+      ssh = on;
+      syncthing = on;
     };
 
     common = {
