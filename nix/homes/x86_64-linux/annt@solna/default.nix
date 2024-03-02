@@ -82,4 +82,11 @@ in
       };
     };
   };
+
+  services.cbatticon = {
+    enable = true;
+    updateIntervalSeconds = 30;
+    lowLevelPercent = 25;
+    criticalLevelPercent = 10;
+  };
 }
