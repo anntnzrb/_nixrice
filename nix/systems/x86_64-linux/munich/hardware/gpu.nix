@@ -2,20 +2,30 @@
 , ...
 }:
 {
-  hardware.opengl = {
-    enable = true;
-  };
+  services.xserver.videoDrivers = [ "nvidia" ];
 
-  # driver for both Xorg and Wayland
-  #services.xserver.videoDrivers = [ "nvidia" ];
+  hardware = {
+    opengl = {
+      enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
+    };
 
-  hardware.nvidia = {
-    open = false;
-    nvidiaSettings = true;
+    nvidia = {
+      open = false;
+      nvidiaSettings = true;
+      modesetting.enable = true;
 
-    # NOTE: match the kernel
-    package = pkgs.linuxPackages_xanmod_latest.nvidia_x11;
+      # this enables having an external nvidia-card-connected display on the
+      # nvidia card; also enables the mobo-connected display
+      prime = {
+        sync.enable = true;
+        intelBusId = "PCI:0:2:0";
+        nvidiaBusId = "PCI:1:0:0";
+      };
 
-    modesetting.enable = true;
+      # NOTE: match the kernel
+      package = pkgs.linuxPackages_xanmod_latest.nvidia_x11;
+    };
   };
 }
