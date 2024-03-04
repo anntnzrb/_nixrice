@@ -4,17 +4,28 @@
 }:
 
 with lib.liberion; let
-  autoStart = [
-    "nm-applet"
-    "pasystray"
-    "\${TERMINAL} -e btop"
-  ];
+  autoStart = {
+    defaults = [
+      "nm-applet"
+      "pasystray"
+      "\${TERMINAL} -e btop"
+    ];
+
+    xrandr = [ "xrandr --output HDMI-0 --primary --mode 1920x1080 --pos 0x0 --rate 75.000 --output HDMI-1-2 --mode 1920x1080 --pos 1920x0 --rate 60.000" ];
+  };
 in
 {
   liberion = {
-    home.packages = with pkgs; [
-      git # example
-    ];
+    home = {
+      packages = with pkgs; [
+        git # example
+      ];
+
+      keyboard = {
+        layout = "us";
+        variant = "altgr-intl";
+      };
+    };
 
     shells = {
       defaults = on;
@@ -68,12 +79,12 @@ in
         xorg = {
           awesomewm = {
             enable = true;
-            autoStart = autoStart ++ [ "xrandr --output HDMI-3 --mode 1920x1080 --right-of HDMI-1-1 --auto --output HDMI-1-1 --primary --mode 1920x1080 --auto" ];
+            autoStart = autoStart.defaults ++ autoStart.xrandr;
           };
 
           xmonad = {
             enable = false;
-            autoStart = autoStart ++ [ "xrandr --output HDMI-3 --mode 1366x768 --pos 1920x0 --output HDMI-1-1 --primary --mode 1920x1080 --pos 0x0 --rate 60.00" ];
+            autoStart = autoStart.defaults ++ autoStart.xrandr;
           };
         };
 
