@@ -14,6 +14,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    services.emacs.enable = true;
+
     programs.emacs = {
       enable = true;
 
