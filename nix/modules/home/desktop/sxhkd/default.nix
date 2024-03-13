@@ -26,7 +26,7 @@ in
 
         "super + d ; {d}" = "{bemenu-run}";
 
-        "super + w ; {f,w,e}" = "{${FILE},${BROWSER},emacsclient -a '' -r}";
+        "super + w ; {f,w,e}" = "{${FILE},${BROWSER},emacs}";
 
         "Print" = "\{ flameshot & \} && sleep 0.5s && flameshot gui";
 

@@ -5,6 +5,39 @@
 }:
 let
   cfg = config.liberion.editors.emacs;
+
+  packages = {
+    dependencies = with pkgs; [
+      mlocate # M-x locate
+      fd
+      (ripgrep.override { withPCRE2 = true; })
+    ];
+
+    emacsPkgs = with pkgs.emacsPackages; [
+      vterm
+    ];
+
+    extras = with pkgs; [
+      nodejs # for lsp copilot auth
+
+      # lookup
+      sqlite
+      wordnet
+    ];
+
+    dicts = with pkgs; [
+      (aspellWithDicts (dicts: with dicts;
+      [
+        # english
+        en
+        en-computers
+        en-science
+
+        es # spanish/español
+        de # german/deutsch
+      ]))
+    ];
+  };
 in
 {
   options.liberion.editors.emacs = with lib.liberion; {
@@ -14,8 +47,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    services.emacs.enable = true;
-
     programs.emacs = {
       enable = true;
 
@@ -25,25 +56,13 @@ in
         withPgtk = cfg.pgtk;
         withNativeCompilation = true; # emacs28+
         withTreeSitter = true; # emacs29+
+        withSQLite3 = true;
       };
     };
 
     home = {
       sessionPath = [ "${config.xdg.configHome}/emacs/bin" ];
-
-      packages = with pkgs; [
-        emacsPackages.vterm
-
-        # extras
-        mlocate
-        (ripgrep.override { withPCRE2 = true; })
-        fd
-        nodejs # for LSPs
-
-        # lookup
-        sqlite
-        wordnet
-      ];
+      packages = with packages; emacsPkgs ++ dependencies ++ extras ++ dicts;
     };
   };
 }
