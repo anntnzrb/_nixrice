@@ -32,7 +32,7 @@ in
       altCoreUtils = on;
 
       sessionVariables = {
-        BROWSER = "firefox";
+        BROWSER = "chromium";
         EDITOR = "nvim";
         FILE = "pcmanfm";
         TERMINAL = "alacritty";
@@ -122,6 +122,7 @@ in
 
       browsers = {
         firefox = on;
+        chromium = on;
         qutebrowser = on;
       };
       discord = on;
