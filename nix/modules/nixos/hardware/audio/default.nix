@@ -13,8 +13,10 @@ in
     };
   };
 
-  config = {
-    services.pipewire = lib.mkIf cfg.pipewire.enable {
+  config = lib.mkIf cfg.pipewire.enable {
+    security.rtkit.enable = true;
+
+    services.pipewire = {
       enable = true;
 
       alsa.enable = true;
@@ -23,7 +25,7 @@ in
       wireplumber.enable = true;
     };
 
-    environment.systemPackages = with pkgs; lib.mkIf cfg.pipewire.enable [
+    environment.systemPackages = with pkgs; [
       pamixer
       pulsemixer
       pasystray
