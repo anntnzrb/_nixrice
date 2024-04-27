@@ -30,6 +30,7 @@
         device = "/dev/disk/by-label/${bootLabel}";
         label = "${bootLabel}";
         fsType = "vfat";
+        options = [ "fmask=0022" "dmask=0022" ];
       };
     };
 
