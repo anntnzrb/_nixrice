@@ -75,11 +75,11 @@ in
         atool
         p7zip
         rar
-        unrar
         unzip
         zip
 
         # misc
+        nh
         kmon
         cachix
       ] ++ cfg.systemPackages;
