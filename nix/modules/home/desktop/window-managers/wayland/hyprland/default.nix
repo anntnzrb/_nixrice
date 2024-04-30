@@ -10,11 +10,6 @@ in
   options.liberion.desktop.window-managers.wayland.hyprland = with lib.liberion; with lib.types; {
     enable = mkOptBool';
 
-    keyboard = {
-      layout = mkOpt' str "us";
-      variant = mkOpt' str "altgr-intl";
-    };
-
     monitor = mkOpt' (listOf str) [ ",preferred,auto,1" ];
     autoStartApps = mkOpt' (listOf str) [ ];
     waybar = mkOptBool';
@@ -40,11 +35,6 @@ in
         inherit (cfg) monitor;
 
         exec-once = cfg.autoStartApps ++ (lib.optional cfg.waybar.enable "waybar");
-
-        input = {
-          kb_layout = cfg.keyboard.layout;
-          kb_variant = cfg.keyboard.variant;
-        };
 
         bind = [
           # "$mod ALT, Q, exit"
