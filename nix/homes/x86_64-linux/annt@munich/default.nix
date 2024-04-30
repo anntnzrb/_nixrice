@@ -112,10 +112,6 @@ in
             waybar = on;
             autoStartApps = autoStart;
             monitor = [ "HDMI-A-2, 1366x768, 1920x0, 1" "HDMI-A-3, 1920x1080, 0x0, 1" ];
-            keyboard = {
-              layout = "us";
-              variant = "altgr-intl";
-            };
           };
         };
       };
