@@ -56,7 +56,7 @@ in
 
     editors = {
       emacs = {
-        enable = true;
+        enable = false;
         pgtk = false;
       };
 
