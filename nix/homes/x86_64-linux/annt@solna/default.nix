@@ -38,11 +38,6 @@ in
     };
 
     editors = {
-      emacs = {
-        enable = true;
-        pgtk = false;
-      };
-
       neovim = on;
     };
 

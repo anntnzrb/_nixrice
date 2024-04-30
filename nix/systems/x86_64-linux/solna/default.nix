@@ -32,6 +32,7 @@
       networkmanager = on;
       ssh = on;
       syncthing = on;
+      vpn.mullvad = on;
     };
 
     common = {
