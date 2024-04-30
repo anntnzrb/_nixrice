@@ -11,15 +11,16 @@
         name = "annt";
         isNormalUser = true;
         extraGroups = [ "wheel" ];
+
+        authorizedKeys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHoPWVoRBmvoWF445a0vTnV2ASk+5Gy/XDTEPPjEDd8/ git"
+        ];
       };
 
       time.timeZone = "America/Guayaquil";
-
-      user.authorizedKeys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHoPWVoRBmvoWF445a0vTnV2ASk+5Gy/XDTEPPjEDd8/ git"
-      ];
     };
 
+    # no dual-boot. systemd-boot suffices
     boot.bootloader.systemd-boot = on;
 
     hardware = {
