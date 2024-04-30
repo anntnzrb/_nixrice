@@ -9,18 +9,19 @@
         name = "annt";
         isNormalUser = true;
         extraGroups = [ "wheel" ];
+
+        authorizedKeys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHoPWVoRBmvoWF445a0vTnV2ASk+5Gy/XDTEPPjEDd8/ git"
+        ];
       };
 
       time = {
         timeZone = "America/Guayaquil";
         hardwareClockInLocalTime = true; # dual-boot
       };
-
-      user.authorizedKeys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHoPWVoRBmvoWF445a0vTnV2ASk+5Gy/XDTEPPjEDd8/ git"
-      ];
     };
 
+    # GRUB because of dual-boot
     boot.bootloader.grub = on;
 
     hardware = {
