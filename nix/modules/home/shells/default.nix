@@ -53,18 +53,18 @@ in
 
           altCoreUtils =
             let
-              commonFlags = "--color=auto --group-directories-first --icons";
+              commonEzaFlags = "--color=auto --group-directories-first --icons";
             in
             mkIf cfg.altCoreUtils.enable {
               # ls/tree => eza
-              ls = "${getExe eza} ${commonFlags} --sort=Name -agh";
-              ll = "${getExe eza} ${commonFlags} --sort=Name -aglh";
+              ls = "${getExe eza} ${commonEzaFlags} --sort=Name -agh";
+              ll = "${getExe eza} ${commonEzaFlags} --sort=Name -aglh";
 
-              tree = "${getExe eza} ${commonFlags} --icons -Tgh";
-              treea = "${getExe eza} ${commonFlags} --icons -Tagh";
-              treed = "${getExe eza} --color=automatic --icons -DTgh";
+              tree = "${getExe eza} ${commonEzaFlags} -Tgh";
+              treea = "${getExe eza} ${commonEzaFlags} -Tagh";
+              treed = "${getExe eza} ${commonEzaFlags} -DTgh";
 
-              # grep => rg (ripgrep
+              # grep => rg (ripgrep)
               grep = "${getExe ripgrep} --color=auto --column --hidden -Hin";
 
               # cat/less => bat
