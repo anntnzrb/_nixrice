@@ -19,7 +19,6 @@ with lib;
   config = mkIf cfg.enable {
     xsession = {
       enable = true;
-      #windowManager.command = lib.mkForce "";
 
       initExtra = parseAutoStartList cfg.autoStart;
       profilePath = ".config/xprofile-hm";
@@ -27,6 +26,9 @@ with lib;
     };
 
     home = {
+      sessionVariables = {
+        XAUTHORITY = "${config.xdg.stateHome}/.Xauthority";
+      };
       shellAliases = {
         startx = "printf 'Do not use this command. Use the appropiate wrapper for launching the graphic environment.\n' >2&1";
       };
