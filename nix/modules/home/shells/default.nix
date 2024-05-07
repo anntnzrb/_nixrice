@@ -47,8 +47,10 @@ in
             wget = "${getExe wget} --no-hsts";
             zip = "${getExe zip} -rv";
 
-            mannixos = "${getExe man} configuration.nix";
-            manhm = "${getExe man} home-configuration.nix";
+            # nix
+            nix-lockfile-update = "nix flake update --commit-lock-file --commit-lockfile-summary 'chore(flake): update lockfile'";
+            nix-man = "${getExe man} configuration.nix";
+            nix-man-hm = "${getExe man} home-configuration.nix";
           };
 
           altCoreUtils =
