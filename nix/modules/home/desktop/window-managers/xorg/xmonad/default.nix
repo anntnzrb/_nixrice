@@ -5,6 +5,8 @@
 }:
 let
   cfg = config.liberion.desktop.window-managers.xorg.xmonad;
+
+  parseAutoStartList = xs: builtins.concatStringsSep "\n" (map (x: x + " &") xs);
 in
 {
   options.liberion.desktop.window-managers.xorg.xmonad = with lib.liberion; with lib.types; {
@@ -16,7 +18,24 @@ in
   config = lib.mkIf cfg.enable {
     liberion.common.xorg = {
       enable = true;
-      inherit (cfg) autoStart;
+      picom.enable = true;
+    };
+
+    xsession = {
+      initExtra = parseAutoStartList cfg.autoStart;
+      windowManager.xmonad = {
+        enable = true;
+        enableContribAndExtras = true;
+      };
+    };
+
+    xdg.configFile = {
+      xmonad = {
+        enable = true;
+        source = ./xmonad;
+        target = "xmonad";
+        recursive = true;
+      };
     };
 
     home = {
@@ -35,22 +54,6 @@ in
           hpkgs.xmonad-extras
         ]))
       ];
-    };
-
-    xsession = {
-      windowManager.xmonad = {
-        enable = true;
-        enableContribAndExtras = true;
-      };
-    };
-
-    xdg.configFile = {
-      xmonad = {
-        enable = true;
-        source = ./xmonad;
-        target = "xmonad";
-        recursive = true;
-      };
     };
   };
 }
