@@ -18,12 +18,13 @@ with lib.liberion; {
     cli = {
       btop = on;
       direnv = on;
+      fastfetch = on;
       fzf = on;
       git = on;
-      fastfetch = on;
       starship = on;
       tldr = on;
       yt-dlp = on;
+      zoxide = on;
     };
 
     editors = {

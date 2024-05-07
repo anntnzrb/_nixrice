@@ -44,14 +44,15 @@ in
     cli = {
       btop = on;
       direnv = on;
+      fastfetch = on;
       fzf = on;
       git = on;
       neofetch = off;
-      fastfetch = on;
       simple-mtpfs = on;
       starship = on;
       tldr = on;
       yt-dlp = on;
+      zoxide = on;
     };
 
     editors = {
