@@ -5,6 +5,8 @@
 }:
 let
   cfg = config.liberion.desktop.window-managers.xorg.awesomewm;
+
+  parseAutoStartList = xs: builtins.concatStringsSep "\n" (map (x: x + " &") xs);
 in
 {
   options.liberion.desktop.window-managers.xorg.awesomewm = with lib.liberion; with lib.types; {
@@ -16,9 +18,21 @@ in
   config = lib.mkIf cfg.enable {
     liberion.common.xorg = {
       enable = true;
-      inherit (cfg) autoStart;
-
       picom.enable = false;
+    };
+
+    xsession = {
+      windowManager.awesome.enable = true;
+      initExtra = parseAutoStartList cfg.autoStart;
+    };
+
+    xdg.configFile = {
+      awesomewm = {
+        enable = true;
+        source = ./awesome;
+        target = "awesome";
+        recursive = true;
+      };
     };
 
     home = {
@@ -31,17 +45,6 @@ in
         stylua
         lua-language-server
       ];
-    };
-
-    xsession.windowManager.awesome.enable = true;
-
-    xdg.configFile = {
-      awesomewm = {
-        enable = true;
-        source = ./awesome;
-        target = "awesome";
-        recursive = true;
-      };
     };
   };
 }

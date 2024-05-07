@@ -5,22 +5,15 @@
 }:
 let
   cfg = config.liberion.common.xorg;
-
-  parseAutoStartList = xs: builtins.concatStringsSep "\n" (map (x: x + " &") xs);
 in
-with lib;
 {
-  options.liberion.common.xorg = with lib.liberion; with lib.types; {
+  options.liberion.common.xorg = with lib.liberion; {
     enable = mkOptBool';
-
-    autoStart = mkOpt' (listOf str) [ ];
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     xsession = {
       enable = true;
-
-      initExtra = parseAutoStartList cfg.autoStart;
       profilePath = ".config/xprofile-hm";
       scriptPath = ".config/xsession-hm";
     };

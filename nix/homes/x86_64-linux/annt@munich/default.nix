@@ -93,7 +93,7 @@ in
         wayland = {
           sway = {
             enable = false;
-            inherit autoStart;
+            autoStart = autoStart.defaults;
             output = {
               HDMI-A-3 = {
                 mode = "1920x1080@60.000Hz";
@@ -112,7 +112,7 @@ in
           hyprland = {
             enable = false;
             waybar = on;
-            autoStartApps = autoStart;
+            autoStartApps = autoStart.defaults;
             monitor = [ "HDMI-A-2, 1366x768, 1920x0, 1" "HDMI-A-3, 1920x1080, 0x0, 1" ];
           };
         };
