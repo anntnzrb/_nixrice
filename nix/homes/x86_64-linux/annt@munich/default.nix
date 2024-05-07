@@ -61,6 +61,7 @@ in
       };
 
       neovim = on;
+      vscode = on;
     };
 
     desktop = {
