@@ -10,6 +10,10 @@ in
   options.liberion.desktop.window-managers.xorg.herbstluftwm = with lib.liberion; with lib.types; {
     enable = mkOptBool';
 
+    compositor = {
+      picom.enable = mkOptBool';
+    };
+
     autoStart = mkOpt' (listOf str) [ ];
     keys.super = mkOpt' str "Mod4";
   };
@@ -17,7 +21,7 @@ in
   config = lib.mkIf cfg.enable {
     liberion.common.xorg = {
       enable = true;
-      picom.enable = false;
+      inherit (cfg.compositor) picom;
     };
 
     xsession.windowManager.herbstluftwm = rec {

@@ -55,6 +55,7 @@ in
         xorg = {
           awesomewm = {
             enable = true;
+            compositor.picom.enable = true;
             inherit autoStart;
           };
         };
