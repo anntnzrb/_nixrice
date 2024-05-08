@@ -81,15 +81,18 @@ in
         xorg = {
           awesomewm = {
             enable = true;
+            compositor.picom.enable = true;
             autoStart = autoStart.defaults ++ autoStart.xrandr;
           };
 
           herbstluftwm = {
             enable = false;
+            compositor.picom.enable = true;
           };
 
           xmonad = {
             enable = false;
+            compositor.picom.enable = true;
             autoStart = autoStart.defaults ++ autoStart.xrandr;
           };
         };

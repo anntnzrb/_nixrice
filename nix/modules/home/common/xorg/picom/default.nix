@@ -8,7 +8,7 @@ in
 {
   options.liberion.common.xorg.picom = with lib.liberion; with lib.types; {
     enable = mkOptBool';
-    backend = mkOpt' str "egl";
+    backend = mkOpt' str "glx";
   };
 
   config = lib.mkIf cfg.enable {

@@ -12,13 +12,17 @@ in
   options.liberion.desktop.window-managers.xorg.awesomewm = with lib.liberion; with lib.types; {
     enable = mkOptBool';
 
+    compositor = {
+      picom.enable = mkOptBool';
+    };
+
     autoStart = mkOpt' (listOf str) [ ];
   };
 
   config = lib.mkIf cfg.enable {
     liberion.common.xorg = {
       enable = true;
-      picom.enable = false;
+      inherit (cfg.compositor) picom;
     };
 
     xsession = {
