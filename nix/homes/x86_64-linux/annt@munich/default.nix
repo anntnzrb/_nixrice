@@ -84,6 +84,10 @@ in
             autoStart = autoStart.defaults ++ autoStart.xrandr;
           };
 
+          herbstluftwm = {
+            enable = false;
+          };
+
           xmonad = {
             enable = false;
             autoStart = autoStart.defaults ++ autoStart.xrandr;
