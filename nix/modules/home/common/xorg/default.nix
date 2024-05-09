@@ -14,8 +14,8 @@ in
   config = lib.mkIf cfg.enable {
     xsession = {
       enable = true;
-      profilePath = ".config/xprofile-hm";
-      scriptPath = ".config/xsession-hm";
+      profilePath = ".config/xorg/xprofile-hm";
+      scriptPath = ".config/xorg/xsession-hm";
     };
 
     home = {
