@@ -13,8 +13,6 @@ with lib; {
     keyboard = {
       layout = mkOpt' str "us";
       variant = mkOpt' str "altgr-intl";
-      repeat_delay = mkOpt' ints.unsigned 300;
-      repeat_rate = mkOpt' ints.unsigned 80;
     };
 
     autoStart = mkOpt' (listOf str) [ ];
@@ -209,8 +207,8 @@ with lib; {
             xkb_model = cfg.keyboard.layout;
             xkb_layout = cfg.keyboard.layout;
             xkb_variant = cfg.keyboard.variant;
-            repeat_delay = toString cfg.keyboard.repeat_delay;
-            repeat_rate = toString cfg.keyboard.repeat_rate;
+            repeat_delay = toString config.liberion.home.keyboard.autoRepeatDelay;
+            repeat_rate = toString config.liberion.home.keyboard.autoRepeatInterval;
 
             # mouse/touchpad
             accel_profile = "flat";

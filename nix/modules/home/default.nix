@@ -12,12 +12,17 @@ in
     keyboard = {
       layout = mkOpt' str "us";
       variant = mkOpt' str "altgr-intl";
+      autoRepeatDelay = mkOpt' ints.unsigned 220;
+      autoRepeatInterval = mkOpt' ints.unsigned 50;
     };
   };
 
   config = {
     home = {
-      inherit (cfg) packages keyboard;
+      inherit (cfg) packages;
+      keyboard = {
+        inherit (cfg.keyboard) layout variant;
+      };
       stateVersion = "22.05";
     };
 
