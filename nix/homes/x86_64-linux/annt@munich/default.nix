@@ -24,6 +24,8 @@ in
       keyboard = {
         layout = "us";
         variant = "altgr-intl";
+        autoRepeatDelay = 220;
+        autoRepeatInterval = 50;
       };
     };
 

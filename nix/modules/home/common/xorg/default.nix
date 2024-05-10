@@ -7,7 +7,7 @@ let
   cfg = config.liberion.common.xorg;
 in
 {
-  options.liberion.common.xorg = with lib.liberion; {
+  options.liberion.common.xorg = with lib.liberion; with lib.types; {
     enable = mkOptBool';
   };
 
@@ -16,6 +16,10 @@ in
       enable = true;
       profilePath = ".config/xorg/xprofile-hm";
       scriptPath = ".config/xorg/xsession-hm";
+
+      initExtra = with config.liberion.home.keyboard; ''
+        ${lib.getExe pkgs.xorg.xset} r rate ${toString autoRepeatDelay} ${toString autoRepeatInterval}
+      '';
     };
 
     home = {
@@ -30,6 +34,7 @@ in
         xclip
         arandr
         xorg.xev
+        xorg.xprop
       ];
     };
   };
