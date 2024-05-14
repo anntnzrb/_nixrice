@@ -32,5 +32,11 @@ in
         net_upload = 100;
       };
     };
+
+    services.sxhkd = {
+      keybindings = with config.home.sessionVariables; {
+        "super + Return ; i" = "${TERMINAL} -e btop";
+      };
+    };
   };
 }

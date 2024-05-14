@@ -19,16 +19,11 @@ in
     services.sxhkd = {
       enable = true;
 
-      extraOptions = [ "-m 1" "-t ${builtins.toString cfg.timeout}" "-a ${cfg.cancelKey}" ];
-      keybindings = with config.home.sessionVariables;{
+      extraOptions = [ "-m 1" "-t ${toString cfg.timeout}" "-a ${cfg.cancelKey}" ];
+      keybindings = with config.home.sessionVariables; {
         "super + Return ; {Return}" = "${TERMINAL} {_}";
-        "super + Return ; {e,i}" = "${TERMINAL} -e {${EDITOR},btop}";
 
-        "super + d ; {d}" = "{bemenu-run}";
-
-        "super + w ; {f,w,e}" = "{${FILE},${BROWSER},emacs}";
-
-        "Print" = "\{ flameshot & \} && sleep 0.5s && flameshot gui";
+        "super + w ; {f,w}" = "{${FILE},${BROWSER}}";
 
         "XF86AudioMute" = "pamixer -t";
         "XF86Audio{Lower,Raise}Volume" = "pamixer -{d,i} 5";

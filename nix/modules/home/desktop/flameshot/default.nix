@@ -25,5 +25,11 @@ in
         };
       };
     };
+
+    services.sxhkd = {
+      keybindings = {
+        "Print" = "flameshot gui";
+      };
+    };
   };
 }
