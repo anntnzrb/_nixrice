@@ -65,4 +65,10 @@ in
       packages = with packages; emacsPkgs ++ dependencies ++ extras ++ dicts;
     };
   };
+
+  services.sxhkd = {
+    keybindings = {
+      "super + w ; e" = "emacs";
+    };
+  };
 }
