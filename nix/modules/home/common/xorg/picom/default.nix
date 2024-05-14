@@ -9,15 +9,14 @@ in
   options.liberion.common.xorg.picom = with lib.liberion; with lib.types; {
     enable = mkOptBool';
     backend = mkOpt' str "glx";
+    vSync = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {
     services.picom = {
       enable = true;
 
-      inherit (cfg) backend;
-
-      vSync = false;
+      inherit (cfg) backend vSync;
 
       # opacity
       activeOpacity = 1.0;
