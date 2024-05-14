@@ -64,11 +64,11 @@ in
       sessionPath = [ "${config.xdg.configHome}/emacs/bin" ];
       packages = with packages; emacsPkgs ++ dependencies ++ extras ++ dicts;
     };
-  };
 
-  services.sxhkd = {
-    keybindings = {
-      "super + w ; e" = "emacs";
+    services.sxhkd = {
+      keybindings = {
+        "super + w ; e" = "emacs";
+      };
     };
   };
 }
