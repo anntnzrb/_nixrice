@@ -13,7 +13,10 @@ in
     enable = mkOptBool';
 
     compositor = {
-      picom.enable = mkOptBool';
+      picom = {
+        enable = mkOptBool';
+        vSync = mkOptBool';
+      };
     };
 
     autoStart = mkOpt' (listOf str) [ ];

@@ -83,7 +83,10 @@ in
         xorg = {
           awesomewm = {
             enable = true;
-            compositor.picom.enable = true;
+            compositor.picom = {
+              enable = true;
+              vSync = true;
+            };
             autoStart = autoStart.defaults ++ autoStart.xrandr;
           };
 
