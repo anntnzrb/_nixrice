@@ -65,9 +65,6 @@ in
 
     environment = {
       systemPackages = with pkgs; [
-        # liberion packages
-        liberion.liberion
-
         # tools
         git
 
