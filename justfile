@@ -49,5 +49,4 @@ flake-update-all:
 # update a single flake input
 flake-update *ARGS:
     nix flake lock --update-input {{ARGS}}
-    git add flake.nix
-    git commit -m 'chore(flake): update lockfile ({{ARGS}})'
+    git add flake.lock && git commit -m 'chore(flake): update lockfile ({{ARGS}})'
