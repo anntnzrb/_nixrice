@@ -178,7 +178,6 @@ in
 
         extensions = with inputs.firefox-addons.packages.${system}; [
           bitwarden # pw manager
-          darkreader
           tridactyl # vi keybinds
           ublock-origin # ad-blocker
         ];
