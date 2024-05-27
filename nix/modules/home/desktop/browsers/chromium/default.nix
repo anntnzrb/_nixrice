@@ -17,7 +17,6 @@ in
       dictionaries = [ pkgs.hunspellDictsChromium.en_US ];
       extensions = [
         { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # uBlock Origin
-        { id = "eimadpbcbfnmbkopoojfekhnkhdbieeh"; } # Dark Reader
         { id = "eanggfilgoajaocelnaflolkadkeghjp"; } # Harpa AI
         { id = "nngceckbapebfimnlniiiahkandclblb"; } # Bitwarden
 
