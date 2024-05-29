@@ -73,6 +73,7 @@ in
       systemPackages = with pkgs; [
         # tools
         git
+        man-pages-posix
 
         # archiving
         atool
