@@ -3,8 +3,8 @@
 
   inputs = {
     # nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # flake framework
@@ -19,7 +19,7 @@
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs-stable";
 
     # user environment manager
-    home-manager.url = "github:nix-community/home-manager/release-23.11"; # NOTE: match NixOS
+    home-manager.url = "github:nix-community/home-manager/release-24.05"; # NOTE: match NixOS
     home-manager.inputs.nixpkgs.follows = "nixpkgs-stable";
 
     # Firefox extensions (add-ons)
