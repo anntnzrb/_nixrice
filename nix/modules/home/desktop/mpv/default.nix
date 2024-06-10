@@ -1,5 +1,6 @@
 { config
 , lib
+, pkgs
 , ...
 }:
 let
@@ -12,41 +13,19 @@ in
   config = lib.mkIf cfg.enable {
     programs.mpv = {
       enable = true;
-      bindings =
-        let
-          # Seek {for,back}-ward by a number of seconds
-          # seek: number -> string
-          seek = val: "no-osd seek ${toString val} exact";
+      scripts = with pkgs.mpvScripts; [
+        uosc
+        thumbfast
+      ];
 
-          # {In,De}-crease volume by a percentage value
-          # speed: number -> string
-          speed = val: "add speed ${toString val}";
+      config = {
+        # disabled because of usoc script
+        osd-bar = false;
+        border = false;
+      };
 
-          # {In,De}-crease volume by a percentage value
-          # vol: number -> string
-          vol = val: "add volume ${toString val}";
-
-          # Disable a keybinding
-          # disabled -> string
-          disabled = "noop";
-        in
-        {
-          "LEFT" = seek (-5);
-          "RIGHT" = seek 5;
-          "Ctrl+LEFT" = seek (-60);
-          "Ctrl+RIGHT" = seek 60;
-
-          "[" = disabled;
-          "]" = disabled;
-          "<" = speed (-0.05);
-          ">" = speed 0.05;
-
-          "DOWN" = vol (-2);
-          "UP" = vol 2;
-          "m" = "cycle mute";
-
-          "q" = "quit-watch-later";
-        };
+      # disabled because of usoc script
+      #bindings = import ./bindings.nix;
     };
   };
 }
