@@ -9,27 +9,44 @@ in
   options.liberion.desktop.mpv = with lib.liberion; {
     enable = mkOptBool';
   };
-
   config = lib.mkIf cfg.enable {
     programs.mpv = {
       enable = true;
-      bindings = {
-        "LEFT" = "seek -10 exact";
-        "RIGHT" = "seek  10 exact";
-        "Shift+LEFT" = "no-osd seek  -5 exact";
-        "Shift+RIGHT" = "no-osd seek   5 exact";
-        "Ctrl+LEFT" = "no-osd seek -60 exact";
-        "Ctrl+RIGHT" = "no-osd seek  60 exact";
+      bindings =
+        let
+          # Seek {for,back}-ward by a number of seconds
+          # seek: number -> string
+          seek = val: "no-osd seek ${toString val} exact";
 
-        "[" = "add speed -0.05";
-        "]" = "add speed  0.05";
+          # {In,De}-crease volume by a percentage value
+          # speed: number -> string
+          speed = val: "add speed ${toString val}";
 
-        "DOWN" = "add volume -2";
-        "UP" = "add volume  2";
-        "m" = "cycle mute";
+          # {In,De}-crease volume by a percentage value
+          # vol: number -> string
+          vol = val: "add volume ${toString val}";
 
-        "q" = "quit-watch-later";
-      };
+          # Disable a keybinding
+          # disabled -> string
+          disabled = "noop";
+        in
+        {
+          "LEFT" = seek (-5);
+          "RIGHT" = seek 5;
+          "Ctrl+LEFT" = seek (-60);
+          "Ctrl+RIGHT" = seek 60;
+
+          "[" = disabled;
+          "]" = disabled;
+          "<" = speed (-0.05);
+          ">" = speed 0.05;
+
+          "DOWN" = vol (-2);
+          "UP" = vol 2;
+          "m" = "cycle mute";
+
+          "q" = "quit-watch-later";
+        };
     };
   };
 }
