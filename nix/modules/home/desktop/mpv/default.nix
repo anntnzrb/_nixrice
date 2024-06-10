@@ -19,12 +19,12 @@ in
       ];
 
       config = {
-        # disabled because of usoc script
+        # disabled because of uosc script
         osd-bar = false;
         border = false;
       };
 
-      # disabled because of usoc script
+      # disabled because of uosc script
       #bindings = import ./bindings.nix;
     };
   };
