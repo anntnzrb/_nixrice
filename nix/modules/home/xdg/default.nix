@@ -1,4 +1,6 @@
 { config
+, lib
+, pkgs
 , ...
 }:
 let
@@ -8,7 +10,7 @@ let
 in
 {
   config = {
-    xdg = {
+    xdg = lib.mkIf pkgs.stdenv.isLinux {
       enable = true;
 
       cacheHome = "${homeDir}/.cache";
