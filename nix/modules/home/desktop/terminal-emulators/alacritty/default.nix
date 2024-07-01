@@ -6,14 +6,15 @@
 let
   cfg = config.liberion.desktop.terminal-emulators.alacritty;
 in
-{
-  options.liberion.desktop.terminal-emulators.alacritty = with lib.liberion; {
+with lib.liberion; {
+  options.liberion.desktop.terminal-emulators.alacritty = {
     enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {
     programs.alacritty = {
       enable = true;
+      package = with pkgs; if stdenv.isLinux then alacritty else git;
 
       settings = {
         live_config_reload = true;
