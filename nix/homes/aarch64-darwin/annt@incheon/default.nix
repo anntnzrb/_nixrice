@@ -25,14 +25,13 @@ with lib.liberion; {
 
     editors = {
       neovim = on;
-      vscode = on;
     };
 
     desktop = {
-      browsers = {
-        firefox = on;
-        chromium = on;
+      ui = {
+        fonts = on;
       };
+
       terminal-emulators.alacritty = on;
     };
   };

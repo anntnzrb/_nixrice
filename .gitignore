@@ -2,3 +2,4 @@ result*
 .direnv*
 *.qcow*
 *.fd
+.DS_Store
