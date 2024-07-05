@@ -3,7 +3,7 @@
 , ...
 }:
 let
-  _cfg = config.${namespace}.darwin.system.finder;
+  _cfg = config.${namespace}.system.finder;
 in
 {
   config = {

@@ -18,22 +18,11 @@ in
   config = lib.mkIf cfg.enable {
     programs.zsh = {
       enable = true;
-      enableCompletion = true;
-      enableVteIntegration = true;
       dotDir = ".config/zsh";
 
-      autosuggestion = {
-        enable = true;
-        highlight = "fg=#ff00ff,bg=cyan,bold,underline";
-      };
-
-      syntaxHighlighting = {
-        enable = true;
-        highlighters = [
-          "main"
-          "brackets"
-        ];
-      };
+      enableCompletion = true;
+      autosuggestion.enable = true;
+      syntaxHighlighting.enable = true;
 
       history = {
         extended = true;

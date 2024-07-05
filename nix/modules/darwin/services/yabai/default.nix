@@ -4,7 +4,7 @@
 , ...
 }:
 let
-  cfg = config.${namespace}.darwin.services.yabai;
+  cfg = config.${namespace}.services.yabai;
 
   # helpers
   formatAttrs = with builtins; attrs: concatStringsSep " " (map (k: "${k}=${getAttr k attrs}") (attrNames attrs));
@@ -12,7 +12,7 @@ let
 
 in
 {
-  options.${namespace}.darwin.services.yabai = with lib.${namespace}; {
+  options.${namespace}.services.yabai = with lib.${namespace}; {
     enable = mkOptBool';
   };
 
