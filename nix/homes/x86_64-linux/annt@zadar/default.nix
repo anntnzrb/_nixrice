@@ -1,8 +1,9 @@
 { lib
+, namespace
 , ...
 }:
 
-with lib.liberion; let
+with lib.${namespace}; let
   autoStart = [
     "nm-applet"
     "pasystray"
@@ -10,7 +11,7 @@ with lib.liberion; let
   ];
 in
 {
-  liberion = {
+  ${namespace} = {
     shells = {
       defaults = on;
       altCoreUtils = on;
@@ -22,7 +23,10 @@ in
         TERMINAL = "alacritty";
       };
 
-      bash = on;
+      bash = {
+        enable = true;
+        prompt.starship = on;
+      };
     };
 
     cli = {
@@ -32,7 +36,6 @@ in
       fzf = on;
       git = on;
       simple-mtpfs = on;
-      starship = on;
       tldr = on;
       yt-dlp = on;
       zoxide = on;

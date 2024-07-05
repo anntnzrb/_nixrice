@@ -1,5 +1,6 @@
 { config
 , lib
+, pkgs
 , ...
 }:
 let
@@ -24,6 +25,9 @@ in
         inherit (cfg.keyboard) layout variant;
       };
       stateVersion = "22.05";
+
+      # disable "Last Login..." preliminary message on OSX
+      file.".hushlogin".text = "";
     };
 
     systemd.user.startServices = "sd-switch";

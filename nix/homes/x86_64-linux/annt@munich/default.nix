@@ -1,9 +1,10 @@
 { pkgs
 , lib
+, namespace
 , ...
 }:
 
-with lib.liberion; let
+with lib.${namespace}; let
   autoStart = {
     defaults = [
       "nm-applet"
@@ -15,7 +16,7 @@ with lib.liberion; let
   };
 in
 {
-  liberion = {
+  ${namespace} = {
     home = {
       packages = with pkgs; [
         git # example
@@ -40,7 +41,10 @@ in
         TERMINAL = "alacritty";
       };
 
-      bash = on;
+      bash = {
+        enable = true;
+        prompt.starship = on;
+      };
     };
 
     cli = {
@@ -51,7 +55,6 @@ in
       git = on;
       neofetch = off;
       simple-mtpfs = on;
-      starship = on;
       tldr = on;
       yt-dlp = on;
       zoxide = on;

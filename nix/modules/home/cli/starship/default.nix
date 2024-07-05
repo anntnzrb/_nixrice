@@ -1,12 +1,13 @@
 { config
 , lib
+, namespace
 , ...
 }:
 let
-  cfg = config.liberion.cli.starship;
+  cfg = config.${namespace}.cli.starship;
 in
 {
-  options.liberion.cli.starship = with lib.liberion; {
+  options.${namespace}.cli.starship = with lib.${namespace}; {
     enable = mkOptBool';
   };
 
