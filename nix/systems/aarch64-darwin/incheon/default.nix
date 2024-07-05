@@ -7,16 +7,35 @@
   programs.zsh.enable = true;
 
   ${namespace} = with lib.${namespace}; {
-    darwin = {
-      system = {
-        trackpad = on;
-      };
+    system = {
+      trackpad = on;
+    };
 
-      services = {
-        yabai = on;
-      };
+    services = {
+      yabai = on;
+    };
 
-      homebrew = on;
+    homebrew = {
+      enable = true;
+
+      packages = {
+        casks = [
+          "alacritty"
+          "bitwarden"
+          "chatgpt"
+          "firefox"
+          "notesnook"
+
+          # dev
+          "visual-studio-code"
+
+          # misc
+          "whatsapp"
+
+          # system
+          "aldente"
+        ];
+      };
     };
   };
 }

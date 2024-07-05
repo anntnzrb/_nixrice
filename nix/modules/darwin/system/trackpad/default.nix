@@ -4,10 +4,10 @@
 , ...
 }:
 let
-  cfg = config.${namespace}.darwin.system.trackpad;
+  cfg = config.${namespace}.system.trackpad;
 in
 {
-  options.${namespace}.darwin.system.trackpad = with lib.${namespace}; {
+  options.${namespace}.system.trackpad = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

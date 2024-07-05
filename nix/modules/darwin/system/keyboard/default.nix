@@ -3,7 +3,7 @@
 , ...
 }:
 let
-  _cfg = config.${namespace}.darwin.system.keyboard;
+  _cfg = config.${namespace}.system.keyboard;
 in
 {
   config = {

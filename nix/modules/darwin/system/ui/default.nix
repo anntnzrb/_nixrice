@@ -3,7 +3,7 @@
 , ...
 }:
 let
-  _cfg = config.${namespace}.darwin.system.ui;
+  _cfg = config.${namespace}.system.ui;
 in
 {
   config = {

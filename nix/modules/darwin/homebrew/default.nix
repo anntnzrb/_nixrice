@@ -4,11 +4,15 @@
 , ...
 }:
 let
-  cfg = config.${namespace}.darwin.homebrew;
+  cfg = config.${namespace}.homebrew;
 in
 {
-  options.${namespace}.darwin.homebrew = with lib.liberion; {
+  options.${namespace}.homebrew = with lib.liberion; with lib.types; {
     enable = mkOptBool';
+
+    packages = {
+      casks = mkOpt' (listOf str) [ ];
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -21,22 +25,7 @@ in
         cleanup = "zap";
       };
 
-      casks = [
-        "alacritty"
-        "bitwarden"
-        "chatgpt"
-        "firefox"
-        "notesnook"
-
-        # dev
-        "visual-studio-code"
-
-        # misc
-        "whatsapp"
-
-        # system
-        "aldente"
-      ];
+      inherit (cfg.packages) casks;
     };
   };
 }
