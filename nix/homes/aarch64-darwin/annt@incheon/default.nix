@@ -1,5 +1,4 @@
-{ pkgs
-, lib
+{ lib
 , ...
 }:
 
@@ -8,7 +7,10 @@ with lib.liberion; {
     shells = {
       defaults = on;
       altCoreUtils = on;
-      bash = on;
+      zsh = {
+        enable = true;
+        prompt.starship = on;
+      };
     };
 
     cli = {
@@ -17,7 +19,6 @@ with lib.liberion; {
       fastfetch = on;
       fzf = on;
       git = on;
-      starship = on;
       tldr = on;
       yt-dlp = on;
       zoxide = on;

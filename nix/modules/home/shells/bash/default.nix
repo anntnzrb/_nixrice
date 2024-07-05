@@ -1,13 +1,18 @@
 { config
 , lib
+, namespace
 , ...
 }:
 let
-  cfg = config.liberion.shells.bash;
+  cfg = config.${namespace}.shells.bash;
 in
 {
-  options.liberion.shells.bash = with lib.liberion; {
+  options.${namespace}.shells.bash = with lib.${namespace}; {
     enable = mkOptBool';
+
+    prompt = {
+      starship.enable = mkOptBool';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -20,8 +25,22 @@ in
       historyControl = [ "erasedups" "ignoredups" "ignorespace" ];
       historyFile = "${config.xdg.dataHome}/bash_history";
       historyFileSize = 1000 * 1000;
-      historyIgnore = [ "&" "bg" "fg" "exit" "cd" "ls" ];
       historySize = 100 * 100;
+      historyIgnore = [
+        "&"
+        "ls"
+        "cd"
+        "cd -"
+        "pwd"
+        "exit"
+        "clear"
+        "history"
+        "*password*"
+        "*secret*"
+        "*token*"
+      ];
     };
+
+    ${namespace}.cli.starship.enable = cfg.prompt.starship.enable;
   };
 }
