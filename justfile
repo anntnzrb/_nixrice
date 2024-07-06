@@ -8,18 +8,31 @@ default:
 # -----------------------------------------------------------------------------
 
 # build the NixOS configuration
-build:
+nixos-build:
     nh os build .
 
 # build & activate the new NixOS configuration on next boot
-boot: build
+nixos-boot: nixos-build
     nh os boot .
 
 # build & activate the NixOS configuration now
-switch: build
+nixos-switch: nixos-build
     nh os switch .
 
-darwin:
+# -----------------------------------------------------------------------------
+# darwin
+# -----------------------------------------------------------------------------
+
+# build the darwin configuration
+darwin-build:
+	nix run nix-darwin -- build --flake .
+
+# build & activate the new darwin configuration on next boot
+darwin-boot: darwin-build
+	nix run nix-darwin -- boot --flake .
+
+# build & activate the darwin configuration now
+darwin-switch: darwin-build
 	nix run nix-darwin -- switch --flake .
 
 # -----------------------------------------------------------------------------
@@ -27,29 +40,29 @@ darwin:
 # -----------------------------------------------------------------------------
 
 # perform a cleanup
-clean:
+nix-clean:
     nh clean all
 
 # perform a full cleanup
-clean-full-wipe: clean
+nix-clean-full-wipe: nix-clean
     nix-collect-garbage -d
     nix store gc --verbose
     nix store optimise --verbose
 
 # attempt to repair the nix store
-repair: clean-full-wipe
+nix-repair: nix-clean-full-wipe
     nix-store --verify --check-contents --repair
-    just clean-full-wipe
+    just nix-clean-full-wipe
 
 # -----------------------------------------------------------------------------
 # flake
 # -----------------------------------------------------------------------------
 
 # update all flake inputs
-flake-update-all:
+nix-flake-update-all:
     nix flake update --commit-lock-file --commit-lockfile-summary 'chore(flake): update lockfile'
 
 # update a single flake input
-flake-update *ARGS:
+nix-flake-update *ARGS:
     nix flake lock --update-input {{ARGS}}
     git add flake.lock && git commit -m 'chore(flake): update lockfile ({{ARGS}})'
