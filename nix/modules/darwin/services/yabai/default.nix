@@ -100,5 +100,16 @@ in
           ${builtins.concatStringsSep "\n" (map mkRule rules)}
         '';
     };
+
+    ${namespace}.services.skhd = {
+      enable = true;
+
+      keybindings = {
+        "alt - k" = "yabai -m window --focus north";
+        "alt - l" = "yabai -m window --focus east";
+        "alt - j" = "yabai -m window --focus south";
+        "alt - h" = "yabai -m window --focus west";
+      };
+    };
   };
 }
