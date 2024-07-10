@@ -1,5 +1,7 @@
-{ lib, namespace, ... }:
-{
+{ lib
+, namespace
+, ...
+}: {
   # zsh as an interactive shell; this is a force default
   # customization is done via hm
   programs.zsh.enable = true;

@@ -1,35 +1,24 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
-with lib;
+{ config
+, lib
+, namespace
+, ...
+}: with lib;
 let
   cfg = config.${namespace}.services.skhd;
 
   # helpers
-  keybindingsStr = concatStringsSep "\n" (
-    mapAttrsToList (
-      hotkey: command:
+  keybindingsStr = concatStringsSep "\n" (mapAttrsToList
+    (hotkey: command:
       optionalString (command != null) ''
         ${hotkey} : ${command}
-      ''
-    ) cfg.keybindings
-  );
+      '')
+    cfg.keybindings);
 in
 {
   options.${namespace}.services.skhd = with lib.${namespace}; {
     enable = mkOptBool';
 
-    keybindings =
-      with types;
-      mkOpt' (attrsOf (
-        nullOr (oneOf [
-          str
-          path
-        ])
-      )) { };
+    keybindings = with types; mkOpt' (attrsOf (nullOr (oneOf [ str path ]))) { };
   };
 
   config = mkIf cfg.enable {

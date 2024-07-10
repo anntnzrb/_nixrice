@@ -1,4 +1,7 @@
-{ config, lib, ... }:
+{ config
+, lib
+, ...
+}:
 let
   cfg = config.liberion.cli.tldr;
 in

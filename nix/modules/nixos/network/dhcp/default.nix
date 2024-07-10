@@ -1,4 +1,7 @@
-{ config, lib, ... }:
+{ config
+, lib
+, ...
+}:
 let
   cfg = config.liberion.network.dhcp;
 in
@@ -7,5 +10,7 @@ in
     enable = mkOptBool';
   };
 
-  config = lib.mkIf cfg.enable { networking.useDHCP = true; };
+  config = lib.mkIf cfg.enable {
+    networking.useDHCP = true;
+  };
 }

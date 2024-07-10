@@ -1,11 +1,11 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
+{ config
+, pkgs
+, lib
+, ...
 }:
 let
   cfg = config.liberion.editors.vscode;
+
 in
 {
   options.liberion.editors.vscode = with lib.liberion; {

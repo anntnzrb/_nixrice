@@ -1,4 +1,7 @@
-{ config, namespace, ... }:
+{ config
+, namespace
+, ...
+}:
 let
   _cfg = config.${namespace}.system.keyboard;
 in

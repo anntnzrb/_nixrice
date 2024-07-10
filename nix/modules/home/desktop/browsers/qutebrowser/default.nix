@@ -1,4 +1,7 @@
-{ config, lib, ... }:
+{ config
+, lib
+, ...
+}:
 let
   cfg = config.liberion.desktop.browsers.qutebrowser;
 in
@@ -47,13 +50,7 @@ in
         statusbar = {
           show = "always";
           position = "top";
-          widgets = [
-            "progress"
-            "keypress"
-            "search_match"
-            "scroll"
-            "url"
-          ];
+          widgets = [ "progress" "keypress" "search_match" "scroll" "url" ];
         };
 
         tabs = {

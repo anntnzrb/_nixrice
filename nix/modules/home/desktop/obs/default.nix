@@ -1,4 +1,7 @@
-{ config, lib, ... }:
+{ config
+, lib
+, ...
+}:
 let
   cfg = config.liberion.desktop.obs;
 in
@@ -7,5 +10,7 @@ in
     enable = mkOptBool';
   };
 
-  config = lib.mkIf cfg.enable { programs.obs-studio.enable = true; };
+  config = lib.mkIf cfg.enable {
+    programs.obs-studio.enable = true;
+  };
 }

@@ -1,8 +1,7 @@
-{
-  config,
-  lib,
-  format,
-  ...
+{ config
+, lib
+, format
+, ...
 }:
 let
   cfg = config.liberion.network.ssh;

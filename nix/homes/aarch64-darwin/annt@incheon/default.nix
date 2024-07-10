@@ -1,7 +1,8 @@
-{ lib, ... }:
+{ lib
+, ...
+}:
 
-with lib.liberion;
-{
+with lib.liberion; {
   liberion = {
     shells = {
       defaults = on;

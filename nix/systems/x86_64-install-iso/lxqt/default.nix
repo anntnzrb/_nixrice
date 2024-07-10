@@ -1,10 +1,12 @@
-{ lib, pkgs, ... }:
+{ lib
+, pkgs
+, ...
+}:
 
 let
   user = "guest";
 in
-with lib.liberion;
-{
+with lib.liberion; {
   services.xserver = {
     enable = true;
 

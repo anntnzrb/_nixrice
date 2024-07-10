@@ -1,26 +1,22 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
+{ config
+, lib
+, pkgs
+, ...
 }:
 let
   cfg = config.liberion.desktop.window-managers.xorg.herbstluftwm;
 in
 {
-  options.liberion.desktop.window-managers.xorg.herbstluftwm =
-    with lib.liberion;
-    with lib.types;
-    {
-      enable = mkOptBool';
+  options.liberion.desktop.window-managers.xorg.herbstluftwm = with lib.liberion; with lib.types; {
+    enable = mkOptBool';
 
-      compositor = {
-        picom.enable = mkOptBool';
-      };
-
-      autoStart = mkOpt' (listOf str) [ ];
-      keys.super = mkOpt' str "Mod4";
+    compositor = {
+      picom.enable = mkOptBool';
     };
+
+    autoStart = mkOpt' (listOf str) [ ];
+    keys.super = mkOpt' str "Mod4";
+  };
 
   config = lib.mkIf cfg.enable {
     liberion.common.xorg = {
@@ -49,9 +45,8 @@ in
           "${cfg.keys.super}-l" = "focus right";
           "${cfg.keys.super}-Shift-q" = "close";
         }
-        (builtins.listToAttrs (
-          builtins.map (
-            i:
+        (builtins.listToAttrs (builtins.map
+          (i:
             let
               tag = builtins.elemAt tags (i - 1);
             in
@@ -59,11 +54,10 @@ in
               name = "${cfg.keys.super}-${toString i}";
               value = "use ${tag}";
             }
-          ) (lib.lists.range 1 (builtins.length tags))
-        ))
-        (builtins.listToAttrs (
-          builtins.map (
-            i:
+          )
+          (lib.lists.range 1 (builtins.length tags))))
+        (builtins.listToAttrs (builtins.map
+          (i:
             let
               tag = builtins.elemAt tags (i - 1);
             in
@@ -71,8 +65,8 @@ in
               name = "${cfg.keys.super}-Shift-${toString i}";
               value = "move ${tag}";
             }
-          ) (lib.lists.range 1 (builtins.length tags))
-        ))
+          )
+          (lib.lists.range 1 (builtins.length tags))))
       ];
 
       mousebinds = {
@@ -93,9 +87,7 @@ in
       };
 
       activation = {
-        reloadHerbstluftwm = config.lib.dag.entryAfter [
-          "writeBoundary"
-        ] "${pkgs.herbstluftwm}/bin/herbstluftwm reload || :";
+        reloadHerbstluftwm = config.lib.dag.entryAfter [ "writeBoundary" ] "${pkgs.herbstluftwm}/bin/herbstluftwm reload || :";
       };
     };
   };

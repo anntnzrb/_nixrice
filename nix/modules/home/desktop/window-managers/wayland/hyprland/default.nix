@@ -1,23 +1,19 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
+{ config
+, pkgs
+, lib
+, ...
 }:
 let
   cfg = config.liberion.desktop.window-managers.wayland.hyprland;
 in
 {
-  options.liberion.desktop.window-managers.wayland.hyprland =
-    with lib.liberion;
-    with lib.types;
-    {
-      enable = mkOptBool';
+  options.liberion.desktop.window-managers.wayland.hyprland = with lib.liberion; with lib.types; {
+    enable = mkOptBool';
 
-      monitor = mkOpt' (listOf str) [ ",preferred,auto,1" ];
-      autoStartApps = mkOpt' (listOf str) [ ];
-      waybar = mkOptBool';
-    };
+    monitor = mkOpt' (listOf str) [ ",preferred,auto,1" ];
+    autoStartApps = mkOpt' (listOf str) [ ];
+    waybar = mkOptBool';
+  };
 
   config = lib.mkIf cfg.enable {
     home = {
@@ -40,17 +36,15 @@ in
 
         exec-once = cfg.autoStartApps ++ (lib.optional cfg.waybar.enable "waybar");
 
-        bind =
-          [
-            # "$mod ALT, Q, exit"
-          ]
-          ++ (
-            let
-              numWorkspaces = 9;
-            in
-            with builtins;
-            concatMap (
-              i:
+        bind = [
+          # "$mod ALT, Q, exit"
+        ] ++
+        (
+          let
+            numWorkspaces = 9;
+          in
+          with builtins; concatMap
+            (i:
               let
                 ws = toString (i);
                 workspaceNumber = toString (i);
@@ -59,8 +53,9 @@ in
                 "$mod, ${ws}, workspace, ${workspaceNumber}"
                 "$mod SHIFT, ${ws}, movetoworkspace, ${workspaceNumber}"
               ]
-            ) (genList (x: x + 1) numWorkspaces)
-          );
+            )
+            (genList (x: x + 1) numWorkspaces)
+        );
       };
     };
 
@@ -75,10 +70,7 @@ in
 
           modules-left = [ "hyprland/workspaces" ];
           modules-center = [ "hyprland/window" ];
-          modules-right = [
-            "tray"
-            "clock"
-          ];
+          modules-right = [ "tray" "clock" ];
 
           "clock" = {
             format = "{:%H:%M}  ";

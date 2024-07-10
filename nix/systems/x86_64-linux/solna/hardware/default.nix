@@ -1,5 +1,7 @@
-{ modulesPath, inputs, ... }:
-{
+{ modulesPath
+, inputs
+, ...
+}: {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
 
@@ -21,20 +23,14 @@
         device = "/dev/disk/by-label/${rootLabel}";
         label = "${rootLabel}";
         fsType = "btrfs";
-        options = [
-          "commit=120"
-          "noatime"
-        ];
+        options = [ "commit=120" "noatime" ];
       };
 
       "/boot" = {
         device = "/dev/disk/by-label/${bootLabel}";
         label = "${bootLabel}";
         fsType = "vfat";
-        options = [
-          "fmask=0022"
-          "dmask=0022"
-        ];
+        options = [ "fmask=0022" "dmask=0022" ];
       };
     };
 
