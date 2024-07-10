@@ -34,8 +34,7 @@
     firefox-addons.inputs.nixpkgs.follows = "nixpkgs-stable";
   };
 
-  outputs =
-    inputs:
+  outputs = inputs:
     inputs.snowfall-lib.mkFlake {
       inherit inputs;
 
@@ -57,7 +56,5 @@
       channels-config = {
         allowUnfree = true;
       };
-
-      outputs-builder = channels: { formatter = channels.nixpkgs.nixfmt-rfc-style; };
     };
 }

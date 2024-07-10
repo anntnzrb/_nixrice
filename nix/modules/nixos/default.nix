@@ -1,54 +1,40 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
+{ lib
+, config
+, pkgs
+, ...
 }:
 let
   cfg = config.liberion.nixos;
 in
 {
-  options.liberion.nixos =
-    with lib.liberion;
-    with lib.types;
-    {
-      time = {
-        timeZone = mkOpt' str "America/New_York";
-        hardwareClockInLocalTime = mkOptBool';
-      };
-
-      user = {
-        name = mkOpt' str "annt";
-        initialPassword = mkOpt' (nullOr str) "pass";
-        isNormalUser = mkOptBool';
-        extraGroups = mkOpt' (listOf str) [ ];
-        packages = mkOpt' (listOf package) [ ];
-        shell = mkOpt' str "bash";
-
-        authorizedKeys = mkOpt' (listOf singleLineStr) [ ];
-      };
-
-      systemPackages = mkOpt' (listOf package) [ ];
-      variables = mkOpt' (attrsOf (oneOf [
-        (listOf str)
-        str
-        path
-      ])) { };
+  options.liberion.nixos = with lib.liberion; with lib.types; {
+    time = {
+      timeZone = mkOpt' str "America/New_York";
+      hardwareClockInLocalTime = mkOptBool';
     };
+
+    user = {
+      name = mkOpt' str "annt";
+      initialPassword = mkOpt' (nullOr str) "pass";
+      isNormalUser = mkOptBool';
+      extraGroups = mkOpt' (listOf str) [ ];
+      packages = mkOpt' (listOf package) [ ];
+      shell = mkOpt' str "bash";
+
+      authorizedKeys = mkOpt' (listOf singleLineStr) [ ];
+    };
+
+    systemPackages = mkOpt' (listOf package) [ ];
+    variables = mkOpt' (attrsOf (oneOf [ (listOf str) str path ])) { };
+  };
 
   config = {
     system.stateVersion = "22.05";
 
     nix = {
       settings = {
-        trusted-users = [
-          "root"
-          "@wheel"
-        ];
-        experimental-features = [
-          "nix-command"
-          "flakes"
-        ];
+        trusted-users = [ "root" "@wheel" ];
+        experimental-features = [ "nix-command" "flakes" ];
       };
 
       gc = {
@@ -84,38 +70,29 @@ in
     };
 
     environment = {
-      systemPackages =
-        with pkgs;
-        [
-          # tools
-          git
-          man-pages-posix
+      systemPackages = with pkgs; [
+        # tools
+        git
+        man-pages-posix
 
-          # archiving
-          atool
-          p7zip
-          rar
-          unzip
-          zip
+        # archiving
+        atool
+        p7zip
+        rar
+        unzip
+        zip
 
-          # misc
-          nh
-          kmon
-          cachix
-        ]
-        ++ cfg.systemPackages;
+        # misc
+        nh
+        kmon
+        cachix
+      ] ++ cfg.systemPackages;
 
       inherit (cfg) variables;
     };
 
     users.users.${cfg.user.name} = {
-      inherit (cfg.user)
-        name
-        initialPassword
-        isNormalUser
-        extraGroups
-        packages
-        ;
+      inherit (cfg.user) name initialPassword isNormalUser extraGroups packages;
       openssh.authorizedKeys.keys = cfg.user.authorizedKeys;
     };
   };

@@ -1,9 +1,9 @@
-{ lib, ... }:
-rec {
+{ lib
+, ...
+}: rec {
 
   # Alias for mkOption.
-  mkOpt =
-    type: default: description:
+  mkOpt = type: default: description:
     lib.mkOption { inherit type default description; };
 
   # Alias for mkOption with no description.

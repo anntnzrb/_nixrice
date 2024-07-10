@@ -1,4 +1,6 @@
-{ config, ... }:
+{ config
+, ...
+}:
 let
   cfg = config.liberion.boot.bootloader;
 in

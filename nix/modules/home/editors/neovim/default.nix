@@ -1,9 +1,8 @@
-{
-  config,
-  inputs,
-  lib,
-  system,
-  ...
+{ config
+, inputs
+, lib
+, system
+, ...
 }:
 let
   cfg = config.liberion.editors.neovim;

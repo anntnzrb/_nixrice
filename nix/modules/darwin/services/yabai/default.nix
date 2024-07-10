@@ -1,17 +1,15 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
+{ config
+, lib
+, namespace
+, ...
 }:
 let
   cfg = config.${namespace}.services.yabai;
 
   # helpers
-  formatAttrs =
-    with builtins;
-    attrs: concatStringsSep " " (map (k: "${k}=${getAttr k attrs}") (attrNames attrs));
+  formatAttrs = with builtins; attrs: concatStringsSep " " (map (k: "${k}=${getAttr k attrs}") (attrNames attrs));
   mkRule = rule: "yabai -m rule --add ${formatAttrs rule.pattern} ${formatAttrs rule.ruleset}";
+
 in
 {
   options.${namespace}.services.yabai = with lib.${namespace}; {
@@ -46,102 +44,54 @@ in
           rules = [
             # sys
             {
-              pattern = {
-                app = "^System Settings$";
-              };
-              ruleset = {
-                manage = "off";
-              };
+              pattern = { app = "^System Settings$"; };
+              ruleset = { manage = "off"; };
             }
             {
-              pattern = {
-                app = "^System Information$";
-              };
-              ruleset = {
-                manage = "off";
-              };
+              pattern = { app = "^System Information$"; };
+              ruleset = { manage = "off"; };
             }
             {
-              pattern = {
-                app = "^System Preferences$";
-              };
-              ruleset = {
-                manage = "off";
-              };
+              pattern = { app = "^System Preferences$"; };
+              ruleset = { manage = "off"; };
             }
             {
-              pattern = {
-                title = "Preferences$";
-              };
-              ruleset = {
-                manage = "off";
-              };
+              pattern = { title = "Preferences$"; };
+              ruleset = { manage = "off"; };
             }
             {
-              pattern = {
-                title = "Settings$";
-              };
-              ruleset = {
-                manage = "off";
-              };
+              pattern = { title = "Settings$"; };
+              ruleset = { manage = "off"; };
             }
             {
-              pattern = {
-                app = "^Finder$";
-              };
-              ruleset = {
-                manage = "off";
-              };
+              pattern = { app = "^Finder$"; };
+              ruleset = { manage = "off"; };
             }
 
             # misc
             {
-              pattern = {
-                app = "^Terminal$";
-              };
-              ruleset = {
-                manage = "off";
-              };
+              pattern = { app = "^Terminal$"; };
+              ruleset = { manage = "off"; };
             }
             {
-              pattern = {
-                app = "^Calculator$";
-              };
-              ruleset = {
-                manage = "off";
-              };
+              pattern = { app = "^Calculator$"; };
+              ruleset = { manage = "off"; };
             }
             {
-              pattern = {
-                app = "^Notes$";
-              };
-              ruleset = {
-                manage = "off";
-              };
+              pattern = { app = "^Notes$"; };
+              ruleset = { manage = "off"; };
             }
             {
-              pattern = {
-                app = "^Alacritty$";
-              };
-              ruleset = {
-                manage = "off";
-              };
+              pattern = { app = "^Alacritty$"; };
+              ruleset = { manage = "off"; };
             }
             {
-              pattern = {
-                app = "^ChatGPT$";
-              };
-              ruleset = {
-                manage = "off";
-              };
+              pattern = { app = "^ChatGPT$"; };
+              ruleset = { manage = "off"; };
             }
             {
-              pattern = {
-                app = "^WhatsApp$";
-              };
-              ruleset = {
-                manage = "off";
-              };
+              pattern = { app = "^WhatsApp$"; };
+              ruleset = { manage = "off"; };
             }
           ];
         in

@@ -1,4 +1,7 @@
-{ lib, config, ... }:
+{ lib
+, config
+, ...
+}:
 let
   cfg = config.liberion.virtualisation.virt-manager;
 in

@@ -1,7 +1,9 @@
-{ lib, namespace, ... }:
+{ lib
+, namespace
+, ...
+}:
 
-with lib.${namespace};
-{
+with lib.${namespace}; {
   ${namespace} = {
     shells = {
       defaults = on;
