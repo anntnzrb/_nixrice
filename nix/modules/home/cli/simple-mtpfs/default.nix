@@ -1,7 +1,8 @@
-{ config
-, pkgs
-, lib
-, ...
+{
+  config,
+  pkgs,
+  lib,
+  ...
 }:
 let
   cfg = config.liberion.cli.simple-mtpfs;
@@ -12,7 +13,5 @@ in
     enable = mkOptBool';
   };
 
-  config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.simple-mtpfs ];
-  };
+  config = lib.mkIf cfg.enable { home.packages = [ pkgs.simple-mtpfs ]; };
 }

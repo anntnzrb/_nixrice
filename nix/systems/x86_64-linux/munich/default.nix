@@ -1,6 +1,5 @@
-{ lib
-, ...
-}: {
+{ lib, ... }:
+{
   imports = [ ./hardware ];
 
   liberion = with lib.liberion; {
@@ -51,7 +50,10 @@
   networking = {
     defaultGateway = "192.168.100.1";
     enableIPv6 = false;
-    nameservers = [ "216.199.54.9" "207.170.7.6" ];
+    nameservers = [
+      "216.199.54.9"
+      "207.170.7.6"
+    ];
     interfaces.enp4s0 = {
       mtu = 1500;
       ipv4.addresses = [

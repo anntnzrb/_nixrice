@@ -1,7 +1,4 @@
-{ config
-, namespace
-, ...
-}:
+{ config, namespace, ... }:
 let
   _cfg = config.${namespace}.system.finder;
 in

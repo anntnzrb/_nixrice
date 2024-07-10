@@ -1,26 +1,31 @@
-{ config
-, lib
-, pkgs
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  ...
 }:
 let
   cfg = config.liberion.desktop.window-managers.wayland.sway;
 in
-with lib; {
-  options.liberion.desktop.window-managers.wayland.sway = with lib.liberion; with types; {
-    enable = mkOptBool';
+with lib;
+{
+  options.liberion.desktop.window-managers.wayland.sway =
+    with lib.liberion;
+    with types;
+    {
+      enable = mkOptBool';
 
-    keyboard = {
-      layout = mkOpt' str "us";
-      variant = mkOpt' str "altgr-intl";
+      keyboard = {
+        layout = mkOpt' str "us";
+        variant = mkOpt' str "altgr-intl";
+      };
+
+      autoStart = mkOpt' (listOf str) [ ];
+
+      modifier = mkOpt' str "Mod4";
+
+      output = mkOpt' (attrsOf (attrsOf str)) { };
     };
-
-    autoStart = mkOpt' (listOf str) [ ];
-
-    modifier = mkOpt' str "Mod4";
-
-    output = mkOpt' (attrsOf (attrsOf str)) { };
-  };
 
   config = mkIf cfg.enable {
     home = {
@@ -52,11 +57,7 @@ with lib; {
         right = "l";
         left = "h";
 
-        startup = [ ] ++ map
-          (cmd: {
-            command = cmd;
-          })
-          cfg.autoStart;
+        startup = [ ] ++ map (cmd: { command = cmd; }) cfg.autoStart;
 
         colors = {
           background = "#1C1B19";
@@ -165,13 +166,18 @@ with lib; {
               "${mod}+${bind.key}" = "focus ${bind.dir}";
               "${modShift}+${bind.key}" = "move ${bind.dir}";
             };
-            genWorkspaceBinds = i:
-              let ws = toString i; in {
+            genWorkspaceBinds =
+              i:
+              let
+                ws = toString i;
+              in
+              {
                 "${mod}+${ws}" = "workspace number ${ws}";
                 "${modShift}+${ws}" = "move container to workspace number ${ws}";
               };
           in
-          with config.home.sessionVariables; {
+          with config.home.sessionVariables;
+          {
             # TODO: mv
             "${mod}+Return" = "exec ${TERMINAL}";
             "${mod}+d" = "exec bemenu-run";
@@ -182,19 +188,44 @@ with lib; {
 
             "${modShift}+space" = "floating toggle";
             "${modShift}+f" = "fullscreen toggle";
-          } // builtins.foldl' (a: b: a // b) { } (
+          }
+          // builtins.foldl' (a: b: a // b) { } (
             map genFocusMoveBinds [
-              { key = "h"; dir = "left"; }
-              { key = "j"; dir = "down"; }
-              { key = "k"; dir = "up"; }
-              { key = "l"; dir = "right"; }
+              {
+                key = "h";
+                dir = "left";
+              }
+              {
+                key = "j";
+                dir = "down";
+              }
+              {
+                key = "k";
+                dir = "up";
+              }
+              {
+                key = "l";
+                dir = "right";
+              }
 
-              { key = "Left"; dir = "left"; }
-              { key = "Down"; dir = "down"; }
-              { key = "Up"; dir = "up"; }
-              { key = "Right"; dir = "right"; }
-            ] ++
-            map genWorkspaceBinds (builtins.genList (x: x + 1) numWorkspaces)
+              {
+                key = "Left";
+                dir = "left";
+              }
+              {
+                key = "Down";
+                dir = "down";
+              }
+              {
+                key = "Up";
+                dir = "up";
+              }
+              {
+                key = "Right";
+                dir = "right";
+              }
+            ]
+            ++ map genWorkspaceBinds (builtins.genList (x: x + 1) numWorkspaces)
           );
 
         gaps = {
@@ -245,7 +276,12 @@ with lib; {
 
           modules-left = [ "sway/workspaces" ];
           modules-center = [ ];
-          modules-right = [ "cpu" "memory" "tray" "clock" ];
+          modules-right = [
+            "cpu"
+            "memory"
+            "tray"
+            "clock"
+          ];
 
           clock = {
             format = "  {:%a, %d/%m %R}";

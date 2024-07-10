@@ -1,7 +1,8 @@
-{ config
-, pkgs
-, namespace
-, ...
+{
+  config,
+  pkgs,
+  namespace,
+  ...
 }:
 let
   _cfg = config.${namespace}.darwin;
@@ -39,5 +40,4 @@ in
       nh
     ];
   };
-
 }

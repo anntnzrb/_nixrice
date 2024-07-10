@@ -1,7 +1,8 @@
-{ config
-, pkgs
-, lib
-, ...
+{
+  config,
+  pkgs,
+  lib,
+  ...
 }:
 let
   cfg = config.liberion.editors.emacs;
@@ -13,9 +14,7 @@ let
       (ripgrep.override { withPCRE2 = true; })
     ];
 
-    emacsPkgs = with pkgs.emacsPackages; [
-      vterm
-    ];
+    emacsPkgs = with pkgs.emacsPackages; [ vterm ];
 
     extras = with pkgs; [
       nodejs # for lsp copilot auth
@@ -26,16 +25,17 @@ let
     ];
 
     dicts = with pkgs; [
-      (aspellWithDicts (dicts: with dicts;
-      [
-        # english
-        en
-        en-computers
-        en-science
+      (aspellWithDicts (
+        dicts: with dicts; [
+          # english
+          en
+          en-computers
+          en-science
 
-        es # spanish/español
-        de # german/deutsch
-      ]))
+          es # spanish/español
+          de # german/deutsch
+        ]
+      ))
     ];
   };
 in
