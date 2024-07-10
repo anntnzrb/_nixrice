@@ -1,7 +1,8 @@
-{ config
-, lib
-, namespace
-, ...
+{
+  config,
+  lib,
+  namespace,
+  ...
 }:
 let
   cfg = config.${namespace}.shells.bash;
@@ -20,9 +21,17 @@ in
       enable = true;
 
       enableCompletion = true;
-      shellOptions = [ "cdspell" "checkwinsize" "cmdhist" ];
+      shellOptions = [
+        "cdspell"
+        "checkwinsize"
+        "cmdhist"
+      ];
 
-      historyControl = [ "erasedups" "ignoredups" "ignorespace" ];
+      historyControl = [
+        "erasedups"
+        "ignoredups"
+        "ignorespace"
+      ];
       historyFile = "${config.xdg.dataHome}/bash_history";
       historyFileSize = 1000 * 1000;
       historySize = 100 * 100;

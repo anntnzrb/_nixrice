@@ -1,7 +1,4 @@
-{ config
-, lib
-, ...
-}:
+{ config, lib, ... }:
 let
   cfg = config.liberion.cli.btop;
 in

@@ -1,9 +1,7 @@
-{ lib
-, namespace
-, ...
-}:
+{ lib, namespace, ... }:
 
-with lib.${namespace}; let
+with lib.${namespace};
+let
   autoStart = [
     "nm-applet"
     "pasystray"

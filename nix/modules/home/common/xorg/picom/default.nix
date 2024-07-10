@@ -1,16 +1,16 @@
-{ config
-, lib
-, ...
-}:
+{ config, lib, ... }:
 let
   cfg = config.liberion.common.xorg.picom;
 in
 {
-  options.liberion.common.xorg.picom = with lib.liberion; with lib.types; {
-    enable = mkOptBool';
-    backend = mkOpt' str "glx";
-    vSync = mkOptBool';
-  };
+  options.liberion.common.xorg.picom =
+    with lib.liberion;
+    with lib.types;
+    {
+      enable = mkOptBool';
+      backend = mkOpt' str "glx";
+      vSync = mkOptBool';
+    };
 
   config = lib.mkIf cfg.enable {
     services.picom = {

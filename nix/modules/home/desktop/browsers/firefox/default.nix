@@ -1,9 +1,10 @@
-{ config
-, inputs
-, lib
-, pkgs
-, system
-, ...
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  system,
+  ...
 }:
 let
   cfg = config.liberion.desktop.browsers.firefox;

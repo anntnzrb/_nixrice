@@ -1,19 +1,23 @@
-{ config
-, lib
-, namespace
-, ...
+{
+  config,
+  lib,
+  namespace,
+  ...
 }:
 let
   cfg = config.${namespace}.homebrew;
 in
 {
-  options.${namespace}.homebrew = with lib.liberion; with lib.types; {
-    enable = mkOptBool';
+  options.${namespace}.homebrew =
+    with lib.liberion;
+    with lib.types;
+    {
+      enable = mkOptBool';
 
-    packages = {
-      casks = mkOpt' (listOf str) [ ];
+      packages = {
+        casks = mkOpt' (listOf str) [ ];
+      };
     };
-  };
 
   config = lib.mkIf cfg.enable {
     homebrew = {
