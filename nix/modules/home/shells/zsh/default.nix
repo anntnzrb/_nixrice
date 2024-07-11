@@ -43,6 +43,6 @@ in
       };
     };
 
-    ${namespace}.cli.starship.enable = cfg.prompt.starship.enable;
+    ${namespace}.shells.starship.enable = cfg.prompt.starship.enable;
   };
 }

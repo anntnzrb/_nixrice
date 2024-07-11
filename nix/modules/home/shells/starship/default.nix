@@ -4,10 +4,10 @@
 , ...
 }:
 let
-  cfg = config.${namespace}.cli.starship;
+  cfg = config.${namespace}.shells.starship;
 in
 {
-  options.${namespace}.cli.starship = with lib.${namespace}; {
+  options.${namespace}.shells.starship = with lib.${namespace}; {
     enable = mkOptBool';
   };
 
