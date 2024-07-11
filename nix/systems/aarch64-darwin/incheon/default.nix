@@ -9,6 +9,7 @@
   ${namespace} = with lib.${namespace}; {
     system = {
       trackpad = on;
+      ui.menuBar.hide = false;
     };
 
     services = {
