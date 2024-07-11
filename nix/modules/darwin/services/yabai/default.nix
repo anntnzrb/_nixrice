@@ -42,7 +42,7 @@ in
       extraConfig =
         let
           rules = [
-            # sys
+            # sys/builtin
             {
               pattern = { app = "^System Settings$"; };
               ruleset = { manage = "off"; };
@@ -67,8 +67,6 @@ in
               pattern = { app = "^Finder$"; };
               ruleset = { manage = "off"; };
             }
-
-            # misc
             {
               pattern = { app = "^Terminal$"; };
               ruleset = { manage = "off"; };
@@ -82,7 +80,25 @@ in
               ruleset = { manage = "off"; };
             }
             {
+              pattern = { app = "^Weather$"; };
+              ruleset = { manage = "off"; };
+            }
+            {
+              pattern = { app = "^Calendar$"; };
+              ruleset = { manage = "off"; };
+            }
+            {
+              pattern = { app = "^Clock$"; };
+              ruleset = { manage = "off"; };
+            }
+
+            # user
+            {
               pattern = { app = "^Alacritty$"; };
+              ruleset = { manage = "off"; };
+            }
+            {
+              pattern = { app = "^Bitwarden$"; };
               ruleset = { manage = "off"; };
             }
             {
