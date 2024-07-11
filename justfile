@@ -6,7 +6,6 @@ default:
 # -----------------------------------------------------------------------------
 # NixOS
 # -----------------------------------------------------------------------------
-
 # build the NixOS configuration
 nixos-build:
     nh os build .
@@ -20,25 +19,8 @@ nixos-switch: nixos-build
     nh os switch .
 
 # -----------------------------------------------------------------------------
-# darwin
-# -----------------------------------------------------------------------------
-
-# build the darwin configuration
-darwin-build:
-	nix run nix-darwin -- build --flake .
-
-# build & activate the new darwin configuration on next boot
-darwin-boot: darwin-build
-	nix run nix-darwin -- boot --flake .
-
-# build & activate the darwin configuration now
-darwin-switch: darwin-build
-	nix run nix-darwin -- switch --flake .
-
-# -----------------------------------------------------------------------------
 # Nix
 # -----------------------------------------------------------------------------
-
 # perform a cleanup
 nix-clean:
     nh clean all
@@ -55,9 +37,36 @@ nix-repair: nix-clean-full-wipe
     just nix-clean-full-wipe
 
 # -----------------------------------------------------------------------------
+# darwin
+# -----------------------------------------------------------------------------
+# build the darwin configuration
+darwin-build:
+	nix run nix-darwin -- build --flake .
+
+# build & activate the new darwin configuration on next boot
+darwin-boot: darwin-build
+	nix run nix-darwin -- boot --flake .
+
+# build & activate the darwin configuration now
+darwin-switch: darwin-build
+	nix run nix-darwin -- switch --flake .
+
+# -----------------------------------------------------------------------------
+# wsl
+# -----------------------------------------------------------------------------
+# FIXME: find a generic way of using WSL without hard-coding a user
+
+# build the WSL configuration
+wsl-build:
+	nix run home-manager -- build --flake .#"annt@wsl"
+
+# build & activate the WSL configuration now
+wsl-switch: wsl-build
+	nix run home-manager -- switch --flake .#"annt@wsl"
+
+# -----------------------------------------------------------------------------
 # flake
 # -----------------------------------------------------------------------------
-
 # update all flake inputs
 nix-flake-update-all:
     nix flake update --commit-lock-file --commit-lockfile-summary 'chore(flake): update lockfile'
