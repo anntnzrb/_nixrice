@@ -1,8 +1,10 @@
-{ pkgs }:
+{ pkgs
+, ...
+}:
 pkgs.mkShell {
+  name = "liberion-shell";
+
   nativeBuildInputs = with pkgs; [
-    nixpkgs-fmt
-    nil
     just
   ];
 }
