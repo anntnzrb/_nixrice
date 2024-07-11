@@ -1,0 +1,23 @@
+{ config
+, lib
+, namespace
+, ...
+}:
+let
+  cfg = config.${namespace}.shells.zellij;
+in
+{
+  options.${namespace}.shells.zellij = with lib.${namespace}; {
+    enable = mkOptBool';
+    enableBashIntegration = mkOptEnabled';
+    enableZshIntegration = mkOptEnabled';
+  };
+
+  config = lib.mkIf cfg.enable {
+    programs.zellij = {
+      enable = true;
+
+      inherit (cfg) enableBashIntegration enableZshIntegration;
+    };
+  };
+}
