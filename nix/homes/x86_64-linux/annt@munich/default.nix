@@ -44,6 +44,7 @@ in
       bash = {
         enable = true;
         prompt.starship = on;
+        zellij = on;
       };
     };
 

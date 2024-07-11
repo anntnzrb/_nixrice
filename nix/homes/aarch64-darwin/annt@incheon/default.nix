@@ -10,6 +10,7 @@ with lib.liberion; {
       zsh = {
         enable = true;
         prompt.starship = on;
+        zellij = on;
       };
     };
 
