@@ -16,7 +16,7 @@ with lib.${namespace}; let
   };
 in
 {
-  ${namespace} = {
+  liberion = {
     home = {
       packages = with pkgs; [
         git # example

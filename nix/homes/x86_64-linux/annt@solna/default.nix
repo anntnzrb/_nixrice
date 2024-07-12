@@ -11,7 +11,7 @@ with lib.${namespace}; let
   ];
 in
 {
-  ${namespace} = {
+  liberion = {
     shells = {
       defaults = on;
       altCoreUtils = on;
