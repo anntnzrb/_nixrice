@@ -3,19 +3,25 @@
 , lib
 , pkgs
 , system
+, namespace
 , ...
 }:
 let
-  cfg = config.liberion.desktop.browsers.firefox;
+  cfg = config.${namespace}.desktop.browsers.firefox;
+  addons = inputs.firefox-addons.packages.${system};
 in
 {
-  options.liberion.desktop.browsers.firefox = with lib.liberion; {
+  options.${namespace}.desktop.browsers.firefox = with lib.${namespace}; {
     enable = mkOptBool';
+
+    package = {
+      install = mkOptEnabled';
+    };
   };
   config = lib.mkIf cfg.enable {
     programs.firefox = {
       enable = true;
-      package = pkgs.firefox;
+      package = if cfg.package.install then pkgs.firefox else null;
 
       profiles.default = {
         id = 0; # default
@@ -176,9 +182,8 @@ in
             };
         };
 
-        extensions = with inputs.firefox-addons.packages.${system}; [
+        extensions = with addons; [
           bitwarden # pw manager
-          tridactyl # vi keybinds
           ublock-origin # ad-blocker
         ];
 

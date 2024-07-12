@@ -1,8 +1,9 @@
 { lib
+, namespace
 , ...
 }:
 
-with lib.liberion; {
+with lib.${namespace}; {
   liberion = {
     shells = {
       defaults = on;
@@ -36,6 +37,11 @@ with lib.liberion; {
     desktop = {
       ui = {
         fonts = on;
+      };
+
+      browsers.firefox = {
+        enable = true;
+        package.install = false;
       };
 
       terminal-emulators.alacritty = on;
