@@ -1,14 +1,19 @@
 { config
 , lib
+, namespace
 , ...
 }:
 let
-  cfg = config.liberion.cli.git;
+  cfg = config.${namespace}.cli.git;
 in
 {
 
-  options.liberion.cli.git = with lib.liberion; {
+  options.${namespace}.cli.git = with lib.${namespace}; {
     enable = mkOptBool';
+
+    lazygit = {
+      enable = mkOptBool';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -42,6 +47,14 @@ in
         ac = "!f() { git add -A ; git commit -am \"`date '+%F :: %T (%Z)'`\"; }; f";
         acp = "!f() { git add -A ; git commit -am \"`date '+%F :: %T (%Z)'`\" ; git push; }; f";
       };
+    };
+
+    programs.lazygit = lib.mkIf cfg.lazygit.enable {
+      enable = true;
+    };
+
+    home.shellAliases = lib.mkIf cfg.lazygit.enable {
+      gg = "lazygit";
     };
   };
 }

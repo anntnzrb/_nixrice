@@ -15,11 +15,15 @@ with lib.liberion; {
     };
 
     cli = {
+      git = {
+        enable = true;
+        lazygit = on;
+      };
+
       btop = on;
       direnv = on;
       fastfetch = on;
       fzf = on;
-      git = on;
       tldr = on;
       yt-dlp = on;
       zoxide = on;
