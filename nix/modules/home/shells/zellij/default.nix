@@ -19,6 +19,7 @@ in
       inherit (cfg) enableBashIntegration enableZshIntegration;
 
       settings = {
+        default_mode = "locked";
         ui = {
           pane_frames = {
             hide_session_name = true;

@@ -32,4 +32,18 @@ layout {
             tmpl-pane-slaves
         }
     }
+
+
+    // ------------------------------------------------------------------------
+    // tab 2
+    // ------------------------------------------------------------------------
+    tab name="ii" {
+        pane split_direction="vertical" {
+            pane name="main" {
+                size "60%"
+                focus true
+            }
+			pane name="2"
+        }
+    }
 }
