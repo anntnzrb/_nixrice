@@ -1,20 +1,26 @@
 { config
 , lib
 , pkgs
+, namespace
 , ...
 }:
 let
-  cfg = config.liberion.desktop.terminal-emulators.alacritty;
+  cfg = config.${namespace}.desktop.terminal-emulators.alacritty;
 in
-with lib.liberion; {
-  options.liberion.desktop.terminal-emulators.alacritty = {
+with lib.${namespace}; {
+  options.${namespace}.desktop.terminal-emulators.alacritty = {
     enable = mkOptBool';
+
+    package = {
+      install = mkOptEnabled';
+    };
   };
 
   config = lib.mkIf cfg.enable {
     programs.alacritty = {
       enable = true;
-      package = with pkgs; if stdenv.isLinux then alacritty else git;
+      # HACK: use git instead of null pkg
+      package = with pkgs; if cfg.package.install then alacritty else git;
 
       settings = {
         live_config_reload = true;
