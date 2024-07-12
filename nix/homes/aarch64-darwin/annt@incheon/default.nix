@@ -44,7 +44,10 @@ with lib.${namespace}; {
         package.install = false;
       };
 
-      terminal-emulators.alacritty = on;
+      terminal-emulators.alacritty = {
+        enable = true;
+        package.install = false;
+      };
     };
   };
 }
