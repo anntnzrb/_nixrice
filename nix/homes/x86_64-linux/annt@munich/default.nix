@@ -49,11 +49,15 @@ in
     };
 
     cli = {
+      git = {
+        enable = true;
+        lazygit = on;
+      };
+
       btop = on;
       direnv = on;
       fastfetch = on;
       fzf = on;
-      git = on;
       neofetch = off;
       simple-mtpfs = on;
       tldr = on;
