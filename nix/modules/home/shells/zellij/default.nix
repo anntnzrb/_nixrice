@@ -16,8 +16,22 @@ in
   config = lib.mkIf cfg.enable {
     programs.zellij = {
       enable = true;
-
       inherit (cfg) enableBashIntegration enableZshIntegration;
+
+      settings = {
+        ui = {
+          pane_frames = {
+            hide_session_name = true;
+            rounded_corners = true;
+          };
+        };
+      };
+    };
+
+    xdg.configFile."zellij/layouts".source = ./layouts;
+
+    home.shellAliases = {
+      zll = "zellij";
     };
   };
 }
