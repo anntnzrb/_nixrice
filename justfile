@@ -37,15 +37,11 @@ nix-repair: nix-clean
 # -----------------------------------------------------------------------------
 # build the darwin configuration
 darwin-build:
-	nix run nix-darwin -- build --flake .
-
-# build & activate the new darwin configuration on next boot
-darwin-boot: darwin-build
-	nix run nix-darwin -- boot --flake .
+	darwin-rebuild build --flake .
 
 # build & activate the darwin configuration now
 darwin-switch: darwin-build
-	nix run nix-darwin -- switch --flake .
+	darwin-rebuild switch --flake .
 
 # -----------------------------------------------------------------------------
 # wsl
