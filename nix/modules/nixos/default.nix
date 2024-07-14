@@ -83,7 +83,6 @@ in
         zip
 
         # misc
-        nh
         kmon
         cachix
       ] ++ cfg.systemPackages;
