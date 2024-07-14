@@ -7,6 +7,10 @@
   programs.zsh.enable = true;
 
   ${namespace} = with lib.${namespace}; {
+    darwin = {
+      user.name = "annt";
+    };
+
     system = {
       trackpad = on;
       ui.menuBar.hide = false;
