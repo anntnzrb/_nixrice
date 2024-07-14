@@ -8,31 +8,27 @@ default:
 # -----------------------------------------------------------------------------
 # build the NixOS configuration
 nixos-build:
-    nh os build .
+	nixos-rebuild build --flake .#
 
 # build & activate the new NixOS configuration on next boot
 nixos-boot: nixos-build
-    nh os boot .
+	nixos-rebuild switch --use-remote-sudo --flake .#
 
 # build & activate the NixOS configuration now
 nixos-switch: nixos-build
-    nh os switch .
+	nixos-rebuild boot --use-remote-sudo --flake .#
 
 # -----------------------------------------------------------------------------
 # Nix
 # -----------------------------------------------------------------------------
 # perform a cleanup
 nix-clean:
-    nh clean all
-
-# perform a full cleanup
-nix-clean-full-wipe: nix-clean
     nix-collect-garbage -d
     nix store gc --verbose
     nix store optimise --verbose
 
 # attempt to repair the nix store
-nix-repair: nix-clean-full-wipe
+nix-repair: nix-clean
     nix-store --verify --check-contents --repair
     just nix-clean-full-wipe
 
