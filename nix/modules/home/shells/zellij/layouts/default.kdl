@@ -43,7 +43,7 @@ layout {
                 size "60%"
                 focus true
             }
-			pane name="2"
+			pane name="s0"
         }
     }
 }
