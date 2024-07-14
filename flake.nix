@@ -11,6 +11,11 @@
     darwin.url = "github:LnL7/nix-darwin/master";
     darwin.inputs.nixpkgs.follows = "nixpkgs-stable";
 
+    # nix-homebrew integration
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew/main";
+    nix-homebrew.inputs.nixpkgs.follows = "nixpkgs-stable";
+    nix-homebrew.inputs.nix-darwin.follows = "darwin";
+
     # user environment manager
     home-manager.url = "github:nix-community/home-manager/release-24.05"; # NOTE: match NixOS
     home-manager.inputs.nixpkgs.follows = "nixpkgs-stable";

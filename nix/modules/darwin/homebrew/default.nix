@@ -1,12 +1,16 @@
 { config
 , lib
 , namespace
+, system
+, inputs
 , ...
 }:
 let
   cfg = config.${namespace}.homebrew;
 in
 {
+  imports = [ inputs.nix-homebrew.darwinModules.nix-homebrew ];
+
   options.${namespace}.homebrew = with lib.liberion; with lib.types; {
     enable = mkOptBool';
 
@@ -16,6 +20,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    nix-homebrew = {
+      enable = true;
+      enableRosetta = (system == "aarch64-darwin");
+      user = config.${namespace}.darwin.user.name;
+      autoMigrate = true;
+    };
+
     homebrew = {
       enable = true;
       global.autoUpdate = false;
