@@ -1,14 +1,25 @@
-{ config
+{ lib
+, config
 , pkgs
 , namespace
 , ...
 }:
 let
-  _cfg = config.${namespace}.darwin;
+  cfg = config.${namespace}.darwin;
 in
 {
+  options.${namespace}.darwin = with lib.liberion; with lib.types; {
+    user = {
+      name = mkOpt' str "annt";
+    };
+  };
+
   config = {
     services.nix-daemon.enable = true;
+
+    users.users.${cfg.user.name} = {
+      inherit (cfg.user) name;
+    };
 
     system = {
       # booting beep/sound
