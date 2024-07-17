@@ -19,20 +19,6 @@ nixos-switch: nixos-build
 	nixos-rebuild boot --use-remote-sudo --flake .#
 
 # -----------------------------------------------------------------------------
-# Nix
-# -----------------------------------------------------------------------------
-# perform a cleanup
-nix-clean:
-    nix-collect-garbage -d
-    nix store gc --verbose
-    nix store optimise --verbose
-
-# attempt to repair the nix store
-nix-repair: nix-clean
-    nix-store --verify --check-contents --repair
-    just nix-clean-full-wipe
-
-# -----------------------------------------------------------------------------
 # darwin
 # -----------------------------------------------------------------------------
 # build the darwin configuration
@@ -55,6 +41,20 @@ wsl-build:
 # build & activate the WSL configuration now
 wsl-switch: wsl-build
 	nix run home-manager -- switch --flake .#"annt@wsl"
+
+# -----------------------------------------------------------------------------
+# Nix
+# -----------------------------------------------------------------------------
+# perform a cleanup
+nix-clean:
+    nix-collect-garbage -d
+    nix store gc --verbose
+    nix store optimise --verbose
+
+# attempt to repair the nix store
+nix-repair: nix-clean
+    nix-store --verify --check-contents --repair
+    just nix-clean
 
 # -----------------------------------------------------------------------------
 # flake
