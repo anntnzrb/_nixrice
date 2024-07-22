@@ -15,6 +15,10 @@ in
   };
 
   config = {
+    nix.settings = {
+      auto-optimise-store = true;
+      trusted-users = [ "root" "@admin" ];
+    };
     services.nix-daemon.enable = true;
 
     users.users.${cfg.user.name} = {
