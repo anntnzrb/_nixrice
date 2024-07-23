@@ -10,17 +10,11 @@ in
 with lib.${namespace}; {
   options.${namespace}.desktop.terminal-emulators.alacritty = {
     enable = mkOptBool';
-
-    package = {
-      install = mkOptEnabled';
-    };
   };
 
   config = lib.mkIf cfg.enable {
     programs.alacritty = {
       enable = true;
-      # HACK: use git instead of null pkg
-      package = with pkgs; if cfg.package.install then alacritty else git;
 
       settings = {
         live_config_reload = true;
