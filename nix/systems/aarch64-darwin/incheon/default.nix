@@ -25,20 +25,10 @@
 
       packages = {
         casks = [
-          "alacritty"
+          "firefox"
           "bitwarden"
           "chatgpt"
-          "firefox"
-          "notesnook"
-
-          # dev
           "visual-studio-code"
-
-          # misc
-          "whatsapp"
-
-          # system
-          "aldente"
         ];
       };
     };
