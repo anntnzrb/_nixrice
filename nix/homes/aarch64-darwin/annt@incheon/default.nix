@@ -1,10 +1,20 @@
 { lib
+, pkgs
+, inputs
 , namespace
 , ...
 }:
 
-with lib.${namespace}; {
-  liberion = {
+{
+  imports = [ inputs.mac-app-util.homeManagerModules.default ];
+
+  home.packages = with pkgs; [
+    whatsapp-for-mac
+    aldente
+    raycast
+  ];
+
+  liberion = with lib.${namespace}; {
     shells = {
       defaults = on;
       altCoreUtils = on;
@@ -44,10 +54,7 @@ with lib.${namespace}; {
         package.install = false;
       };
 
-      terminal-emulators.alacritty = {
-        enable = true;
-        package.install = false;
-      };
+      terminal-emulators.alacritty = on;
     };
   };
 }

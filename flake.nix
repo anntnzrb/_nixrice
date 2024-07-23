@@ -2,22 +2,15 @@
   description = "Liberion's Core";
 
   inputs = {
-    # nixpkgs
+    # -------------------------------------------------------------------------
+    # nix
+    # -------------------------------------------------------------------------
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    # macOS support
-    darwin.url = "github:LnL7/nix-darwin/master";
-    darwin.inputs.nixpkgs.follows = "nixpkgs-stable";
-
-    # nix-homebrew integration
-    nix-homebrew.url = "github:zhaofengli/nix-homebrew/main";
-    nix-homebrew.inputs.nixpkgs.follows = "nixpkgs-stable";
-    nix-homebrew.inputs.nix-darwin.follows = "darwin";
-
     # user environment manager
-    home-manager.url = "github:nix-community/home-manager/release-24.05"; # NOTE: match NixOS
+    home-manager.url = "github:nix-community/home-manager/release-24.05"; # NOTE: match nixpkgs
     home-manager.inputs.nixpkgs.follows = "nixpkgs-stable";
 
     # flake framework
@@ -31,6 +24,24 @@
     nixos-generators.url = "github:nix-community/nixos-generators/master";
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs-stable";
 
+    # -------------------------------------------------------------------------
+    # darwin
+    # -------------------------------------------------------------------------
+    # macOS support
+    darwin.url = "github:LnL7/nix-darwin/master";
+    darwin.inputs.nixpkgs.follows = "nixpkgs-stable";
+
+    # nix-homebrew integration
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew/main";
+    nix-homebrew.inputs.nixpkgs.follows = "nixpkgs-stable";
+    nix-homebrew.inputs.nix-darwin.follows = "darwin";
+
+    # fix .app bundles
+    mac-app-util.url = "github:hraban/mac-app-util";
+
+    # -------------------------------------------------------------------------
+    # misc
+    # -------------------------------------------------------------------------
     # Neovim
     neovim-annt.url = "github:anntnzrb/nixvim/main";
 
