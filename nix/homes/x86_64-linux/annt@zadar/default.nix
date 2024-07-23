@@ -40,6 +40,7 @@ in
       direnv = on;
       fastfetch = on;
       fzf = on;
+      notesnook = on;
       simple-mtpfs = on;
       tldr = on;
       yt-dlp = on;

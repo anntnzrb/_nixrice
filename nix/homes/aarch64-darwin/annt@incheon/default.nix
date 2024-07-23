@@ -45,6 +45,7 @@
     };
 
     desktop = {
+      terminal-emulators.alacritty = on;
       ui = {
         fonts = on;
       };
@@ -54,7 +55,7 @@
         package.install = false;
       };
 
-      terminal-emulators.alacritty = on;
+      notesnook = on;
     };
   };
 }
