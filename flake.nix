@@ -16,6 +16,7 @@
     # flake framework
     snowfall-lib.url = "github:snowfallorg/lib/main";
     snowfall-lib.inputs.nixpkgs.follows = "nixpkgs-stable";
+    snowfall-lib.inputs.flake-compat.follows = "flake-compat";
 
     # collection of hardware modules for systems
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
@@ -35,9 +36,11 @@
     nix-homebrew.url = "github:zhaofengli/nix-homebrew/main";
     nix-homebrew.inputs.nixpkgs.follows = "nixpkgs-stable";
     nix-homebrew.inputs.nix-darwin.follows = "darwin";
+    nix-homebrew.inputs.flake-utils.follows = "flake-utils";
 
     # fix .app bundles
     mac-app-util.url = "github:hraban/mac-app-util";
+    mac-app-util.inputs.flake-compat.follows = "flake-compat";
 
     # -------------------------------------------------------------------------
     # misc
@@ -48,6 +51,15 @@
     # Firefox extensions (add-ons)
     firefox-addons.url = "github:nix-community/nur-combined/master?dir=repos/rycee/pkgs/firefox-addons";
     firefox-addons.inputs.nixpkgs.follows = "nixpkgs-stable";
+    firefox-addons.inputs.flake-utils.follows = "flake-utils";
+
+    # -------------------------------------------------------------------------
+    # follows
+    # -------------------------------------------------------------------------
+    systems.url = "github:nix-systems/default/main";
+    flake-utils.url = "github:numtide/flake-utils/main";
+    flake-utils.inputs.systems.follows = "systems";
+    flake-compat.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
   };
 
   outputs = inputs:
