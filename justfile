@@ -1,7 +1,6 @@
 # prints this menu
 default:
     @just --list
-    @printf '=> Some commands may use the NH frontend\n'
 
 # -----------------------------------------------------------------------------
 # NixOS
