@@ -60,7 +60,7 @@ nix-repair: nix-clean
 # -----------------------------------------------------------------------------
 # update all flake inputs
 nix-flake-update-all:
-    nix flake update --commit-lock-file --commit-lockfile-summary 'chore(flake): update lockfile'
+    nix flake update --commit-lock-file --option commit-lockfile-summary 'chore(flake): update lockfile'
 
 # update a single flake input
 nix-flake-update *ARGS:
