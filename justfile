@@ -46,13 +46,13 @@ wsl-switch: wsl-build
 # -----------------------------------------------------------------------------
 # perform a cleanup
 nix-clean:
-    nix-collect-garbage -d
-    nix store gc --verbose
-    nix store optimise --verbose
+    sudo nix-collect-garbage --max-jobs auto --cores 0 --delete-old
+    sudo nix store gc
+    sudo nix store optimise
 
 # attempt to repair the nix store
 nix-repair: nix-clean
-    nix-store --verify --check-contents --repair
+    sudo nix store verify --all --recursive --refresh --repair --no-trust
     just nix-clean
 
 # -----------------------------------------------------------------------------
