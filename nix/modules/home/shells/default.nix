@@ -48,7 +48,7 @@ in
             zip = "${getExe zip} -rv";
 
             # nix
-            nix-lockfile-update = "nix flake update --commit-lock-file --commit-lockfile-summary 'chore(flake): update lockfile'";
+            nix-lockfile-update = "nix flake update --commit-lock-file --option commit-lockfile-summary 'chore(flake): update lockfile'";
             nix-man = "${getExe man} configuration.nix";
             nix-man-hm = "${getExe man} home-configuration.nix";
           };
