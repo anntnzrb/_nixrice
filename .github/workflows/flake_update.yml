@@ -3,7 +3,7 @@ name: Nix Flake Update
 on:
   workflow_dispatch: # manual triggering
   schedule:
-  - cron: "0 0 1 * *" # run 1st of each month
+  - cron: "0 0 3 * *" # run 1st of each month
 
 permissions:
   contents: write
