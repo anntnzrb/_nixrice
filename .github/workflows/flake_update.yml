@@ -26,7 +26,7 @@ jobs:
 
       - name: Update Flake Inputs
         run: |
-          nix flake update --commit-lock-file --commit-lockfile-summary 'chore(flake): update lockfile'
+          nix flake update --commit-lock-file --option commit-lockfile-summary 'chore(flake): update lockfile'
 
       - name: Push Updates
         run: |
