@@ -25,9 +25,13 @@
 
       packages = {
         casks = [
-          "firefox"
+          # apps
           "bitwarden"
           "chatgpt"
+          "firefox"
+          "whatsapp"
+
+          # dev
           "visual-studio-code"
         ];
       };
