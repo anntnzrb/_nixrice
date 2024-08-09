@@ -185,6 +185,7 @@ in
         extensions = with addons; [
           bitwarden # pw manager
           ublock-origin # ad-blocker
+          clearurls
         ];
 
         settings = {
