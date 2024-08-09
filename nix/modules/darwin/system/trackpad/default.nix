@@ -15,14 +15,18 @@ in
     system.defaults = {
       trackpad =
         let
-          light = 0;
+          pressure = {
+            light = 0;
+            medium = 1;
+            firm = 2;
+          };
         in
         {
-          ActuationStrength = 0;
+          ActuationStrength = 1;
           Clicking = true;
           Dragging = true;
-          FirstClickThreshold = light;
-          SecondClickThreshold = light;
+          FirstClickThreshold = pressure.medium;
+          SecondClickThreshold = pressure.medium;
           TrackpadRightClick = true;
         };
 
@@ -32,7 +36,7 @@ in
         "com.apple.trackpad.enableSecondaryClick" = true;
         AppleEnableMouseSwipeNavigateWithScrolls = true;
 
-        "com.apple.trackpad.scaling" = 2.0;
+        "com.apple.trackpad.scaling" = 0.6875;
       };
 
       ".GlobalPreferences"."com.apple.mouse.scaling" = -1.0;
