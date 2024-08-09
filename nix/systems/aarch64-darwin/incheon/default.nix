@@ -33,6 +33,7 @@
 
           # dev
           "visual-studio-code"
+          "rustdesk"
         ];
       };
     };
