@@ -36,7 +36,7 @@ in
 
     # NOTE: this might be a future module option
     home.sessionVariables = {
-      FZF_COMPLETION_TRIGGER = ".";
+      FZF_COMPLETION_TRIGGER = "~~";
     };
   };
 }
