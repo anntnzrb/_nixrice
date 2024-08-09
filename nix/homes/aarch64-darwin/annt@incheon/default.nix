@@ -9,7 +9,6 @@
   imports = [ inputs.mac-app-util.homeManagerModules.default ];
 
   home.packages = with pkgs; [
-    whatsapp-for-mac
     aldente
     raycast
   ];
