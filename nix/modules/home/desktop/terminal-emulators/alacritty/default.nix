@@ -22,30 +22,30 @@ with lib.${namespace}; {
         font =
           let
             _fantasque = "Fantasque Sans Mono";
-            _codeNewRoman = "CodeNewRoman Nerd Font";
-            mononoki = "mononoki";
+            _mononoki = "mononoki";
+            codeNewRoman = "CodeNewRoman Nerd Font";
           in
           {
             size = 15.0;
             builtin_box_drawing = false;
 
             normal = {
-              family = mononoki;
+              family = codeNewRoman;
               style = "Regular";
             };
 
             bold = {
-              family = mononoki;
+              family = codeNewRoman;
               style = "Bold";
             };
 
             italic = {
-              family = mononoki;
+              family = codeNewRoman;
               style = "Italic";
             };
 
             bold_italic = {
-              family = mononoki;
+              family = codeNewRoman;
               style = "Bold Italic";
             };
           };
