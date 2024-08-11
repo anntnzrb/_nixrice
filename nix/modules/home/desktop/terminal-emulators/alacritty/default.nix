@@ -1,6 +1,5 @@
 { config
 , lib
-, pkgs
 , namespace
 , ...
 }:
@@ -23,29 +22,30 @@ with lib.${namespace}; {
         font =
           let
             _fantasque = "Fantasque Sans Mono";
-            codeNewRoman = "CodeNewRoman Nerd Font";
+            _codeNewRoman = "CodeNewRoman Nerd Font";
+            mononoki = "mononoki";
           in
           {
             size = 15.0;
             builtin_box_drawing = false;
 
             normal = {
-              family = codeNewRoman;
+              family = mononoki;
               style = "Regular";
             };
 
             bold = {
-              family = codeNewRoman;
+              family = mononoki;
               style = "Bold";
             };
 
             italic = {
-              family = codeNewRoman;
+              family = mononoki;
               style = "Italic";
             };
 
             bold_italic = {
-              family = codeNewRoman;
+              family = mononoki;
               style = "Bold Italic";
             };
           };
@@ -92,9 +92,5 @@ with lib.${namespace}; {
         };
       };
     };
-
-    home.packages = with pkgs; [
-      fantasque-sans-mono
-    ];
   };
 }
