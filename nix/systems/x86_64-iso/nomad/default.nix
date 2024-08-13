@@ -1,31 +1,33 @@
 { lib
 , pkgs
+, inputs
+, system
 , ...
 }:
 
 let
-  user = "guest";
+  user = "nixos";
+  pass = "nixos";
 in
 with lib.liberion; {
-  services.xserver = {
-    enable = true;
-
-    desktopManager.lxqt = on;
-
+  services = {
     displayManager = {
       autoLogin = {
         enable = true;
-        user = user;
+        inherit user;
       };
+    };
 
-      sessionCommands = ''
-        nm-applet &
-        pasystray &
-      '';
+    xserver = {
+      enable = true;
 
-      lightdm = {
-        enable = true;
-        greeters.slick = on;
+      desktopManager.xfce = on;
+
+      displayManager = {
+        lightdm = {
+          enable = true;
+          greeters.slick = on;
+        };
       };
     };
   };
@@ -43,32 +45,28 @@ with lib.liberion; {
     nixos = {
       user = {
         name = user;
-        initialPassword = "pass";
+        initialPassword = pass;
         isNormalUser = true;
         extraGroups = [ "wheel" ];
       };
 
       variables = {
         EDITOR = "nvim";
-        VISUAL = "emacs";
-
-        TERMINAL = "alacritty";
-        FILE = "pcmanfm";
       };
 
       systemPackages = with pkgs; [
         # tools
         git
-        gnumake
+        autorandr
 
         # terminal-emulators
         alacritty
-        xterm # fallback
+        kitty
+        xterm
 
         # editors
-        emacs
-        neovim
-        geany
+        inputs.neovim-annt.packages.${system}.neovim # vi-like
+        geany # gui
 
         # browsers
         firefox # gecko
