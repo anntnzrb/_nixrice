@@ -31,6 +31,7 @@ in
       syntaxHighlighting.enable = true;
 
       history = {
+        path = "${config.xdg.dataHome}/zsh_history";
         extended = true;
         size = 5000;
         ignorePatterns = [
