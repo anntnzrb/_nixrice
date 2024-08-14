@@ -71,7 +71,7 @@ nix-flake-update-all:
 
 # update a single flake input
 nix-flake-update *ARGS:
-    nix flake lock --update-input {{ARGS}}
+    nix flake update {{ARGS}}
     git add flake.lock && git commit -m 'chore(flake): update lockfile ({{ARGS}})'
 
 # fmt
