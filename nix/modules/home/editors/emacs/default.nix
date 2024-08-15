@@ -8,9 +8,10 @@ let
 
   packages = {
     dependencies = with pkgs; [
-      mlocate # M-x locate
       fd
       (ripgrep.override { withPCRE2 = true; })
+    ] ++ lib.optional (!pkgs.stdenv.isDarwin) [
+      mlocate # M-x locate
     ];
 
     emacsPkgs = with pkgs.emacsPackages; [
@@ -53,7 +54,7 @@ in
       package = pkgs.emacs29.override {
         withGTK3 = true;
         withGTK2 = false;
-        withPgtk = cfg.pgtk;
+        withPgtk = cfg.pgtk && !pkgs.stdenv.isDarwin;
         withNativeCompilation = true; # emacs28+
         withTreeSitter = true; # emacs29+
         withSQLite3 = true;
@@ -63,12 +64,6 @@ in
     home = {
       sessionPath = [ "${config.xdg.configHome}/emacs/bin" ];
       packages = with packages; emacsPkgs ++ dependencies ++ extras ++ dicts;
-    };
-
-    services.sxhkd = {
-      keybindings = {
-        "super + w ; e" = "emacs";
-      };
     };
   };
 }
