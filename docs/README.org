@@ -52,7 +52,7 @@ deal with previously. To accomplish this, I followed *LearnLinuxTV*'s excellent
 [[https://youtube.com/playlist?list=PLT98CRl2KxKEUHie1m24-wkyHpEsa4Y70&si=O5xxvPiCyK_C1m7P][playlist]] on the matter.
 
 # TODO: finish
-Around mid-late 2022 I entered the world of [[https://nixos.org/][NixOS]], ...
+Around mid-late 2022 I entered the world of [[https://nixos.org/][NixOS]], [*TO BE CONTINUED*]
 
 #+begin_quote
 I encourage the reader to browse through this repository's commit history to see
