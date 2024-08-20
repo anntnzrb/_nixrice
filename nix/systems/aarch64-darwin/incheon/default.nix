@@ -17,7 +17,7 @@
     };
 
     services = {
-      yabai = on;
+      yabai = off;
     };
 
     homebrew = {
