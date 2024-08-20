@@ -10,7 +10,7 @@
 
   home.packages = with pkgs; [
     aldente
-    raycast
+    #raycast
   ];
 
   liberion = with lib.${namespace}; {
