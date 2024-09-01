@@ -31,8 +31,6 @@ with lib.${namespace}; {
       fastfetch = on;
       fzf = on;
       simple-mtpfs = on;
-      tldr = on;
-      yt-dlp = on;
       zoxide = on;
     };
 
