@@ -12,6 +12,7 @@ in
   options.${namespace}.darwin = with lib.liberion; with lib.types; {
     user = {
       name = mkOpt' str "annt";
+      authorizedKeys = mkOpt' (listOf singleLineStr) [ ];
     };
   };
 
@@ -34,6 +35,7 @@ in
 
     users.users.${cfg.user.name} = {
       inherit (cfg.user) name;
+      openssh.authorizedKeys.keys = cfg.user.authorizedKeys;
     };
 
     system = {

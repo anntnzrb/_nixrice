@@ -1,13 +1,14 @@
 { config
 , lib
 , format
+, namespace
 , ...
 }:
 let
-  cfg = config.liberion.network.ssh;
+  cfg = config.${namespace}.network.ssh;
 in
 {
-  options.liberion.network.ssh = with lib.liberion; {
+  options.${namespace}.network.ssh = with lib.${namespace}; {
     enable = mkOptBool';
   };
 
