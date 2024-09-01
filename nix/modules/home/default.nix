@@ -27,7 +27,7 @@ in
       stateVersion = "22.05";
 
       # disable "Last Login..." preliminary message on OSX
-      file.".hushlogin".text = "";
+      file.".hushlogin".text = lib.mkIf pkgs.stdenv.isDarwin "";
     };
 
     systemd.user.startServices = "sd-switch";
