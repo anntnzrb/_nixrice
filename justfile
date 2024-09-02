@@ -52,7 +52,7 @@ nix-clean:
 
 # attempt to repair the nix store
 nix-repair: nix-clean
-    sudo nix store verify --all --recursive --refresh --repair --no-trust
+    sudo nix-store --verify --check-contents --repair
     just nix-clean
 
 # -----------------------------------------------------------------------------
