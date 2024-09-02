@@ -30,6 +30,7 @@
         lazygit = on;
       };
 
+      aider-chat = on;
       btop = on;
       direnv = on;
       fastfetch = on;
