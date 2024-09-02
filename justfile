@@ -11,11 +11,11 @@ nixos-build:
 
 # build & activate the new NixOS configuration on next boot
 nixos-boot: nixos-build
-	nixos-rebuild switch --use-remote-sudo --flake .#
+	nixos-rebuild boot --use-remote-sudo --flake .#
 
 # build & activate the NixOS configuration now
 nixos-switch: nixos-build
-	nixos-rebuild boot --use-remote-sudo --flake .#
+	nixos-rebuild switch --use-remote-sudo --flake .#
 
 # -----------------------------------------------------------------------------
 # darwin
