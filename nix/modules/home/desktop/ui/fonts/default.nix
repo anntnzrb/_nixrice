@@ -15,17 +15,22 @@ in
     fonts.fontconfig.enable = true;
 
     home.packages = with pkgs; [
-      apl386
-      dejavu_fonts
-      font-awesome
-      mononoki
-      nerdfonts
-      noto-fonts-color-emoji
-
-      iosevka-comfy.comfy
-      iosevka-comfy.comfy-duo
-      iosevka-comfy.comfy-motion
-      iosevka-comfy.comfy-motion-duo
+      bqn386
+      font-awesome_6
+      (nerdfonts.override {
+        fonts = [
+          "CodeNewRoman"
+          "FantasqueSansMono"
+          "FiraCode"
+          "Inconsolata"
+          "JetBrainsMono"
+          "Mononoki"
+          "Overpass"
+          "UbuntuMono"
+          "VictorMono"
+          "ZedMono"
+        ];
+      })
     ];
   };
 }
