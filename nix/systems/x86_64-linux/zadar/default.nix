@@ -1,10 +1,17 @@
 { lib
 , pkgs
+, inputs
 , ...
 }:
 
 {
-  imports = [ ./hardware ];
+  # TODO: refactor when ollama is off unstable
+  disabledModules = [ "services/misc/ollama.nix" ];
+  imports = [ ./hardware ]
+    ++ [
+    (import (inputs.nixpkgs-unstable
+      + "/nixos/modules/services/misc/ollama.nix"))
+  ];
 
   liberion = with lib.liberion; {
     nixos = {
@@ -35,4 +42,23 @@
   };
 
   console.font = "${pkgs.terminus_font}/share/fonts/consolefonts/ter-v8n.psf.gz";
+
+  services = {
+    logind = {
+      lidSwitch = "ignore";
+      lidSwitchDocked = "ignore";
+      lidSwitchExternalPower = "ignore";
+    };
+
+    ollama = {
+      enable = true;
+      package = pkgs.ollama-cuda;
+
+      acceleration = "cuda";
+      port = 11434;
+      loadModels = [
+        "llama3.1:8b"
+      ];
+    };
+  };
 }
