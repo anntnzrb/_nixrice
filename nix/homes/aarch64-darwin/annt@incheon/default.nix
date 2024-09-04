@@ -20,7 +20,10 @@
       zsh = {
         enable = true;
         prompt.starship = on;
-        zellij = on;
+        zellij = {
+          enable = true;
+          enableZshIntegration = false;
+        };
       };
     };
 
