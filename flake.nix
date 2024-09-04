@@ -5,9 +5,9 @@
     # -------------------------------------------------------------------------
     # nix
     # -------------------------------------------------------------------------
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/release-24.05";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/release-24.05";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     # user environment manager
     home-manager.url = "github:nix-community/home-manager/release-24.05"; # NOTE: match nixpkgs
