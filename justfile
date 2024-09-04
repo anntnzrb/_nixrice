@@ -48,12 +48,14 @@ wsl-switch: wsl-build
 nix-clean:
     sudo nix-collect-garbage --max-jobs auto --cores 0 --delete-old
     sudo nix store gc
+
+# optimise the nix store
+nix-optimise: nix-clean
     sudo nix store optimise
 
 # attempt to repair the nix store
-nix-repair: nix-clean
+nix-repair: nix-optimise
     sudo nix-store --verify --check-contents --repair
-    just nix-clean
 
 # -----------------------------------------------------------------------------
 # nixos-generators
