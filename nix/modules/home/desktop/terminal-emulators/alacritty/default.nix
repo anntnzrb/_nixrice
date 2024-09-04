@@ -27,7 +27,7 @@ with lib.${namespace}; {
             firaCode-mono = "FiraCode Nerd Font Mono";
           in
           {
-            size = 15.0;
+            size = 14.0;
             builtin_box_drawing = false;
 
             normal = {
