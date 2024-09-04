@@ -16,7 +16,6 @@ in
 
     zellij = {
       enable = mkOptBool';
-      enableBashIntegration = mkOptEnabled';
       enableZshIntegration = mkOptEnabled';
     };
   };
@@ -56,7 +55,7 @@ in
       };
 
       zellij = {
-        inherit (cfg.zellij) enable enableBashIntegration enableZshIntegration;
+        inherit (cfg.zellij) enable enableZshIntegration;
       };
     };
   };
