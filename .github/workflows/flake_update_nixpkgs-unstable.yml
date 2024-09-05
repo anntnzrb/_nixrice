@@ -1,4 +1,4 @@
-name: Nix Flake Update
+name: Nix Flake Input Update (nixpkgs-unstable)
 
 on:
   workflow_dispatch: # manual triggering
