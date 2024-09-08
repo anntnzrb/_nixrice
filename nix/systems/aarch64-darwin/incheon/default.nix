@@ -35,6 +35,8 @@
           "chatgpt"
           "firefox"
           "whatsapp"
+          "obs"
+          "docker"
 
           # dev
           "visual-studio-code"
