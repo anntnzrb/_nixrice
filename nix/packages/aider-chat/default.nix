@@ -10,12 +10,6 @@ let
     self = python3;
     packageOverrides = _: super: {
       tree-sitter = super.tree-sitter_0_21;
-      #fastapi = super.fastapi.overridePythonAttrs (_: {
-      #  # Flaky test:
-      #  #     ResourceWarning: Unclosed <MemoryObjectSendStream>
-      #  # Unclear whether it's flaky in general or only in this overridden package set.
-      #  doCheck = false;
-      #});
     };
   };
   version = "0.55.0";
