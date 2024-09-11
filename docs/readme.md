@@ -10,7 +10,7 @@ sharing is encouraged.
 
 ## Introduction
 
-The journey begins around 2019-ish, back when I was a complete novice in the
+The journey begins around _2019_-ish, back when I was a complete novice in the
 _\*nix_ world. The way I used to manage my configurations originally was by
 emulating the `~/` directory structure in the git repository; plain `cp`.
 _Luke Smith_ was the individual who introduced me the _\*nix_ world via his
@@ -34,7 +34,7 @@ farm manager. It was nice being able to edit the managed configuration files
 the normal way to also affecting the source files.
 
 _Stow_ did not last long before I tried [chezmoi](https://www.chezmoi.io) for
-even less time. It offered me everything /Stow/ did but with the added benefit
+even less time. It offered me everything _Stow_ did but with the added benefit
 of being able to use placeholders and templates, among other few things.
 
 I settled using [Ansible]([https://www.ansible.com) for a while, which is a
@@ -50,7 +50,7 @@ had to deal with previously. To accomplish this, I followed _LearnLinuxTV_'s
 excellent
 [playlist]([https://youtube.com/playlist?list=PLT98CRl2KxKEUHie1m24-wkyHpEsa4Y70&si=O5xxvPiCyK_C1m7P) on the matter.
 
-Around mid-late 2022 I entered the world of [NixOS](https://nixos.org),
+Around mid-late _2022_ I entered the world of [NixOS](https://nixos.org),
 ( ... ) [**TO BE CONTINUED**]
 
 > I encourage the reader to browse through this repository's commit history to see
