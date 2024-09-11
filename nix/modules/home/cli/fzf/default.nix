@@ -14,7 +14,7 @@ in
   config = with lib; mkIf cfg.enable {
     programs.fzf = with pkgs;
       let
-        catCmd = "${getExe bar} --color=auto -P";
+        catCmd = "${getExe bat} --color=auto -P";
         treeCmd = "${getExe eza} --color=automatic --icons -T";
       in
       rec {
