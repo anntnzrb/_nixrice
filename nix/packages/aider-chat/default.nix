@@ -12,7 +12,7 @@ let
       tree-sitter = super.tree-sitter_0_21;
     };
   };
-  version = "0.55.0";
+  version = "0.56.0";
 in
 python3.pkgs.buildPythonApplication {
   pname = "aider-chat";
@@ -23,7 +23,7 @@ python3.pkgs.buildPythonApplication {
     owner = "paul-gauthier";
     repo = "aider";
     rev = "refs/tags/v${version}";
-    hash = "sha256-/BTs4vPg/iwi4bLxctmgLLZLexnRe4w9mHKsmq31hvM=";
+    hash = "sha256-e0Fqj67vYt41Zbr1FN2fuLp6cHRius8RtacBHLgB9dM=";
   };
 
   build-system = with python3.pkgs; [ setuptools-scm ];
