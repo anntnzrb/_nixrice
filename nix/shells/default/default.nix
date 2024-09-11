@@ -1,7 +1,7 @@
 { pkgs
 , ...
 }:
-pkgs.mkShell {
+pkgs.mkShellNoCC {
   name = "liberion-shell";
 
   nativeBuildInputs = with pkgs; [
