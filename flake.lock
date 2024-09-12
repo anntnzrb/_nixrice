@@ -418,6 +418,22 @@
         "type": "github"
       }
     },
+    "nixpkgs_4": {
+      "locked": {
+        "lastModified": 1726108120,
+        "narHash": "sha256-Ji5wO1lLG99grI0qCRb6FyRPpH9tfdfD1QP/r7IlgfM=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "111ed8812c10d7dc3017de46cbf509600c93f551",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixvim": {
       "inputs": {
         "devshell": [
@@ -466,6 +482,28 @@
         "type": "github"
       }
     },
+    "nurpkgs": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_4",
+        "systems": [
+          "systems"
+        ]
+      },
+      "locked": {
+        "lastModified": 1726158845,
+        "narHash": "sha256-m7vHS5dBw5FXXR7Yq3Pv+KLpf/40REIYsT11Vl3y3+A=",
+        "owner": "anntnzrb",
+        "repo": "nurpkgs",
+        "rev": "ddd75683b65a9bf6558288c98ff08d9e4df85a05",
+        "type": "github"
+      },
+      "original": {
+        "owner": "anntnzrb",
+        "ref": "main",
+        "repo": "nurpkgs",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "darwin": "darwin",
@@ -481,6 +519,7 @@
         "nixpkgs": "nixpkgs_3",
         "nixpkgs-stable": "nixpkgs-stable",
         "nixpkgs-unstable": "nixpkgs-unstable",
+        "nurpkgs": "nurpkgs",
         "snowfall-lib": "snowfall-lib",
         "systems": "systems_4"
       }
