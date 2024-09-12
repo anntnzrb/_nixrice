@@ -9,6 +9,10 @@
     nixpkgs-stable.url = "github:nixos/nixpkgs/release-24.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
+    # self pkgs
+    nurpkgs.url = "github:anntnzrb/nurpkgs/main";
+    nurpkgs.inputs.systems.follows = "systems";
+
     # user environment manager
     home-manager.url = "github:nix-community/home-manager/release-24.05"; # NOTE: match nixpkgs
     home-manager.inputs.nixpkgs.follows = "nixpkgs-stable";
