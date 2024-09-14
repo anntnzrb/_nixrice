@@ -46,6 +46,7 @@ in
         cp = "!f() { git commit -m \"`date '+%F :: %T (%Z)'`\" ; git push; }; f";
         ac = "!f() { git add -A ; git commit -am \"`date '+%F :: %T (%Z)'`\"; }; f";
         acp = "!f() { git add -A ; git commit -am \"`date '+%F :: %T (%Z)'`\" ; git push; }; f";
+        srp = "!f() { git diff --quiet && git diff --cached --quiet || git stash push -m \"local\" && git rebase --merge && git stash pop; }; f";
       };
     };
 
