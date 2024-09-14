@@ -24,7 +24,7 @@ in
       substituters = [
         "https://nix-community.cachix.org"
         "https://devenv.cachix.org"
-        "anntnzrb.cachix.org"
+        "https://anntnzrb.cachix.org"
       ];
 
       trusted-public-keys = [
