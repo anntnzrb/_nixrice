@@ -41,11 +41,10 @@ in
         st = "status -sb";
 
         # function-aliases
-        wipe = "!f() { git reset --hard && git clean -fdx }; f";
+        nuke = "!f() { git reset --hard && git clean -fdx }; f";
 
-        cp = "!f() { git commit -m \"`date '+%F :: %T (%Z)'`\" ; git push; }; f";
-        ac = "!f() { git add -A ; git commit -am \"`date '+%F :: %T (%Z)'`\"; }; f";
-        acp = "!f() { git add -A ; git commit -am \"`date '+%F :: %T (%Z)'`\" ; git push; }; f";
+        qc = "!f() { git commit -m \"`date '+%F :: %T (%Z)'`\" }; f";
+
         srp = "!f() { git diff --quiet && git diff --cached --quiet || git stash push -m \"local\" && git rebase --merge && git stash pop; }; f";
       };
     };
