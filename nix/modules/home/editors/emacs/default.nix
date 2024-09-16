@@ -10,8 +10,6 @@ let
     dependencies = with pkgs; [
       fd
       (ripgrep.override { withPCRE2 = true; })
-    ] ++ lib.optional (!pkgs.stdenv.isDarwin) [
-      mlocate # M-x locate
     ];
 
     emacsPkgs = with pkgs.emacsPackages; [
