@@ -78,16 +78,11 @@
         in
         {
           namespace = codeName;
-
-          meta = {
-            name = codeName;
-            title = codeName;
-          };
+          meta.name = codeName;
+          meta.title = codeName;
         };
 
-      channels-config = {
-        allowUnfree = true;
-      };
+      channels-config.allowUnfree = true;
 
       outputs-builder = channels: { formatter = channels.nixpkgs.nixpkgs-fmt; };
     };
