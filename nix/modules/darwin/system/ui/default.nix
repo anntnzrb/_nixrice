@@ -19,6 +19,7 @@ in
     system.defaults = {
       NSGlobalDomain = {
         AppleInterfaceStyle = "Dark";
+        AppleFontSmoothing = 2;
 
         # menu bar
         _HIHideMenuBar = cfg.menuBar.hide;
