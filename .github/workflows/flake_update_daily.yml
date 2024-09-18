@@ -31,7 +31,7 @@ jobs:
       - name: Update Flake Inputs
         run: |
           for input in $NIX_INPUTS; do
-            nix flake update $input --commit-lock-file --option commit-lockfile-summary "chore(flake): update input ($input)"
+            nix flake update "$input" --commit-lock-file --option commit-lockfile-summary "chore(flake): update input ($input)"
           done
 
       - name: Push Updates

@@ -1,54 +1,65 @@
 * {
-    border: none;
-    border-radius: 0;
-    font-family: Iosevka Comfy Motion;
-    font-size: 16px;
-    min-height: 0;
-    margin-top: 1px;
+  border: none;
+  border-radius: 0;
+  font-family: Iosevka Comfy Motion;
+  font-size: 16px;
+  min-height: 0;
+  margin-top: 1px;
 }
 
 window#waybar {
-    background: rgba(0,0,0,0);
-    color: #ffffff;
+  background: rgba(0, 0, 0, 0);
+  color: #ffffff;
 }
 
 window#waybar.hidden {
-    opacity: 0.0;
+  opacity: 0;
 }
 
 #workspaces {
-    background-color: #282a36;
-    border-radius: 20px;
-    padding: 0 15px;
+  background-color: #282a36;
+  border-radius: 20px;
+  padding: 0 15px;
 }
 
 #workspaces button {
-    margin: 0 5px;
-    padding: 0;
-    background: transparent;
-    color: #ffffff;
-    border-bottom: 2px solid transparent;
+  margin: 0 5px;
+  padding: 0;
+  background: transparent;
+  color: #ffffff;
+  border-bottom: 2px solid transparent;
 }
 
 #workspaces button.focused {
-    border-bottom: 2px solid #ff79c6;
-    color: #ff79c6;
+  border-bottom: 2px solid #ff79c6;
+  color: #ff79c6;
 }
 
 #workspaces button.urgent {
-    color: #ff5555;
+  color: #ff5555;
 }
 
 #workspaces button:hover {
-    box-shadow: none;
-    text-shadow: none;
-    border-bottom: 2px solid #ff79c6;
+  box-shadow: none;
+  text-shadow: none;
+  border-bottom: 2px solid #ff79c6;
 }
 
-#clock, #battery, #cpu, #memory, #temperature, #backlight, #network, #pulseaudio, #custom-media, #tray, #mode, #idle_inhibitor {
-    padding: 0 20px;
-    margin: 0 2px;
-    background-color: #282a36;
-    color: #ffffff;
-    border-radius: 20px;
+#clock,
+#battery,
+#cpu,
+#memory,
+#temperature,
+#backlight,
+#network,
+#pulseaudio,
+#custom-media,
+#tray,
+#mode,
+#idle_inhibitor {
+  padding: 0 20px;
+  margin: 0 2px;
+  background-color: #282a36;
+  color: #ffffff;
+  border-radius: 20px;
 }
