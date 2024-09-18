@@ -1,4 +1,4 @@
- {
+{
   description = "Liberion's Core";
 
   inputs = {
@@ -35,6 +35,10 @@
     pre-commit-hooks.inputs.nixpkgs-stable.follows = "nixpkgs-stable";
     pre-commit-hooks.inputs.flake-compat.follows = "flake-compat";
     pre-commit-hooks.inputs.gitignore.follows = "";
+
+    # tree-fmt
+    treefmt-nix.url = "github:numtide/treefmt-nix/main";
+    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
 
     # -------------------------------------------------------------------------
     # darwin
@@ -91,6 +95,8 @@
 
       channels-config.allowUnfree = true;
 
-      outputs-builder = channels: { formatter = channels.nixpkgs.nixpkgs-fmt; };
+      outputs-builder = channels: {
+        formatter = inputs.treefmt-nix.lib.mkWrapper channels.nixpkgs (import ./nix/formatters/treefmt-nix);
+      };
     };
 }
