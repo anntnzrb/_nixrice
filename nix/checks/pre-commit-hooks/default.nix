@@ -6,7 +6,9 @@ inputs.pre-commit-hooks.lib.${pkgs.system}.run {
   src = inputs.self;
 
   hooks = {
+    flake-checker.enable = true;
     actionlint.enable = true;
+
     deadnix = {
       enable = true;
       settings = {
