@@ -11,13 +11,10 @@ permissions:
 jobs:
   flake-update:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v14
+      - uses: DeterminateSystems/nix-installer-action@v14
 
       - name: Configure Git
         run: |
@@ -29,6 +26,4 @@ jobs:
           nix flake update --commit-lock-file --option commit-lockfile-summary 'chore(flake): update lockfile'
 
       - name: Push Updates
-        run: |
-          git pull --rebase --autostash
-          git push
+        run: git pull --rebase --autostash && git push
