@@ -547,7 +547,8 @@
         "nurpkgs": "nurpkgs",
         "pre-commit-hooks": "pre-commit-hooks",
         "snowfall-lib": "snowfall-lib",
-        "systems": "systems_4"
+        "systems": "systems_4",
+        "treefmt-nix": "treefmt-nix"
       }
     },
     "snowfall-lib": {
@@ -634,6 +635,27 @@
         "owner": "nix-systems",
         "ref": "main",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "treefmt-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1726560002,
+        "narHash": "sha256-3zr63B6CDZ8FnzrRUvNZlsxLmFjaNyis6R91GjUCIhU=",
+        "owner": "numtide",
+        "repo": "treefmt-nix",
+        "rev": "77dd46bf0ec7febbc0022bb6e4449cdc49af95d7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "ref": "main",
+        "repo": "treefmt-nix",
         "type": "github"
       }
     }
