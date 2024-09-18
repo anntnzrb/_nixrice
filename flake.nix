@@ -1,4 +1,4 @@
-{
+ {
   description = "Liberion's Core";
 
   inputs = {
@@ -28,6 +28,13 @@
     # generate images (iso, sd, amazon, ...)
     nixos-generators.url = "github:nix-community/nixos-generators/master";
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs-stable";
+
+    # pre-commit
+    pre-commit-hooks.url = "github:cachix/git-hooks.nix";
+    pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    pre-commit-hooks.inputs.nixpkgs-stable.follows = "nixpkgs-stable";
+    pre-commit-hooks.inputs.flake-compat.follows = "flake-compat";
+    pre-commit-hooks.inputs.gitignore.follows = "";
 
     # -------------------------------------------------------------------------
     # darwin
