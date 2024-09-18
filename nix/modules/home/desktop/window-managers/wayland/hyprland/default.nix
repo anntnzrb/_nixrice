@@ -35,26 +35,22 @@ in
 
         exec-once = cfg.autoStartApps ++ (lib.optional cfg.waybar.enable "waybar");
 
-        bind = [
-          # "$mod ALT, Q, exit"
-        ] ++
-        (
+        bind =
           let
             numWorkspaces = 9;
           in
           with builtins; concatMap
             (i:
               let
-                ws = toString (i);
-                workspaceNumber = toString (i);
+                ws = toString i;
+                workspaceNumber = toString i;
               in
               [
                 "$mod, ${ws}, workspace, ${workspaceNumber}"
                 "$mod SHIFT, ${ws}, movetoworkspace, ${workspaceNumber}"
               ]
             )
-            (genList (x: x + 1) numWorkspaces)
-        );
+            (genList (x: x + 1) numWorkspaces);
       };
     };
 

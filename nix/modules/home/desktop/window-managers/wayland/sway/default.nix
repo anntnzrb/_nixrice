@@ -52,7 +52,7 @@ with lib; {
         right = "l";
         left = "h";
 
-        startup = [ ] ++ map
+        startup = map
           (cmd: {
             command = cmd;
           })
