@@ -27,7 +27,7 @@ in
       cursorTheme = {
         name = cfg.cursor.theme;
         package = pkgs.apple-cursor;
-        size = cfg.cursor.size;
+        inherit (cfg.cursor) size;
       };
 
       iconTheme = {
