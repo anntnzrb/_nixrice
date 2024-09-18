@@ -2,7 +2,7 @@
 , ...
 }:
 let
-  cfg = config.liberion.boot;
+  _cfg = config.liberion.boot;
 in
 {
   config = {
