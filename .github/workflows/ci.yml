@@ -1,0 +1,21 @@
+name: "Nix CI"
+
+on:
+  workflow_dispatch: # manual triggering
+  pull_request:
+  push:
+    branches: ['dev']
+
+jobs:
+  ci:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@v14
+
+      - name: Run CI
+        run: nix flake check .
