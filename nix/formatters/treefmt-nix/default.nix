@@ -1,7 +1,7 @@
 {
   projectRootFile = "flake.nix";
   programs = {
-    nixpkgs-fmt.enable = true;
+    nixfmt-rfc-style.enable = true;
     actionlint.enable = true;
 
     deadnix = {
