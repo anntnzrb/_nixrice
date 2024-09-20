@@ -1,12 +1,15 @@
-{ inputs
-, pkgs
-, ...
+{
+  inputs,
+  pkgs,
+  ...
 }:
 inputs.pre-commit-hooks.lib.${pkgs.system}.run {
   src = inputs.self;
 
   hooks = {
+    nixfmt-rfc-style.enable = true;
     flake-checker.enable = true;
+
     actionlint.enable = true;
 
     deadnix = {
