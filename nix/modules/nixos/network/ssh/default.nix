@@ -1,8 +1,9 @@
-{ config
-, lib
-, format
-, namespace
-, ...
+{
+  config,
+  lib,
+  format,
+  namespace,
+  ...
 }:
 let
   cfg = config.${namespace}.network.ssh;

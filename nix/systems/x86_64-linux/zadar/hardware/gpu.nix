@@ -1,5 +1,4 @@
-_:
-{
+_: {
   services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware = {
@@ -16,4 +15,3 @@ _:
     };
   };
 }
-

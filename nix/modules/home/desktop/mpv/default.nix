@@ -1,7 +1,8 @@
-{ config
-, lib
-, pkgs
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  ...
 }:
 let
   cfg = config.liberion.desktop.mpv;
@@ -50,8 +51,8 @@ in
 
           "[" = disabled;
           "]" = disabled;
-          "<" = speed (-0.05);
-          ">" = speed 0.05;
+          "<" = speed (-5.0e-2);
+          ">" = speed 5.0e-2;
 
           "DOWN" = vol (-2);
           "UP" = vol 2;

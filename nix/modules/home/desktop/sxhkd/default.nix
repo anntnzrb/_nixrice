@@ -1,25 +1,33 @@
-{ lib
-, pkgs
-, config
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  ...
 }:
 let
   cfg = config.liberion.desktop.sxhkd;
 
 in
 {
-  options.liberion.desktop.sxhkd = with lib.liberion; with lib.types; {
-    enable = mkOptBool';
+  options.liberion.desktop.sxhkd =
+    with lib.liberion;
+    with lib.types;
+    {
+      enable = mkOptBool';
 
-    timeout = mkOpt' ints.unsigned 3;
-    cancelKey = mkOpt' str "Escape";
-  };
+      timeout = mkOpt' ints.unsigned 3;
+      cancelKey = mkOpt' str "Escape";
+    };
 
   config = lib.mkIf cfg.enable {
     services.sxhkd = {
       enable = true;
 
-      extraOptions = [ "-m 1" "-t ${toString cfg.timeout}" "-a ${cfg.cancelKey}" ];
+      extraOptions = [
+        "-m 1"
+        "-t ${toString cfg.timeout}"
+        "-a ${cfg.cancelKey}"
+      ];
       keybindings = with config.home.sessionVariables; {
         "super + Return ; {Return}" = "${TERMINAL} {_}";
 
@@ -35,7 +43,9 @@ in
     };
 
     home.activation = {
-      reloadSxhkd = config.lib.dag.entryAfter [ "writeBoundary" ] "${pkgs.procps}/bin/pkill -USR1 sxhkd || :";
+      reloadSxhkd = config.lib.dag.entryAfter [
+        "writeBoundary"
+      ] "${pkgs.procps}/bin/pkill -USR1 sxhkd || :";
     };
   };
 }

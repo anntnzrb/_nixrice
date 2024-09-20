@@ -1,7 +1,8 @@
-{ config
-, lib
-, namespace
-, ...
+{
+  config,
+  lib,
+  namespace,
+  ...
 }:
 let
   cfg = config.${namespace}.cli.git;
@@ -49,12 +50,8 @@ in
       };
     };
 
-    programs.lazygit = lib.mkIf cfg.lazygit.enable {
-      enable = true;
-    };
+    programs.lazygit = lib.mkIf cfg.lazygit.enable { enable = true; };
 
-    home.shellAliases = lib.mkIf cfg.lazygit.enable {
-      gg = "lazygit";
-    };
+    home.shellAliases = lib.mkIf cfg.lazygit.enable { gg = "lazygit"; };
   };
 }

@@ -1,3 +1,1 @@
-_: {
-  hardware.cpu.intel.updateMicrocode = true;
-}
+_: { hardware.cpu.intel.updateMicrocode = true; }

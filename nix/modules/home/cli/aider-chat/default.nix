@@ -1,9 +1,10 @@
-{ config
-, lib
-, system
-, namespace
-, inputs
-, ...
+{
+  config,
+  lib,
+  system,
+  namespace,
+  inputs,
+  ...
 }:
 let
   cfg = config.${namespace}.cli.aider-chat;

@@ -1,25 +1,32 @@
-{ lib
-, config
-, pkgs
-, system
-, namespace
-, ...
+{
+  lib,
+  config,
+  pkgs,
+  system,
+  namespace,
+  ...
 }:
 let
   cfg = config.${namespace}.darwin;
 in
 {
-  options.${namespace}.darwin = with lib.liberion; with lib.types; {
-    user = {
-      name = mkOpt' str "annt";
-      authorizedKeys = mkOpt' (listOf singleLineStr) [ ];
+  options.${namespace}.darwin =
+    with lib.liberion;
+    with lib.types;
+    {
+      user = {
+        name = mkOpt' str "annt";
+        authorizedKeys = mkOpt' (listOf singleLineStr) [ ];
+      };
     };
-  };
 
   config = {
     nix.settings = {
       auto-optimise-store = true;
-      trusted-users = [ "root" "@admin" ];
+      trusted-users = [
+        "root"
+        "@admin"
+      ];
 
       substituters = [
         "https://nix-community.cachix.org"

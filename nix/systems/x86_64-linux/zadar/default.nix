@@ -1,17 +1,16 @@
-{ lib
-, pkgs
-, inputs
-, ...
+{
+  lib,
+  pkgs,
+  inputs,
+  ...
 }:
 
 {
   # TODO: refactor when ollama is off unstable
   disabledModules = [ "services/misc/ollama.nix" ];
-  imports = [ ./hardware ]
-    ++ [
-    (import (inputs.nixpkgs-unstable
-      + "/nixos/modules/services/misc/ollama.nix"))
-  ];
+  imports = [
+    ./hardware
+  ] ++ [ (import (inputs.nixpkgs-unstable + "/nixos/modules/services/misc/ollama.nix")) ];
 
   liberion = with lib.liberion; {
     nixos = {
@@ -56,9 +55,7 @@
 
       acceleration = "cuda";
       port = 11434;
-      loadModels = [
-        "llama3.1:8b"
-      ];
+      loadModels = [ "llama3.1:8b" ];
     };
   };
 }

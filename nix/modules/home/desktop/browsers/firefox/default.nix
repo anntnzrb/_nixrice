@@ -1,10 +1,11 @@
-{ config
-, inputs
-, lib
-, pkgs
-, system
-, namespace
-, ...
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  system,
+  namespace,
+  ...
 }:
 let
   cfg = config.${namespace}.desktop.browsers.firefox;
