@@ -1,8 +1,4 @@
-{
-  inputs,
-  pkgs,
-  ...
-}:
+{ inputs, pkgs, ... }:
 inputs.pre-commit-hooks.lib.${pkgs.system}.run {
   src = inputs.self;
 

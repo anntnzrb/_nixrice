@@ -1,8 +1,9 @@
-{ lib
-, pkgs
-, inputs
-, namespace
-, ...
+{
+  lib,
+  pkgs,
+  inputs,
+  namespace,
+  ...
 }:
 
 {

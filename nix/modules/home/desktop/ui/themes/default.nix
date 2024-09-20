@@ -1,23 +1,27 @@
-{ lib
-, config
-, pkgs
-, ...
+{
+  lib,
+  config,
+  pkgs,
+  ...
 }:
 let
   cfg = config.liberion.desktop.ui.themes;
 in
 {
-  options.liberion.desktop.ui.themes = with lib.liberion; with lib.types; {
-    enable = mkOptBool';
+  options.liberion.desktop.ui.themes =
+    with lib.liberion;
+    with lib.types;
+    {
+      enable = mkOptBool';
 
-    cursor = {
-      theme = mkOpt' str "macOS-BigSur";
-      size = mkOpt' ints.u8 28;
+      cursor = {
+        theme = mkOpt' str "macOS-BigSur";
+        size = mkOpt' ints.u8 28;
+      };
+
+      iconTheme = mkOpt' str "Papirus-Dark";
+      theme = mkOpt' str "Dracula";
     };
-
-    iconTheme = mkOpt' str "Papirus-Dark";
-    theme = mkOpt' str "Dracula";
-  };
 
   config = lib.mkIf cfg.enable {
     gtk = {

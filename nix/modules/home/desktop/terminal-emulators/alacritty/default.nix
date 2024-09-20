@@ -1,12 +1,14 @@
-{ config
-, lib
-, namespace
-, ...
+{
+  config,
+  lib,
+  namespace,
+  ...
 }:
 let
   cfg = config.${namespace}.desktop.terminal-emulators.alacritty;
 in
-with lib.${namespace}; {
+with lib.${namespace};
+{
   options.${namespace}.desktop.terminal-emulators.alacritty = {
     enable = mkOptBool';
   };
@@ -76,19 +78,37 @@ with lib.${namespace}; {
 
         keyboard.bindings = [
           # copy/paste
-          { key = "C"; mods = "Control|Shift"; action = "Copy"; }
-          { key = "V"; mods = "Control|Shift"; action = "Paste"; }
+          {
+            key = "C";
+            mods = "Control|Shift";
+            action = "Copy";
+          }
+          {
+            key = "V";
+            mods = "Control|Shift";
+            action = "Paste";
+          }
 
           # search
-          { key = "/"; mods = "Control"; action = "SearchForward"; }
+          {
+            key = "/";
+            mods = "Control";
+            action = "SearchForward";
+          }
         ];
 
         mouse = {
           hide_when_typing = true;
 
           bindings = [
-            { mouse = "Right"; action = "ExpandSelection"; }
-            { mouse = "Middle"; action = "PasteSelection"; }
+            {
+              mouse = "Right";
+              action = "ExpandSelection";
+            }
+            {
+              mouse = "Middle";
+              action = "PasteSelection";
+            }
           ];
         };
       };

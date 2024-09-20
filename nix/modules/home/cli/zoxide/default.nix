@@ -1,7 +1,4 @@
-{ config
-, lib
-, ...
-}:
+{ config, lib, ... }:
 let
   cfg = config.liberion.cli.zoxide;
 in
@@ -10,9 +7,11 @@ in
     enable = mkOptBool';
   };
 
-  config = with lib; mkIf cfg.enable {
-    programs.zoxide = {
-      enable = true;
+  config =
+    with lib;
+    mkIf cfg.enable {
+      programs.zoxide = {
+        enable = true;
+      };
     };
-  };
 }

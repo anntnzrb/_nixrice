@@ -1,9 +1,10 @@
-{ config
-, lib
-, namespace
-, system
-, inputs
-, ...
+{
+  config,
+  lib,
+  namespace,
+  system,
+  inputs,
+  ...
 }:
 let
   cfg = config.${namespace}.homebrew;
@@ -11,13 +12,16 @@ in
 {
   imports = [ inputs.nix-homebrew.darwinModules.nix-homebrew ];
 
-  options.${namespace}.homebrew = with lib.liberion; with lib.types; {
-    enable = mkOptBool';
+  options.${namespace}.homebrew =
+    with lib.liberion;
+    with lib.types;
+    {
+      enable = mkOptBool';
 
-    packages = {
-      casks = mkOpt' (listOf str) [ ];
+      packages = {
+        casks = mkOpt' (listOf str) [ ];
+      };
     };
-  };
 
   config = lib.mkIf cfg.enable {
     nix-homebrew = {

@@ -1,10 +1,12 @@
-{ pkgs
-, lib
-, namespace
-, ...
+{
+  pkgs,
+  lib,
+  namespace,
+  ...
 }:
 
-with lib.${namespace}; let
+with lib.${namespace};
+let
   autoStart = {
     defaults = [
       "nm-applet"
@@ -12,7 +14,9 @@ with lib.${namespace}; let
       "\${TERMINAL} -e btop"
     ];
 
-    xrandr = [ "xrandr --output HDMI-0 --primary --mode 1920x1080 --pos 0x0 --rate 75.000 --output HDMI-1-2 --mode 1920x1080 --pos 1920x0 --rate 60.000" ];
+    xrandr = [
+      "xrandr --output HDMI-0 --primary --mode 1920x1080 --pos 0x0 --rate 75.000 --output HDMI-1-2 --mode 1920x1080 --pos 1920x0 --rate 60.000"
+    ];
   };
 in
 {
@@ -133,7 +137,10 @@ in
             enable = false;
             waybar = on;
             autoStartApps = autoStart.defaults;
-            monitor = [ "HDMI-A-2, 1366x768, 1920x0, 1" "HDMI-A-3, 1920x1080, 0x0, 1" ];
+            monitor = [
+              "HDMI-A-2, 1366x768, 1920x0, 1"
+              "HDMI-A-3, 1920x1080, 0x0, 1"
+            ];
           };
         };
       };

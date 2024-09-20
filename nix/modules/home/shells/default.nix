@@ -1,31 +1,33 @@
-{ config
-, pkgs
-, lib
-, ...
+{
+  config,
+  pkgs,
+  lib,
+  ...
 }:
 let
   cfg = config.liberion.shells;
 in
 {
-  options.liberion.shells = with lib.liberion; with lib.types; {
-    defaults = {
-      enable = mkOptBool';
-    };
+  options.liberion.shells =
+    with lib.liberion;
+    with lib.types;
+    {
+      defaults = {
+        enable = mkOptBool';
+      };
 
-    sessionVariables = mkOpt' (attrsOf str) { };
+      sessionVariables = mkOpt' (attrsOf str) { };
 
-    altCoreUtils = {
-      enable = mkOptBool';
+      altCoreUtils = {
+        enable = mkOptBool';
+      };
     };
-  };
 
   config = with lib; {
     home = {
       sessionVariables =
         let
-          defaults = mkIf cfg.defaults.enable {
-            NIX_SHELL_PRESERVE_PROMPT = "1";
-          };
+          defaults = mkIf cfg.defaults.enable { NIX_SHELL_PRESERVE_PROMPT = "1"; };
         in
         mkMerge [
           { }
@@ -33,7 +35,8 @@ in
           cfg.sessionVariables
         ];
 
-      shellAliases = with pkgs;
+      shellAliases =
+        with pkgs;
         let
           defaults = mkIf cfg.defaults.enable {
             ".." = "cd ..";
@@ -80,13 +83,15 @@ in
           altCoreUtils
         ];
 
-      packages = with pkgs; mkIf cfg.altCoreUtils.enable [
-        bat
-        du-dust
-        eza
-        fd
-        (ripgrep.override { withPCRE2 = true; })
-      ];
+      packages =
+        with pkgs;
+        mkIf cfg.altCoreUtils.enable [
+          bat
+          du-dust
+          eza
+          fd
+          (ripgrep.override { withPCRE2 = true; })
+        ];
     };
   };
 }

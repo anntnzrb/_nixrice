@@ -1,15 +1,17 @@
-{ lib
-, pkgs
-, inputs
-, system
-, ...
+{
+  lib,
+  pkgs,
+  inputs,
+  system,
+  ...
 }:
 
 let
   user = "nixos";
   pass = "nixos";
 in
-with lib.liberion; {
+with lib.liberion;
+{
   services = {
     displayManager = {
       autoLogin = {

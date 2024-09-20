@@ -1,6 +1,1 @@
-{ channels
-, ...
-}:
-_final: _prev: {
-  inherit (channels.nixpkgs-unstable) ollama-cuda;
-}
+{ channels, ... }: _final: _prev: { inherit (channels.nixpkgs-unstable) ollama-cuda; }
