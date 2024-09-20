@@ -3,6 +3,7 @@
   programs = {
     nixfmt.enable = true;
     actionlint.enable = true;
+    just.enable = true;
 
     deadnix = {
       enable = true;
