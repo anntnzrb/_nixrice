@@ -82,5 +82,7 @@ in
       wget
       cachix
     ];
+
+    system.stateVersion = 4;
   };
 }
