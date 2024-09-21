@@ -2,48 +2,13 @@ let
   updateInterval = 24 * 60 * 60 * 7 * 1000; # 1 week in ms
 in
 {
-  "Arch Wiki" = {
-    definedAliases = [ "@aw" ];
-    urls = [
-      {
-        template = "https://wiki.archlinux.org/index.php";
-        params = [
-          {
-            name = "search";
-            value = "{searchTerms}";
-          }
-        ];
-      }
-    ];
-
-    iconUpdateURL = "https://wiki.archlinux.org/favicon.ico";
-    inherit updateInterval;
-  };
-
-  "GitHub" = {
-    definedAliases = [ "@gh" ];
-    urls = [
-      {
-        template = "https://github.com/search";
-        params = [
-          {
-            name = "q";
-            value = "{searchTerms}";
-          }
-          {
-            name = "type";
-            value = "code";
-          }
-        ];
-      }
-    ];
-
-    iconUpdateURL = "https://github.githubassets.com/favicons/favicon.png";
-    inherit updateInterval;
-  };
-
+  # ---------------------------------------------------------------------------
+  # nix
+  # ---------------------------------------------------------------------------
   "Nix Packages" = {
     definedAliases = [ "@nixp" ];
+    iconUpdateURL = "https://nixos.wiki/favicon.png";
+    inherit updateInterval;
     urls = [
       {
         template = "https://search.nixos.org/packages?channel=unstable";
@@ -59,13 +24,12 @@ in
         ];
       }
     ];
-
-    iconUpdateURL = "https://nixos.wiki/favicon.png";
-    inherit updateInterval;
   };
 
   "GitHub: nixpkgs" = {
     definedAliases = [ "@gnixp" ];
+    iconUpdateURL = "https://nixos.wiki/favicon.png";
+    inherit updateInterval;
     urls = [
       {
         template = "https://github.com/search";
@@ -82,13 +46,46 @@ in
         ];
       }
     ];
+  };
 
+  "NixOS Wiki" = {
+    definedAliases = [ "@nixw" ];
     iconUpdateURL = "https://nixos.wiki/favicon.png";
     inherit updateInterval;
+    urls = [
+      {
+        template = "https://nixos.wiki/index.php";
+        params = [
+          {
+            name = "search";
+            value = "{searchTerms}";
+          }
+        ];
+      }
+    ];
+  };
+
+  "Noogle" = {
+    definedAliases = [ "@noogle" ];
+    iconUpdateURL = "https://noogle.dev/favicon.png";
+    inherit updateInterval;
+    urls = [
+      {
+        template = "https://noogle.dev/q";
+        params = [
+          {
+            name = "term";
+            value = "{searchTerms}";
+          }
+        ];
+      }
+    ];
   };
 
   "GitHub: Home-Manager" = {
     definedAliases = [ "@gnixhm" ];
+    iconUpdateURL = "https://nixos.wiki/favicon.png";
+    inherit updateInterval;
     urls = [
       {
         template = "https://github.com/search";
@@ -105,16 +102,19 @@ in
         ];
       }
     ];
-
-    iconUpdateURL = "https://nixos.wiki/favicon.png";
-    inherit updateInterval;
   };
 
-  "NixOS Wiki" = {
-    definedAliases = [ "@nixw" ];
+  # ---------------------------------------------------------------------------
+  # misc
+  # ---------------------------------------------------------------------------
+
+  "Arch Wiki" = {
+    definedAliases = [ "@aw" ];
+    iconUpdateURL = "https://wiki.archlinux.org/favicon.ico";
+    inherit updateInterval;
     urls = [
       {
-        template = "https://nixos.wiki/index.php";
+        template = "https://wiki.archlinux.org/index.php";
         params = [
           {
             name = "search";
@@ -123,31 +123,33 @@ in
         ];
       }
     ];
-
-    iconUpdateURL = "https://nixos.wiki/favicon.png";
-    inherit updateInterval;
   };
 
-  "Noogle" = {
-    definedAliases = [ "@noogle" ];
+  "GitHub" = {
+    definedAliases = [ "@gh" ];
+    iconUpdateURL = "https://github.githubassets.com/favicons/favicon.png";
+    inherit updateInterval;
     urls = [
       {
-        template = "https://noogle.dev/q";
+        template = "https://github.com/search";
         params = [
           {
-            name = "term";
+            name = "q";
             value = "{searchTerms}";
+          }
+          {
+            name = "type";
+            value = "code";
           }
         ];
       }
     ];
-
-    iconUpdateURL = "https://noogle.dev/favicon.png";
-    inherit updateInterval;
   };
 
   "Hoogle" = {
     definedAliases = [ "@hoogle" ];
+    iconUpdateURL = "https://www.haskell.org/img/favicon.ico";
+    inherit updateInterval;
     urls = [
       {
         template = "https://hoogle.haskell.org";
@@ -160,8 +162,5 @@ in
         ];
       }
     ];
-
-    iconUpdateURL = "https://www.haskell.org/img/favicon.ico";
-    inherit updateInterval;
   };
 }
