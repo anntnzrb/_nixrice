@@ -1,0 +1,7 @@
+pull_request_rules:
+  - name: Merge when labeled as dependencies
+    description: Merge when PR is labeled as dependencies
+    conditions:
+      - label~=dependencies
+    actions:
+      merge:
