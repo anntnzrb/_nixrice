@@ -74,7 +74,7 @@ Around mid-late _2022_ I entered the world of [NixOS](https://nixos.org),
 
 ### Resources
 
-- [xero's dotfiles](https://github.com/xero/dotfiles)
+- [`xero`'s dotfiles](https://github.com/xero/dotfiles)
 - [Luke Smith's dotfiles](https://github.com/lukesmithxyz/voidrice)
 - [Derek Taylor's dotfiles](https://gitlab.com/dwt1/dotfiles)
 - [David Wilson's dotfiles](https://github.com/daviwil/dotfiles)
