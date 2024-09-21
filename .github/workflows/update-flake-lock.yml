@@ -1,0 +1,26 @@
+name: Nix Flake Lock Update
+on:
+  workflow_dispatch: # manual triggering
+  schedule:
+  - cron: "1 6 2 * *"
+  permissions:
+    pull-requests: write
+
+jobs:
+  update-lockfile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@v14
+
+      - name: Update Flake Lockfile
+        uses: DeterminateSystems/update-flake-lock@v24
+        with:
+          git-author-name: "anntnzrb"
+          git-author-email: "anntnzrb@proton.me"
+          git-committer-name: "github-actions[bot]"
+          git-committer-email: "github-actions[bot]@users.noreply.github.com"
+          pr-title: "chore(flake): update lockfile"
+          pr-labels: |
+            dependencies
