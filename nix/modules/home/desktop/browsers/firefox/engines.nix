@@ -1,5 +1,5 @@
 let
-  weekInMs = 24 * 60 * 60 * 7 * 1000;
+  updateInterval = 24 * 60 * 60 * 7 * 1000; # 1 week in ms
 in
 {
   "Arch Wiki" = {
@@ -17,7 +17,7 @@ in
     ];
 
     iconUpdateURL = "https://wiki.archlinux.org/favicon.ico";
-    updateInterval = weekInMs;
+    inherit updateInterval;
   };
 
   "GitHub" = {
@@ -39,7 +39,7 @@ in
     ];
 
     iconUpdateURL = "https://github.githubassets.com/favicons/favicon.png";
-    updateInterval = weekInMs;
+    inherit updateInterval;
   };
 
   "Nix Packages" = {
@@ -61,7 +61,7 @@ in
     ];
 
     iconUpdateURL = "https://nixos.wiki/favicon.png";
-    updateInterval = weekInMs;
+    inherit updateInterval;
   };
 
   "GitHub: nixpkgs" = {
@@ -84,7 +84,7 @@ in
     ];
 
     iconUpdateURL = "https://nixos.wiki/favicon.png";
-    updateInterval = weekInMs;
+    inherit updateInterval;
   };
 
   "GitHub: Home-Manager" = {
@@ -107,7 +107,7 @@ in
     ];
 
     iconUpdateURL = "https://nixos.wiki/favicon.png";
-    updateInterval = weekInMs;
+    inherit updateInterval;
   };
 
   "NixOS Wiki" = {
@@ -125,8 +125,27 @@ in
     ];
 
     iconUpdateURL = "https://nixos.wiki/favicon.png";
-    updateInterval = weekInMs;
+    inherit updateInterval;
   };
+
+  "Noogle" = {
+    definedAliases = [ "@noogle" ];
+    urls = [
+      {
+        template = "https://noogle.dev/q";
+        params = [
+          {
+            name = "term";
+            value = "{searchTerms}";
+          }
+        ];
+      }
+    ];
+
+    iconUpdateURL = "https://noogle.dev/favicon.png";
+    inherit updateInterval;
+  };
+
   "Hoogle" = {
     definedAliases = [ "@hoogle" ];
     urls = [
@@ -143,6 +162,6 @@ in
     ];
 
     iconUpdateURL = "https://www.haskell.org/img/favicon.ico";
-    updateInterval = weekInMs;
+    inherit updateInterval;
   };
 }
