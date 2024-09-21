@@ -16,8 +16,7 @@
 
   liberion = with lib.${namespace}; {
     shells = {
-      defaults = on;
-      altCoreUtils = on;
+      aliases.defaults = on;
       zsh = {
         enable = true;
         prompt.starship = on;

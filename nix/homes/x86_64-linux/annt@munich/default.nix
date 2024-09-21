@@ -35,9 +35,7 @@ in
     };
 
     shells = {
-      defaults = on;
-      altCoreUtils = on;
-
+      aliases.defaults = on;
       sessionVariables = {
         BROWSER = "chromium";
         EDITOR = "nvim";

@@ -4,9 +4,7 @@ with lib.${namespace};
 {
   liberion = {
     shells = {
-      defaults = on;
-      altCoreUtils = on;
-
+      aliases.defaults = on;
       sessionVariables = {
         EDITOR = "nvim";
       };

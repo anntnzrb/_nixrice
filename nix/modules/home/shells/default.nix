@@ -2,96 +2,85 @@
   config,
   pkgs,
   lib,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.shells;
+  cfg = config.${namespace}.shells;
+
+  cmd = rec {
+    eza = {
+      flags = "--color=auto --group-directories-first --icons";
+      bin = "${lib.getExe pkgs.eza} ${eza.flags}";
+    };
+
+    bat = {
+      flags = "--color=auto --theme='Monokai Extended Origin' --style=full";
+      bin = "${lib.getExe pkgs.bat} ${bat.flags}";
+    };
+  };
 in
 {
-  options.liberion.shells =
-    with lib.liberion;
-    with lib.types;
-    {
-      defaults = {
-        enable = mkOptBool';
-      };
+  options.${namespace}.shells = with lib.${namespace}; {
+    aliases.defaults.enable = mkOptBool';
+    sessionVariables = with lib.types; mkOpt' (attrsOf str) { };
+  };
 
-      sessionVariables = mkOpt' (attrsOf str) { };
+  config = {
+    home.sessionVariables = lib.mkMerge [
+      { NIX_SHELL_PRESERVE_PROMPT = "1"; }
+      cfg.sessionVariables
+    ];
 
-      altCoreUtils = {
-        enable = mkOptBool';
-      };
-    };
+    home.shellAliases =
+      with pkgs;
+      let
+        inherit (lib) mkIf getExe;
 
-  config = with lib; {
-    home = {
-      sessionVariables =
-        let
-          defaults = mkIf cfg.defaults.enable { NIX_SHELL_PRESERVE_PROMPT = "1"; };
-        in
-        mkMerge [
-          { }
-          defaults
-          cfg.sessionVariables
-        ];
+        defaults = mkIf cfg.aliases.defaults.enable {
+          ".." = "cd ..";
+          cp = "cp -Riv";
+          diff = "diff --color=auto";
+          mkdir = "mkdir -pv";
+          lsblk = "lsblk -ai";
+          mv = "mv -iv";
+          rm = "rm -v";
+          rmfr = "rm -Rfv";
+          wget = "${getExe wget} --no-hsts";
+          zip = "${getExe zip} -rv";
 
-      shellAliases =
-        with pkgs;
-        let
-          defaults = mkIf cfg.defaults.enable {
-            ".." = "cd ..";
-            cp = "cp -Riv";
-            diff = "diff --color=auto";
-            mkdir = "mkdir -pv";
-            lsblk = "lsblk -ai";
-            mv = "mv -iv";
-            rm = "rm -v";
-            rmfr = "rm -Rfv";
-            wget = "${getExe wget} --no-hsts";
-            zip = "${getExe zip} -rv";
+          # nix
+          nix-lockfile-update = "nix flake update --commit-lock-file --option commit-lockfile-summary 'chore(flake): update lockfile'";
+          nix-man = "${getExe man} configuration.nix";
+          nix-man-hm = "${getExe man} home-configuration.nix";
 
-            # nix
-            nix-lockfile-update = "nix flake update --commit-lock-file --option commit-lockfile-summary 'chore(flake): update lockfile'";
-            nix-man = "${getExe man} configuration.nix";
-            nix-man-hm = "${getExe man} home-configuration.nix";
-          };
+          # ls/tree => eza
+          ls = "${cmd.eza.bin} --sort=Name -agh";
+          ll = "${cmd.eza.bin} --sort=Name -aglh";
 
-          altCoreUtils =
-            let
-              commonEzaFlags = "--color=auto --group-directories-first --icons";
-            in
-            mkIf cfg.altCoreUtils.enable {
-              # ls/tree => eza
-              ls = "${getExe eza} ${commonEzaFlags} --sort=Name -agh";
-              ll = "${getExe eza} ${commonEzaFlags} --sort=Name -aglh";
+          tree = "${cmd.eza.bin} -Tgh";
+          treea = "${cmd.eza.bin} -Tagh";
+          treed = "${cmd.eza.bin} -DTgh";
 
-              tree = "${getExe eza} ${commonEzaFlags} -Tgh";
-              treea = "${getExe eza} ${commonEzaFlags} -Tagh";
-              treed = "${getExe eza} ${commonEzaFlags} -DTgh";
+          # grep => rg (ripgrep)
+          grep = "${getExe ripgrep} --color=auto --column --hidden -Hin";
 
-              # grep => rg (ripgrep)
-              grep = "${getExe ripgrep} --color=auto --column --hidden -Hin";
+          # cat/less => bat
+          cat = "${cmd.bat.bin} -P";
+          less = "${cmd.bat.bin}";
+        };
+      in
+      lib.mkMerge [
+        { }
+        defaults
+      ];
 
-              # cat/less => bat
-              cat = "${getExe bat} --color=auto --theme='Monokai Extended Origin' --style=full -P";
-              less = "${getExe bat} --color=auto --theme='Monokai Extended Origin' --style=full";
-            };
-        in
-        mkMerge [
-          { }
-          defaults
-          altCoreUtils
-        ];
-
-      packages =
-        with pkgs;
-        mkIf cfg.altCoreUtils.enable [
-          bat
-          du-dust
-          eza
-          fd
-          (ripgrep.override { withPCRE2 = true; })
-        ];
-    };
+    home.packages = with pkgs; [
+      bat
+      du-dust
+      eza
+      fd
+      (ripgrep.override { withPCRE2 = true; })
+    ];
   };
 }
