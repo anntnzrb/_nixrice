@@ -1,7 +1,7 @@
 {
-  config,
   lib,
   pkgs,
+  config,
   inputs,
   system,
   namespace,
@@ -32,7 +32,14 @@ in
           engines = import ./engines.nix;
         };
 
-        extensions = import ./extensions.nix { inherit inputs system; };
+        extensions = import ./extensions.nix {
+          inherit
+            lib
+            pkgs
+            inputs
+            system
+            ;
+        };
         settings = import ./settings.nix;
       };
     };

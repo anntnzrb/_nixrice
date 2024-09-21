@@ -1,8 +1,13 @@
-{ inputs, system, ... }:
+{
+  lib,
+  pkgs,
+  inputs,
+  system,
+  ...
+}:
 with inputs.firefox-addons.packages.${system};
 [
   # utils
-  bitwarden # pw manager
   ublock-origin # ad-blocker
   clearurls
   istilldontcareaboutcookies
@@ -11,3 +16,6 @@ with inputs.firefox-addons.packages.${system};
   # ui/ux
   refined-github
 ]
+++ (lib.optionals (!pkgs.stdenv.isDarwin) [
+  bitwarden # pw manager
+])
