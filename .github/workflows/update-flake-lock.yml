@@ -2,7 +2,7 @@ name: Nix Flake Lock Update
 on:
   workflow_dispatch: # manual triggering
   schedule:
-  - cron: "1 6 2 * *"
+  - cron: "0 6 2 * *" # every 2nd of month @ At 06:00
 
 permissions:
   contents: write
