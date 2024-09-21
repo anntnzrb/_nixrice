@@ -1,0 +1,7 @@
+pull_request_rules:
+  - name: Auto merge when renovate[bot]
+    description: Merge when PR passes all branch protection and author is renovate[bot]
+    conditions:
+      - author = renovate[bot]
+    actions:
+      merge:
