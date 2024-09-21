@@ -6,6 +6,7 @@ with inputs.firefox-addons.packages.${system};
   ublock-origin # ad-blocker
   clearurls
   istilldontcareaboutcookies
+  sponsorblock
 
   # ui/ux
   refined-github
