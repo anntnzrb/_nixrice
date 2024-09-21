@@ -1,0 +1,11 @@
+queue_rules:
+  - name: default
+    merge_method: rebase
+    batch_size: 5
+pull_request_rules:
+  - name: Merge when labeled as dependencies
+    conditions:
+      - base=dev
+      - label~=merge-queue|dependencies
+    actions:
+      queue:
