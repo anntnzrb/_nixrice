@@ -1,5 +1,7 @@
 # \*nixrice
 
+[![Built with Nix](https://builtwithnix.org/badge.svg)](https://builtwithnix.org)
+
 ## Disclaimer
 
 This repository serves as a laboratory. It is meant for experimentation and
