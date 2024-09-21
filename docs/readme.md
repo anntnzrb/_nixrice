@@ -80,6 +80,7 @@ Around mid-late _2022_ I entered the world of [NixOS](https://nixos.org),
 - [David Wilson's dotfiles](https://github.com/daviwil/dotfiles)
 - [Henrik Lissner's dotfiles](https://github.com/hlissner/dotfiles)
 - [Jake Hamilton's dotfiles](https://github.com/jakehamilton/config)
+- [`mic92`'s dotfiles](https://github.com/Mic92/dotfiles)
 - [Austin Horstman's dotfiles](https://github.com/khaneliman/khanelinix)
 
 ## COPYING
