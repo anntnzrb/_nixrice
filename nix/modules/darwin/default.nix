@@ -10,15 +10,12 @@ let
   cfg = config.${namespace}.darwin;
 in
 {
-  options.${namespace}.darwin =
-    with lib.liberion;
-    with lib.types;
-    {
-      user = {
-        name = mkOpt' str "annt";
-        authorizedKeys = mkOpt' (listOf singleLineStr) [ ];
-      };
+  options.${namespace}.darwin = with lib.liberion; {
+    user = {
+      name = mkOpt' str "annt";
+      authorizedKeys = with lib.types; mkOpt' (listOf singleLineStr) [ ];
     };
+  };
 
   config = {
     nix.settings = {
@@ -40,7 +37,9 @@ in
         "anntnzrb.cachix.org-1:hG29RyjX45a9q1nZqdvOJUQ6nRDG/Jj4yt2d1dpWCgE="
       ];
     };
+
     services.nix-daemon.enable = true;
+    security.pam.enableSudoTouchIdAuth = true;
 
     users.users.${cfg.user.name} = {
       inherit (cfg.user) name;
