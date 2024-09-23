@@ -1,3 +1,6 @@
+# get the current system host name
+hostname := `hostname | cut -d "." -f 1`
+
 # prints this menu
 default:
     @just --list
@@ -24,11 +27,11 @@ nixos-switch: nixos-build
 
 # build the darwin configuration
 darwin-build:
-    darwin-rebuild build --flake .
+    nix build ".#darwinConfigurations.{{hostname}}.system"
 
 # build & activate the darwin configuration now
 darwin-switch: darwin-build
-    darwin-rebuild switch --flake .
+	./result/sw/bin/darwin-rebuild switch --flake ".#{{hostname}}"
 
 # -----------------------------------------------------------------------------
 # wsl
