@@ -52,8 +52,9 @@ in
 
       defaults = {
         SoftwareUpdate.AutomaticallyInstallMacOSUpdates = false;
+        # disable ads
+        CustomUserPreferences."com.apple.AdLib".allowApplePersonalizedAdvertising = false;
 
-        # TODO: get more related stuff for move
         menuExtraClock =
           let
             always = 1;
