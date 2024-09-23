@@ -39,17 +39,16 @@ switch: build
 	./result/sw/bin/darwin-rebuild switch --flake ".#{{hostname}}"
 
 # -----------------------------------------------------------------------------
-# wsl
+# home-manager
 # -----------------------------------------------------------------------------
-# FIXME: find a generic way of using WSL without hard-coding a user
 
-# build the WSL configuration
-wsl-build:
-    nix run home-manager -- build --flake .#"annt@wsl"
+# build the home-manager configuration
+hm-build user host:
+	nix build ".#homeConfigurations.{{user}}@{{host}}.activationPackage"
 
-# build & activate the WSL configuration now
-wsl-switch: wsl-build
-    nix run home-manager -- switch --flake .#"annt@wsl"
+# build & activate the home-manager configuration now
+hm-switch user host: (hm-build user host)
+    ./result/activate
 
 # -----------------------------------------------------------------------------
 # Nix
@@ -87,7 +86,7 @@ nix-flake-update-all:
 # update a single flake input
 nix-flake-update *ARGS:
     nix flake update {{ ARGS }}
-    git add flake.lock && git commit -m 'chore(flake): update input ({{ ARGS }})'
+    git add flake.lock && git commit -m 'chore(flake): update input ({{ARGS}})'
 
 # fmt src tree
 fmt:
