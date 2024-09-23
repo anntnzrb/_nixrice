@@ -1,9 +1,9 @@
 {
-  config,
   lib,
+  config,
+  inputs,
   namespace,
   system,
-  inputs,
   ...
 }:
 let
@@ -12,16 +12,13 @@ in
 {
   imports = [ inputs.nix-homebrew.darwinModules.nix-homebrew ];
 
-  options.${namespace}.homebrew =
-    with lib.liberion;
-    with lib.types;
-    {
-      enable = mkOptBool';
+  options.${namespace}.homebrew = with lib.liberion; {
+    enable = mkOptBool';
 
-      packages = {
-        casks = mkOpt' (listOf str) [ ];
-      };
+    packages = {
+      casks = with lib.types; mkOpt' (listOf str) [ ];
     };
+  };
 
   config = lib.mkIf cfg.enable {
     nix-homebrew = {
@@ -31,17 +28,21 @@ in
       autoMigrate = true;
     };
 
-    homebrew = {
-      enable = true;
-      global.autoUpdate = false;
-      onActivation = {
-        autoUpdate = false;
-        upgrade = false;
-        cleanup = "zap";
-      };
+    homebrew =
+      let
+        autoUpgrade = true;
+      in
+      {
+        enable = true;
+        global.autoUpdate = autoUpgrade;
+        onActivation = {
+          autoUpdate = autoUpgrade;
+          upgrade = autoUpgrade;
+          cleanup = "zap";
+        };
 
-      inherit (cfg.packages) casks;
-    };
+        inherit (cfg.packages) casks;
+      };
 
     environment.variables = {
       HOMEBREW_NO_INSECURE_REDIRECT = "1";
