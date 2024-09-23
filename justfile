@@ -10,15 +10,18 @@ default:
 # -----------------------------------------------------------------------------
 
 # build the NixOS configuration
-nixos-build:
+[linux]
+build:
     nixos-rebuild build --flake .#
 
 # build & activate the new NixOS configuration on next boot
-nixos-boot: nixos-build
+[linux]
+boot: build
     nixos-rebuild boot --use-remote-sudo --flake .#
 
 # build & activate the NixOS configuration now
-nixos-switch: nixos-build
+[linux]
+switch: build
     nixos-rebuild switch --use-remote-sudo --flake .#
 
 # -----------------------------------------------------------------------------
@@ -26,11 +29,13 @@ nixos-switch: nixos-build
 # -----------------------------------------------------------------------------
 
 # build the darwin configuration
-darwin-build:
+[macos]
+build:
     nix build ".#darwinConfigurations.{{hostname}}.system"
 
 # build & activate the darwin configuration now
-darwin-switch: darwin-build
+[macos]
+switch: build
 	./result/sw/bin/darwin-rebuild switch --flake ".#{{hostname}}"
 
 # -----------------------------------------------------------------------------
@@ -84,6 +89,6 @@ nix-flake-update *ARGS:
     nix flake update {{ ARGS }}
     git add flake.lock && git commit -m 'chore(flake): update input ({{ ARGS }})'
 
-# fmt
+# fmt src tree
 fmt:
     nix fmt
