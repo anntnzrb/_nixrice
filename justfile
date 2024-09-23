@@ -1,4 +1,5 @@
 # get the current system host name
+
 hostname := `hostname | cut -d "." -f 1`
 
 # prints this menu
@@ -31,12 +32,12 @@ switch: build
 # build the darwin configuration
 [macos]
 build:
-    nix build ".#darwinConfigurations.{{hostname}}.system"
+    nix build ".#darwinConfigurations.{{ hostname }}.system"
 
 # build & activate the darwin configuration now
 [macos]
 switch: build
-	./result/sw/bin/darwin-rebuild switch --flake ".#{{hostname}}"
+    ./result/sw/bin/darwin-rebuild switch --flake ".#{{ hostname }}"
 
 # -----------------------------------------------------------------------------
 # home-manager
@@ -44,7 +45,7 @@ switch: build
 
 # build the home-manager configuration
 hm-build user host:
-	nix build ".#homeConfigurations.{{user}}@{{host}}.activationPackage"
+    nix build ".#homeConfigurations.{{ user }}@{{ host }}.activationPackage"
 
 # build & activate the home-manager configuration now
 hm-switch user host: (hm-build user host)
@@ -86,7 +87,7 @@ nix-flake-update-all:
 # update a single flake input
 nix-flake-update *ARGS:
     nix flake update {{ ARGS }}
-    git add flake.lock && git commit -m 'chore(flake): update input ({{ARGS}})'
+    git add flake.lock && git commit -m 'chore(flake): update input ({{ ARGS }})'
 
 # fmt src tree
 fmt:
