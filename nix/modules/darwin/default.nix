@@ -11,12 +11,15 @@ in
 {
   imports = [ ./activation.nix ];
 
-  options.${namespace}.darwin = with lib.liberion; {
-    user = {
-      name = mkOpt' str "annt";
-      authorizedKeys = with lib.types; mkOpt' (listOf singleLineStr) [ ];
+  options.${namespace}.darwin =
+    with lib.liberion;
+    with lib.types;
+    {
+      user = {
+        name = mkOpt' types.str "annt";
+        authorizedKeys = mkOpt' (types.listOf types.singleLineStr) [ ];
+      };
     };
-  };
 
   config = {
     nix.settings = {
