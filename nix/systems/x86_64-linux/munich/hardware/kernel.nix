@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-rec {
+{
   boot = {
     initrd.availableKernelModules = [
       "vmd"
@@ -11,7 +10,6 @@ rec {
       "sd_mod"
     ];
     kernelModules = [ "kvm-intel" ];
-    kernelPackages = pkgs.linuxPackages_xanmod_latest;
   };
 
   # support for tablets
