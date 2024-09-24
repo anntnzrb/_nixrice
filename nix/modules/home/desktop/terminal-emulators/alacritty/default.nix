@@ -1,6 +1,6 @@
 {
-  config,
   lib,
+  config,
   namespace,
   ...
 }:
@@ -11,6 +11,7 @@ with lib.${namespace};
 {
   options.${namespace}.desktop.terminal-emulators.alacritty = {
     enable = mkOptBool';
+    font.size = mkOpt' lib.types.float 10.0;
   };
 
   config = lib.mkIf cfg.enable {
@@ -29,7 +30,7 @@ with lib.${namespace};
             firaCode-mono = "FiraCode Nerd Font Mono";
           in
           {
-            size = 14.0;
+            inherit (cfg.font) size;
             builtin_box_drawing = false;
 
             normal = {
