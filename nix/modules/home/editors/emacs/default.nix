@@ -1,27 +1,24 @@
 {
-  config,
-  pkgs,
   lib,
+  pkgs,
+  config,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.editors.emacs;
+  cfg = config.${namespace}.editors.emacs;
 
   packages = {
     dependencies = with pkgs; [
       fd
       (ripgrep.override { withPCRE2 = true; })
-    ];
-
-    emacsPkgs = with pkgs.emacsPackages; [ vterm ];
-
-    extras = with pkgs; [
-      nodejs # for lsp copilot auth
 
       # lookup
       sqlite
       wordnet
     ];
+
+    emacsPkgs = with pkgs.emacsPackages; [ vterm ];
 
     dicts = with pkgs; [
       (aspellWithDicts (
@@ -39,9 +36,8 @@ let
   };
 in
 {
-  options.liberion.editors.emacs = with lib.liberion; {
+  options.${namespace}.editors.emacs = with lib.${namespace}; {
     enable = mkOptBool';
-
     pgtk = mkOptBool';
   };
 
@@ -59,9 +55,6 @@ in
       };
     };
 
-    home = {
-      sessionPath = [ "${config.xdg.configHome}/emacs/bin" ];
-      packages = with packages; emacsPkgs ++ dependencies ++ extras ++ dicts;
-    };
+    home.packages = with packages; emacsPkgs ++ dependencies ++ dicts;
   };
 }
