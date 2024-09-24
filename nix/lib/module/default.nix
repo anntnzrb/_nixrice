@@ -1,33 +1,35 @@
 { lib, ... }:
 rec {
 
-  # Alias for mkOption
+  # Creates an option with the specified type, default value, and description.
+  # Alias for mkOption.
   mkOpt =
     type: default: description:
     lib.mkOption { inherit type default description; };
 
-  # Alias for mkOption with no description
+  # Creates an option with the specified type and default value, no description.
+  # Alias for mkOption.
   mkOpt' = type: def: mkOpt type def null;
 
-  # Alias for mkEnableOption
+  # Creates a boolean option defaulting to false, with given description.
+  # Alias for mkEnableOption.
   mkOptBool = desc: lib.mkEnableOption desc;
 
-  # Alias for mkEnableOption with no description
+  # Creates a boolean option defaulting to false, no description.
+  # Alias for mkEnableOption.
   mkOptBool' = mkOptBool null;
 
-  # Alias for mkEnableOption but defaulting to true
+  # Creates a boolean option defaulting to true, with given description.
+  # Alias for mkOption.
   mkOptEnabled = desc: mkOpt lib.types.bool true desc;
 
-  # Alias for mkEnableOption but defaulting to true with no description
+  # Creates a boolean option defaulting to true, no description.
+  # Alias for mkOption.
   mkOptEnabled' = mkOpt lib.types.bool true null;
 
-  # Alias for enabling a service
-  on = {
-    enable = true;
-  };
+  # Alias for enabling an option.
+  on.enable = true;
 
-  # Alias for disabling a service
-  off = {
-    enable = false;
-  };
+  # Alias for disabling an option.
+  off.enable = false;
 }
