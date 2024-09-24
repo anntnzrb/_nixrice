@@ -27,6 +27,14 @@ rec {
   # Alias for mkOption.
   mkOptEnabled' = mkOpt lib.types.bool true null;
 
+  # Creates a boolean option defaulting to false, with given description.
+  # Alias for mkOption.
+  mkOptDisabled = desc: mkOpt lib.types.bool false desc;
+
+  # Creates a boolean option defaulting to false, no description.
+  # Alias for mkOption.
+  mkOptDisabled' = mkOpt lib.types.bool false null;
+
   # Alias for enabling an option.
   on.enable = true;
 
