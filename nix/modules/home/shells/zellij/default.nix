@@ -10,8 +10,8 @@ in
 {
   options.${namespace}.shells.zellij = with lib.${namespace}; {
     enable = mkOptBool';
-    enableBashIntegration = mkOptEnabled';
-    enableZshIntegration = mkOptEnabled';
+    enableBashIntegration = mkOptDisabled';
+    enableZshIntegration = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {

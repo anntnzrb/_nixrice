@@ -14,11 +14,6 @@ in
     prompt = {
       starship.enable = mkOptBool';
     };
-
-    zellij = {
-      enable = mkOptBool';
-      enableZshIntegration = mkOptEnabled';
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -53,10 +48,6 @@ in
     ${namespace}.shells = {
       starship = {
         inherit (cfg.prompt.starship) enable;
-      };
-
-      zellij = {
-        inherit (cfg.zellij) enable enableZshIntegration;
       };
     };
   };
