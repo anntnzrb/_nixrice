@@ -1,6 +1,6 @@
 {
-  pkgs,
   lib,
+  pkgs,
   namespace,
   ...
 }:
@@ -37,7 +37,7 @@ in
     shells = {
       aliases.defaults = on;
       sessionVariables = {
-        BROWSER = "chromium";
+        BROWSER = "firefox";
         EDITOR = "nvim";
         FILE = "pcmanfm";
         TERMINAL = "alacritty";
@@ -146,7 +146,7 @@ in
 
       browsers = {
         firefox = on;
-        chromium = on;
+        chromium = off;
         qutebrowser = on;
       };
       discord = on;
