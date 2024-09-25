@@ -2,8 +2,6 @@
   lib,
   pkgs,
   config,
-  inputs,
-  system,
   namespace,
   ...
 }:
@@ -11,6 +9,12 @@ let
   cfg = config.${namespace}.desktop.browsers.firefox;
 in
 {
+  imports = [
+    ./engines.nix
+    ./extensions.nix
+    ./settings.nix
+  ];
+
   options.${namespace}.desktop.browsers.firefox = with lib.${namespace}; {
     enable = mkOptBool';
     package.install = mkOptEnabled';
@@ -28,19 +32,7 @@ in
         search = {
           default = "DuckDuckGo";
           force = true;
-
-          engines = import ./engines.nix;
         };
-
-        extensions = import ./extensions.nix {
-          inherit
-            lib
-            pkgs
-            inputs
-            system
-            ;
-        };
-        settings = import ./settings.nix;
       };
     };
   };
