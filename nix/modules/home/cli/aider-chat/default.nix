@@ -1,9 +1,8 @@
 {
-  config,
   lib,
-  system,
+  pkgs,
+  config,
   namespace,
-  inputs,
   ...
 }:
 let
@@ -16,7 +15,7 @@ in
 
   config = lib.mkIf cfg.enable {
     home = {
-      packages = [ inputs.nurpkgs.packages.${system}.aider-chat ];
+      packages = [ pkgs.aider-chat ];
       shellAliases.aider = "aider --cache-prompts --pretty --stream";
     };
   };
