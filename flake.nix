@@ -30,7 +30,7 @@
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs-stable";
 
     # pre-commit
-    pre-commit-hooks.url = "github:cachix/git-hooks.nix";
+    pre-commit-hooks.url = "github:cachix/git-hooks.nix/master";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs-unstable";
     pre-commit-hooks.inputs.nixpkgs-stable.follows = "nixpkgs-stable";
     pre-commit-hooks.inputs.flake-compat.follows = "flake-compat";
@@ -54,7 +54,7 @@
     nix-homebrew.inputs.flake-utils.follows = "flake-utils";
 
     # fix .app bundles
-    mac-app-util.url = "github:hraban/mac-app-util";
+    mac-app-util.url = "github:hraban/mac-app-util/master";
     mac-app-util.inputs.flake-compat.follows = "flake-compat";
 
     # -------------------------------------------------------------------------
