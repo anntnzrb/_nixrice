@@ -39,6 +39,10 @@
           # dev
           "visual-studio-code"
           "rustdesk"
+
+          # situational
+          #"zoom"
+          #"microsoft-teams"
         ];
       };
     };
