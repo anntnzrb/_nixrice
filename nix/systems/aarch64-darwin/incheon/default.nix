@@ -41,8 +41,10 @@
           "rustdesk"
 
           # situational
-          #"zoom"
           #"microsoft-teams"
+          #"microsoft-word"
+          #"zoom"
+          #"zotero"
         ];
       };
     };
