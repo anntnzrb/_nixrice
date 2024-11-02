@@ -24,6 +24,9 @@ in
   config.home.shellAliases =
     with pkgs;
     (lib.optionals config.${namespace}.shells.aliases.defaults.enable {
+      # ----------------------------------------------------------------------
+      # misc
+      # ----------------------------------------------------------------------
       ".." = "cd ..";
       cp = "cp -Riv";
       diff = "diff --color=auto";
@@ -34,11 +37,18 @@ in
       rmfr = "rm -Rfv";
       wget = "${getExe wget} --no-hsts";
       zip = "${getExe zip} -rv";
+      tnet = "ping -c 2 8.8.8.8";
 
+      # ----------------------------------------------------------------------
       # nix
+      # ----------------------------------------------------------------------
       nix-lockfile-update = "nix flake update --commit-lock-file --option commit-lockfile-summary 'chore(flake): update lockfile'";
       nix-man = "${getExe man} configuration.nix";
       nix-man-hm = "${getExe man} home-configuration.nix";
+
+      # ----------------------------------------------------------------------
+      # coreutils
+      # ----------------------------------------------------------------------
 
       # ls/tree => eza
       ls = "${cmd.eza.bin} --sort=Name -agh";
