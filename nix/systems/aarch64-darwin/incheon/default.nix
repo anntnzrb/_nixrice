@@ -45,7 +45,6 @@
           #"microsoft-teams"
           #"microsoft-word"
           #"zoom"
-          #"zotero"
         ];
       };
     };
