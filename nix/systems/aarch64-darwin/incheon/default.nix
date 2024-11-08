@@ -35,6 +35,7 @@
           "whatsapp"
           "obs"
           "docker"
+          "transmission"
 
           # dev
           "visual-studio-code"
