@@ -29,10 +29,10 @@ in
         interval.Day = 7;
         options = "--delete-older-than 7d";
       };
+      optimise.automatic = true;
     };
 
     nix.settings = {
-      auto-optimise-store = true;
       trusted-users = [
         "root"
         "@admin"
