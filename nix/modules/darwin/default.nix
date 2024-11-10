@@ -85,7 +85,6 @@ in
     environment.systemPackages = with pkgs; [
       curl
       wget
-      cachix
     ];
 
     system.stateVersion = 4;

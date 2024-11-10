@@ -112,7 +112,6 @@ in
 
           # misc
           kmon
-          cachix
         ]
         ++ cfg.systemPackages;
 
