@@ -36,6 +36,7 @@
           "obs"
           "docker"
           "transmission"
+          "vlc"
 
           # dev
           "visual-studio-code"
