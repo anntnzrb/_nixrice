@@ -5,8 +5,8 @@
     # -------------------------------------------------------------------------
     # nix
     # -------------------------------------------------------------------------
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     # self pkgs
@@ -14,7 +14,7 @@
     nurpkgs.inputs.systems.follows = "systems";
 
     # user environment manager
-    home-manager.url = "github:nix-community/home-manager/release-24.05"; # NOTE: match nixpkgs
+    home-manager.url = "github:nix-community/home-manager/release-24.11"; # NOTE: match nixpkgs
     home-manager.inputs.nixpkgs.follows = "nixpkgs-stable";
 
     # flake framework
