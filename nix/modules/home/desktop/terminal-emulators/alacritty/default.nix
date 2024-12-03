@@ -19,8 +19,9 @@ with lib.${namespace};
       enable = true;
 
       settings = {
-        live_config_reload = true;
         working_directory = "None";
+
+        general.live_config_reload = true;
 
         font =
           let
