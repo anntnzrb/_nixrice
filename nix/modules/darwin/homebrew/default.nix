@@ -28,21 +28,17 @@ in
       autoMigrate = true;
     };
 
-    homebrew =
-      let
-        autoUpgrade = true;
-      in
-      {
-        enable = true;
-        global.autoUpdate = autoUpgrade;
-        onActivation = {
-          autoUpdate = autoUpgrade;
-          upgrade = autoUpgrade;
-          cleanup = "zap";
-        };
-
-        inherit (cfg.packages) casks;
+    homebrew = {
+      enable = true;
+      global.autoUpdate = false;
+      onActivation = {
+        autoUpdate = false;
+        upgrade = false;
+        cleanup = "zap";
       };
+
+      inherit (cfg.packages) casks;
+    };
 
     environment.variables = {
       HOMEBREW_NO_ANALYTICS = "1";
