@@ -42,6 +42,7 @@
 
     editors = {
       neovim = on;
+      zed = on;
     };
 
     desktop = {
