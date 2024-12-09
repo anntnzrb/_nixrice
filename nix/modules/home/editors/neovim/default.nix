@@ -1,15 +1,16 @@
 {
+  lib,
   config,
   inputs,
-  lib,
+  namespace,
   system,
   ...
 }:
 let
-  cfg = config.liberion.editors.neovim;
+  cfg = config.${namespace}.editors.neovim;
 in
 {
-  options.liberion.editors.neovim = with lib.liberion; {
+  options.${namespace}.editors.neovim = with lib.${namespace}; {
     enable = mkOptBool';
   };
 
