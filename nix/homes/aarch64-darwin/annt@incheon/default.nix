@@ -33,6 +33,7 @@
 
       btop = on;
       direnv = on;
+      espanso = on;
       fastfetch = on;
       fzf = on;
       tldr = on;
