@@ -1,15 +1,16 @@
 {
   lib,
-  config,
   pkgs,
+  namespace,
+  config,
   ...
 }:
 let
-  cfg = config.liberion.nixos;
+  cfg = config.${namespace}.nixos;
 in
 {
-  options.liberion.nixos =
-    with lib.liberion;
+  options.${namespace}.nixos =
+    with lib.${namespace};
     with lib.types;
     {
       time = {
