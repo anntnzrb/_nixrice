@@ -77,11 +77,6 @@ in
     # EN
     # -------------------------------------------------------------------------
     {
-      trigger = "i";
-      replace = "I";
-      word = true;
-    }
-    {
       trigger = "its";
       replace = "it's";
       word = true;
