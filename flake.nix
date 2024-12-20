@@ -17,6 +17,9 @@
     home-manager.url = "github:nix-community/home-manager/release-24.11"; # NOTE: match nixpkgs
     home-manager.inputs.nixpkgs.follows = "nixpkgs-stable";
 
+    home-manager-unstable.url = "github:nix-community/home-manager/master";
+    home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs-stable";
+
     # flake framework
     snowfall-lib.url = "github:snowfallorg/lib/main";
     snowfall-lib.inputs.nixpkgs.follows = "nixpkgs-stable";
