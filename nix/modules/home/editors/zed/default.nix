@@ -23,7 +23,7 @@ with lib.${namespace}.zed-editor;
 
   imports = [
     (import (inputs.home-manager-unstable + "/modules/${mod}"))
-  ] ++ util.mapImports (map (lang: ./langs/${lang}/default.nix) langs);
+  ] ++ map (lang: ./langs/${lang}/default.nix) langs;
 
   options.${namespace}.editors.zed = with lib.${namespace}; {
     enable = mkOptBool';
