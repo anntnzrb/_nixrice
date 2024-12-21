@@ -89,6 +89,9 @@ nix-flake-update *ARGS:
     nix flake update {{ ARGS }}
     git add flake.lock && git commit -m 'chore(flake): update input ({{ ARGS }})'
 
-# fmt src tree
+# fmt & check
 fmt:
-    nix fmt
+    pre-commit run --all-files
+
+# fmt & check
+pre-commit: fmt
