@@ -4,3 +4,4 @@ result*
 *.fd
 .DS_Store
 .aider*
+/.pre-commit-config.yaml
