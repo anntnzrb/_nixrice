@@ -4,7 +4,7 @@ on:
   workflow_dispatch: # manual triggering
   pull_request:
   push:
-    branches: ['dev']
+    branches: ["dev"]
 
 jobs:
   ci:

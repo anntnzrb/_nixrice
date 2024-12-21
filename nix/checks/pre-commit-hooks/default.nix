@@ -3,11 +3,9 @@ inputs.pre-commit-hooks.lib.${pkgs.system}.run {
   src = inputs.self;
 
   hooks = {
-    nixfmt-rfc-style.enable = true;
+    # nix
     flake-checker.enable = true;
-
-    actionlint.enable = true;
-
+    nixfmt-rfc-style.enable = true;
     deadnix = {
       enable = true;
       settings = {
@@ -32,5 +30,8 @@ inputs.pre-commit-hooks.lib.${pkgs.system}.run {
           '';
         };
       };
+
+    # GH actions
+    actionlint.enable = true;
   };
 }
