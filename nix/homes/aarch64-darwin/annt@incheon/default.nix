@@ -36,6 +36,7 @@
       espanso = on;
       fastfetch = on;
       fzf = on;
+      omnix = on;
       tldr = on;
       yt-dlp = on;
       zoxide = on;
