@@ -62,6 +62,9 @@
     # Neovim
     neovim-annt.url = "github:anntnzrb/nixvim/main";
 
+    # Emacs
+    emacs-overlay.url = "github:nix-community/emacs-overlay/master";
+
     # Firefox extensions (add-ons)
     firefox-addons.url = "github:nix-community/nur-combined/master?dir=repos/rycee/pkgs/firefox-addons";
     firefox-addons.inputs.nixpkgs.follows = "nixpkgs-stable";
@@ -92,6 +95,8 @@
           meta.name = codeName;
           meta.title = codeName;
         };
+
+      overlays = [ inputs.emacs-overlay.overlays.default ];
 
       channels-config.allowUnfree = true;
     };

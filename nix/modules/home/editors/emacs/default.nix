@@ -8,53 +8,39 @@
 let
   cfg = config.${namespace}.editors.emacs;
 
-  packages = {
-    dependencies = with pkgs; [
-      fd
-      (ripgrep.override { withPCRE2 = true; })
+  mkEmacsPackage =
+    pkg:
+    (pkgs.emacsPackagesFor pkg).emacsWithPackages (
+      epkgs: with epkgs; [
+        treesit-grammars.with-all-grammars
 
-      # lookup
-      sqlite
-      wordnet
-    ];
+        evil
+        vertico
+        marginalia
+        corfu
+        fontaine
+        envrc
+        ef-themes
 
-    emacsPkgs = with pkgs.emacsPackages; [ vterm ];
-
-    dicts = with pkgs; [
-      (aspellWithDicts (
-        dicts: with dicts; [
-          # english
-          en
-          en-computers
-          en-science
-
-          es # spanish/español
-          de # german/deutsch
-        ]
-      ))
-    ];
-  };
+        # langs
+        gleam-ts-mode
+      ]
+    );
 in
 {
   options.${namespace}.editors.emacs = with lib.${namespace}; {
     enable = mkOptBool';
-    pgtk = mkOptBool';
+
+    package = lib.mkOption {
+      type = lib.types.package;
+      default =
+        if pkgs.stdenv.isDarwin then (mkEmacsPackage pkgs.emacs29) else (mkEmacsPackag pkgs.emacs29-pgtk);
+      description = "The Emacs package to install.";
+    };
+
   };
 
   config = lib.mkIf cfg.enable {
-    programs.emacs = {
-      enable = true;
-
-      package = pkgs.emacs29.override {
-        withGTK3 = true;
-        withGTK2 = false;
-        withPgtk = cfg.pgtk && !pkgs.stdenv.isDarwin;
-        withNativeCompilation = true; # emacs28+
-        withTreeSitter = true; # emacs29+
-        withSQLite3 = true;
-      };
-    };
-
-    home.packages = with packages; emacsPkgs ++ dependencies ++ dicts;
+    home.packages = [ cfg.package ];
   };
 }
