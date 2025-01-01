@@ -30,22 +30,18 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages =
-      if cfg.extraPackages != [ ] then
-        [
-          (pkgs.symlinkJoin {
-            name = "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
-            paths = [ cfg.package ];
-            preferLocalBuild = true;
-            nativeBuildInputs = [ pkgs.makeWrapper ];
-            postBuild = ''
-              wrapProgram $out/bin/zeditor \
-                --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
-            '';
-          })
-        ]
-      else
-        [ cfg.package ];
+    home.packages = [
+      (pkgs.symlinkJoin {
+        name = "${lib.getName cfg.package}-wrapped-${lib.getVersion cfg.package}";
+        paths = [ cfg.package ];
+        preferLocalBuild = true;
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        postBuild = ''
+          wrapProgram $out/bin/zeditor \
+            --suffix PATH : ${lib.makeBinPath cfg.extraPackages}
+        '';
+      })
+    ];
 
     xdg.configFile =
       let
@@ -53,7 +49,7 @@ in
       in
       {
         zed = {
-          enable = true;
+          enable = false;
           source = ./${cfg};
           target = "${config.xdg.configHome}/zed/${cfg}";
           recursive = true;
