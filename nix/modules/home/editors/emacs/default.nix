@@ -34,7 +34,7 @@ in
     package = lib.mkOption {
       type = lib.types.package;
       default =
-        if pkgs.stdenv.isDarwin then (mkEmacsPackage pkgs.emacs29) else (mkEmacsPackag pkgs.emacs29-pgtk);
+        if pkgs.stdenv.isDarwin then (mkEmacsPackage pkgs.emacs29) else (mkEmacsPackage pkgs.emacs29-pgtk);
       description = "The Emacs package to install.";
     };
 

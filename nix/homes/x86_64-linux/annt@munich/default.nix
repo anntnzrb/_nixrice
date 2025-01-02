@@ -69,11 +69,7 @@ in
     };
 
     editors = {
-      emacs = {
-        enable = false;
-        pgtk = false;
-      };
-
+      emacs = on;
       neovim = on;
       vscode = on;
     };
