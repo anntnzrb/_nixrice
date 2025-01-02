@@ -48,9 +48,15 @@
     };
 
     desktop = {
-      terminal-emulators.alacritty = {
-        enable = true;
-        font.size = 14.0;
+      terminal-emulators = {
+        alacritty = {
+          enable = true;
+          font.size = 14.0;
+        };
+        ghostty = {
+          enable = true;
+          font.size = 16;
+        };
       };
       ui = {
         fonts = on;
