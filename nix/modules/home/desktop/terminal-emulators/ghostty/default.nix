@@ -29,7 +29,7 @@ with lib.${namespace};
     programs.ghostty = {
       enable = true;
       settings = {
-        theme = "synthwave-everything";
+        theme = "catppuccin-frappe";
 
         font-size = cfg.font.size;
         font-family = cfg.font.family;
