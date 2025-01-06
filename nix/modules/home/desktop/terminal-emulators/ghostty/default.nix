@@ -1,5 +1,7 @@
+# https://github.com/nix-community/home-manager/blob/master/modules/programs/ghostty.nix
 {
   lib,
+  pkgs,
   config,
   inputs,
   namespace,
@@ -10,15 +12,21 @@ let
 
   mod = "programs/ghostty.nix";
 in
-with lib.${namespace};
 {
   disabledModules = [ mod ];
   imports = [
     (import (inputs.home-manager-unstable + "/modules/${mod}"))
   ];
 
-  options.${namespace}.desktop.terminal-emulators.ghostty = {
+  options.${namespace}.desktop.terminal-emulators.ghostty = with lib.${namespace}; {
     enable = mkOptBool';
+
+    package = lib.mkOption {
+      type = lib.types.package;
+      default = pkgs.ghostty;
+      description = "Ghostty terminal package";
+    };
+
     font = with lib.types; {
       size = mkOpt' ints.unsigned 10;
       family = mkOpt' str "ZedMono Nerd Font Mono";
@@ -27,7 +35,7 @@ with lib.${namespace};
 
   config = lib.mkIf cfg.enable {
     programs.ghostty = {
-      enable = true;
+      inherit (cfg) enable package;
       settings = {
         theme = "catppuccin-frappe";
 
