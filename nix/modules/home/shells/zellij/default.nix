@@ -1,6 +1,6 @@
 {
-  config,
   lib,
+  config,
   namespace,
   ...
 }:
@@ -34,6 +34,7 @@ in
 
     home.shellAliases = {
       zll = "zellij";
+      zllk = "pkill -x zellij";
     };
   };
 }
