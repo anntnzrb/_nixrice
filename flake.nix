@@ -35,7 +35,6 @@
     # pre-commit
     pre-commit-hooks.url = "github:cachix/git-hooks.nix/master";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs-unstable";
-    pre-commit-hooks.inputs.nixpkgs-stable.follows = "nixpkgs-stable";
     pre-commit-hooks.inputs.flake-compat.follows = "flake-compat";
     pre-commit-hooks.inputs.gitignore.follows = "";
 
@@ -50,7 +49,6 @@
     nix-homebrew.url = "github:zhaofengli/nix-homebrew/main";
     nix-homebrew.inputs.nixpkgs.follows = "nixpkgs-stable";
     nix-homebrew.inputs.nix-darwin.follows = "darwin";
-    nix-homebrew.inputs.flake-utils.follows = "flake-utils";
 
     # fix .app bundles
     mac-app-util.url = "github:hraban/mac-app-util/master";
