@@ -43,6 +43,7 @@
     };
 
     editors = {
+      emacs = on;
       neovim = on;
       zed = on;
     };
@@ -54,7 +55,7 @@
           font.size = 14.0;
         };
         ghostty = {
-          enable = true;
+          enable = false;
           font.size = 16;
         };
       };
