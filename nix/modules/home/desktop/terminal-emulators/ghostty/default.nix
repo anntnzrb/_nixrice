@@ -3,21 +3,13 @@
   lib,
   pkgs,
   config,
-  inputs,
   namespace,
   ...
 }:
 let
   cfg = config.${namespace}.desktop.terminal-emulators.ghostty;
-
-  mod = "programs/ghostty.nix";
 in
 {
-  disabledModules = [ mod ];
-  imports = [
-    (import (inputs.home-manager-unstable + "/modules/${mod}"))
-  ];
-
   options.${namespace}.desktop.terminal-emulators.ghostty = with lib.${namespace}; {
     enable = mkOptBool';
 
