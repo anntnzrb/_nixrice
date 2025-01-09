@@ -151,7 +151,6 @@ in
       flameshot = on;
       gammastep = on;
       mpv = on;
-      notesnook = on;
       obs = on;
       terminal-emulators.alacritty = on;
       zathura = on;

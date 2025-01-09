@@ -75,7 +75,6 @@ in
       flameshot = on;
       gammastep = on;
       mpv = on;
-      notesnook = on;
       terminal-emulators.alacritty = on;
       zathura = on;
 

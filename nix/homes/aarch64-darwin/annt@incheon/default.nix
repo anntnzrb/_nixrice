@@ -67,8 +67,6 @@
         enable = true;
         package.install = false;
       };
-
-      notesnook = on;
     };
   };
 }

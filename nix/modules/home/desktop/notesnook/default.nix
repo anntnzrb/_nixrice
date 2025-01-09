@@ -12,5 +12,7 @@ in
   options.${namespace}.desktop.notesnook = with lib.${namespace}; {
     enable = mkOptBool';
   };
-  config = lib.mkIf cfg.enable { home.packages = [ pkgs.notesnook ]; };
+  config = lib.mkIf cfg.enable {
+    home.packages = [ pkgs.notesnook ];
+  };
 }
