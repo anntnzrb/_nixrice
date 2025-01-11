@@ -24,9 +24,7 @@ with lib.${namespace};
 
     xserver = {
       enable = true;
-
-      desktopManager.xfce = on;
-
+      desktopManager.cinnamon = on;
     };
   };
 
