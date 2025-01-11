@@ -53,7 +53,7 @@ with lib.${namespace};
       systemPackages = with pkgs; [
         # tools
         git
-        autorandr
+        arandr
 
         # terminal-emulators
         alacritty
