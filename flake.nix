@@ -58,7 +58,7 @@
     # misc
     # -------------------------------------------------------------------------
     # Neovim
-    neovim-annt.url = "github:anntnzrb/nixvim/main";
+    neovim-annt.url = "github:anntnzrb/nvf/main";
 
     # Emacs
     emacs-overlay.url = "github:nix-community/emacs-overlay/master";
