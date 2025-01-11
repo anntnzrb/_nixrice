@@ -14,9 +14,12 @@ in
 with lib.${namespace};
 {
   services = {
-    displayManager.autoLogin = {
+    displayManager = {
       enable = true;
-      inherit user;
+      autoLogin = {
+        enable = true;
+        inherit user;
+      };
     };
 
     xserver = {
@@ -24,10 +27,6 @@ with lib.${namespace};
 
       desktopManager.xfce = on;
 
-      displayManager.lightdm = {
-        enable = true;
-        greeters.slick = on;
-      };
     };
   };
 
