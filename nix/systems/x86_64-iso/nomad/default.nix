@@ -3,6 +3,7 @@
   pkgs,
   inputs,
   system,
+  namespace,
   ...
 }:
 
@@ -10,14 +11,12 @@ let
   user = "nixos";
   pass = "nixos";
 in
-with lib.liberion;
+with lib.${namespace};
 {
   services = {
-    displayManager = {
-      autoLogin = {
-        enable = true;
-        inherit user;
-      };
+    displayManager.autoLogin = {
+      enable = true;
+      inherit user;
     };
 
     xserver = {
@@ -25,16 +24,14 @@ with lib.liberion;
 
       desktopManager.xfce = on;
 
-      displayManager = {
-        lightdm = {
-          enable = true;
-          greeters.slick = on;
-        };
+      displayManager.lightdm = {
+        enable = true;
+        greeters.slick = on;
       };
     };
   };
 
-  liberion = {
+  ${namespace} = {
     boot.bootloader.systemd-boot = on;
 
     hardware.audio.pipewire = on;
