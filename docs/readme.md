@@ -63,12 +63,12 @@ Around mid-late _2022_ I entered the world of [NixOS](https://nixos.org),
 ### People
 
 - [Luke Smith](https://github.com/lukesmithxyz)
-- [Derek Taylor (DistroTube)](https://www.youtube.com/@DistroTube)
+- [Derek "_DistroTube_" Taylor](https://www.youtube.com/@DistroTube)
 - [Protesilaos Stavrou](https://www.youtube.com/@protesilaos)
 - [David Wilson (SystemCrafters)](https://www.youtube.com/@SystemCrafters)
 - [Brodie Robertson](https://www.youtube.com/@BrodieRobertson)
 - [Jake Hamilton](https://www.youtube.com/@jakehamiltondev)
-- [Suraj Kushwah (bugswriter)](https://www.youtube.com/@bugswriter_)
+- [Suraj "_bugswriter_" Kushwah](https://www.youtube.com/@bugswriter_)
 - [Gavin Freeborn](https://www.youtube.com/@GavinFreeborn)
 - [gotbletu](https://www.youtube.com/@gotbletu)
 
@@ -76,12 +76,12 @@ Around mid-late _2022_ I entered the world of [NixOS](https://nixos.org),
 
 - [`xero`'s dotfiles](https://github.com/xero/dotfiles)
 - [Luke Smith's dotfiles](https://github.com/lukesmithxyz/voidrice)
-- [Derek Taylor's dotfiles](https://gitlab.com/dwt1/dotfiles)
+- [Derek "_DistroTube_" Taylor's dotfiles](https://gitlab.com/dwt1/dotfiles)
 - [David Wilson's dotfiles](https://github.com/daviwil/dotfiles)
 - [Henrik Lissner's dotfiles](https://github.com/hlissner/dotfiles)
 - [Jake Hamilton's dotfiles](https://github.com/jakehamilton/config)
-- [`mic92`'s dotfiles](https://github.com/Mic92/dotfiles)
-- [Austin Horstman's dotfiles](https://github.com/khaneliman/khanelinix)
+- [Jörg "`mic92`" Thalheim's dotfiles](https://github.com/Mic92/dotfiles)
+- [Austin "`khaneliman`" Horstman's dotfiles](https://github.com/khaneliman/khanelinix)
 
 ## COPYING
 
