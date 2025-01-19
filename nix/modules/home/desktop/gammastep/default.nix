@@ -1,10 +1,15 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  namespace,
+  ...
+}:
 let
-  cfg = config.liberion.desktop.gammastep;
+  cfg = config.${namespace}.desktop.gammastep;
 in
 {
-  options.liberion.desktop.gammastep =
-    with lib.liberion;
+  options.${namespace}.desktop.gammastep =
+    with lib.${namespace};
     with lib.types;
     {
       enable = mkOptBool';

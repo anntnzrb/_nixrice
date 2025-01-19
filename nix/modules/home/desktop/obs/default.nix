@@ -1,9 +1,14 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  namespace,
+  ...
+}:
 let
-  cfg = config.liberion.desktop.obs;
+  cfg = config.${namespace}.desktop.obs;
 in
 {
-  options.liberion.desktop.obs = with lib.liberion; {
+  options.${namespace}.desktop.obs = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

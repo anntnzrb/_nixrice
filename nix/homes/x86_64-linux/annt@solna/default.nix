@@ -1,6 +1,8 @@
-{ lib, namespace, ... }:
-
-with lib.${namespace};
+{
+  lib,
+  namespace,
+  ...
+}:
 let
   autoStart = [
     "nm-applet"
@@ -9,7 +11,7 @@ let
   ];
 in
 {
-  liberion = {
+  liberion = with lib.${namespace}; {
     shells = {
       aliases.defaults = on;
       sessionVariables = {

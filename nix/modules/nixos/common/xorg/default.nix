@@ -2,13 +2,14 @@
   config,
   lib,
   pkgs,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.common.xorg;
+  cfg = config.${namespace}.common.xorg;
 in
 {
-  options.liberion.common.xorg = with lib.liberion; {
+  options.${namespace}.common.xorg = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

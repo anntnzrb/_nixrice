@@ -1,10 +1,15 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  namespace,
+  ...
+}:
 let
-  cfg = config.liberion.desktop.window-managers.wayland.hyprland;
+  cfg = config.${namespace}.desktop.window-managers.wayland.hyprland;
 in
 {
-  options.liberion.desktop.window-managers.wayland.hyprland =
-    with lib.liberion;
+  options.${namespace}.desktop.window-managers.wayland.hyprland =
+    with lib.${namespace};
     with lib.types;
     {
       enable = mkOptBool';

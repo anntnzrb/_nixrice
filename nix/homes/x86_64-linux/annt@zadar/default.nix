@@ -1,8 +1,10 @@
-{ lib, namespace, ... }:
-
-with lib.${namespace};
 {
-  liberion = {
+  lib,
+  namespace,
+  ...
+}:
+{
+  liberion = with lib.${namespace}; {
     shells = {
       aliases.defaults = on;
       sessionVariables = {

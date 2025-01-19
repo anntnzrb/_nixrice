@@ -2,13 +2,14 @@
   lib,
   config,
   pkgs,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.hardware.audio;
+  cfg = config.${namespace}.hardware.audio;
 in
 {
-  options.liberion.hardware.audio = with lib.liberion; {
+  options.${namespace}.hardware.audio = with lib.${namespace}; {
     pipewire = {
       enable = mkOptBool';
     };

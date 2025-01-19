@@ -1,9 +1,14 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  namespace,
+  ...
+}:
 let
-  cfg = config.liberion.virtualisation.docker;
+  cfg = config.${namespace}.virtualisation.docker;
 in
 {
-  options.liberion.virtualisation.docker = with lib.liberion; {
+  options.${namespace}.virtualisation.docker = with lib.${namespace}; {
     enable = mkOptBool';
     enableOnBoot = mkOptBool';
   };
@@ -20,6 +25,6 @@ in
       };
     };
 
-    liberion.nixos.user.extraGroups = [ "docker" ];
+    ${namespace}.nixos.user.extraGroups = [ "docker" ];
   };
 }

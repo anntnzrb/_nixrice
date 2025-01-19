@@ -1,15 +1,20 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  namespace,
+  ...
+}:
 let
-  cfg = config.liberion.network.syncthing;
+  cfg = config.${namespace}.network.syncthing;
 in
 {
-  options.liberion.network.syncthing = with lib.liberion; {
+  options.${namespace}.network.syncthing = with lib.${namespace}; {
     enable = mkOptBool';
   };
 
   config =
     let
-      user = config.liberion.nixos.user.name;
+      user = config.${namespace}.nixos.user.name;
       syncPath = "/home/${user}/lib/sync";
     in
     lib.mkIf cfg.enable {

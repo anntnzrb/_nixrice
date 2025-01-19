@@ -1,14 +1,15 @@
 {
-  config,
   lib,
   pkgs,
+  config,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.cli.fzf;
+  cfg = config.${namespace}.cli.fzf;
 in
 {
-  options.liberion.cli.fzf = with lib.liberion; {
+  options.${namespace}.cli.fzf = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

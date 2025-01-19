@@ -1,9 +1,14 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  namespace,
+  ...
+}:
 let
-  cfg = config.liberion.boot.bootloader.systemd-boot;
+  cfg = config.${namespace}.boot.bootloader.systemd-boot;
 in
 {
-  options.liberion.boot.bootloader.systemd-boot = with lib.liberion; {
+  options.${namespace}.boot.bootloader.systemd-boot = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

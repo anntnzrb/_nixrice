@@ -1,9 +1,14 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  namespace,
+  ...
+}:
 let
-  cfg = config.liberion.boot.bootloader.grub;
+  cfg = config.${namespace}.boot.bootloader.grub;
 in
 {
-  options.liberion.boot.bootloader.grub = with lib.liberion; {
+  options.${namespace}.boot.bootloader.grub = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

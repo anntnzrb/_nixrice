@@ -1,9 +1,14 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  namespace,
+  ...
+}:
 let
-  cfg = config.liberion.cli.zoxide;
+  cfg = config.${namespace}.cli.zoxide;
 in
 {
-  options.liberion.cli.zoxide = with lib.liberion; {
+  options.${namespace}.cli.zoxide = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

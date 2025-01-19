@@ -1,10 +1,15 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  namespace,
+  ...
+}:
 let
-  cfg = config.liberion.common.xorg.picom;
+  cfg = config.${namespace}.common.xorg.picom;
 in
 {
-  options.liberion.common.xorg.picom =
-    with lib.liberion;
+  options.${namespace}.common.xorg.picom =
+    with lib.${namespace};
     with lib.types;
     {
       enable = mkOptBool';

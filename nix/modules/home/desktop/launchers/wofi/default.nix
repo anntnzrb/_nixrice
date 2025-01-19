@@ -1,9 +1,14 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  namespace,
+  ...
+}:
 let
-  cfg = config.liberion.desktop.launchers.wofi;
+  cfg = config.${namespace}.desktop.launchers.wofi;
 in
 {
-  options.liberion.desktop.launchers.wofi = with lib.liberion; {
+  options.${namespace}.desktop.launchers.wofi = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

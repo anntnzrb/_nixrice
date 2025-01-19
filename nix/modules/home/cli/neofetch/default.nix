@@ -1,14 +1,15 @@
 {
-  config,
   pkgs,
   lib,
+  config,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.cli.neofetch;
+  cfg = config.${namespace}.cli.neofetch;
 in
 {
-  options.liberion.cli.neofetch = with lib.liberion; {
+  options.${namespace}.cli.neofetch = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

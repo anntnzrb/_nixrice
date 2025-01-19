@@ -1,9 +1,14 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  namespace,
+  ...
+}:
 let
-  cfg = config.liberion.desktop.zathura;
+  cfg = config.${namespace}.desktop.zathura;
 in
 {
-  options.liberion.desktop.zathura = with lib.liberion; {
+  options.${namespace}.desktop.zathura = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

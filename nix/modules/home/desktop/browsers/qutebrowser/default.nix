@@ -1,9 +1,14 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  namespace,
+  ...
+}:
 let
-  cfg = config.liberion.desktop.browsers.qutebrowser;
+  cfg = config.${namespace}.desktop.browsers.qutebrowser;
 in
 {
-  options.liberion.desktop.browsers.qutebrowser = with lib.liberion; {
+  options.${namespace}.desktop.browsers.qutebrowser = with lib.${namespace}; {
     enable = mkOptBool';
   };
   config = lib.mkIf cfg.enable {

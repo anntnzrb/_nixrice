@@ -1,9 +1,12 @@
-{ lib, ... }:
-
+{
+  lib,
+  namespace,
+  ...
+}:
 {
   imports = [ ./hardware ];
 
-  liberion = with lib.liberion; {
+  ${namespace} = with lib.${namespace}; {
     nixos = {
       user = {
         name = "annt";

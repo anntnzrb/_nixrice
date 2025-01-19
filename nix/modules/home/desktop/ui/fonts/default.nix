@@ -1,14 +1,15 @@
 {
-  config,
   pkgs,
   lib,
+  config,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.desktop.ui.fonts;
+  cfg = config.${namespace}.desktop.ui.fonts;
 in
 {
-  options.liberion.desktop.ui.fonts = with lib.liberion; {
+  options.${namespace}.desktop.ui.fonts = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

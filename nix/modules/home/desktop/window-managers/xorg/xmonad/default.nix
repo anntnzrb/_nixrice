@@ -1,17 +1,18 @@
 {
-  config,
-  lib,
   pkgs,
+  lib,
+  config,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.desktop.window-managers.xorg.xmonad;
+  cfg = config.${namespace}.desktop.window-managers.xorg.xmonad;
 
   parseAutoStartList = xs: builtins.concatStringsSep "\n" (map (x: x + " &") xs);
 in
 {
-  options.liberion.desktop.window-managers.xorg.xmonad =
-    with lib.liberion;
+  options.${namespace}.desktop.window-managers.xorg.xmonad =
+    with lib.${namespace};
     with lib.types;
     {
       enable = mkOptBool';
@@ -24,7 +25,7 @@ in
     };
 
   config = lib.mkIf cfg.enable {
-    liberion.common.xorg = {
+    ${namespace}.common.xorg = {
       enable = true;
       inherit (cfg.compositor) picom;
     };

@@ -1,14 +1,15 @@
 {
-  config,
   lib,
   pkgs,
+  config,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.network.networkmanager;
+  cfg = config.${namespace}.network.networkmanager;
 in
 {
-  options.liberion.network.networkmanager = with lib.liberion; {
+  options.${namespace}.network.networkmanager = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

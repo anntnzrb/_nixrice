@@ -12,7 +12,7 @@ in
 {
   imports = [ inputs.nix-homebrew.darwinModules.nix-homebrew ];
 
-  options.${namespace}.homebrew = with lib.liberion; {
+  options.${namespace}.homebrew = with lib.${namespace}; {
     enable = mkOptBool';
 
     packages = {

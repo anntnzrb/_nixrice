@@ -1,16 +1,17 @@
 {
-  config,
-  lib,
   pkgs,
+  lib,
+  config,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.desktop.window-managers.wayland.sway;
+  cfg = config.${namespace}.desktop.window-managers.wayland.sway;
 in
 with lib;
 {
-  options.liberion.desktop.window-managers.wayland.sway =
-    with lib.liberion;
+  options.${namespace}.desktop.window-managers.wayland.sway =
+    with lib.${namespace};
     with types;
     {
       enable = mkOptBool';
@@ -238,8 +239,8 @@ with lib;
             xkb_model = cfg.keyboard.layout;
             xkb_layout = cfg.keyboard.layout;
             xkb_variant = cfg.keyboard.variant;
-            repeat_delay = toString config.liberion.home.keyboard.autoRepeatDelay;
-            repeat_rate = toString config.liberion.home.keyboard.autoRepeatInterval;
+            repeat_delay = toString config.${namespace}.home.keyboard.autoRepeatDelay;
+            repeat_rate = toString config.${namespace}.home.keyboard.autoRepeatInterval;
 
             # mouse/touchpad
             accel_profile = "flat";

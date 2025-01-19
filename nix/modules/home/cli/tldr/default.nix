@@ -1,9 +1,14 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  namespace,
+  ...
+}:
 let
-  cfg = config.liberion.cli.tldr;
+  cfg = config.${namespace}.cli.tldr;
 in
 {
-  options.liberion.cli.tldr = with lib.liberion; {
+  options.${namespace}.cli.tldr = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

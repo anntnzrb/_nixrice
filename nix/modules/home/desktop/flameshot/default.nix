@@ -1,9 +1,14 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  namespace,
+  ...
+}:
 let
-  cfg = config.liberion.desktop.flameshot;
+  cfg = config.${namespace}.desktop.flameshot;
 in
 {
-  options.liberion.desktop.flameshot = with lib.liberion; {
+  options.${namespace}.desktop.flameshot = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

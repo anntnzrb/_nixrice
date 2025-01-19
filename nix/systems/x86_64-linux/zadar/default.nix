@@ -2,6 +2,7 @@
   lib,
   pkgs,
   inputs,
+  namespace,
   ...
 }:
 
@@ -12,7 +13,7 @@
     ./hardware
   ] ++ [ (import (inputs.nixpkgs-unstable + "/nixos/modules/services/misc/ollama.nix")) ];
 
-  liberion = with lib.liberion; {
+  ${namespace} = with lib.${namespace}; {
     nixos = {
       user = {
         name = "annt";

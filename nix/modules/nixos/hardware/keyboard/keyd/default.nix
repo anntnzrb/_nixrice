@@ -1,9 +1,14 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  namespace,
+  ...
+}:
 let
-  cfg = config.liberion.hardware.keyboard.keyd;
+  cfg = config.${namespace}.hardware.keyboard.keyd;
 in
 {
-  options.liberion.hardware.keyboard.keyd = with lib.liberion; {
+  options.${namespace}.hardware.keyboard.keyd = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

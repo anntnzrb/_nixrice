@@ -1,15 +1,16 @@
 {
+  pkgs,
   lib,
   config,
-  pkgs,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.desktop.ui.themes;
+  cfg = config.${namespace}.desktop.ui.themes;
 in
 {
-  options.liberion.desktop.ui.themes =
-    with lib.liberion;
+  options.${namespace}.desktop.ui.themes =
+    with lib.${namespace};
     with lib.types;
     {
       enable = mkOptBool';

@@ -1,9 +1,14 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  namespace,
+  ...
+}:
 let
-  cfg = config.liberion.network.dhcp;
+  cfg = config.${namespace}.network.dhcp;
 in
 {
-  options.liberion.network.dhcp = with lib.liberion; {
+  options.${namespace}.network.dhcp = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

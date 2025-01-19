@@ -1,14 +1,15 @@
 {
-  config,
-  lib,
   pkgs,
+  lib,
+  config,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.network.vpn.mullvad;
+  cfg = config.${namespace}.network.vpn.mullvad;
 in
 {
-  options.liberion.network.vpn.mullvad = with lib.liberion; {
+  options.${namespace}.network.vpn.mullvad = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

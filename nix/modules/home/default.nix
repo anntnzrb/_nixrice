@@ -1,15 +1,16 @@
 {
-  config,
-  lib,
   pkgs,
+  lib,
+  config,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.home;
+  cfg = config.${namespace}.home;
 in
 {
-  options.liberion.home =
-    with lib.liberion;
+  options.${namespace}.home =
+    with lib.${namespace};
     with lib.types;
     {
       packages = mkOpt' (listOf package) [ ];

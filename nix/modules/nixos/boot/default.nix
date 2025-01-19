@@ -1,6 +1,10 @@
-{ config, ... }:
+{
+  config,
+  namespace,
+  ...
+}:
 let
-  _cfg = config.liberion.boot;
+  _cfg = config.${namespace}.boot;
 in
 {
   config = {

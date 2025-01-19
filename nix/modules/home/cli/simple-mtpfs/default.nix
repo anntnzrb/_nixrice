@@ -1,15 +1,16 @@
 {
-  config,
   pkgs,
   lib,
+  config,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.cli.simple-mtpfs;
+  cfg = config.${namespace}.cli.simple-mtpfs;
 in
 {
 
-  options.liberion.cli.simple-mtpfs = with lib.liberion; {
+  options.${namespace}.cli.simple-mtpfs = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

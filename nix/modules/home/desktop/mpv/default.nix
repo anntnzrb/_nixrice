@@ -1,14 +1,15 @@
 {
-  config,
-  lib,
   pkgs,
+  lib,
+  config,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.desktop.mpv;
+  cfg = config.${namespace}.desktop.mpv;
 in
 {
-  options.liberion.desktop.mpv = with lib.liberion; {
+  options.${namespace}.desktop.mpv = with lib.${namespace}; {
     enable = mkOptBool';
   };
   config = lib.mkIf cfg.enable {

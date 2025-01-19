@@ -1,9 +1,14 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  namespace,
+  ...
+}:
 let
-  cfg = config.liberion.cli.yt-dlp;
+  cfg = config.${namespace}.cli.yt-dlp;
 in
 {
-  options.liberion.cli.yt-dlp = with lib.liberion; {
+  options.${namespace}.cli.yt-dlp = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

@@ -1,9 +1,14 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  namespace,
+  ...
+}:
 let
-  cfg = config.liberion.virtualisation.virt-manager;
+  cfg = config.${namespace}.virtualisation.virt-manager;
 in
 {
-  options.liberion.virtualisation.virt-manager = with lib.liberion; {
+  options.${namespace}.virtualisation.virt-manager = with lib.${namespace}; {
     enable = mkOptBool';
   };
 
@@ -15,6 +20,6 @@ in
 
     programs.virt-manager.enable = true;
 
-    liberion.nixos.user.extraGroups = [ "libvirtd" ];
+    ${namespace}.nixos.user.extraGroups = [ "libvirtd" ];
   };
 }

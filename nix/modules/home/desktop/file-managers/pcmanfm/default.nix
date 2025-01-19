@@ -1,15 +1,16 @@
 {
+  pkgs,
   lib,
   config,
-  pkgs,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.desktop.file-managers.pcmanfm;
+  cfg = config.${namespace}.desktop.file-managers.pcmanfm;
 in
 {
-  options.liberion.desktop.file-managers.pcmanfm =
-    with lib.liberion;
+  options.${namespace}.desktop.file-managers.pcmanfm =
+    with lib.${namespace};
     with lib.types;
     {
       enable = mkOptBool';

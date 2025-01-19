@@ -1,14 +1,15 @@
 {
-  config,
   pkgs,
   lib,
+  config,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.common.xorg;
+  cfg = config.${namespace}.common.xorg;
 in
 {
-  options.liberion.common.xorg = with lib.liberion; with lib.types; { enable = mkOptBool'; };
+  options.${namespace}.common.xorg = with lib.${namespace}; with lib.types; { enable = mkOptBool'; };
 
   config = lib.mkIf cfg.enable {
     xsession = {
@@ -16,7 +17,7 @@ in
       profilePath = ".config/xorg/xprofile-hm";
       scriptPath = ".config/xorg/xsession-hm";
 
-      initExtra = with config.liberion.home.keyboard; ''
+      initExtra = with config.${namespace}.home.keyboard; ''
         ${lib.getExe pkgs.xorg.xset} r rate ${toString autoRepeatDelay} ${toString autoRepeatInterval}
       '';
     };

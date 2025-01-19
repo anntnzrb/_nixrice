@@ -1,16 +1,17 @@
 {
-  lib,
   pkgs,
+  lib,
   config,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.desktop.sxhkd;
+  cfg = config.${namespace}.desktop.sxhkd;
 
 in
 {
-  options.liberion.desktop.sxhkd =
-    with lib.liberion;
+  options.${namespace}.desktop.sxhkd =
+    with lib.${namespace};
     with lib.types;
     {
       enable = mkOptBool';

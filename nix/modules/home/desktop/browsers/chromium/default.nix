@@ -1,14 +1,15 @@
 {
-  config,
-  lib,
   pkgs,
+  lib,
+  config,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.desktop.browsers.chromium;
+  cfg = config.${namespace}.desktop.browsers.chromium;
 in
 {
-  options.liberion.desktop.browsers.chromium = with lib.liberion; {
+  options.${namespace}.desktop.browsers.chromium = with lib.${namespace}; {
     enable = mkOptBool';
   };
   config = lib.mkIf cfg.enable {

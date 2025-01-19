@@ -1,14 +1,15 @@
 {
+  pkgs,
   lib,
   config,
-  pkgs,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.desktop.feh;
+  cfg = config.${namespace}.desktop.feh;
 in
 {
-  options.liberion.desktop.feh = with lib.liberion; {
+  options.${namespace}.desktop.feh = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

@@ -12,7 +12,7 @@ in
   imports = [ ./activation.nix ];
 
   options.${namespace}.darwin =
-    with lib.liberion;
+    with lib.${namespace};
     with lib.types;
     {
       user = {

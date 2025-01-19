@@ -1,14 +1,15 @@
 {
-  config,
-  lib,
   pkgs,
+  lib,
+  config,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.desktop.launchers.bemenu;
+  cfg = config.${namespace}.desktop.launchers.bemenu;
 in
 {
-  options.liberion.desktop.launchers.bemenu = with lib.liberion; {
+  options.${namespace}.desktop.launchers.bemenu = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

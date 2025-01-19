@@ -2,14 +2,15 @@
   config,
   pkgs,
   lib,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.editors.vscode;
+  cfg = config.${namespace}.editors.vscode;
 
 in
 {
-  options.liberion.editors.vscode = with lib.liberion; {
+  options.${namespace}.editors.vscode = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

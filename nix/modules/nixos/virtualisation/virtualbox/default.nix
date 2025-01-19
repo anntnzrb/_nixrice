@@ -1,9 +1,14 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  namespace,
+  ...
+}:
 let
-  cfg = config.liberion.virtualisation.virtualbox;
+  cfg = config.${namespace}.virtualisation.virtualbox;
 in
 {
-  options.liberion.virtualisation.virtualbox = with lib.liberion; {
+  options.${namespace}.virtualisation.virtualbox = with lib.${namespace}; {
     enable = mkOptBool';
     enableExtensionPack = mkOptBool';
   };
@@ -17,6 +22,6 @@ in
       };
     };
 
-    liberion.nixos.user.extraGroups = [ "vboxusers" ];
+    ${namespace}.nixos.user.extraGroups = [ "vboxusers" ];
   };
 }

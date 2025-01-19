@@ -4,8 +4,6 @@
   namespace,
   ...
 }:
-
-with lib.${namespace};
 let
   autoStart = {
     defaults = [
@@ -20,7 +18,7 @@ let
   };
 in
 {
-  liberion = {
+  liberion = with lib.${namespace}; {
     home = {
       packages = with pkgs; [
         git # example

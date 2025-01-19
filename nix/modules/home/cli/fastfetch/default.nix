@@ -2,13 +2,14 @@
   config,
   pkgs,
   lib,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.cli.fastfetch;
+  cfg = config.${namespace}.cli.fastfetch;
 in
 {
-  options.liberion.cli.fastfetch = with lib.liberion; {
+  options.${namespace}.cli.fastfetch = with lib.${namespace}; {
     enable = mkOptBool';
   };
 

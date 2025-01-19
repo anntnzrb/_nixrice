@@ -1,14 +1,15 @@
 {
-  config,
   pkgs,
   lib,
+  config,
+  namespace,
   ...
 }:
 let
-  cfg = config.liberion.desktop.discord;
+  cfg = config.${namespace}.desktop.discord;
 in
 {
-  options.liberion.desktop.discord = with lib.liberion; {
+  options.${namespace}.desktop.discord = with lib.${namespace}; {
     enable = mkOptBool';
   };
   config = lib.mkIf cfg.enable { home.packages = [ pkgs.discord ]; };
