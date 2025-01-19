@@ -1,6 +1,6 @@
 # get the current system host name
 
-hostname := `hostname | cut -d "." -f 1`
+hostname := `uname -n | cut -d "." -f 1`
 
 # prints this menu
 default:
