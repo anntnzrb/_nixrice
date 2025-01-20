@@ -1,17 +1,14 @@
 {
   lib,
   pkgs,
-  inputs,
   namespace,
   ...
 }:
 
 {
-  # TODO: refactor when ollama is off unstable
-  disabledModules = [ "services/misc/ollama.nix" ];
   imports = [
     ./hardware
-  ] ++ [ (import (inputs.nixpkgs-unstable + "/nixos/modules/services/misc/ollama.nix")) ];
+  ];
 
   ${namespace} = with lib.${namespace}; {
     nixos = {
@@ -48,15 +45,6 @@
       lidSwitch = "ignore";
       lidSwitchDocked = "ignore";
       lidSwitchExternalPower = "ignore";
-    };
-
-    ollama = {
-      enable = true;
-      package = pkgs.ollama-cuda;
-
-      acceleration = "cuda";
-      port = 11434;
-      loadModels = [ "llama3.1:8b" ];
     };
   };
 }
