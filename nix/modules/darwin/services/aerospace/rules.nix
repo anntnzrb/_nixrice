@@ -7,8 +7,9 @@ let
     {
       appId ? null,
       appNameRegexSubstring ? null,
-      windowTitleRegexSubstring ? null,
+      checkFurtherCallbacks ? false,
       duringAerospaceStartup ? null,
+      windowTitleRegexSubstring ? null,
       workspace ? null,
       run,
     }:
@@ -21,6 +22,7 @@ let
         inherit workspace;
       };
       inherit run;
+      "check-further-callbacks" = checkFurtherCallbacks;
     };
 
   mkRules = rules: (map mkRule rules);
