@@ -39,6 +39,7 @@ in
       # Finder
       appId = "com.apple.finder";
       run = [ (mkLayout "floating") ];
+      furtherCallbacks = true;
     }
     {
       # Browser: Firefox
@@ -64,11 +65,20 @@ in
       # Docker (Desktop)
       appId = "com.electron.dockerdesktop";
       run = [ (mkLayout "floating") ];
+      furtherCallbacks = true;
     }
     {
       # RustDesk
       appId = "com.carriez.rustdesk";
       run = [ (mkLayout "floating") ];
+      furtherCallbacks = true;
+    }
+
+    # fallback rule
+    # foreign nodes go to scratch/dumpster/whatever workspace
+    # do not mess with my setup
+    {
+      run = [ (mvNodeToWorkspace 0) ];
     }
   ];
 }
