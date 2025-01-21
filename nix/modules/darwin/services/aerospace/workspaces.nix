@@ -20,7 +20,7 @@ in
   options.${namespace}.services.aerospace = {
     workspaceRange = lib.mkOption {
       type = lib.types.listOf lib.types.int;
-      default = lib.range 1 9;
+      default = lib.range 0 9;
       description = "Workspace numbers to generate bindings for";
     };
   };
