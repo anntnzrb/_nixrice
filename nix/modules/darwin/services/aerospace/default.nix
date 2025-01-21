@@ -23,14 +23,6 @@ in
   config = lib.mkIf cfg.enable {
     services.aerospace.enable = true;
 
-    services.aerospace.settings = {
-      # colored borders for active windows
-      # cf. https://nikitabobko.github.io/AeroSpace/goodies#highlight-focused-windows-with-colored-borders
-      after-startup-command = [
-        "exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=5.0"
-      ];
-    };
-
     # goodies
     # cf. https://nikitabobko.github.io/AeroSpace/goodies
     system.defaults.NSGlobalDomain = {
