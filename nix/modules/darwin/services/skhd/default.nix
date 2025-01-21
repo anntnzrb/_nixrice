@@ -4,26 +4,29 @@
   namespace,
   ...
 }:
-with lib;
 let
+  inherit (lib) concatStringsSep;
+
   cfg = config.${namespace}.services.skhd;
 
   # helpers
   keybindingsStr = concatStringsSep "\n" (
-    mapAttrsToList (
+    lib.mapAttrsToList (
       hotkey: command:
-      optionalString (command != null) ''
+      lib.optionalString (command != null) ''
         ${hotkey} : ${command}
       ''
     ) cfg.keybindings
   );
+
+  skhdConfig = concatStringsSep "\n" [ keybindingsStr ];
 in
 {
   options.${namespace}.services.skhd = with lib.${namespace}; {
     enable = mkOptBool';
 
     keybindings =
-      with types;
+      with lib.types;
       mkOpt' (attrsOf (
         nullOr (oneOf [
           str
@@ -32,11 +35,8 @@ in
       )) { };
   };
 
-  config = mkIf cfg.enable {
-    services.skhd = {
-      enable = true;
-
-      skhdConfig = concatStringsSep "\n" [ keybindingsStr ];
-    };
+  config.services.skhd = lib.mkIf cfg.enable {
+    inherit (cfg) enable;
+    inherit skhdConfig;
   };
 }
