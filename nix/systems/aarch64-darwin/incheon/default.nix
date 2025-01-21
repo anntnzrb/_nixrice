@@ -1,6 +1,11 @@
-{ lib, namespace, ... }:
 {
-  # zsh as an interactive shell; this is a force default
+  lib,
+  pkgs,
+  namespace,
+  ...
+}:
+{
+  # zsh as an interactive shell; this is a forced default
   # customization is done via hm
   programs.zsh.enable = true;
 
@@ -20,7 +25,18 @@
     };
 
     services = {
-      yabai = off;
+      aerospace = on;
+
+      skhd = {
+        enable = true;
+        keybindings =
+          let
+            mod = "alt";
+          in
+          {
+            "${mod} - return" = "open -na ${lib.getExe pkgs.alacritty}";
+          };
+      };
     };
 
     homebrew = {
