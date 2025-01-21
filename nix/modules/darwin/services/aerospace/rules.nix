@@ -6,23 +6,25 @@ let
   mkRule =
     {
       appId ? null,
-      appNameRegexSubstring ? null,
-      checkFurtherCallbacks ? false,
-      duringAerospaceStartup ? null,
-      windowTitleRegexSubstring ? null,
+      appName ? null,
+      windowTitle ? null,
       workspace ? null,
+
+      duringStartup ? null,
+      furtherCallbacks ? false,
+
       run,
     }:
     {
       "if" = lib.filterAttrs (_: v: v != null) {
         "app-id" = appId;
-        "app-name-regex-substring" = appNameRegexSubstring;
-        "window-title-regex-substring" = windowTitleRegexSubstring;
-        "during-aerospace-startup" = duringAerospaceStartup;
+        "app-name-regex-substring" = appName;
+        "window-title-regex-substring" = windowTitle;
+        "during-aerospace-startup" = duringStartup;
         inherit workspace;
       };
       inherit run;
-      "check-further-callbacks" = checkFurtherCallbacks;
+      "check-further-callbacks" = furtherCallbacks;
     };
 
   mkRules = rules: (map mkRule rules);
