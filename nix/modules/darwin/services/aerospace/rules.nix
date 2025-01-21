@@ -54,12 +54,12 @@ in
     {
       # WhatsApp
       appId = "net.whatsapp.WhatsApp";
-      run = [ (mvNodeToWorkspace 9) ];
+      run = [ (mvNodeToWorkspace 3) ];
     }
     {
       # ChatGPT
       appId = "com.openai.chat";
-      run = [ (mvNodeToWorkspace 8) ];
+      run = [ (mvNodeToWorkspace 4) ];
     }
     {
       # Docker (Desktop)
