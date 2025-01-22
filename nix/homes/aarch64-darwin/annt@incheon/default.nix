@@ -21,6 +21,7 @@
         enable = true;
         prompt.starship = on;
       };
+      preliminaryMessage.disable = true;
 
       zellij = on;
     };

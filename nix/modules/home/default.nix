@@ -1,5 +1,4 @@
 {
-  pkgs,
   lib,
   config,
   namespace,
@@ -27,9 +26,6 @@ in
         inherit (cfg.keyboard) layout variant;
       };
       stateVersion = "22.05";
-
-      # disable "Last Login..." preliminary message on OSX
-      file.".hushlogin" = lib.mkIf pkgs.stdenv.isDarwin { text = ""; };
     };
 
     systemd.user.startServices = "sd-switch";

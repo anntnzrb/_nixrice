@@ -8,6 +8,7 @@ with lib.${namespace};
       sessionVariables = {
         EDITOR = "nvim";
       };
+      preliminaryMessage.disable = true;
 
       bash = {
         enable = true;
