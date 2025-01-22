@@ -17,11 +17,7 @@ in
   options.${namespace}.services.aerospace = with lib.${namespace}; {
     enable = mkOptBool';
 
-    modifier = lib.mkOption {
-      type = lib.types.str;
-      default = "alt";
-      description = "Primary modifier key for bindings";
-    };
+    modifier = mkOpt' lib.types.str "alt";
   };
 
   config = lib.mkIf cfg.enable {

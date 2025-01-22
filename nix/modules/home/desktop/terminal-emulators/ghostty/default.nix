@@ -13,11 +13,7 @@ in
   options.${namespace}.desktop.terminal-emulators.ghostty = with lib.${namespace}; {
     enable = mkOptBool';
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.ghostty;
-      description = "Ghostty terminal package";
-    };
+    package = mkOpt' lib.types.package pkgs.ghostty;
 
     font = with lib.types; {
       size = mkOpt' ints.unsigned 10;

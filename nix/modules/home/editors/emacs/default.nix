@@ -64,16 +64,14 @@ in
   options.${namespace}.editors.emacs = with lib.${namespace}; {
     enable = mkOptBool';
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = mkEmacsPackage (
+    package = mkOpt' lib.types.package (
+      mkEmacsPackage (
         emacs30.override {
           withNativeCompilation = true;
           withTreeSitter = true;
         }
-      );
-      description = "The Emacs package to install.";
-    };
+      )
+    );
   };
 
   config = lib.mkIf cfg.enable {

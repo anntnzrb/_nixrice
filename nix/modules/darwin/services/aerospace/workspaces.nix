@@ -17,12 +17,8 @@ let
     );
 in
 {
-  options.${namespace}.services.aerospace = {
-    workspaceRange = lib.mkOption {
-      type = lib.types.listOf lib.types.int;
-      default = lib.range 0 9;
-      description = "Workspace numbers to generate bindings for";
-    };
+  options.${namespace}.services.aerospace = with lib.${namespace}; {
+    workspaceRange = with lib; mkOpt' (types.listOf types.int) (range 0 9);
   };
 
   config.services.aerospace.settings = lib.mkIf cfg.enable {

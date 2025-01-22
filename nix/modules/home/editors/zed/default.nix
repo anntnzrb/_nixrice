@@ -13,20 +13,12 @@ in
   options.${namespace}.editors.zed = with lib.${namespace}; {
     enable = mkOptBool';
 
-    package = lib.mkOption {
-      type = lib.types.package;
-      default = pkgs.zed-editor;
-      description = "The Zed editor package";
-    };
+    package = lib.types.package pkgs.zed-editor;
 
-    extraPackages = lib.mkOption {
-      type = with lib.types; listOf package;
-      default = [
-        pkgs.nixd
-        pkgs.nixfmt-rfc-style
-      ];
-      description = "Extra packages available to Zed.";
-    };
+    extraPackages = mkOpt' (with lib.types; listOf package) [
+      pkgs.nixd
+      pkgs.nixfmt-rfc-style
+    ];
   };
 
   config = lib.mkIf cfg.enable {
