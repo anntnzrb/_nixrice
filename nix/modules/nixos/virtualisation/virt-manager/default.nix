@@ -20,6 +20,6 @@ in
 
     programs.virt-manager.enable = true;
 
-    ${namespace}.nixos.user.extraGroups = [ "libvirtd" ];
+    ${namespace}.user.extraGroups = [ "libvirtd" ];
   };
 }

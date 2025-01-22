@@ -22,6 +22,6 @@ in
       };
     };
 
-    ${namespace}.nixos.user.extraGroups = [ "vboxusers" ];
+    ${namespace}.user.extraGroups = [ "vboxusers" ];
   };
 }

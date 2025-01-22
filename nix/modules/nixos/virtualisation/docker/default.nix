@@ -25,6 +25,6 @@ in
       };
     };
 
-    ${namespace}.nixos.user.extraGroups = [ "docker" ];
+    ${namespace}.user.extraGroups = [ "docker" ];
   };
 }

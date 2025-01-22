@@ -14,7 +14,7 @@ in
 
   config =
     let
-      user = config.${namespace}.nixos.user.name;
+      user = config.${namespace}.user.name;
       syncPath = "/home/${user}/lib/sync";
     in
     lib.mkIf cfg.enable {

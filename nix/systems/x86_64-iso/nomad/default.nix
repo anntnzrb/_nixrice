@@ -8,27 +8,56 @@
 }:
 
 let
-  user = "nixos";
-  pass = "nixos";
+  login = {
+    name = "nixos";
+    initialPassword = "nixos";
+  };
 in
-with lib.${namespace};
 {
   services = {
     displayManager = {
       enable = true;
       autoLogin = {
         enable = true;
-        inherit user;
+        user = login.name;
       };
     };
 
     xserver = {
       enable = true;
-      desktopManager.cinnamon = on;
+      desktopManager.cinnamon.enable = true;
     };
   };
 
-  ${namespace} = {
+  networking.wireless.enable = lib.mkForce false;
+
+  environment.systemPackages = with pkgs; [
+    # tools
+    git
+    arandr
+
+    # terminal-emulators
+    alacritty
+    kitty
+    xterm
+
+    # editors
+    inputs.neovim-annt.packages.${system}.neovim # vi-like
+    geany # gui
+
+    # browsers
+    firefox # gecko
+    brave # blink
+
+    # misc
+    pcmanfm # file manager (gui)
+  ];
+
+  ${namespace} = with lib.${namespace}; {
+    user = {
+      inherit (login) name initialPassword;
+    };
+
     boot.bootloader.systemd-boot = on;
 
     hardware.audio.pipewire = on;
@@ -37,42 +66,5 @@ with lib.${namespace};
       ssh = on;
       networkmanager = on;
     };
-
-    nixos = {
-      user = {
-        name = user;
-        initialPassword = pass;
-        isNormalUser = true;
-        extraGroups = [ "wheel" ];
-      };
-
-      variables = {
-        EDITOR = "nvim";
-      };
-
-      systemPackages = with pkgs; [
-        # tools
-        git
-        arandr
-
-        # terminal-emulators
-        alacritty
-        kitty
-        xterm
-
-        # editors
-        inputs.neovim-annt.packages.${system}.neovim # vi-like
-        geany # gui
-
-        # browsers
-        firefox # gecko
-        brave # blink
-
-        # misc
-        pcmanfm # file manager (gui)
-      ];
-    };
   };
-
-  networking.wireless.enable = lib.mkForce false;
 }
