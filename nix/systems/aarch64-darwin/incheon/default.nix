@@ -10,13 +10,10 @@
   programs.zsh.enable = true;
 
   ${namespace} = with lib.${namespace}; {
-    darwin = {
-      user = {
-        name = "annt";
-        authorizedKeys = [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHoPWVoRBmvoWF445a0vTnV2ASk+5Gy/XDTEPPjEDd8/ git"
-        ];
-      };
+    user = {
+      authorizedKeys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHoPWVoRBmvoWF445a0vTnV2ASk+5Gy/XDTEPPjEDd8/ git"
+      ];
     };
 
     system = {
