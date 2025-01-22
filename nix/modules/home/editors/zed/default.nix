@@ -13,7 +13,7 @@ in
   options.${namespace}.editors.zed = with lib.${namespace}; {
     enable = mkOptBool';
 
-    package = lib.types.package pkgs.zed-editor;
+    package = mkOpt' lib.types.package pkgs.zed-editor;
 
     extraPackages = mkOpt' (with lib.types; listOf package) [
       pkgs.nixd
