@@ -80,6 +80,10 @@ iso-nomad-x86_64-linux:
 # flake
 # -----------------------------------------------------------------------------
 
+# check flake
+check:
+    nix flake check .
+
 # update all flake inputs
 nix-flake-update-all:
     nix flake update --commit-lock-file --option commit-lockfile-summary 'chore(flake): update lockfile'
