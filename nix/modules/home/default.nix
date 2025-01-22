@@ -13,8 +13,6 @@ in
     with lib.${namespace};
     with lib.types;
     {
-      packages = mkOpt' (listOf package) [ ];
-
       keyboard = {
         layout = mkOpt' str "us";
         variant = mkOpt' str "altgr-intl";
@@ -25,7 +23,6 @@ in
 
   config = {
     home = {
-      inherit (cfg) packages;
       keyboard = {
         inherit (cfg.keyboard) layout variant;
       };

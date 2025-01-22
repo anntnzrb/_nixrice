@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   namespace,
   ...
 }:
@@ -20,10 +19,6 @@ in
 {
   liberion = with lib.${namespace}; {
     home = {
-      packages = with pkgs; [
-        git # example
-      ];
-
       keyboard = {
         layout = "us";
         variant = "altgr-intl";
