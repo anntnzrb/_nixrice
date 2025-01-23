@@ -15,6 +15,11 @@
   ];
 
   liberion = with lib.${namespace}; {
+    ssh = {
+      enable = true;
+      hosts.incheon.keys.public = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM/EtC7o13JI6meAvX4RZrh7dUlch5Jzv5rU2KrKhe+X incheon";
+    };
+
     shells = {
       aliases.defaults = on;
       zsh = {
