@@ -13,13 +13,11 @@ in
     with lib.types;
     {
       name = mkOpt' types.str "annt";
-      authorizedKeys = mkOpt' (types.listOf types.singleLineStr) [ ];
     };
 
   config = {
     users.users.${cfg.name} = {
       inherit (cfg) name;
-      openssh.authorizedKeys.keys = cfg.authorizedKeys;
     };
   };
 }
