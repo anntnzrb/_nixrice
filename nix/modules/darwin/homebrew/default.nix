@@ -24,7 +24,7 @@ in
     nix-homebrew = {
       enable = true;
       enableRosetta = system == "aarch64-darwin";
-      user = config.${namespace}.darwin.user.name;
+      user = config.${namespace}.user.name;
       autoMigrate = true;
     };
 
