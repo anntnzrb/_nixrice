@@ -35,9 +35,6 @@ in
         ShowMountedServersOnDesktop = true;
         ShowRemovableMediaOnDesktop = true;
 
-        # finder startup is ~/
-        NewWindowTargetPath = "file:///Users/${config.${namespace}.darwin.user.name}/";
-        NewWindowTarget = "PfHm";
         # multi-file tab view
         FinderSpawnTab = true;
       };
