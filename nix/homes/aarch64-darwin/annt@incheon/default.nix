@@ -9,10 +9,14 @@
 {
   imports = [ inputs.mac-app-util.homeManagerModules.default ];
 
-  home.packages = with pkgs; [
-    aldente
-    czkawka
-  ];
+  home = {
+    sessionVariables.EDITOR = "nvim";
+
+    packages = with pkgs; [
+      aldente
+      czkawka
+    ];
+  };
 
   liberion = with lib.${namespace}; {
     ssh = {
