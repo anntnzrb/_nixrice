@@ -21,7 +21,19 @@
   liberion = with lib.${namespace}; {
     ssh = {
       enable = true;
-      hosts.incheon.keys.public = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM/EtC7o13JI6meAvX4RZrh7dUlch5Jzv5rU2KrKhe+X incheon";
+      hosts = {
+        incheon = {
+          keys.public = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM/EtC7o13JI6meAvX4RZrh7dUlch5Jzv5rU2KrKhe+X incheon";
+        };
+        git = {
+          hostname = "github.com";
+          user = "git";
+          keys.public = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG+2YoDrSYPW7ucDqCz/lpNvFzLo4ZY3I1Afg/SV5N3P git";
+        };
+        sops = {
+          keys.public = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM3ljZSRJAutWneaqwajNnvntyZIUWKpWy82AL3hsIjT sops";
+        };
+      };
     };
 
     shells = {

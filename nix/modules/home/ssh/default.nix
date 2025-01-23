@@ -2,6 +2,7 @@
   lib,
   config,
   namespace,
+  host,
   ...
 }:
 let
@@ -9,31 +10,31 @@ let
 
   sshDir = "${config.home.homeDirectory}/.ssh";
 
-  mkKeyFile =
-    { name, key }:
-    {
-      "${sshDir}/${name}.pub" = {
-        force = true;
-        text = key;
-      };
+  mkKeyFile = filename: key: {
+    "${sshDir}/${filename}" = {
+      force = true;
+      text = key;
     };
+  };
 
   mkHostConfig =
     name:
     {
-      hostname ? name,
+      hostname ? host,
       user ? null,
       keys ? { },
+      identityFile ? "${sshDir}/${name}",
+      identitiesOnly ? true,
     }:
     {
       matchBlock = {
-        inherit hostname;
+        inherit hostname identityFile identitiesOnly;
       } // lib.optionalAttrs (user != null) { inherit user; };
 
-      files = lib.optional (keys ? public) (mkKeyFile {
-        inherit name;
-        key = keys.public;
-      });
+      files = lib.concatLists [
+        (lib.optional (keys.public != null) (mkKeyFile "${name}.pub" keys.public))
+        (lib.optional (keys.private != null) (mkKeyFile name keys.private))
+      ];
     };
 
 in
@@ -56,8 +57,14 @@ in
                 type = types.submodule {
                   options = {
                     public = mkOption {
-                      type = types.str;
+                      type = types.nullOr types.str;
+                      default = null;
                       description = "Public key content";
+                    };
+                    private = mkOption {
+                      type = types.nullOr types.str;
+                      default = null;
+                      description = "Private key content";
                     };
                   };
                 };
@@ -73,7 +80,8 @@ in
 
   config = lib.mkIf cfg.enable {
     programs.ssh = {
-      enable = true;
+      inherit (cfg) enable;
+      hashKnownHosts = true;
       matchBlocks = lib.mapAttrs (name: hostCfg: (mkHostConfig name hostCfg).matchBlock) cfg.hosts;
     };
 
