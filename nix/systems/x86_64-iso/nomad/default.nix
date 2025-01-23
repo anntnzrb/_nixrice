@@ -63,7 +63,6 @@ in
     hardware.audio.pipewire = on;
 
     network = {
-      ssh = on;
       networkmanager = on;
     };
   };

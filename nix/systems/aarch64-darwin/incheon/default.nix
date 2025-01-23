@@ -10,12 +10,6 @@
   programs.zsh.enable = true;
 
   ${namespace} = with lib.${namespace}; {
-    user = {
-      authorizedKeys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHoPWVoRBmvoWF445a0vTnV2ASk+5Gy/XDTEPPjEDd8/ git"
-      ];
-    };
-
     system = {
       trackpad = on;
       ui.menuBar.hide = false;

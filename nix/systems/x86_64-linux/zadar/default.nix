@@ -13,12 +13,6 @@
   time.timeZone = "America/Guayaquil";
 
   ${namespace} = with lib.${namespace}; {
-    user = {
-      authorizedKeys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHoPWVoRBmvoWF445a0vTnV2ASk+5Gy/XDTEPPjEDd8/ git"
-      ];
-    };
-
     # no dual-boot. systemd-boot suffices
     boot.bootloader.systemd-boot = on;
 
@@ -28,7 +22,6 @@
 
     network = {
       networkmanager = on;
-      ssh = on;
     };
   };
 
