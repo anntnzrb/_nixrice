@@ -7,5 +7,9 @@
 
   time.timeZone = "America/Guayaquil";
 
-  wsl.enable = true;
+  wsl = {
+    enable = true;
+    defaultUser = "annt";
+    docker-desktop.enable = true;
+  };
 }
