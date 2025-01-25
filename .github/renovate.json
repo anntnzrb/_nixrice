@@ -1,3 +1,17 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json"
+   "$schema":"https://docs.renovatebot.com/renovate-schema.json",
+
+   "commitMessagePrefix":"deps:",
+   "commitMessageAction":"update",
+   "prConcurrentLimit":1,
+   "addLabels":[
+      "dependencies"
+   ],
+
+   "nix":{
+      "enabled":true
+   },
+   "lockFileMaintenance":{
+      "enabled":true
+   }
 }
