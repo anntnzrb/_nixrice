@@ -79,6 +79,7 @@ Around mid-late _2022_ I entered the world of [NixOS](https://nixos.org), ( ...
 - [Derek "_DistroTube_" Taylor's dotfiles](https://gitlab.com/dwt1/dotfiles)
 - [David Wilson's dotfiles](https://github.com/daviwil/dotfiles)
 - [Henrik Lissner's dotfiles](https://github.com/hlissner/dotfiles)
+- [`Misterio77`'s nix-starter-configs](https://github.com/Misterio77/nix-starter-configs)
 - [Jake Hamilton's dotfiles](https://github.com/jakehamilton/config)
 - [Jörg "`mic92`" Thalheim's dotfiles](https://github.com/Mic92/dotfiles)
 - [Austin "`khaneliman`" Horstman's dotfiles](https://github.com/khaneliman/khanelinix)
