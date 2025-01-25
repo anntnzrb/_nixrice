@@ -31,23 +31,18 @@
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
-    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
-
     # self pkgs
     nurpkgs.url = "github:anntnzrb/nurpkgs/main";
-    nurpkgs.inputs.systems.follows = "systems";
 
     # user environment manager
     home-manager.url = "github:nix-community/home-manager/release-24.11"; # NOTE: match nixpkgs
     home-manager.inputs.nixpkgs.follows = "nixpkgs-stable";
-
     home-manager-unstable.url = "github:nix-community/home-manager/master";
     home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs-stable";
 
     # flake framework
     snowfall-lib.url = "github:snowfallorg/lib/main";
     snowfall-lib.inputs.nixpkgs.follows = "nixpkgs-stable";
-    snowfall-lib.inputs.flake-compat.follows = "flake-compat";
 
     # collection of hardware modules for systems
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
@@ -59,8 +54,12 @@
     # pre-commit
     pre-commit-hooks.url = "github:cachix/git-hooks.nix/master";
     pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs-unstable";
-    pre-commit-hooks.inputs.flake-compat.follows = "flake-compat";
     pre-commit-hooks.inputs.gitignore.follows = "";
+
+    # -------------------------------------------------------------------------
+    # WSL
+    # -------------------------------------------------------------------------
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
 
     # -------------------------------------------------------------------------
     # darwin
@@ -76,7 +75,6 @@
 
     # fix .app bundles
     mac-app-util.url = "github:hraban/mac-app-util/master";
-    mac-app-util.inputs.flake-compat.follows = "flake-compat";
 
     # -------------------------------------------------------------------------
     # misc
@@ -90,14 +88,5 @@
     # Firefox extensions (add-ons)
     firefox-addons.url = "github:nix-community/nur-combined/master?dir=repos/rycee/pkgs/firefox-addons";
     firefox-addons.inputs.nixpkgs.follows = "nixpkgs-stable";
-    firefox-addons.inputs.flake-utils.follows = "flake-utils";
-
-    # -------------------------------------------------------------------------
-    # follows
-    # -------------------------------------------------------------------------
-    systems.url = "github:nix-systems/default/main";
-    flake-utils.url = "github:numtide/flake-utils/main";
-    flake-utils.inputs.systems.follows = "systems";
-    flake-compat.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
   };
 }
