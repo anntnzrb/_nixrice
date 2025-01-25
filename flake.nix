@@ -1,6 +1,28 @@
 {
   description = "Liberion's Core";
 
+  outputs =
+    inputs:
+    inputs.snowfall-lib.mkFlake {
+      inherit inputs;
+
+      src = ./nix;
+
+      snowfall =
+        let
+          codeName = "liberion";
+        in
+        {
+          namespace = codeName;
+          meta.name = codeName;
+          meta.title = codeName;
+        };
+
+      overlays = [ inputs.emacs-overlay.overlays.default ];
+
+      channels-config.allowUnfree = true;
+    };
+
   inputs = {
     # -------------------------------------------------------------------------
     # nix
@@ -78,26 +100,4 @@
     flake-utils.inputs.systems.follows = "systems";
     flake-compat.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
   };
-
-  outputs =
-    inputs:
-    inputs.snowfall-lib.mkFlake {
-      inherit inputs;
-
-      src = ./nix;
-
-      snowfall =
-        let
-          codeName = "liberion";
-        in
-        {
-          namespace = codeName;
-          meta.name = codeName;
-          meta.title = codeName;
-        };
-
-      overlays = [ inputs.emacs-overlay.overlays.default ];
-
-      channels-config.allowUnfree = true;
-    };
 }
