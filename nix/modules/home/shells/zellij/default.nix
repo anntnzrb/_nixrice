@@ -12,6 +12,7 @@ in
     ./keybinds.nix
     ./themes.nix
     ./plugins.nix
+    ./layouts.nix
   ];
 
   options.${namespace}.shells.zellij = with lib.${namespace}; {
@@ -43,8 +44,6 @@ in
         attach_to_session = true;
       };
     };
-
-    xdg.configFile."zellij/layouts".source = ./layouts;
 
     home.shellAliases = {
       zll = "zellij";
