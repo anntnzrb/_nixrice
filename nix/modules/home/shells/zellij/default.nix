@@ -34,7 +34,6 @@ in
         default_mode = "locked";
         simplified_ui = false;
         default_cwd = "${config.home.homeDirectory}";
-        default_layout = "default";
         mouse_mode = true;
         pane_frames = true;
         on_force_close = "detach";
