@@ -171,6 +171,10 @@
           // global
           // ----------------------------------------------------------------------
 
+          shared_among "normal" "resize" "tab" "scroll" "prompt" {
+            bind "p" { SwitchToMode "pane"; }
+          }
+
           shared_except "locked" "renametab" "renamepane" {
               bind "Ctrl b" { SwitchToMode "locked"; }
               bind "Ctrl q" { Quit; }
