@@ -6,12 +6,15 @@
 }:
 let
   cfg = config.${namespace}.shells.zellij;
-
-  mkConfig = files: lib.concatStrings (map import files);
 in
 {
-  options.${namespace}.shells.zellij = with lib.${namespace}; {
+  imports = [
+    ./keybinds.nix
+    ./themes.nix
+    ./plugins.nix
+  ];
 
+  options.${namespace}.shells.zellij = with lib.${namespace}; {
     enable = mkOptBool';
     enableBashIntegration = mkOptDisabled';
     enableZshIntegration = mkOptDisabled';
@@ -41,11 +44,6 @@ in
       };
     };
 
-    xdg.configFile."zellij/config.kdl".text = mkConfig [
-      ./keybinds.nix
-      ./themes.nix
-      ./plugins.nix
-    ];
     xdg.configFile."zellij/layouts".source = ./layouts;
 
     home.shellAliases = {
