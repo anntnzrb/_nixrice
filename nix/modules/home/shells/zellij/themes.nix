@@ -1,0 +1,4 @@
+# kdl
+''
+  theme "catppuccin-frappe"
+''
