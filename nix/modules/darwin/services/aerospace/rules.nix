@@ -52,6 +52,11 @@ in
       run = [ (mvNodeToWorkspace 2) ];
     }
     {
+      # Terminal: Rio
+      appId = "com.raphaelamorim.rio";
+      run = [ (mvNodeToWorkspace 2) ];
+    }
+    {
       # WhatsApp
       appId = "net.whatsapp.WhatsApp";
       run = [ (mvNodeToWorkspace 3) ];
