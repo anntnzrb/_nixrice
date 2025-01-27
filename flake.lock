@@ -2774,6 +2774,40 @@
         "type": "github"
       }
     },
+    "rio-catppuccin": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1732542095,
+        "narHash": "sha256-TMhSufhDB3ZQ8/dIDx33NLzNsfjFwnUdRDOV/jF/EGM=",
+        "owner": "catppuccin",
+        "repo": "rio",
+        "rev": "13c2fab4d416625d49b54b9c1b97f12e34e85ca1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "catppuccin",
+        "ref": "main",
+        "repo": "rio",
+        "type": "github"
+      }
+    },
+    "rio-dracula": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1731925203,
+        "narHash": "sha256-+vKyIUqbHjsR1Gtw+oWpZpmFgnLv6wf9Q4eb666H2QI=",
+        "owner": "dracula",
+        "repo": "rio-terminal",
+        "rev": "d739b1753e69d6e937b9d0d63004380b8ad47a7d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dracula",
+        "ref": "main",
+        "repo": "rio-terminal",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "darwin": "darwin",
@@ -2792,6 +2826,8 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nurpkgs": "nurpkgs",
         "pre-commit-hooks": "pre-commit-hooks",
+        "rio-catppuccin": "rio-catppuccin",
+        "rio-dracula": "rio-dracula",
         "snowfall-lib": "snowfall-lib"
       }
     },

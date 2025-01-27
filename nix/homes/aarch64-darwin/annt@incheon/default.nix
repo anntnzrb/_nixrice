@@ -75,6 +75,9 @@
           enable = true;
           font.size = 14.0;
         };
+
+        rio.enable = true;
+
         ghostty = {
           enable = false;
           font.size = 16;

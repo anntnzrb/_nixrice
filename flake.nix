@@ -88,5 +88,12 @@
     # Firefox extensions (add-ons)
     firefox-addons.url = "github:nix-community/nur-combined/master?dir=repos/rycee/pkgs/firefox-addons";
     firefox-addons.inputs.nixpkgs.follows = "nixpkgs-stable";
+
+    ## rio themes
+    rio-catppuccin.url = "github:catppuccin/rio/main";
+    rio-catppuccin.flake = false;
+
+    rio-dracula.url = "github:dracula/rio-terminal/main";
+    rio-dracula.flake = false;
   };
 }
