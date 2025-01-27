@@ -7,9 +7,8 @@
 let
   cfg = config.${namespace}.desktop.terminal-emulators.alacritty;
 in
-with lib.${namespace};
 {
-  options.${namespace}.desktop.terminal-emulators.alacritty = {
+  options.${namespace}.desktop.terminal-emulators.alacritty = with lib.${namespace}; {
     enable = mkOptBool';
     font.size = mkOpt' lib.types.float 10.0;
   };
