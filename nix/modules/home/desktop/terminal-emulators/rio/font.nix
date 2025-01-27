@@ -1,9 +1,13 @@
 {
   lib,
   pkgs,
+  config,
+  namespace,
   ...
 }:
 let
+  cfg = config.${namespace}.desktop.terminal-emulators.rio;
+
   fonts = {
     iosevka-comfy-motion = {
       name = "Iosevka Comfy Motion";
@@ -22,7 +26,7 @@ in
     home.packages = lib.attrsets.mapAttrsToList (_: font: font.pkg) fonts;
 
     programs.rio.settings.fonts = {
-      size = 14;
+      inherit (cfg.font) size;
 
       regular = {
         family = fonts.iosevka-comfy-motion.name;

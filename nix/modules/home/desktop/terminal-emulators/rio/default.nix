@@ -19,6 +19,7 @@ in
 
   options.${namespace}.desktop.terminal-emulators.rio = with lib.${namespace}; {
     enable = mkOptBool';
+    font.size = mkOpt' lib.types.int 15;
   };
 
   config.programs.rio = lib.mkIf cfg.enable {

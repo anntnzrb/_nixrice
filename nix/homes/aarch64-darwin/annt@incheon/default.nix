@@ -70,8 +70,13 @@
     };
 
     desktop = {
-      terminal-emulators.rio.enable = true;
+      terminal-emulators.rio = {
+        enable = true;
+        font.size = 16;
+      };
+
       ui.fonts = on;
+
       browsers.firefox = {
         enable = true;
         package.install = false;
