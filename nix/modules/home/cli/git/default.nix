@@ -50,7 +50,12 @@ in
       };
     };
 
-    programs.lazygit = lib.mkIf cfg.lazygit.enable { enable = true; };
+    programs.lazygit = lib.mkIf cfg.lazygit.enable {
+      enable = true;
+      settings = {
+        gui.showCommandLog = false;
+      };
+    };
 
     home.shellAliases = lib.mkIf cfg.lazygit.enable { gg = "lazygit"; };
   };
