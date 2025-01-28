@@ -11,7 +11,7 @@
     [
       # utils
       ublock-origin # ad-blocker
-      clearurls
+      #clearurls # broken
       istilldontcareaboutcookies
       sponsorblock
 
