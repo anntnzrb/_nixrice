@@ -6,9 +6,9 @@
 let
   themeDir = "rio/themes";
 
-  themes = {
-    catppuccin-mocha = "${inputs.rio-catppuccin}/themes/catppuccin-mocha.toml";
-    dracula = "${inputs.rio-dracula}/dracula.toml";
+  themes = with inputs; {
+    catppuccin-mocha = rio-catppuccin + "/themes/catppuccin-mocha.toml";
+    dracula = rio-dracula + "/dracula.toml";
   };
 in
 {
