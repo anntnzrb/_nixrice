@@ -117,7 +117,7 @@
       # unstable version of home-manager
       # used for unmerged new modules
       url = "github:nix-community/home-manager/master";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     firefox-addons = {
