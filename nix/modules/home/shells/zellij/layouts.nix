@@ -14,10 +14,10 @@ let
     names: lib.foldl (acc: name: acc // (mkLayout name (import ./layouts/${name}.nix))) { } names;
 in
 {
-  config.programs.zellij.settings.default_layout = "def";
+  config.programs.zellij.settings.default_layout = "welcome";
 
   config.xdg.configFile = mkLayouts [
     "base"
-    "def"
+    "rice"
   ];
 }
