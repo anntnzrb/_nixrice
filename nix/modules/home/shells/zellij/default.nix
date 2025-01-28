@@ -35,7 +35,7 @@ in
         simplified_ui = false;
         default_cwd = "${config.home.homeDirectory}";
         mouse_mode = true;
-        pane_frames = true;
+        pane_frames = false;
         on_force_close = "detach";
         scroll_buffer_size = 10000;
         copy_clipboard = "primary";
