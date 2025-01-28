@@ -1,16 +1,16 @@
-# \*nixrice
+# \*nixrice 🍚✨
 
 [![Built with Nix](https://builtwithnix.org/badge.svg)](https://builtwithnix.org)
 
-## Disclaimer
+## 🧪 Disclaimer
 
-This repository serves as a laboratory. It is meant for experimentation and
-should be considered _unstable_, _biased_ and sometimes even _untested_.
+This repository is my digital laboratory - a playground for unstable experiments
+and strong opinions. Configs might bite, features may mutate, and some
+components could spontaneously combust. Consider this as _unstable_, _biased_
+and sometimes even _untested_. That said, feel free to poke around and steal
+anything useful.
 
-Nevertheless feel free to take a look and learn from it, experimenting and
-sharing is encouraged.
-
-## Introduction
+## 🚀 Introduction
 
 The journey begins around _2019_-ish, back when I was a complete novice in the
 _\*nix_ world. The way I used to manage my configurations originally was by
@@ -26,7 +26,7 @@ at any _libre-whatever_ platform. More on this on the
 > The following _.files_ have accompanied me since _2019_-ish and have been
 > under **vc** since _2020_.
 
-**NOTE**: Consider reading the [Disclaimer](#disclaimer) section.
+**NOTE**: Consider reading the [🧪 Disclaimer](#disclaimer) section.
 
 ## Dotfile Configuration Systems (stow, chezmoi, ansible, ...)
 
@@ -58,9 +58,9 @@ Around mid-late _2022_ I entered the world of [NixOS](https://nixos.org), ( ...
 > I encourage the reader to browse through this repository's commit history to
 > see how the structured of it has evolved over time.
 
-## Acknowledgments
+## 🙏 Acknowledgments
 
-### People
+### 👥 People
 
 - [Luke Smith](https://github.com/lukesmithxyz)
 - [Derek "_DistroTube_" Taylor](https://www.youtube.com/@DistroTube)
@@ -72,7 +72,7 @@ Around mid-late _2022_ I entered the world of [NixOS](https://nixos.org), ( ...
 - [Gavin Freeborn](https://www.youtube.com/@GavinFreeborn)
 - [gotbletu](https://www.youtube.com/@gotbletu)
 
-### Resources
+### 📚 Resources
 
 - [`xero`'s dotfiles](https://github.com/xero/dotfiles)
 - [Luke Smith's dotfiles](https://github.com/lukesmithxyz/voidrice)
@@ -84,7 +84,7 @@ Around mid-late _2022_ I entered the world of [NixOS](https://nixos.org), ( ...
 - [Jörg "`mic92`" Thalheim's dotfiles](https://github.com/Mic92/dotfiles)
 - [Austin "`khaneliman`" Horstman's dotfiles](https://github.com/khaneliman/khanelinix)
 
-## COPYING
+## 📜 COPYING
 
 Refer to the [COPYING](./COPYING) file for licensing information.
 
