@@ -8,15 +8,11 @@
 
       src = ./nix;
 
-      snowfall =
-        let
-          codeName = "liberion";
-        in
-        {
-          namespace = codeName;
-          meta.name = codeName;
-          meta.title = codeName;
-        };
+      snowfall = rec {
+        namespace = "liberion";
+        meta.name = namespace;
+        meta.title = namespace;
+      };
 
       overlays = [ inputs.emacs-overlay.overlays.default ];
 
@@ -25,75 +21,133 @@
 
   inputs = {
     # -------------------------------------------------------------------------
-    # nix
+    # nix & nixpkgs
     # -------------------------------------------------------------------------
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs = {
+      # main nixpkgs reference, most likely pointing to stable
+      url = "github:nixos/nixpkgs/nixos-24.11";
+    };
 
-    # self pkgs
-    nurpkgs.url = "github:anntnzrb/nurpkgs/main";
+    nixpkgs-stable = {
+      # stable version of nixpkgs
+      url = "github:nixos/nixpkgs/nixos-24.11";
+    };
 
-    # user environment manager
-    home-manager.url = "github:nix-community/home-manager/release-24.11"; # NOTE: match nixpkgs
-    home-manager.inputs.nixpkgs.follows = "nixpkgs-stable";
-    home-manager-unstable.url = "github:nix-community/home-manager/master";
-    home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs-stable";
+    nixpkgs-unstable = {
+      # unstable version of nixpkgs
+      url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    };
 
-    # flake framework
-    snowfall-lib.url = "github:snowfallorg/lib/main";
-    snowfall-lib.inputs.nixpkgs.follows = "nixpkgs-stable";
-
-    # collection of hardware modules for systems
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-
-    # generate images (iso, sd, amazon, ...)
-    nixos-generators.url = "github:nix-community/nixos-generators/master";
-    nixos-generators.inputs.nixpkgs.follows = "nixpkgs-stable";
-
-    # pre-commit
-    pre-commit-hooks.url = "github:cachix/git-hooks.nix/master";
-    pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs-unstable";
-    pre-commit-hooks.inputs.gitignore.follows = "";
+    nurpkgs = {
+      # self hosted nix expressions
+      url = "github:anntnzrb/nurpkgs/main";
+    };
 
     # -------------------------------------------------------------------------
-    # WSL
+    # tools
     # -------------------------------------------------------------------------
-    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+    snowfall-lib = {
+      # snowfall-lib is an opinionated flake framework
+      # it forces a predefined schema
+      url = "github:snowfallorg/lib/main";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
+
+    pre-commit-hooks = {
+      # run hooks before committing
+      # user for linting, formatting and more
+      url = "github:cachix/git-hooks.nix/master";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.gitignore.follows = "";
+    };
 
     # -------------------------------------------------------------------------
-    # darwin
+    # systems
     # -------------------------------------------------------------------------
-    # macOS support
-    darwin.url = "github:LnL7/nix-darwin/master";
-    darwin.inputs.nixpkgs.follows = "nixpkgs-stable";
+    nixos-generators = {
+      # is a collection of image builders (iso, sd, vm, ...)
+      url = "github:nix-community/nixos-generators/master";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
 
-    # nix-homebrew integration
-    nix-homebrew.url = "github:zhaofengli/nix-homebrew/main";
-    nix-homebrew.inputs.nixpkgs.follows = "nixpkgs-stable";
-    nix-homebrew.inputs.nix-darwin.follows = "darwin";
+    nixos-hardware = {
+      # is a collection of hardware modules for systems
+      url = "github:NixOS/nixos-hardware/master";
+    };
 
-    # fix .app bundles
-    mac-app-util.url = "github:hraban/mac-app-util/master";
+    nixos-wsl = {
+      # NixOS support on WSL
+      url = "github:nix-community/nixos-wsl/main";
+    };
+
+    darwin = {
+      # nix support on macOS (darwin)
+      url = "github:lnl7/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
+
+    nix-homebrew = {
+      ## darwin
+      # homebrew integration for nix
+      url = "github:zhaofengli/nix-homebrew/main";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+      inputs.nix-darwin.follows = "darwin";
+    };
+
+    mac-app-util = {
+      ## darwin
+      # allows nix-managed programs to be indexed by macOS Spotlight
+      url = "github:hraban/mac-app-util/master";
+    };
 
     # -------------------------------------------------------------------------
     # misc
     # -------------------------------------------------------------------------
-    # Neovim
-    neovim-annt.url = "github:anntnzrb/nvf/main";
 
-    # Emacs
-    emacs-overlay.url = "github:nix-community/emacs-overlay/master";
+    home-manager = {
+      # allows managing the environment at user level
+      # provides modules for many programs
+      url = "github:nix-community/home-manager/release-24.11";
 
-    # Firefox extensions (add-ons)
-    firefox-addons.url = "github:nix-community/nur-combined/master?dir=repos/rycee/pkgs/firefox-addons";
-    firefox-addons.inputs.nixpkgs.follows = "nixpkgs-stable";
+      # NOTE: match nixpkgs main ref.
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
 
-    ## rio themes
-    rio-catppuccin.url = "github:catppuccin/rio/main";
-    rio-catppuccin.flake = false;
+    home-manager-unstable = {
+      # unstable version of home-manager
+      # used for unmerged new modules
+      url = "github:nix-community/home-manager/master";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
 
-    rio-dracula.url = "github:dracula/rio-terminal/main";
-    rio-dracula.flake = false;
+    firefox-addons = {
+      # addons (extensions) for firefox as nix expressions
+      url = "github:nix-community/nur-combined/master?dir=repos/rycee/pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
+
+    emacs-overlay = {
+      # bleeding-edge GNU Emacs in nix
+      url = "github:nix-community/emacs-overlay/master";
+    };
+
+    neovim-annt = {
+      # annt's neovim
+      url = "github:anntnzrb/nvf/main";
+    };
+
+    rio-catppuccin = {
+      ## rio themes
+      # catppuccin
+      url = "github:catppuccin/rio/main";
+      flake = false;
+    };
+
+    rio-dracula = {
+      ## rio themes
+      # dracula
+      url = "github:dracula/rio-terminal/main";
+      flake = false;
+    };
   };
 }
