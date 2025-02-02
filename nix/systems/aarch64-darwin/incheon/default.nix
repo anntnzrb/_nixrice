@@ -44,6 +44,7 @@
           "docker"
           "transmission"
           "vlc"
+          "ghostty"
 
           # dev
           "visual-studio-code"

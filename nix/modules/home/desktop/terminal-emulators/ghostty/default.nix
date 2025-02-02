@@ -2,26 +2,41 @@
 {
   lib,
   pkgs,
+  inputs,
   config,
   namespace,
   ...
 }:
 let
   cfg = config.${namespace}.desktop.terminal-emulators.ghostty;
+
+  fonts = {
+    iosevka-comfy-motion = {
+      name = "Iosevka Comfy Motion";
+      pkg = pkgs.iosevka-comfy.comfy-motion;
+    };
+  };
+
+  mod = "programs/ghostty.nix";
 in
 {
+  disabledModules = [ mod ];
+  imports = [ (import "${inputs.home-manager-unstable}/modules/${mod}") ];
+
   options.${namespace}.desktop.terminal-emulators.ghostty = with lib.${namespace}; {
     enable = mkOptBool';
 
-    package = mkOpt' lib.types.package pkgs.ghostty;
+    package = with lib.types; mkOpt' (nullOr package) pkgs.ghostty;
 
     font = with lib.types; {
       size = mkOpt' ints.unsigned 10;
-      family = mkOpt' str "ZedMono Nerd Font Mono";
+      family = mkOpt' str fonts.iosevka-comfy-motion.name;
     };
   };
 
   config = lib.mkIf cfg.enable {
+    home.packages = lib.attrsets.mapAttrsToList (_: font: font.pkg) fonts;
+
     programs.ghostty = {
       inherit (cfg) enable package;
       settings = {
@@ -34,7 +49,7 @@ in
         font-family-bold-italic = cfg.font.family;
       };
 
-      installBatSyntax = true;
+      installBatSyntax = lib.mkIf (cfg.package != null) true;
 
       # these will most likely be set to to true by default
       enableBashIntegration = true;

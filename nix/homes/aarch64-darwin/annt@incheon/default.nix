@@ -70,9 +70,12 @@
     };
 
     desktop = {
-      terminal-emulators.rio = {
+      terminal-emulators.ghostty = {
         enable = true;
-        font.size = 16;
+        package = null; # use brew. darwin pkg is broken
+        font = {
+          size = 15;
+        };
       };
 
       ui.fonts = on;
