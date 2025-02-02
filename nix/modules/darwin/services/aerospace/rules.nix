@@ -52,6 +52,11 @@ in
       run = [ (mvNodeToWorkspace 2) ];
     }
     {
+      # Terminal: Ghostty
+      appId = "com.mitchellh.ghostty";
+      run = [ (mvNodeToWorkspace 2) ];
+    }
+    {
       # Terminal: Rio
       appId = "com.raphaelamorim.rio";
       run = [ (mvNodeToWorkspace 2) ];
