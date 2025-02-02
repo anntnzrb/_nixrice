@@ -19,6 +19,7 @@ in
     enable = mkOptBool';
     enableBashIntegration = mkOptDisabled';
     enableZshIntegration = mkOptDisabled';
+    enableFishIntegration = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {
