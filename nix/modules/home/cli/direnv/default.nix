@@ -7,6 +7,8 @@
 let
   inherit (lib.${namespace}.module) mkOptBool';
 
+  exe = lib.getExe config.programs.direnv.package;
+
   cfg = config.${namespace}.cli.direnv;
 in
 {
@@ -21,6 +23,6 @@ in
       nix-direnv.enable = true;
     };
 
-    home.shellAliases.dirrr = "direnv allow && direnv reload";
+    home.shellAliases.dirrr = "${exe} allow && ${exe} reload";
   };
 }
