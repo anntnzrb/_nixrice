@@ -39,9 +39,15 @@ in
     rm = "${getExe' uutils "rm"} --verbose";
     rmfr = "${getExe' uutils "rm"} --recursive --force --verbose";
     wget = "${getExe pkgs.wget} --no-hsts";
-    zip = "${getExe pkgs.zip} --recurse-paths --verbose";
+    zip = "${getExe pkgs.zip "zip"} --recurse-paths --verbose -9";
     tnet = "${getExe pkgs.unixtools.ping} --count 2 8.8.8.8";
     gen-str = "${getExe' uutils "tr"} --delete --complement 'A-Za-z0-9' < /dev/urandom | ${getExe' uutils "head"} --bytes 16";
+
+    dir-print-empty = "${getExe pkgs.fd} --color=always --type empty --type directory .";
+    dir-print-rm = "${getExe pkgs.fd} --color=always --type empty --type directory . --exec ${getExe' uutils "rmdir"} --verbose {} \;";
+
+    file-print-empty = "${getExe pkgs.fd} --color=always --type empty --type file .";
+    file-print-rm = "${getExe pkgs.fd} --color=always --type empty --type directory . --exec ${getExe' uutils "rm"} --verbose {} \;";
 
     # linux
     lsblk = mkIf isLinux "lsblk --all --ascii";
