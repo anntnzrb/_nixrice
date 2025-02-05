@@ -5,7 +5,6 @@ in
 {
   ${namespace} = {
     shells = {
-      aliases.defaults = on;
       sessionVariables = {
         EDITOR = "nvim";
       };

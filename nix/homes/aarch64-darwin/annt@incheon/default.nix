@@ -39,8 +39,6 @@ in
     };
 
     shells = {
-      aliases.defaults = on;
-
       zsh = {
         enable = true;
         prompt.starship = on;

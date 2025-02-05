@@ -33,7 +33,6 @@ in
     };
 
     shells = {
-      aliases.defaults = on;
       sessionVariables = {
         BROWSER = "firefox";
         EDITOR = "nvim";

@@ -15,7 +15,6 @@ in
 {
   liberion = {
     shells = {
-      aliases.defaults = on;
       sessionVariables = {
         BROWSER = "chromium";
         EDITOR = "nvim";

@@ -9,7 +9,6 @@ in
 {
   liberion = {
     shells = {
-      aliases.defaults = on;
       sessionVariables.EDITOR = "nvim";
 
       bash = {

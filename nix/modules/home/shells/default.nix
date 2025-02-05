@@ -23,7 +23,6 @@ in
   ];
 
   options.${namespace}.shells = {
-    aliases.defaults.enable = mkOptBool';
     sessionVariables = mkOpt' (attrsOf str) { };
     preliminaryMessage.disable = mkOptBool';
   };
