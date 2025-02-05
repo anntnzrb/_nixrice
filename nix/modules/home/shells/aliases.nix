@@ -41,11 +41,13 @@ in
     wget = "${getExe pkgs.wget} --no-hsts";
     zip = "${getExe pkgs.zip "zip"} --recurse-paths --verbose -9";
     tnet = "${getExe pkgs.unixtools.ping} --count 2 8.8.8.8";
+
+    # generate a 16-byte alphanumeric string
     gen-str = "${getExe' uutils "tr"} --delete --complement 'A-Za-z0-9' < /dev/urandom | ${getExe' uutils "head"} --bytes 16";
 
+    # empty files management
     dir-print-empty = "${getExe pkgs.fd} --color=always --type empty --type directory .";
     dir-print-rm = "${getExe pkgs.fd} --color=always --type empty --type directory . --exec ${getExe' uutils "rmdir"} --verbose {} \;";
-
     file-print-empty = "${getExe pkgs.fd} --color=always --type empty --type file .";
     file-print-rm = "${getExe pkgs.fd} --color=always --type empty --type directory . --exec ${getExe' uutils "rm"} --verbose {} \;";
 
@@ -56,17 +58,16 @@ in
     # nix
     # ----------------------------------------------------------------------
     nix-lockfile-update = "${getExe pkgs.nix} flake update --commit-lock-file --option commit-lockfile-summary 'chore(flake): update lockfile'";
-    nix-man = "${getExe pkgs.man} configuration.nix";
-    nix-man-hm = "${getExe pkgs.man} home-configuration.nix";
 
     # ----------------------------------------------------------------------
     # coreutils
     # ----------------------------------------------------------------------
 
-    # ls/tree => eza
+    # ls => eza
     ls = "${eza.bin} --sort=Name --all --group --header";
     ll = "${eza.bin} --sort=Name --all --group --header --long";
 
+    # tree => eza
     tree = "${eza.bin} --group --header --tree";
     treea = "${eza.bin} --all --group --header --tree";
     treed = "${eza.bin} --group --header --tree --only-dirs";
