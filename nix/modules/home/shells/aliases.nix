@@ -45,10 +45,10 @@ in
     gen-str = "${getExe' uutils "tr"} --delete --complement 'A-Za-z0-9' < /dev/urandom | ${getExe' uutils "head"} --bytes 16";
 
     # empty files management
-    dir-print-empty = "${getExe pkgs.fd} --color=always --type empty --type directory .";
-    dir-print-rm = "${getExe pkgs.fd} --color=always --type empty --type directory . --exec ${getExe' uutils "rmdir"} --verbose {} \;";
-    file-print-empty = "${getExe pkgs.fd} --color=always --type empty --type file .";
-    file-print-rm = "${getExe pkgs.fd} --color=always --type empty --type directory . --exec ${getExe' uutils "rm"} --verbose {} \;";
+    dir-empty-print = "${getExe pkgs.fd} --color=always --type empty --type directory .";
+    dir-empty-rm = "${getExe pkgs.fd} --color=always --type empty --type directory . --exec ${getExe' uutils "rmdir"} --verbose {} \;";
+    file-empty-print = "${getExe pkgs.fd} --color=always --type empty --type file .";
+    file-empty-rm = "${getExe pkgs.fd} --color=always --type empty --type directory . --exec ${getExe' uutils "rm"} --verbose {} \;";
 
     # network
     tnet = "${getExe pkgs.unixtools.ping} --count 4 8.8.8.8";
