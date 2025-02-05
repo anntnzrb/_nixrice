@@ -39,8 +39,7 @@ in
     rm = "${getExe' uutils "rm"} --verbose";
     rmfr = "${getExe' uutils "rm"} --recursive --force --verbose";
     wget = "${getExe pkgs.wget} --no-hsts";
-    zip = "${getExe pkgs.zip "zip"} --recurse-paths --verbose -9";
-    tnet = "${getExe pkgs.unixtools.ping} --count 2 8.8.8.8";
+    zip = "${getExe pkgs.zip} --recurse-paths --verbose -9";
 
     # generate a 16-byte alphanumeric string
     gen-str = "${getExe' uutils "tr"} --delete --complement 'A-Za-z0-9' < /dev/urandom | ${getExe' uutils "head"} --bytes 16";
@@ -50,6 +49,13 @@ in
     dir-print-rm = "${getExe pkgs.fd} --color=always --type empty --type directory . --exec ${getExe' uutils "rmdir"} --verbose {} \;";
     file-print-empty = "${getExe pkgs.fd} --color=always --type empty --type file .";
     file-print-rm = "${getExe pkgs.fd} --color=always --type empty --type directory . --exec ${getExe' uutils "rm"} --verbose {} \;";
+
+    # network
+    tnet = "${getExe pkgs.unixtools.ping} --count 4 8.8.8.8";
+    "ip?" = "${getExe' pkgs.curlMinimal "curl"} --fail --silent --show-error --location icanhazip.com";
+    "local-ip?" = ''
+      ${getExe pkgs.unixtools.ifconfig} | ${getExe pkgs.gawk} '/inet / { if ($2 != "127.0.0.1") { print $2; exit } }'
+    '';
 
     # linux
     lsblk = mkIf isLinux "lsblk --all --ascii";
