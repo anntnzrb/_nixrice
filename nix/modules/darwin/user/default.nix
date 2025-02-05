@@ -5,6 +5,7 @@
   ...
 }:
 let
+  inherit (lib.${namespace}.module) mkOpt';
 
   cfg = config.${namespace}.user;
 in

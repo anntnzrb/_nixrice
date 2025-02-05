@@ -5,7 +5,10 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptBool';
+  inherit (lib.${namespace}.module)
+    mkOpt'
+    mkOptBool'
+    ;
 
   cfg = config.${namespace}.services.aerospace;
 in

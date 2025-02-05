@@ -6,7 +6,11 @@
 }:
 let
   inherit (lib.${namespace}.module) mkOpt';
-  inherit (lib.types) listOf int range;
+  inherit (lib) range;
+  inherit (lib.types)
+    listOf
+    int
+    ;
 
   cfg = config.${namespace}.services.aerospace;
 

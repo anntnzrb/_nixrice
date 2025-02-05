@@ -24,7 +24,7 @@ in
 
     package = mkOpt' lib.types.package pkgs.zed-editor;
 
-    extraPackages = mkOpt' listOf package [
+    extraPackages = mkOpt' (listOf package) [
       pkgs.nixd
       pkgs.nixfmt-rfc-style
     ];

@@ -6,6 +6,7 @@
 }:
 let
   inherit (lib.${namespace}.module) mkOptBool';
+  inherit (lib) concatStringsSep getAttr attrNames;
 
   cfg = config.${namespace}.services.yabai;
 
