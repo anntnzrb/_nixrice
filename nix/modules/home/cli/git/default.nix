@@ -10,13 +10,11 @@ let
   cfg = config.${namespace}.cli.git;
 in
 {
+  imports = [ ./lazygit.nix ];
 
   options.${namespace}.cli.git = {
     enable = mkOptBool';
-
-    lazygit = {
-      enable = mkOptBool';
-    };
+    lazygit.enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {
@@ -56,14 +54,5 @@ in
         srp = "!f() { git diff --quiet && git diff --cached --quiet || git stash push -m \"local\" && git rebase --merge && git stash pop; }; f";
       };
     };
-
-    programs.lazygit = lib.mkIf cfg.lazygit.enable {
-      enable = true;
-      settings = {
-        gui.showCommandLog = false;
-      };
-    };
-
-    home.shellAliases = lib.mkIf cfg.lazygit.enable { gg = "lazygit"; };
   };
 }
