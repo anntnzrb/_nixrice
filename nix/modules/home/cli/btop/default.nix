@@ -38,8 +38,8 @@ in
     };
 
     services.sxhkd = {
-      keybindings = with config.home.sessionVariables; {
-        "super + Return ; i" = "${TERMINAL} -e btop";
+      keybindings = {
+        "super + Return ; i" = "${config.home.sessionVariables.TERMINAL} -e btop";
       };
     };
   };

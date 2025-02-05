@@ -190,10 +190,9 @@ in
                 "${modShift}+${ws}" = "move container to workspace number ${ws}";
               };
           in
-          with config.home.sessionVariables;
           {
             # TODO: mv
-            "${mod}+Return" = "exec ${TERMINAL}";
+            "${mod}+Return" = "exec ${config.home.sessionVariables.TERMINAL}";
             "${mod}+d" = "exec bemenu-run";
 
             "${modShift}+q" = "kill";
