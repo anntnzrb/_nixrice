@@ -12,6 +12,11 @@ in
   # customization is done via hm
   programs.zsh.enable = true;
 
+  nix.settings = {
+    max-jobs = 8;
+    cores = 4;
+  };
+
   ${namespace} = {
     system = {
       trackpad = on;
