@@ -19,7 +19,9 @@ in
 
   config = lib.mkIf cfg.enable {
     programs.git = {
-      enable = true;
+      inherit (cfg) enable;
+      difftastic.enable = true;
+
       userName = "anntnzrb";
       userEmail = "anntnzrb@proton.me";
 
