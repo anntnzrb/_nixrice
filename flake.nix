@@ -123,7 +123,7 @@
 
     firefox-addons = {
       # addons (extensions) for firefox as nix expressions
-      url = "github:nix-community/nur-combined/master?dir=repos/rycee/pkgs/firefox-addons";
+      url = "gitlab:rycee/nur-expressions/master?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
 
