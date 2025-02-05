@@ -8,7 +8,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}) mkOpt' mkOptBool';
+  inherit (lib.${namespace}.module) mkOpt' mkOptBool';
   inherit (inputs.nixpkgs.legacyPackages.${system}) emacs30;
 
   cfg = config.${namespace}.editors.emacs;

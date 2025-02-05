@@ -8,7 +8,7 @@
 }:
 
 let
-  inherit (lib.${namespace}) on;
+  inherit (lib.${namespace}.module) on;
 
   login = {
     name = "nixos";

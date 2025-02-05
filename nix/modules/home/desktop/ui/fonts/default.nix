@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}) mkOptBool';
+  inherit (lib.${namespace}.module) mkOptBool';
 
   cfg = config.${namespace}.desktop.ui.fonts;
 in

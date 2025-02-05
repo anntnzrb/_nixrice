@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}) mkOptEnabled';
+  inherit (lib.${namespace}.module) mkOptEnabled';
   inherit (lib)
     mkIf
     mkOption

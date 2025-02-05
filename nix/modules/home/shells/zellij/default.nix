@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}) mkOptBool' mkOptDisabled';
+  inherit (lib.${namespace}.module) mkOptBool' mkOptDisabled';
 
   cfg = config.${namespace}.shells.zellij;
 in

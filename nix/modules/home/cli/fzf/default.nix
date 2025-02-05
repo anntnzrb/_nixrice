@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}) mkOptBool';
+  inherit (lib.${namespace}.module) mkOptBool';
   inherit (lib) getExe;
 
   cfg = config.${namespace}.cli.fzf;

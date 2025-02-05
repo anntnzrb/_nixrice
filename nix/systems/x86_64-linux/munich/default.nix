@@ -4,7 +4,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}) on off;
+  inherit (lib.${namespace}.module) on off;
 in
 {
   imports = [ ./hardware ];

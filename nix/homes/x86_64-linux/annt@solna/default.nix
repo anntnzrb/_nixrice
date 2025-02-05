@@ -4,7 +4,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}) on;
+  inherit (lib.${namespace}.module) on;
 
   autoStart = [
     "nm-applet"

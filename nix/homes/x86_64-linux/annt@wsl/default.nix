@@ -1,6 +1,6 @@
 { lib, namespace, ... }:
 let
-  inherit (lib.${namespace}) on;
+  inherit (lib.${namespace}.module) on;
 in
 {
   ${namespace} = {

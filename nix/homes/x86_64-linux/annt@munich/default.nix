@@ -4,7 +4,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace})
+  inherit (lib.${namespace}.module)
     on
     off
     ;

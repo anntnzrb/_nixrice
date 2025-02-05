@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}) mkOpt' mkOptBool';
+  inherit (lib.${namespace}.module) mkOpt' mkOptBool';
   inherit (lib.types) attrsOf str;
   inherit (lib)
     mkMerge

@@ -7,7 +7,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}) mkOptBool';
+  inherit (lib.${namespace}.module) mkOptBool';
   inherit (lib.types)
     listOf
     str

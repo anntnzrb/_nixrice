@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}) on;
+  inherit (lib.${namespace}.module) on;
 in
 {
   imports = [ inputs.mac-app-util.homeManagerModules.default ];

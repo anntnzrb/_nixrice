@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}) on;
+  inherit (lib.${namespace}.module) on;
 in
 {
   # zsh as an interactive shell; this is a forced default

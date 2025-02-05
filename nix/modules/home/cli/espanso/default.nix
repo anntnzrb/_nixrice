@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}) mkOptBool';
+  inherit (lib.${namespace}.module) mkOptBool';
 
   cfg = config.${namespace}.cli.espanso;
 in

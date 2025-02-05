@@ -7,7 +7,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace})
+  inherit (lib.${namespace}.module)
     mkOpt'
     mkOptBool'
     ;
