@@ -26,8 +26,13 @@ in
       userEmail = "anntnzrb@proton.me";
 
       extraConfig = {
-        init = {
-          defaultBranch = "main";
+        init.defaultBranch = "main";
+        fetch.prune = true;
+        rebase.autoStash = true;
+        pull.rebase = true;
+        push = {
+          autoSetupRemote = true;
+          default = "current";
         };
       };
 
