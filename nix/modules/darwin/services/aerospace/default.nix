@@ -5,6 +5,8 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.services.aerospace;
 in
 {
@@ -14,7 +16,7 @@ in
     ./nodes.nix
   ];
 
-  options.${namespace}.services.aerospace = with lib.${namespace}; {
+  options.${namespace}.services.aerospace = {
     enable = mkOptBool';
 
     modifier = mkOpt' lib.types.str "alt";

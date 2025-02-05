@@ -6,6 +6,11 @@
   ...
 }:
 let
+  inherit (lib.${namespace})
+    mkOpt'
+    mkOptBool'
+    ;
+
   cfg = config.${namespace}.desktop.terminal-emulators.rio;
 in
 {
@@ -17,7 +22,7 @@ in
     ./bind.nix
   ];
 
-  options.${namespace}.desktop.terminal-emulators.rio = with lib.${namespace}; {
+  options.${namespace}.desktop.terminal-emulators.rio = {
     enable = mkOptBool';
     font.size = mkOpt' lib.types.int 15;
   };

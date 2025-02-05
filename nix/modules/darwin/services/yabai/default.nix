@@ -5,17 +5,19 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.services.yabai;
 
   # helpers
   formatAttrs =
-    with builtins;
+
     attrs: concatStringsSep " " (map (k: "${k}=${getAttr k attrs}") (attrNames attrs));
   mkRule = rule: "yabai -m rule --add ${formatAttrs rule.pattern} ${formatAttrs rule.ruleset}";
 
 in
 {
-  options.${namespace}.services.yabai = with lib.${namespace}; {
+  options.${namespace}.services.yabai = {
     enable = mkOptBool';
   };
 
@@ -180,7 +182,7 @@ in
         in
         ''
           # rules
-          ${builtins.concatStringsSep "\n" (map mkRule rules)}
+          ${lib.concatStringsSep "\n" (map mkRule rules)}
         '';
     };
 

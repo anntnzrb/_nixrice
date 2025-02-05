@@ -6,26 +6,32 @@
   ...
 }:
 let
+  inherit (lib.${namespace})
+    mkOpt'
+    mkOptBool'
+    ;
+  inherit (lib.types)
+    listOf
+    str
+    ;
+
   cfg = config.${namespace}.desktop.window-managers.xorg.awesomewm;
 
-  parseAutoStartList = xs: builtins.concatStringsSep "\n" (map (x: x + " &") xs);
+  parseAutoStartList = xs: lib.concatStringsSep "\n" (map (x: x + " &") xs);
 in
 {
-  options.${namespace}.desktop.window-managers.xorg.awesomewm =
-    with lib.${namespace};
-    with lib.types;
-    {
-      enable = mkOptBool';
+  options.${namespace}.desktop.window-managers.xorg.awesomewm = {
+    enable = mkOptBool';
 
-      compositor = {
-        picom = {
-          enable = mkOptBool';
-          vSync = mkOptBool';
-        };
+    compositor = {
+      picom = {
+        enable = mkOptBool';
+        vSync = mkOptBool';
       };
-
-      autoStart = mkOpt' (listOf str) [ ];
     };
+
+    autoStart = mkOpt' (listOf str) [ ];
+  };
 
   config = lib.mkIf cfg.enable {
     ${namespace}.common.xorg = {

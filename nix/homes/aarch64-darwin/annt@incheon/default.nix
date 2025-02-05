@@ -5,7 +5,9 @@
   namespace,
   ...
 }:
-
+let
+  inherit (lib.${namespace}) on;
+in
 {
   imports = [ inputs.mac-app-util.homeManagerModules.default ];
 
@@ -18,7 +20,7 @@
     ];
   };
 
-  liberion = with lib.${namespace}; {
+  liberion = {
     ssh = {
       enable = true;
       hosts = {

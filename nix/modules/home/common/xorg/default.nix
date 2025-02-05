@@ -1,15 +1,19 @@
 {
-  pkgs,
   lib,
+  pkgs,
   config,
   namespace,
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.common.xorg;
 in
 {
-  options.${namespace}.common.xorg = with lib.${namespace}; with lib.types; { enable = mkOptBool'; };
+  options.${namespace}.common.xorg = {
+    enable = mkOptBool';
+  };
 
   config = lib.mkIf cfg.enable {
     xsession = {

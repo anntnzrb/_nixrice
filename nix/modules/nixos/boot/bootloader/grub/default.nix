@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.boot.bootloader.grub;
 in
 {
-  options.${namespace}.boot.bootloader.grub = with lib.${namespace}; {
+  options.${namespace}.boot.bootloader.grub = {
     enable = mkOptBool';
   };
 

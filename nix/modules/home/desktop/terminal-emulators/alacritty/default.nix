@@ -5,10 +5,15 @@
   ...
 }:
 let
+  inherit (lib.${namespace})
+    mkOpt'
+    mkOptBool'
+    ;
+
   cfg = config.${namespace}.desktop.terminal-emulators.alacritty;
 in
 {
-  options.${namespace}.desktop.terminal-emulators.alacritty = with lib.${namespace}; {
+  options.${namespace}.desktop.terminal-emulators.alacritty = {
     enable = mkOptBool';
     font.size = mkOpt' lib.types.float 10.0;
   };

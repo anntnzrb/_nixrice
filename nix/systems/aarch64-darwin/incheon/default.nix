@@ -4,12 +4,15 @@
   namespace,
   ...
 }:
+let
+  inherit (lib.${namespace}) on;
+in
 {
   # zsh as an interactive shell; this is a forced default
   # customization is done via hm
   programs.zsh.enable = true;
 
-  ${namespace} = with lib.${namespace}; {
+  ${namespace} = {
     system = {
       trackpad = on;
       ui.menuBar.hide = false;

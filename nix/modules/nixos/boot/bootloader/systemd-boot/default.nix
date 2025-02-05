@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.boot.bootloader.systemd-boot;
 in
 {
-  options.${namespace}.boot.bootloader.systemd-boot = with lib.${namespace}; {
+  options.${namespace}.boot.bootloader.systemd-boot = {
     enable = mkOptBool';
   };
 

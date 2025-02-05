@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.network.syncthing;
 in
 {
-  options.${namespace}.network.syncthing = with lib.${namespace}; {
+  options.${namespace}.network.syncthing = {
     enable = mkOptBool';
   };
 

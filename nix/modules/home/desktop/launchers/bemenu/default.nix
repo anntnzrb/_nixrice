@@ -6,10 +6,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.desktop.launchers.bemenu;
 in
 {
-  options.${namespace}.desktop.launchers.bemenu = with lib.${namespace}; {
+  options.${namespace}.desktop.launchers.bemenu = {
     enable = mkOptBool';
   };
 

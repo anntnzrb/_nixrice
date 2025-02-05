@@ -6,6 +6,11 @@
   ...
 }:
 let
+  inherit (lib.${namespace})
+    mkOptBool'
+    mkOptEnabled'
+    ;
+
   cfg = config.${namespace}.desktop.browsers.firefox;
 in
 {
@@ -15,7 +20,7 @@ in
     ./settings.nix
   ];
 
-  options.${namespace}.desktop.browsers.firefox = with lib.${namespace}; {
+  options.${namespace}.desktop.browsers.firefox = {
     enable = mkOptBool';
     package.install = mkOptEnabled';
   };

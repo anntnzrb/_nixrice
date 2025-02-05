@@ -6,23 +6,29 @@
   ...
 }:
 let
+  inherit (lib.${namespace})
+    mkOpt'
+    mkOptBool'
+    ;
+  inherit (lib.types)
+    str
+    ints
+    ;
+
   cfg = config.${namespace}.desktop.ui.themes;
 in
 {
-  options.${namespace}.desktop.ui.themes =
-    with lib.${namespace};
-    with lib.types;
-    {
-      enable = mkOptBool';
+  options.${namespace}.desktop.ui.themes = {
+    enable = mkOptBool';
 
-      cursor = {
-        theme = mkOpt' str "macOS-BigSur";
-        size = mkOpt' ints.u8 28;
-      };
-
-      iconTheme = mkOpt' str "Papirus-Dark";
-      theme = mkOpt' str "Dracula";
+    cursor = {
+      theme = mkOpt' str "macOS-BigSur";
+      size = mkOpt' ints.u8 28;
     };
+
+    iconTheme = mkOpt' str "Papirus-Dark";
+    theme = mkOpt' str "Dracula";
+  };
 
   config = lib.mkIf cfg.enable {
     gtk = {

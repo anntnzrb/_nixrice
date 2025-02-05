@@ -5,11 +5,13 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.cli.git;
 in
 {
 
-  options.${namespace}.cli.git = with lib.${namespace}; {
+  options.${namespace}.cli.git = {
     enable = mkOptBool';
 
     lazygit = {

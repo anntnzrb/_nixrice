@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.system.trackpad;
 in
 {
-  options.${namespace}.system.trackpad = with lib.${namespace}; {
+  options.${namespace}.system.trackpad = {
     enable = mkOptBool';
   };
 

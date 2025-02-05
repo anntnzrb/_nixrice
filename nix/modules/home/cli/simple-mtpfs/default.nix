@@ -6,11 +6,13 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.cli.simple-mtpfs;
 in
 {
 
-  options.${namespace}.cli.simple-mtpfs = with lib.${namespace}; {
+  options.${namespace}.cli.simple-mtpfs = {
     enable = mkOptBool';
   };
 

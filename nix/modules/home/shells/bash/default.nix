@@ -5,15 +5,15 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.shells.bash;
 in
 {
-  options.${namespace}.shells.bash = with lib.${namespace}; {
+  options.${namespace}.shells.bash = {
     enable = mkOptBool';
 
-    prompt = {
-      starship.enable = mkOptBool';
-    };
+    prompt.starship.enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

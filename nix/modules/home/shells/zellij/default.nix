@@ -5,6 +5,8 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool' mkOptDisabled';
+
   cfg = config.${namespace}.shells.zellij;
 in
 {
@@ -15,7 +17,7 @@ in
     ./layouts.nix
   ];
 
-  options.${namespace}.shells.zellij = with lib.${namespace}; {
+  options.${namespace}.shells.zellij = {
     enable = mkOptBool';
     enableBashIntegration = mkOptDisabled';
     enableZshIntegration = mkOptDisabled';

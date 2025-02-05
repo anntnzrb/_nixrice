@@ -1,6 +1,7 @@
 { lib, namespace, ... }:
-
-with lib.${namespace};
+let
+  inherit (lib.${namespace}) on;
+in
 {
   ${namespace} = {
     shells = {

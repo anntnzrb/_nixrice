@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.shells.starship;
 in
 {
-  options.${namespace}.shells.starship = with lib.${namespace}; {
+  options.${namespace}.shells.starship = {
     enable = mkOptBool';
   };
 

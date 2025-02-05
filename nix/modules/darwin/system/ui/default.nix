@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.system.ui;
 in
 {
-  options.${namespace}.system.ui = with lib.${namespace}; {
+  options.${namespace}.system.ui = {
     enable = mkOptBool';
 
     menuBar = {

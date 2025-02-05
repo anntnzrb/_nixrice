@@ -6,17 +6,26 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOpt' mkOptBool';
+  inherit (lib.types) attrsOf str;
+  inherit (lib)
+    mkMerge
+    listToAttrs
+    map
+    elemAt
+    length
+    range
+    ;
+
   cfg = config.${namespace}.desktop.window-managers.xorg.herbstluftwm;
 in
 {
-  options.${namespace}.desktop.window-managers.xorg.herbstluftwm = with lib.${namespace}; {
+  options.${namespace}.desktop.window-managers.xorg.herbstluftwm = {
     enable = mkOptBool';
 
-    compositor = {
-      picom.enable = mkOptBool';
-    };
+    compositor.picom.enable = mkOptBool';
 
-    autoStart = with lib.types; mkOpt' (listOf str) [ ];
+    autoStart = mkOpt' (attrsOf str) [ ];
     keys.super = mkOpt' str "Mod4";
   };
 
@@ -29,7 +38,7 @@ in
     xsession.windowManager.herbstluftwm = rec {
       enable = true;
 
-      tags = builtins.map toString (lib.lists.range 1 9);
+      tags = map toString (range 1 9);
 
       settings = {
         always_show_frame = true;
@@ -39,41 +48,39 @@ in
         frame_padding = -12;
       };
 
-      keybinds =
-        with builtins;
-        lib.mkMerge [
-          {
-            "${cfg.keys.super}-j" = "focus down";
-            "${cfg.keys.super}-k" = "focus up";
-            "${cfg.keys.super}-h" = "focus left";
-            "${cfg.keys.super}-l" = "focus right";
-            "${cfg.keys.super}-Shift-q" = "close";
-          }
-          (listToAttrs (
-            map (
-              i:
-              let
-                tag = elemAt tags (i - 1);
-              in
-              {
-                name = "${cfg.keys.super}-${toString i}";
-                value = "use ${tag}";
-              }
-            ) (lib.lists.range 1 (length tags))
-          ))
-          (listToAttrs (
-            map (
-              i:
-              let
-                tag = elemAt tags (i - 1);
-              in
-              {
-                name = "${cfg.keys.super}-Shift-${toString i}";
-                value = "move ${tag}";
-              }
-            ) (lib.lists.range 1 (length tags))
-          ))
-        ];
+      keybinds = mkMerge [
+        {
+          "${cfg.keys.super}-j" = "focus down";
+          "${cfg.keys.super}-k" = "focus up";
+          "${cfg.keys.super}-h" = "focus left";
+          "${cfg.keys.super}-l" = "focus right";
+          "${cfg.keys.super}-Shift-q" = "close";
+        }
+        (listToAttrs (
+          map (
+            i:
+            let
+              tag = elemAt tags (i - 1);
+            in
+            {
+              name = "${cfg.keys.super}-${toString i}";
+              value = "use ${tag}";
+            }
+          ) (range 1 (length tags))
+        ))
+        (listToAttrs (
+          map (
+            i:
+            let
+              tag = elemAt tags (i - 1);
+            in
+            {
+              name = "${cfg.keys.super}-Shift-${toString i}";
+              value = "move ${tag}";
+            }
+          ) (range 1 (length tags))
+        ))
+      ];
 
       mousebinds = {
         "${cfg.keys.super}-B1" = "move";

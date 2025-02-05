@@ -7,16 +7,22 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+  inherit (lib.types)
+    listOf
+    str
+    ;
+
   cfg = config.${namespace}.homebrew;
 in
 {
   imports = [ inputs.nix-homebrew.darwinModules.nix-homebrew ];
 
-  options.${namespace}.homebrew = with lib.${namespace}; {
+  options.${namespace}.homebrew = {
     enable = mkOptBool';
 
     packages = {
-      casks = with lib.types; mkOpt' (listOf str) [ ];
+      casks = mkOpt' (listOf str) [ ];
     };
   };
 

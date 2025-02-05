@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.desktop.launchers.wofi;
 in
 {
-  options.${namespace}.desktop.launchers.wofi = with lib.${namespace}; {
+  options.${namespace}.desktop.launchers.wofi = {
     enable = mkOptBool';
   };
 

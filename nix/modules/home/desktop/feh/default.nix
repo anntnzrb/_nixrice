@@ -6,10 +6,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.desktop.feh;
 in
 {
-  options.${namespace}.desktop.feh = with lib.${namespace}; {
+  options.${namespace}.desktop.feh = {
     enable = mkOptBool';
   };
 

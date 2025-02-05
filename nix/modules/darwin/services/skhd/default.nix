@@ -5,6 +5,17 @@
   ...
 }:
 let
+  inherit (lib.${namespace})
+    mkOpt'
+    mkOptBool'
+    ;
+  inherit (lib.types)
+    attrsOf
+    nullOr
+    oneOf
+    str
+    path
+    ;
   inherit (lib) concatStringsSep;
 
   cfg = config.${namespace}.services.skhd;
@@ -22,17 +33,15 @@ let
   skhdConfig = concatStringsSep "\n" [ keybindingsStr ];
 in
 {
-  options.${namespace}.services.skhd = with lib.${namespace}; {
+  options.${namespace}.services.skhd = {
     enable = mkOptBool';
 
-    keybindings =
-      with lib.types;
-      mkOpt' (attrsOf (
-        nullOr (oneOf [
-          str
-          path
-        ])
-      )) { };
+    keybindings = mkOpt' (attrsOf (
+      nullOr (oneOf [
+        str
+        path
+      ])
+    )) { };
   };
 
   config.services.skhd = lib.mkIf cfg.enable {

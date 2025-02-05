@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.common.desktop;
 in
 {
-  options.${namespace}.common.desktop = with lib.${namespace}; {
+  options.${namespace}.common.desktop = {
     enable = mkOptBool';
   };
 

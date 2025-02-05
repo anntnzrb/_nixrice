@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.cli.yt-dlp;
 in
 {
-  options.${namespace}.cli.yt-dlp = with lib.${namespace}; {
+  options.${namespace}.cli.yt-dlp = {
     enable = mkOptBool';
   };
 

@@ -5,15 +5,15 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.shells.zsh;
 in
 {
-  options.${namespace}.shells.zsh = with lib.${namespace}; {
+  options.${namespace}.shells.zsh = {
     enable = mkOptBool';
 
-    prompt = {
-      starship.enable = mkOptBool';
-    };
+    prompt.starship.enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.enable {

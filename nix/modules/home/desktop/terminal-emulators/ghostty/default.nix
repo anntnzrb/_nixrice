@@ -8,6 +8,17 @@
   ...
 }:
 let
+  inherit (lib.${namespace})
+    mkOpt'
+    mkOptBool'
+    ;
+  inherit (lib.types)
+    nullOr
+    package
+    str
+    ints
+    ;
+
   cfg = config.${namespace}.desktop.terminal-emulators.ghostty;
 
   fonts = {
@@ -23,12 +34,12 @@ in
   disabledModules = [ mod ];
   imports = [ (import "${inputs.home-manager-unstable}/modules/${mod}") ];
 
-  options.${namespace}.desktop.terminal-emulators.ghostty = with lib.${namespace}; {
+  options.${namespace}.desktop.terminal-emulators.ghostty = {
     enable = mkOptBool';
 
-    package = with lib.types; mkOpt' (nullOr package) pkgs.ghostty;
+    package = mkOpt' (nullOr package) pkgs.ghostty;
 
-    font = with lib.types; {
+    font = {
       size = mkOpt' ints.unsigned 10;
       family = mkOpt' str fonts.iosevka-comfy-motion.name;
     };

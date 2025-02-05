@@ -6,14 +6,14 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.desktop.bitwarden;
 in
 {
-  options.${namespace}.desktop.bitwarden = with lib.${namespace}; {
+  options.${namespace}.desktop.bitwarden = {
     enable = mkOptBool';
-
     desktop.enable = mkOptBool';
-
     cli.enable = mkOptBool';
   };
 

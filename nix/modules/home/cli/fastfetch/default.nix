@@ -6,10 +6,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.cli.fastfetch;
 in
 {
-  options.${namespace}.cli.fastfetch = with lib.${namespace}; {
+  options.${namespace}.cli.fastfetch = {
     enable = mkOptBool';
   };
 

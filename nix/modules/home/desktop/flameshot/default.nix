@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.desktop.flameshot;
 in
 {
-  options.${namespace}.desktop.flameshot = with lib.${namespace}; {
+  options.${namespace}.desktop.flameshot = {
     enable = mkOptBool';
   };
 

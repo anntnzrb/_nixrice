@@ -6,10 +6,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.desktop.ui.fonts;
 in
 {
-  options.${namespace}.desktop.ui.fonts = with lib.${namespace}; {
+  options.${namespace}.desktop.ui.fonts = {
     enable = mkOptBool';
   };
 

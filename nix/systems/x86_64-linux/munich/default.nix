@@ -3,6 +3,9 @@
   namespace,
   ...
 }:
+let
+  inherit (lib.${namespace}) on off;
+in
 {
   imports = [ ./hardware ];
 
@@ -11,7 +14,7 @@
     hardwareClockInLocalTime = true; # dual-boot
   };
 
-  ${namespace} = with lib.${namespace}; {
+  ${namespace} = {
     # GRUB because of dual-boot
     boot.bootloader.grub = on;
 

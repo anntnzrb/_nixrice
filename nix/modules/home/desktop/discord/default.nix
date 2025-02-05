@@ -6,10 +6,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.desktop.discord;
 in
 {
-  options.${namespace}.desktop.discord = with lib.${namespace}; {
+  options.${namespace}.desktop.discord = {
     enable = mkOptBool';
   };
   config = lib.mkIf cfg.enable { home.packages = [ pkgs.discord ]; };

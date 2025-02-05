@@ -6,19 +6,26 @@
   ...
 }:
 let
-  cfg = config.${namespace}.desktop.sxhkd;
+  inherit (lib.${namespace})
+    mkOpt'
+    mkOptBool'
+    ;
+  inherit (lib.types) str ints;
+  inherit (config.home.sessionVariables)
+    TERMINAL
+    FILE
+    BROWSER
+    ;
 
+  cfg = config.${namespace}.desktop.sxhkd;
 in
 {
-  options.${namespace}.desktop.sxhkd =
-    with lib.${namespace};
-    with lib.types;
-    {
-      enable = mkOptBool';
+  options.${namespace}.desktop.sxhkd = {
+    enable = mkOptBool';
 
-      timeout = mkOpt' ints.unsigned 3;
-      cancelKey = mkOpt' str "Escape";
-    };
+    timeout = mkOpt' ints.unsigned 3;
+    cancelKey = mkOpt' str "Escape";
+  };
 
   config = lib.mkIf cfg.enable {
     services.sxhkd = {
@@ -29,7 +36,7 @@ in
         "-t ${toString cfg.timeout}"
         "-a ${cfg.cancelKey}"
       ];
-      keybindings = with config.home.sessionVariables; {
+      keybindings = {
         "super + Return ; {Return}" = "${TERMINAL} {_}";
 
         "super + w ; {f,w}" = "{${FILE},${BROWSER}}";

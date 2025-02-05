@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.cli.omnix;
 in
 {
-  options.${namespace}.cli.omnix = with lib.${namespace}; {
+  options.${namespace}.cli.omnix = {
     enable = mkOptBool';
   };
 

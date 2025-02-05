@@ -6,6 +6,27 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptEnabled';
+  inherit (lib)
+    mkIf
+    mkOption
+    optional
+    concatLists
+    optionalAttrs
+    mkMerge
+    flatten
+    mapAttrs
+    mapAttrsToList
+    ;
+
+  inherit (lib.types)
+    attrsOf
+    submodule
+    anything
+    nullOr
+    str
+    ;
+
   cfg = config.${namespace}.ssh;
 
   sshDir = "${config.home.homeDirectory}/.ssh";
@@ -29,40 +50,40 @@ let
     {
       matchBlock = {
         inherit hostname identityFile identitiesOnly;
-      } // lib.optionalAttrs (user != null) { inherit user; };
+      } // optionalAttrs (user != null) { inherit user; };
 
-      files = lib.concatLists [
-        (lib.optional (keys.public != null) (mkKeyFile "${name}.pub" keys.public))
-        (lib.optional (keys.private != null) (mkKeyFile name keys.private))
+      files = concatLists [
+        (optional (keys.public != null) (mkKeyFile "${name}.pub" keys.public))
+        (optional (keys.private != null) (mkKeyFile name keys.private))
       ];
     };
 
 in
 {
-  options.${namespace}.ssh = with lib; {
-    enable = mkEnableOption "SSH configuration";
+  options.${namespace}.ssh = {
+    enable = mkOptEnabled';
     hosts = mkOption {
-      type = types.attrsOf (
-        types.submodule (
+      type = attrsOf (
+        submodule (
           { name, ... }:
           {
-            freeformType = types.attrsOf types.anything;
+            freeformType = attrsOf anything;
             options = {
               hostname = mkOption {
-                type = types.str;
+                type = str;
                 default = name;
                 description = "SSH server hostname";
               };
               keys = mkOption {
-                type = types.submodule {
+                type = submodule {
                   options = {
                     public = mkOption {
-                      type = types.nullOr types.str;
+                      type = nullOr str;
                       default = null;
                       description = "Public key content";
                     };
                     private = mkOption {
-                      type = types.nullOr types.str;
+                      type = nullOr str;
                       default = null;
                       description = "Private key content";
                     };
@@ -78,15 +99,15 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
+  config = mkIf cfg.enable {
     programs.ssh = {
       inherit (cfg) enable;
       hashKnownHosts = true;
-      matchBlocks = lib.mapAttrs (name: hostCfg: (mkHostConfig name hostCfg).matchBlock) cfg.hosts;
+      matchBlocks = mapAttrs (name: hostCfg: (mkHostConfig name hostCfg).matchBlock) cfg.hosts;
     };
 
-    home.file = lib.mkMerge (
-      lib.flatten (lib.mapAttrsToList (name: hostCfg: (mkHostConfig name hostCfg).files) cfg.hosts)
+    home.file = mkMerge (
+      flatten (mapAttrsToList (name: hostCfg: (mkHostConfig name hostCfg).files) cfg.hosts)
     );
   };
 }

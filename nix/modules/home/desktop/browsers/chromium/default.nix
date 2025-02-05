@@ -6,10 +6,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.desktop.browsers.chromium;
 in
 {
-  options.${namespace}.desktop.browsers.chromium = with lib.${namespace}; {
+  options.${namespace}.desktop.browsers.chromium = {
     enable = mkOptBool';
   };
   config = lib.mkIf cfg.enable {

@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.network.dhcp;
 in
 {
-  options.${namespace}.network.dhcp = with lib.${namespace}; {
+  options.${namespace}.network.dhcp = {
     enable = mkOptBool';
   };
 

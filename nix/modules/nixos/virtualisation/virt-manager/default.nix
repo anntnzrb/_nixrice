@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.virtualisation.virt-manager;
 in
 {
-  options.${namespace}.virtualisation.virt-manager = with lib.${namespace}; {
+  options.${namespace}.virtualisation.virt-manager = {
     enable = mkOptBool';
   };
 

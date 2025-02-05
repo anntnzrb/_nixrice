@@ -6,10 +6,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.desktop.notesnook;
 in
 {
-  options.${namespace}.desktop.notesnook = with lib.${namespace}; {
+  options.${namespace}.desktop.notesnook = {
     enable = mkOptBool';
   };
   config = lib.mkIf cfg.enable {

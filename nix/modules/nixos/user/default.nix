@@ -5,20 +5,29 @@
   ...
 }:
 let
+  inherit (lib.${namespace})
+    mkOpt'
+    mkOptEnabled'
+    ;
+
+  inherit (lib.types)
+    str
+    nullOr
+    listOf
+    singleLineStr
+    ;
+
   cfg = config.${namespace}.user;
 in
 {
-  options.${namespace}.user =
-    with lib.${namespace};
-    with lib.types;
-    {
-      name = mkOpt' str "annt";
-      isNormalUser = mkOptEnabled';
-      initialPassword = mkOpt' (nullOr str) "pass";
-      extraGroups = mkOpt' (listOf str) [ ];
+  options.${namespace}.user = {
+    name = mkOpt' str "annt";
+    isNormalUser = mkOptEnabled';
+    initialPassword = mkOpt' (nullOr str) "pass";
+    extraGroups = mkOpt' (listOf str) [ ];
 
-      authorizedKeys = mkOpt' (listOf singleLineStr) [ ];
-    };
+    authorizedKeys = mkOpt' (listOf singleLineStr) [ ];
+  };
 
   config = {
     users.users.${cfg.name} = {

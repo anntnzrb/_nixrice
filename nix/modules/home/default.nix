@@ -5,20 +5,23 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOpt';
+  inherit (lib.types)
+    str
+    ints
+    ;
+
   cfg = config.${namespace}.home;
 in
 {
-  options.${namespace}.home =
-    with lib.${namespace};
-    with lib.types;
-    {
-      keyboard = {
-        layout = mkOpt' str "us";
-        variant = mkOpt' str "altgr-intl";
-        autoRepeatDelay = mkOpt' ints.unsigned 220;
-        autoRepeatInterval = mkOpt' ints.unsigned 50;
-      };
+  options.${namespace}.home = {
+    keyboard = {
+      layout = mkOpt' str "us";
+      variant = mkOpt' str "altgr-intl";
+      autoRepeatDelay = mkOpt' ints.unsigned 220;
+      autoRepeatInterval = mkOpt' ints.unsigned 50;
     };
+  };
 
   config = {
     home = {

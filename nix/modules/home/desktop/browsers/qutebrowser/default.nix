@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.desktop.browsers.qutebrowser;
 in
 {
-  options.${namespace}.desktop.browsers.qutebrowser = with lib.${namespace}; {
+  options.${namespace}.desktop.browsers.qutebrowser = {
     enable = mkOptBool';
   };
   config = lib.mkIf cfg.enable {

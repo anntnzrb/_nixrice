@@ -6,10 +6,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.network.ssh;
 in
 {
-  options.${namespace}.network.ssh = with lib.${namespace}; {
+  options.${namespace}.network.ssh = {
     enable = mkOptBool';
   };
 

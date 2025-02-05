@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.virtualisation.docker;
 in
 {
-  options.${namespace}.virtualisation.docker = with lib.${namespace}; {
+  options.${namespace}.virtualisation.docker = {
     enable = mkOptBool';
     enableOnBoot = mkOptBool';
   };

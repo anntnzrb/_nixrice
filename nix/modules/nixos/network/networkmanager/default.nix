@@ -6,10 +6,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.network.networkmanager;
 in
 {
-  options.${namespace}.network.networkmanager = with lib.${namespace}; {
+  options.${namespace}.network.networkmanager = {
     enable = mkOptBool';
   };
 

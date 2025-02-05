@@ -3,8 +3,11 @@
   namespace,
   ...
 }:
+let
+  inherit (lib.${namespace}) on;
+in
 {
-  liberion = with lib.${namespace}; {
+  liberion = {
     shells = {
       aliases.defaults = on;
       sessionVariables.EDITOR = "nvim";

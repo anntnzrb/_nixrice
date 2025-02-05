@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.desktop.zathura;
 in
 {
-  options.${namespace}.desktop.zathura = with lib.${namespace}; {
+  options.${namespace}.desktop.zathura = {
     enable = mkOptBool';
   };
 

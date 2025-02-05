@@ -5,15 +5,13 @@
   ...
 }:
 let
+
   cfg = config.${namespace}.user;
 in
 {
-  options.${namespace}.user =
-    with lib.${namespace};
-    with lib.types;
-    {
-      name = mkOpt' types.str "annt";
-    };
+  options.${namespace}.user = {
+    name = mkOpt' lib.types.str "annt";
+  };
 
   config = {
     users.users.${cfg.name} = {

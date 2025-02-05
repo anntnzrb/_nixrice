@@ -5,6 +5,9 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOpt';
+  inherit (lib.types) listOf int range;
+
   cfg = config.${namespace}.services.aerospace;
 
   mkWorkspaceBindings =
@@ -17,8 +20,8 @@ let
     );
 in
 {
-  options.${namespace}.services.aerospace = with lib.${namespace}; {
-    workspaceRange = with lib; mkOpt' (types.listOf types.int) (range 0 9);
+  options.${namespace}.services.aerospace = {
+    workspaceRange = mkOpt' (listOf int) (range 0 9);
   };
 
   config.services.aerospace.settings = lib.mkIf cfg.enable {

@@ -6,27 +6,40 @@
   ...
 }:
 let
+  inherit (lib.${namespace})
+    mkOpt'
+    mkOptBool'
+    ;
+  inherit (lib)
+    foldl'
+    mkIf
+    genList
+    readFile
+    ;
+  inherit (lib.types)
+    str
+    listOf
+    attrsOf
+    ;
+
   cfg = config.${namespace}.desktop.window-managers.wayland.sway;
 in
-with lib;
+
 {
-  options.${namespace}.desktop.window-managers.wayland.sway =
-    with lib.${namespace};
-    with types;
-    {
-      enable = mkOptBool';
+  options.${namespace}.desktop.window-managers.wayland.sway = {
+    enable = mkOptBool';
 
-      keyboard = {
-        layout = mkOpt' str "us";
-        variant = mkOpt' str "altgr-intl";
-      };
-
-      autoStart = mkOpt' (listOf str) [ ];
-
-      modifier = mkOpt' str "Mod4";
-
-      output = mkOpt' (attrsOf (attrsOf str)) { };
+    keyboard = {
+      layout = mkOpt' str "us";
+      variant = mkOpt' str "altgr-intl";
     };
+
+    autoStart = mkOpt' (listOf str) [ ];
+
+    modifier = mkOpt' str "Mod4";
+
+    output = mkOpt' (attrsOf (attrsOf str)) { };
+  };
 
   config = mkIf cfg.enable {
     home = {
@@ -190,7 +203,7 @@ with lib;
             "${modShift}+space" = "floating toggle";
             "${modShift}+f" = "fullscreen toggle";
           }
-          // builtins.foldl' (a: b: a // b) { } (
+          // foldl' (a: b: a // b) { } (
             map genFocusMoveBinds [
               {
                 key = "h";
@@ -226,7 +239,7 @@ with lib;
                 dir = "right";
               }
             ]
-            ++ map genWorkspaceBinds (builtins.genList (x: x + 1) numWorkspaces)
+            ++ map genWorkspaceBinds (genList (x: x + 1) numWorkspaces)
           );
 
         gaps = {
@@ -269,7 +282,7 @@ with lib;
     programs.waybar = {
       enable = true;
 
-      style = builtins.readFile ./style.css;
+      style = readFile ./style.css;
 
       settings = {
         default = {

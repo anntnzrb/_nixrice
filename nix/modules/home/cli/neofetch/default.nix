@@ -6,10 +6,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.cli.neofetch;
 in
 {
-  options.${namespace}.cli.neofetch = with lib.${namespace}; {
+  options.${namespace}.cli.neofetch = {
     enable = mkOptBool';
   };
 

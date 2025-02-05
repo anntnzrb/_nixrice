@@ -5,19 +5,29 @@
   ...
 }:
 let
+  inherit (lib.${namespace})
+    mkOpt'
+    mkOptBool'
+    ;
+  inherit (lib)
+    genList
+    concatMap
+    ;
+  inherit (lib.types)
+    listOf
+    str
+    ;
+
   cfg = config.${namespace}.desktop.window-managers.wayland.hyprland;
 in
 {
-  options.${namespace}.desktop.window-managers.wayland.hyprland =
-    with lib.${namespace};
-    with lib.types;
-    {
-      enable = mkOptBool';
+  options.${namespace}.desktop.window-managers.wayland.hyprland = {
+    enable = mkOptBool';
 
-      monitor = mkOpt' (listOf str) [ ",preferred,auto,1" ];
-      autoStartApps = mkOpt' (listOf str) [ ];
-      waybar = mkOptBool';
-    };
+    monitor = mkOpt' (listOf str) [ ",preferred,auto,1" ];
+    autoStartApps = mkOpt' (listOf str) [ ];
+    waybar = mkOptBool';
+  };
 
   config = lib.mkIf cfg.enable {
     home = {
@@ -31,7 +41,7 @@ in
       enable = true;
       xwayland.enable = true;
 
-      extraConfig = builtins.readFile ./hyprland.conf;
+      extraConfig = lib.readFile ./hyprland.conf;
 
       settings = {
         "$mod" = "SUPER";
@@ -44,7 +54,6 @@ in
           let
             numWorkspaces = 9;
           in
-          with builtins;
           concatMap (
             i:
             let

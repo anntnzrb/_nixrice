@@ -6,11 +6,13 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.editors.vscode;
 
 in
 {
-  options.${namespace}.editors.vscode = with lib.${namespace}; {
+  options.${namespace}.editors.vscode = {
     enable = mkOptBool';
   };
 

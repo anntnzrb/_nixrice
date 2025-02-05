@@ -4,7 +4,9 @@
   namespace,
   ...
 }:
-
+let
+  inherit (lib.${namespace}) on;
+in
 {
   imports = [
     ./hardware
@@ -12,7 +14,7 @@
 
   time.timeZone = "America/Guayaquil";
 
-  ${namespace} = with lib.${namespace}; {
+  ${namespace} = {
     # no dual-boot. systemd-boot suffices
     boot.bootloader.systemd-boot = on;
 

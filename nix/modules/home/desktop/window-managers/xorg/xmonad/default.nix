@@ -6,23 +6,25 @@
   ...
 }:
 let
+  inherit (lib.${namespace})
+    mkOpt'
+    mkOptBool'
+    ;
+  inherit (lib.types)
+    listOf
+    str
+    ;
+
   cfg = config.${namespace}.desktop.window-managers.xorg.xmonad;
 
-  parseAutoStartList = xs: builtins.concatStringsSep "\n" (map (x: x + " &") xs);
+  parseAutoStartList = xs: lib.concatStringsSep "\n" (map (x: x + " &") xs);
 in
 {
-  options.${namespace}.desktop.window-managers.xorg.xmonad =
-    with lib.${namespace};
-    with lib.types;
-    {
-      enable = mkOptBool';
-
-      compositor = {
-        picom.enable = mkOptBool';
-      };
-
-      autoStart = mkOpt' (listOf str) [ ];
-    };
+  options.${namespace}.desktop.window-managers.xorg.xmonad = {
+    enable = mkOptBool';
+    compositor.picom.enable = mkOptBool';
+    autoStart = mkOpt' (listOf str) [ ];
+  };
 
   config = lib.mkIf cfg.enable {
     ${namespace}.common.xorg = {

@@ -4,6 +4,11 @@
   ...
 }:
 let
+  inherit (lib.${namespace})
+    on
+    off
+    ;
+
   autoStart = {
     defaults = [
       "nm-applet"
@@ -17,7 +22,7 @@ let
   };
 in
 {
-  liberion = with lib.${namespace}; {
+  liberion = {
     home = {
       keyboard = {
         layout = "us";

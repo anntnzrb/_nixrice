@@ -6,10 +6,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.common.xorg;
 in
 {
-  options.${namespace}.common.xorg = with lib.${namespace}; {
+  options.${namespace}.common.xorg = {
     enable = mkOptBool';
   };
 

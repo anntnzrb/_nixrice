@@ -4,6 +4,8 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) on;
+
   autoStart = [
     "nm-applet"
     "pasystray"
@@ -11,7 +13,7 @@ let
   ];
 in
 {
-  liberion = with lib.${namespace}; {
+  liberion = {
     shells = {
       aliases.defaults = on;
       sessionVariables = {

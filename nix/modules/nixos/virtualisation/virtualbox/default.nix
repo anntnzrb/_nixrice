@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.virtualisation.virtualbox;
 in
 {
-  options.${namespace}.virtualisation.virtualbox = with lib.${namespace}; {
+  options.${namespace}.virtualisation.virtualbox = {
     enable = mkOptBool';
     enableExtensionPack = mkOptBool';
   };

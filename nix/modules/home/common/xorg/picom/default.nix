@@ -5,17 +5,19 @@
   ...
 }:
 let
+  inherit (lib.${namespace})
+    mkOpt'
+    mkOptBool'
+    ;
+
   cfg = config.${namespace}.common.xorg.picom;
 in
 {
-  options.${namespace}.common.xorg.picom =
-    with lib.${namespace};
-    with lib.types;
-    {
-      enable = mkOptBool';
-      backend = mkOpt' str "glx";
-      vSync = mkOptBool';
-    };
+  options.${namespace}.common.xorg.picom = {
+    enable = mkOptBool';
+    backend = mkOpt' lib.types.str "glx";
+    vSync = mkOptBool';
+  };
 
   config = lib.mkIf cfg.enable {
     services.picom = {

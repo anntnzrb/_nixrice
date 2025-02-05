@@ -6,10 +6,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.network.vpn.mullvad;
 in
 {
-  options.${namespace}.network.vpn.mullvad = with lib.${namespace}; {
+  options.${namespace}.network.vpn.mullvad = {
     enable = mkOptBool';
   };
 

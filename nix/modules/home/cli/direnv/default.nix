@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.cli.direnv;
 in
 {
-  options.${namespace}.cli.direnv = with lib.${namespace}; {
+  options.${namespace}.cli.direnv = {
     enable = mkOptBool';
   };
 

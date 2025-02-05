@@ -6,10 +6,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.desktop.mpv;
 in
 {
-  options.${namespace}.desktop.mpv = with lib.${namespace}; {
+  options.${namespace}.desktop.mpv = {
     enable = mkOptBool';
   };
   config = lib.mkIf cfg.enable {

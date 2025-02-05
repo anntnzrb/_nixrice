@@ -5,6 +5,8 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.cli.espanso;
 in
 {
@@ -13,7 +15,7 @@ in
     ./matches/dictionary.nix
   ];
 
-  options.${namespace}.cli.espanso = with lib.${namespace}; {
+  options.${namespace}.cli.espanso = {
     enable = mkOptBool';
   };
 

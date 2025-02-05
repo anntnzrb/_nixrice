@@ -8,6 +8,8 @@
 }:
 
 let
+  inherit (lib.${namespace}) on;
+
   login = {
     name = "nixos";
     initialPassword = "nixos";
@@ -53,7 +55,7 @@ in
     pcmanfm # file manager (gui)
   ];
 
-  ${namespace} = with lib.${namespace}; {
+  ${namespace} = {
     user = {
       inherit (login) name initialPassword;
     };

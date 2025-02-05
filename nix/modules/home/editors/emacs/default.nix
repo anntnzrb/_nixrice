@@ -8,6 +8,7 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOpt' mkOptBool';
   inherit (inputs.nixpkgs.legacyPackages.${system}) emacs30;
 
   cfg = config.${namespace}.editors.emacs;
@@ -61,7 +62,7 @@ let
     );
 in
 {
-  options.${namespace}.editors.emacs = with lib.${namespace}; {
+  options.${namespace}.editors.emacs = {
     enable = mkOptBool';
 
     package = mkOpt' lib.types.package (

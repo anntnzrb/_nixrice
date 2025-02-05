@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.cli.btop;
 in
 {
-  options.${namespace}.cli.btop = with lib.${namespace}; {
+  options.${namespace}.cli.btop = {
     enable = mkOptBool';
   };
 

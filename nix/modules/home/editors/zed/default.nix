@@ -7,15 +7,24 @@
   ...
 }:
 let
+  inherit (lib.${namespace})
+    mkOpt'
+    mkOptBool'
+    ;
+  inherit (lib.types)
+    listOf
+    package
+    ;
+
   cfg = config.${namespace}.editors.zed;
 in
 {
-  options.${namespace}.editors.zed = with lib.${namespace}; {
+  options.${namespace}.editors.zed = {
     enable = mkOptBool';
 
     package = mkOpt' lib.types.package pkgs.zed-editor;
 
-    extraPackages = mkOpt' (with lib.types; listOf package) [
+    extraPackages = mkOpt' listOf package [
       pkgs.nixd
       pkgs.nixfmt-rfc-style
     ];

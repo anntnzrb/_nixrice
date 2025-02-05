@@ -6,6 +6,15 @@
   ...
 }:
 let
+  inherit (lib.${namespace})
+    mkOpt'
+    mkOptBool'
+    ;
+  inherit (lib.types)
+    attrsOf
+    str
+    ;
+
   cfg = config.${namespace}.shells;
 in
 {
@@ -13,10 +22,9 @@ in
     ./aliases.nix
   ];
 
-  options.${namespace}.shells = with lib.${namespace}; {
+  options.${namespace}.shells = {
     aliases.defaults.enable = mkOptBool';
-    sessionVariables = with lib.types; mkOpt' (attrsOf str) { };
-
+    sessionVariables = mkOpt' (attrsOf str) { };
     preliminaryMessage.disable = mkOptBool';
   };
 

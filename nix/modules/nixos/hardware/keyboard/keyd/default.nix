@@ -5,10 +5,12 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.hardware.keyboard.keyd;
 in
 {
-  options.${namespace}.hardware.keyboard.keyd = with lib.${namespace}; {
+  options.${namespace}.hardware.keyboard.keyd = {
     enable = mkOptBool';
   };
 

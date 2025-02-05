@@ -6,13 +6,13 @@
   ...
 }:
 let
+  inherit (lib.${namespace}) mkOptBool';
+
   cfg = config.${namespace}.hardware.audio;
 in
 {
-  options.${namespace}.hardware.audio = with lib.${namespace}; {
-    pipewire = {
-      enable = mkOptBool';
-    };
+  options.${namespace}.hardware.audio = {
+    pipewire.enable = mkOptBool';
   };
 
   config = lib.mkIf cfg.pipewire.enable {
