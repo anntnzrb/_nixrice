@@ -13,7 +13,10 @@ in
   config = mkIf cfg.enable {
     programs.lazygit = mkIf cfg.lazygit.enable {
       enable = true;
-      settings.gui.showCommandLog = false;
+      settings = {
+        gui.showCommandLog = false;
+        git.paging.externalDiffCommand = mkIf cfg.lazygit.enable "difft --color=always --display=inline";
+      };
     };
 
     home.shellAliases = mkIf cfg.lazygit.enable {
