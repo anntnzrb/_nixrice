@@ -6,10 +6,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOptBool'
-    mkOptEnabled'
-    ;
+  inherit (lib.${namespace}.module) mkOptBool';
 
   cfg = config.${namespace}.desktop.browsers.firefox;
 in
@@ -22,13 +19,12 @@ in
 
   options.${namespace}.desktop.browsers.firefox = {
     enable = mkOptBool';
-    package.install = mkOptEnabled';
   };
 
   config = lib.mkIf cfg.enable {
     programs.firefox = {
       enable = true;
-      package = if cfg.package.install then pkgs.firefox else null;
+      package = if pkgs.stdenvNoCC.isDarwin then pkgs.emptyFile else pkgs.firefox;
 
       profiles.default = {
         id = 0; # default
