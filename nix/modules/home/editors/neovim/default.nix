@@ -18,7 +18,7 @@ in
 
   config = lib.mkIf cfg.enable {
     home = {
-      packages = [ inputs.neovim-annt.packages.${system}.neovim ];
+      packages = [ inputs.neovim-annt.packages.${system}.nvf ];
       shellAliases.v = "nvim";
     };
   };
