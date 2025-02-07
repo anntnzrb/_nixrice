@@ -1,11 +1,20 @@
-{ inputs, pkgs, ... }:
+{
+  inputs,
+  pkgs,
+  ...
+}:
 inputs.pre-commit-hooks.lib.${pkgs.system}.run {
   src = inputs.self;
 
   hooks = {
     # nix
     flake-checker.enable = true;
-    nixfmt-rfc-style.enable = true;
+
+    nixfmt-rfc-style = {
+      enable = true;
+      settings.width = 80;
+    };
+
     deadnix = {
       enable = true;
       settings = {
@@ -16,7 +25,9 @@ inputs.pre-commit-hooks.lib.${pkgs.system}.run {
 
     statix =
       let
-        cfg = (pkgs.formats.toml { }).generate "statix.toml" { disabled = disabled-lints; };
+        cfg = (pkgs.formats.toml { }).generate "statix.toml" {
+          disabled = disabled-lints;
+        };
         disabled-lints = [ "repeated_keys" ];
       in
       {
