@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   namespace,
   ...
 }:
@@ -36,11 +35,6 @@ in
           };
       };
     };
-
-    environment.systemPackages = with pkgs; [
-      curl
-      wget
-    ];
 
     system.stateVersion = 4;
   };

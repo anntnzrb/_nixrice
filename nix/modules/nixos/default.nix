@@ -1,5 +1,4 @@
 {
-  pkgs,
   config,
   namespace,
   ...
@@ -9,8 +8,6 @@ let
 in
 {
   config = {
-    system.stateVersion = "22.05";
-
     i18n = rec {
       defaultLocale = "en_US.UTF-8";
       extraLocaleSettings = {
@@ -26,20 +23,6 @@ in
       };
     };
 
-    environment.systemPackages = with pkgs; [
-      # tools
-      git
-      man-pages-posix
-
-      # archiving
-      atool
-      p7zip
-      rar
-      unzip
-      zip
-
-      # misc
-      kmon
-    ];
+    system.stateVersion = "22.05";
   };
 }
