@@ -23,6 +23,7 @@
     # -------------------------------------------------------------------------
     # nix & nixpkgs
     # -------------------------------------------------------------------------
+
     nixpkgs = {
       # main nixpkgs reference, most likely pointing to stable
       url = "github:nixos/nixpkgs/nixos-24.11";
@@ -46,6 +47,7 @@
     # -------------------------------------------------------------------------
     # tools
     # -------------------------------------------------------------------------
+
     snowfall-lib = {
       # snowfall-lib is an opinionated flake framework
       # it forces a predefined schema
@@ -64,6 +66,7 @@
     # -------------------------------------------------------------------------
     # systems
     # -------------------------------------------------------------------------
+
     nixos-generators = {
       # is a collection of image builders (iso, sd, vm, ...)
       url = "github:nix-community/nixos-generators/master";
