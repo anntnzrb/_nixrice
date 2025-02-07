@@ -82,10 +82,7 @@ in
 
       ui.fonts = on;
 
-      browsers.firefox = {
-        enable = true;
-        package.install = false;
-      };
+      browsers.firefox.enable = true;
     };
   };
 }
