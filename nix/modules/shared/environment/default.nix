@@ -21,6 +21,9 @@ in
       unrar-wrapper
       unzip
       zip
+
+      # nix
+      nh
     ];
   };
 }
