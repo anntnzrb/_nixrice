@@ -57,11 +57,12 @@ hm-switch user host: (hm-build user host)
 
 # perform a cleanup
 nix-clean:
-    sudo nix-collect-garbage --max-jobs auto --cores 0 --delete-old
+    rm -Rf ${HOME}/.cache/nix/ >/dev/null
+    nh clean all
+    nh clean user
 
 # optimise the nix store
 nix-optimise: nix-clean
-    rm -Rf ${HOME}/.cache/ >/dev/null
     sudo nix store optimise
 
 # attempt to repair the nix store
