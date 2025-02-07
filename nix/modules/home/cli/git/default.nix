@@ -56,5 +56,8 @@ in
         srp = "!f() { git diff --quiet && git diff --cached --quiet || git stash push -m \"local\" && git rebase --merge && git stash pop; }; f";
       };
     };
+
+    sops.secrets."git/github/token" = { };
+    home.sessionVariables."GITHUB_TOKEN" = ''$(cat ${config.sops.secrets."git/github/token".path})'';
   };
 }
