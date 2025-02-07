@@ -11,7 +11,7 @@ let
 in
 {
   config = {
-    xdg = lib.mkIf pkgs.stdenv.isLinux {
+    xdg = lib.mkIf pkgs.stdenvNoCC.hostPlatform.isLinux {
       enable = true;
 
       cacheHome = "${homeDir}/.cache";

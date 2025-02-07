@@ -10,7 +10,7 @@ let
     getExe'
     ;
 
-  inherit (pkgs.stdenvNoCC)
+  inherit (pkgs.stdenvNoCC.hostPlatform)
     isLinux
     ;
 
