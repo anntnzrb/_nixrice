@@ -152,10 +152,7 @@ in
       terminal-emulators.alacritty = on;
       zathura = on;
 
-      ui = {
-        themes = on;
-        fonts = on;
-      };
+      ui.themes = on;
     };
   };
 }

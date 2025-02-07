@@ -36,7 +36,5 @@ in
     };
 
     editors.neovim = on;
-
-    desktop.ui.fonts = on;
   };
 }

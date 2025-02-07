@@ -80,8 +80,6 @@ in
         };
       };
 
-      ui.fonts = on;
-
       browsers.firefox.enable = true;
     };
   };
