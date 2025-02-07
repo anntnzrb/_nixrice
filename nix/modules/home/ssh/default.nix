@@ -103,11 +103,15 @@ in
     programs.ssh = {
       inherit (cfg) enable;
       hashKnownHosts = true;
-      matchBlocks = mapAttrs (name: hostCfg: (mkHostConfig name hostCfg).matchBlock) cfg.hosts;
+      matchBlocks = mapAttrs (
+        name: hostCfg: (mkHostConfig name hostCfg).matchBlock
+      ) cfg.hosts;
     };
 
     home.file = mkMerge (
-      flatten (mapAttrsToList (name: hostCfg: (mkHostConfig name hostCfg).files) cfg.hosts)
+      flatten (
+        mapAttrsToList (name: hostCfg: (mkHostConfig name hostCfg).files) cfg.hosts
+      )
     );
   };
 }

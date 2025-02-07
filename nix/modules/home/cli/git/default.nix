@@ -58,6 +58,8 @@ in
     };
 
     sops.secrets."git/github/token" = { };
-    home.sessionVariables."GITHUB_TOKEN" = ''$(cat ${config.sops.secrets."git/github/token".path})'';
+    home.sessionVariables."GITHUB_TOKEN" = ''
+      $(cat ${config.sops.secrets."git/github/token".path})
+    '';
   };
 }

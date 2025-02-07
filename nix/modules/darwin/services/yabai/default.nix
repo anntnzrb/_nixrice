@@ -13,8 +13,11 @@ let
   # helpers
   formatAttrs =
 
-    attrs: concatStringsSep " " (map (k: "${k}=${getAttr k attrs}") (attrNames attrs));
-  mkRule = rule: "yabai -m rule --add ${formatAttrs rule.pattern} ${formatAttrs rule.ruleset}";
+    attrs:
+    concatStringsSep " " (map (k: "${k}=${getAttr k attrs}") (attrNames attrs));
+  mkRule =
+    rule:
+    "yabai -m rule --add ${formatAttrs rule.pattern} ${formatAttrs rule.ruleset}";
 
 in
 {

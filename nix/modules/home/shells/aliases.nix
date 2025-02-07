@@ -52,7 +52,8 @@ in
 
     # network
     tnet = "${getExe pkgs.unixtools.ping} --count 4 8.8.8.8";
-    "ip?" = "${getExe' pkgs.curlMinimal "curl"} --fail --silent --show-error --location icanhazip.com";
+    "ip?" =
+      "${getExe' pkgs.curlMinimal "curl"} --fail --silent --show-error --location icanhazip.com";
     "local-ip?" = ''
       ${getExe pkgs.unixtools.ifconfig} | ${getExe pkgs.gawk} '/inet / { if ($2 != "127.0.0.1") { print $2; exit } }'
     '';
