@@ -21,6 +21,8 @@ in
   };
 
   liberion = {
+    secrets.sops.enable = true;
+
     ssh = {
       enable = true;
       hosts = {

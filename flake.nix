@@ -17,6 +17,8 @@
       overlays = [ inputs.emacs-overlay.overlays.default ];
 
       channels-config.allowUnfree = true;
+
+      homes.modules = [ inputs.sops-nix.homeManagerModules.sops ];
     };
 
   inputs = {
@@ -61,6 +63,12 @@
       url = "github:cachix/git-hooks.nix/master";
       inputs.nixpkgs.follows = "nixpkgs-stable";
       inputs.gitignore.follows = "";
+    };
+
+    sops-nix = {
+      # secrets management
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
     };
 
     # -------------------------------------------------------------------------

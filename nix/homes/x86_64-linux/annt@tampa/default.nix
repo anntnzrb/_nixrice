@@ -8,6 +8,7 @@ let
 in
 {
   liberion = {
+    secrets.sops.enable = true;
     shells = {
       sessionVariables.EDITOR = "nvim";
 
