@@ -8,6 +8,8 @@ let
 in
 {
   config = {
+    time.timeZone = "America/Guayaquil";
+
     i18n = rec {
       defaultLocale = "en_US.UTF-8";
       extraLocaleSettings = {

@@ -9,8 +9,6 @@ in
 {
   imports = [ ./hardware ];
 
-  time.timeZone = "America/Guayaquil";
-
   ${namespace} = {
     # no dual-boot. systemd-boot suffices
     boot.bootloader.systemd-boot = on;

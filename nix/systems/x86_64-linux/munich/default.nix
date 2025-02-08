@@ -9,10 +9,7 @@ in
 {
   imports = [ ./hardware ];
 
-  time = {
-    timeZone = "America/Guayaquil";
-    hardwareClockInLocalTime = true; # dual-boot
-  };
+  time.hardwareClockInLocalTime = true; # dual-boot
 
   ${namespace} = {
     # GRUB because of dual-boot
