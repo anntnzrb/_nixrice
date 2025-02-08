@@ -62,14 +62,12 @@ in
       fzf = on;
       omnix = on;
       tldr = on;
+      yazi = on;
       yt-dlp = on;
       zoxide = on;
     };
 
-    editors = {
-      emacs = on;
-      neovim = on;
-    };
+    editors.neovim = on;
 
     desktop = {
       terminal-emulators.ghostty = {
