@@ -5,15 +5,22 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.module)
+    mkOptEnabled'
+    mkOptDisabled'
+    ;
 
   cfg = config.${namespace}.cli.yazi;
 in
 {
-  imports = [ ./theme.nix ];
+  imports = [
+    ./theme.nix
+    ./plugin.nix
+  ];
 
   options.${namespace}.cli.yazi = {
     enable = mkOptDisabled';
+    plugin.githead.enable = mkOptEnabled';
   };
 
   config.programs.yazi = lib.mkIf cfg.enable {

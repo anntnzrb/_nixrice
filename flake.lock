@@ -3576,6 +3576,7 @@
         "snowfall-lib": "snowfall-lib",
         "sops-nix": "sops-nix",
         "yazi-flavors": "yazi-flavors",
+        "yazi-plugins-githead": "yazi-plugins-githead",
         "yazi-timu-macos": "yazi-timu-macos"
       }
     },
@@ -3682,6 +3683,23 @@
         "owner": "yazi-rs",
         "ref": "main",
         "repo": "flavors",
+        "type": "github"
+      }
+    },
+    "yazi-plugins-githead": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1736362991,
+        "narHash": "sha256-UHynR1oEkqHfV3Kaohc1R8sT1YinVzQyrxHA+3TA8fc=",
+        "owner": "llanosrocas",
+        "repo": "githead.yazi",
+        "rev": "45bd61e44ab44fe8deff9099902226c3aff969e5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "llanosrocas",
+        "ref": "main",
+        "repo": "githead.yazi",
         "type": "github"
       }
     },
