@@ -187,17 +187,6 @@
               bind "Ctrl a" { SwitchToMode "normal"; }
           }
 
-          shared_among "normal" "locked" {
-              // navigation
-              bind "Alt k" "Alt up"    { MoveFocus "up"; }
-              bind "Alt l" "Alt right" { MoveFocus "right"; }
-              bind "Alt j" "Alt down"  { MoveFocus "down"; }
-              bind "Alt h" "Alt left"  { MoveFocus "left"; }
-
-              // misc
-              bind "Alt f" { ToggleFloatingPanes; }
-          }
-
           shared_except "locked" "renametab" "renamepane" {
               bind "Ctrl a" { SwitchToMode "locked"; }
               bind "Ctrl q" { Quit; }
