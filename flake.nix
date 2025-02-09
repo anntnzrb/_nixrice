@@ -161,5 +161,18 @@
       url = "github:dracula/rio-terminal/main";
       flake = false;
     };
+
+    yazi-flavors = {
+      # yazi themes
+      url = "github:yazi-rs/flavors/main";
+      flake = false;
+    };
+
+    yazi-timu-macos = {
+      ## yazi themes
+      # timu-macos
+      url = "gitlab:aimebertrand/timu-macos-yazi/main";
+      flake = false;
+    };
   };
 }

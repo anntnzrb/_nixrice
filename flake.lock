@@ -3574,7 +3574,9 @@
         "rio-catppuccin": "rio-catppuccin",
         "rio-dracula": "rio-dracula",
         "snowfall-lib": "snowfall-lib",
-        "sops-nix": "sops-nix"
+        "sops-nix": "sops-nix",
+        "yazi-flavors": "yazi-flavors",
+        "yazi-timu-macos": "yazi-timu-macos"
       }
     },
     "snowfall-lib": {
@@ -3664,6 +3666,40 @@
         "owner": "nix-systems",
         "repo": "default",
         "type": "github"
+      }
+    },
+    "yazi-flavors": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1737723829,
+        "narHash": "sha256-UymfR1g8ci2XM5OUMpeRFiDkRg5vlfn3Qw9LCD4qvvY=",
+        "owner": "yazi-rs",
+        "repo": "flavors",
+        "rev": "fd85060a93e73058b81a2d6cba414e1b7846703b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "yazi-rs",
+        "ref": "main",
+        "repo": "flavors",
+        "type": "github"
+      }
+    },
+    "yazi-timu-macos": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1737507649,
+        "narHash": "sha256-0iwr+yzFyAMYNhFD1iFYkhIjdDrRdGGNT0jbCMX4TzA=",
+        "owner": "aimebertrand",
+        "repo": "timu-macos-yazi",
+        "rev": "8b8e24a288d2b9b443f9218fa6b038a40e84fd5a",
+        "type": "gitlab"
+      },
+      "original": {
+        "owner": "aimebertrand",
+        "ref": "main",
+        "repo": "timu-macos-yazi",
+        "type": "gitlab"
       }
     }
   },

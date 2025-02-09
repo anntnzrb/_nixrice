@@ -10,6 +10,8 @@ let
   cfg = config.${namespace}.cli.yazi;
 in
 {
+  imports = [ ./theme.nix ];
+
   options.${namespace}.cli.yazi = {
     enable = mkOptDisabled';
   };
