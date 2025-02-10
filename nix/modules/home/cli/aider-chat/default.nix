@@ -6,13 +6,13 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptBool';
+  inherit (lib.${namespace}.module) mkOptDisabled';
 
   cfg = config.${namespace}.cli.aider-chat;
 in
 {
   options.${namespace}.cli.aider-chat = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {

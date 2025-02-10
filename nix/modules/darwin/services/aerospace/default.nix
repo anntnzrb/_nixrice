@@ -7,7 +7,7 @@
 let
   inherit (lib.${namespace}.module)
     mkOpt'
-    mkOptBool'
+    mkOptDisabled'
     ;
 
   cfg = config.${namespace}.services.aerospace;
@@ -20,7 +20,7 @@ in
   ];
 
   options.${namespace}.services.aerospace = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
 
     modifier = mkOpt' lib.types.str "alt";
   };

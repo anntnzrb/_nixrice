@@ -5,13 +5,13 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptBool';
+  inherit (lib.${namespace}.module) mkOptDisabled';
 
   cfg = config.${namespace}.cli.zoxide;
 in
 {
   options.${namespace}.cli.zoxide = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {

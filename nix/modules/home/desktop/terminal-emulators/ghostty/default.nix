@@ -10,7 +10,7 @@
 let
   inherit (lib.${namespace}.module)
     mkOpt'
-    mkOptBool'
+    mkOptDisabled'
     ;
   inherit (lib.types)
     nullOr
@@ -35,7 +35,7 @@ in
   imports = [ (import "${inputs.home-manager-unstable}/modules/${mod}") ];
 
   options.${namespace}.desktop.terminal-emulators.ghostty = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
 
     package = mkOpt' (nullOr package) pkgs.ghostty;
 

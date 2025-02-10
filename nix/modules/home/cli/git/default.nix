@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptBool';
+  inherit (lib.${namespace}.module) mkOptDisabled';
 
   cfg = config.${namespace}.cli.git;
 in
@@ -13,8 +13,8 @@ in
   imports = [ ./lazygit.nix ];
 
   options.${namespace}.cli.git = {
-    enable = mkOptBool';
-    lazygit.enable = mkOptBool';
+    enable = mkOptDisabled';
+    lazygit.enable = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {

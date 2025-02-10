@@ -5,14 +5,14 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptBool';
+  inherit (lib.${namespace}.module) mkOptDisabled';
 
   cfg = config.${namespace}.virtualisation.docker;
 in
 {
   options.${namespace}.virtualisation.docker = {
-    enable = mkOptBool';
-    enableOnBoot = mkOptBool';
+    enable = mkOptDisabled';
+    enableOnBoot = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {

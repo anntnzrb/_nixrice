@@ -8,7 +8,7 @@
 let
   inherit (lib.${namespace}.module)
     mkOpt'
-    mkOptBool'
+    mkOptDisabled'
     ;
   inherit (lib.types)
     listOf
@@ -21,8 +21,8 @@ let
 in
 {
   options.${namespace}.desktop.window-managers.xorg.xmonad = {
-    enable = mkOptBool';
-    compositor.picom.enable = mkOptBool';
+    enable = mkOptDisabled';
+    compositor.picom.enable = mkOptDisabled';
     autoStart = mkOpt' (listOf str) [ ];
   };
 

@@ -9,7 +9,7 @@
 let
   inherit (lib.${namespace}.module)
     mkOpt'
-    mkOptBool'
+    mkOptDisabled'
     ;
   inherit (lib.types)
     listOf
@@ -20,7 +20,7 @@ let
 in
 {
   options.${namespace}.editors.zed = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
 
     package = mkOpt' lib.types.package pkgs.zed-editor;
 

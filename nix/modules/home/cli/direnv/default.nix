@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptBool';
+  inherit (lib.${namespace}.module) mkOptDisabled';
 
   exe = lib.getExe config.programs.direnv.package;
 
@@ -13,7 +13,7 @@ let
 in
 {
   options.${namespace}.cli.direnv = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {

@@ -7,13 +7,13 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptBool';
+  inherit (lib.${namespace}.module) mkOptDisabled';
 
   cfg = config.${namespace}.editors.neovim;
 in
 {
   options.${namespace}.editors.neovim = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {

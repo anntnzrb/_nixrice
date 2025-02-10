@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptBool';
+  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
   inherit (lib.types) attrsOf str;
   inherit (lib)
     mkMerge
@@ -21,9 +21,9 @@ let
 in
 {
   options.${namespace}.desktop.window-managers.xorg.herbstluftwm = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
 
-    compositor.picom.enable = mkOptBool';
+    compositor.picom.enable = mkOptDisabled';
 
     autoStart = mkOpt' (attrsOf str) [ ];
     keys.super = mkOpt' str "Mod4";

@@ -7,7 +7,7 @@
 let
   inherit (lib.${namespace}.module)
     mkOpt'
-    mkOptBool'
+    mkOptDisabled'
     ;
   inherit (lib.types)
     nullOr
@@ -18,11 +18,11 @@ let
 in
 {
   options.${namespace}.desktop.gammastep = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
 
     latitude = mkOpt' (nullOr float) (-2.0);
     longitude = mkOpt' (nullOr float) (-81.0);
-    tray = mkOptBool';
+    tray = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {

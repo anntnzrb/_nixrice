@@ -8,7 +8,7 @@
 let
   inherit (lib.${namespace}.module)
     mkOpt'
-    mkOptBool'
+    mkOptDisabled'
     ;
   inherit (lib.types) str ints;
   inherit (config.home.sessionVariables)
@@ -21,7 +21,7 @@ let
 in
 {
   options.${namespace}.desktop.sxhkd = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
 
     timeout = mkOpt' ints.unsigned 3;
     cancelKey = mkOpt' str "Escape";

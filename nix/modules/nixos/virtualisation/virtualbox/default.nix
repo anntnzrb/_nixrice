@@ -5,14 +5,14 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptBool';
+  inherit (lib.${namespace}.module) mkOptDisabled';
 
   cfg = config.${namespace}.virtualisation.virtualbox;
 in
 {
   options.${namespace}.virtualisation.virtualbox = {
-    enable = mkOptBool';
-    enableExtensionPack = mkOptBool';
+    enable = mkOptDisabled';
+    enableExtensionPack = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {

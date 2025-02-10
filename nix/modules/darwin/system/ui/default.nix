@@ -5,16 +5,16 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptBool';
+  inherit (lib.${namespace}.module) mkOptDisabled';
 
   cfg = config.${namespace}.system.ui;
 in
 {
   options.${namespace}.system.ui = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
 
     menuBar = {
-      hide = mkOptBool';
+      hide = mkOptDisabled';
     };
   };
 

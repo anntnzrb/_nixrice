@@ -8,7 +8,7 @@
 let
   inherit (lib.${namespace}.module)
     mkOpt'
-    mkOptBool'
+    mkOptDisabled'
     ;
   inherit (lib.types)
     attrsOf
@@ -24,7 +24,7 @@ in
 
   options.${namespace}.shells = {
     sessionVariables = mkOpt' (attrsOf str) { };
-    preliminaryMessage.disable = mkOptBool';
+    preliminaryMessage.disable = mkOptDisabled';
   };
 
   config.home = {

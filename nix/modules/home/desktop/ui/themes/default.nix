@@ -8,7 +8,7 @@
 let
   inherit (lib.${namespace}.module)
     mkOpt'
-    mkOptBool'
+    mkOptDisabled'
     ;
   inherit (lib.types)
     str
@@ -19,7 +19,7 @@ let
 in
 {
   options.${namespace}.desktop.ui.themes = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
 
     cursor = {
       theme = mkOpt' str "macOS-BigSur";

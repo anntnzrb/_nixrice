@@ -8,7 +8,7 @@
 let
   inherit (lib.${namespace}.module)
     mkOpt'
-    mkOptBool'
+    mkOptDisabled'
     ;
   inherit (lib.types)
     attrsOf
@@ -19,7 +19,7 @@ let
 in
 {
   options.${namespace}.desktop.file-managers.pcmanfm = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
 
     settings = mkOpt' (attrsOf anything) {
       config = {

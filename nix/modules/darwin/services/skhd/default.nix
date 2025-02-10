@@ -7,7 +7,7 @@
 let
   inherit (lib.${namespace}.module)
     mkOpt'
-    mkOptBool'
+    mkOptDisabled'
     ;
   inherit (lib.types)
     attrsOf
@@ -34,7 +34,7 @@ let
 in
 {
   options.${namespace}.services.skhd = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
 
     keybindings = mkOpt' (attrsOf (
       nullOr (oneOf [

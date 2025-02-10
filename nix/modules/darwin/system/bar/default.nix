@@ -5,13 +5,13 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptBool';
+  inherit (lib.${namespace}.module) mkOptDisabled';
 
   cfg = config.${namespace}.system.bar;
 in
 {
   options.${namespace}.system.bar = {
-    sketchybar.enable = mkOptBool';
+    sketchybar.enable = mkOptDisabled';
   };
 
   config = {

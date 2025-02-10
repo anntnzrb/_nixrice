@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptBool';
+  inherit (lib.${namespace}.module) mkOptDisabled';
 
   cfg = config.${namespace}.desktop.browsers.firefox;
 in
@@ -18,7 +18,7 @@ in
   ];
 
   options.${namespace}.desktop.browsers.firefox = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {

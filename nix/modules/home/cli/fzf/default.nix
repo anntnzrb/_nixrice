@@ -6,14 +6,14 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptBool';
+  inherit (lib.${namespace}.module) mkOptDisabled';
   inherit (lib) getExe;
 
   cfg = config.${namespace}.cli.fzf;
 in
 {
   options.${namespace}.cli.fzf = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {

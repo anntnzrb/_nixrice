@@ -8,7 +8,7 @@
 let
   inherit (lib.${namespace}.module)
     mkOpt'
-    mkOptBool'
+    mkOptDisabled'
     ;
   inherit (lib)
     foldl'
@@ -27,7 +27,7 @@ in
 
 {
   options.${namespace}.desktop.window-managers.wayland.sway = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
 
     keyboard = {
       layout = mkOpt' str "us";

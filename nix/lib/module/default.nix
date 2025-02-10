@@ -11,14 +11,6 @@
     # Alias for mkOption.
     mkOpt' = type: def: mkOpt type def null;
 
-    # Creates a boolean option defaulting to false, with given description.
-    # Alias for mkEnableOption.
-    mkOptBool = desc: lib.mkEnableOption desc;
-
-    # Creates a boolean option defaulting to false, no description.
-    # Alias for mkEnableOption.
-    mkOptBool' = mkOptBool null;
-
     # Creates a boolean option defaulting to true, with given description.
     # Alias for mkOption.
     mkOptEnabled = desc: mkOpt lib.types.bool true desc;

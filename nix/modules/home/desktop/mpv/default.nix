@@ -6,13 +6,13 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptBool';
+  inherit (lib.${namespace}.module) mkOptDisabled';
 
   cfg = config.${namespace}.desktop.mpv;
 in
 {
   options.${namespace}.desktop.mpv = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
   };
   config = lib.mkIf cfg.enable {
     programs.mpv = {

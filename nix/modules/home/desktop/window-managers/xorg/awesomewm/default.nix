@@ -8,7 +8,7 @@
 let
   inherit (lib.${namespace}.module)
     mkOpt'
-    mkOptBool'
+    mkOptDisabled'
     ;
   inherit (lib.types)
     listOf
@@ -21,12 +21,12 @@ let
 in
 {
   options.${namespace}.desktop.window-managers.xorg.awesomewm = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
 
     compositor = {
       picom = {
-        enable = mkOptBool';
-        vSync = mkOptBool';
+        enable = mkOptDisabled';
+        vSync = mkOptDisabled';
       };
     };
 

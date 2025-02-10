@@ -7,16 +7,16 @@
 let
   inherit (lib.${namespace}.module)
     mkOpt'
-    mkOptBool'
+    mkOptDisabled'
     ;
 
   cfg = config.${namespace}.common.xorg.picom;
 in
 {
   options.${namespace}.common.xorg.picom = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
     backend = mkOpt' lib.types.str "glx";
-    vSync = mkOptBool';
+    vSync = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {

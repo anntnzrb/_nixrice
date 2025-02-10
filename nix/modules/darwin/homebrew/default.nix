@@ -9,7 +9,7 @@
 let
   inherit (lib.${namespace}.module)
     mkOpt'
-    mkOptBool'
+    mkOptDisabled'
     ;
   inherit (lib.types)
     listOf
@@ -22,7 +22,7 @@ in
   imports = [ inputs.nix-homebrew.darwinModules.nix-homebrew ];
 
   options.${namespace}.homebrew = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
 
     packages = {
       casks = mkOpt' (listOf str) [ ];

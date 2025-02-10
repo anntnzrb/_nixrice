@@ -7,14 +7,14 @@
 let
   inherit (lib.${namespace}.module)
     mkOpt'
-    mkOptBool'
+    mkOptDisabled'
     ;
 
   cfg = config.${namespace}.desktop.terminal-emulators.alacritty;
 in
 {
   options.${namespace}.desktop.terminal-emulators.alacritty = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
     font.size = mkOpt' lib.types.float 10.0;
   };
 

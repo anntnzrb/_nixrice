@@ -8,7 +8,7 @@
 let
   inherit (lib.${namespace}.module)
     mkOpt'
-    mkOptBool'
+    mkOptDisabled'
     ;
 
   inherit (lib.types) path;
@@ -17,7 +17,7 @@ let
 in
 {
   options.${namespace}.secrets.sops = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
     defaultSopsFile = mkOpt' path (lib.snowfall.fs.get-file "secrets/default.yml");
   };
 

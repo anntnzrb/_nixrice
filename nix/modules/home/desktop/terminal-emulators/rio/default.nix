@@ -8,7 +8,7 @@
 let
   inherit (lib.${namespace}.module)
     mkOpt'
-    mkOptBool'
+    mkOptDisabled'
     ;
 
   cfg = config.${namespace}.desktop.terminal-emulators.rio;
@@ -23,7 +23,7 @@ in
   ];
 
   options.${namespace}.desktop.terminal-emulators.rio = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
     font.size = mkOpt' lib.types.int 15;
   };
 

@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptBool';
+  inherit (lib.${namespace}.module) mkOptDisabled';
   inherit (lib) concatStringsSep getAttr attrNames;
 
   cfg = config.${namespace}.services.yabai;
@@ -22,7 +22,7 @@ let
 in
 {
   options.${namespace}.services.yabai = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {

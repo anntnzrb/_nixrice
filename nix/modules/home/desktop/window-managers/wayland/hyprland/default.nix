@@ -7,7 +7,7 @@
 let
   inherit (lib.${namespace}.module)
     mkOpt'
-    mkOptBool'
+    mkOptDisabled'
     ;
   inherit (lib)
     genList
@@ -22,11 +22,11 @@ let
 in
 {
   options.${namespace}.desktop.window-managers.wayland.hyprland = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
 
     monitor = mkOpt' (listOf str) [ ",preferred,auto,1" ];
     autoStartApps = mkOpt' (listOf str) [ ];
-    waybar = mkOptBool';
+    waybar = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {

@@ -5,13 +5,13 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptBool';
+  inherit (lib.${namespace}.module) mkOptDisabled';
 
   cfg = config.${namespace}.desktop.browsers.qutebrowser;
 in
 {
   options.${namespace}.desktop.browsers.qutebrowser = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
   };
   config = lib.mkIf cfg.enable {
     programs.qutebrowser = {

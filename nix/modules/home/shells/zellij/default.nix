@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptBool' mkOptDisabled';
+  inherit (lib.${namespace}.module) mkOptDisabled';
 
   cfg = config.${namespace}.shells.zellij;
 in
@@ -18,7 +18,7 @@ in
   ];
 
   options.${namespace}.shells.zellij = {
-    enable = mkOptBool';
+    enable = mkOptDisabled';
     enableBashIntegration = mkOptDisabled';
     enableZshIntegration = mkOptDisabled';
     enableFishIntegration = mkOptDisabled';
