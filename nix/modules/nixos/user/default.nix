@@ -37,7 +37,6 @@ in
         initialPassword
         extraGroups
         ;
-      openssh.authorizedKeys.keys = cfg.authorizedKeys;
     };
   };
 }
