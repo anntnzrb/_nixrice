@@ -11,19 +11,17 @@ in
 {
   imports = [ inputs.mac-app-util.homeManagerModules.default ];
 
-  home = {
-    sessionVariables.EDITOR = "nvim";
-
-    packages = with pkgs; [
-      aldente
-      czkawka
-    ];
-  };
+  home.packages = with pkgs; [
+    aldente
+    czkawka
+  ];
 
   liberion = {
     secrets.sops.enable = true;
 
     shells = {
+      sessionVariables.EDITOR = "nvim";
+
       zsh = {
         enable = true;
         prompt.starship = on;
