@@ -1,11 +1,14 @@
 {
   lib,
+  pkgs,
   config,
   namespace,
   ...
 }:
 let
   inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib) mkIf;
+  inherit (pkgs.stdenvNoCC.hostPlatform) isLinux;
 
   cfg = config.${namespace}.network.ssh;
 in
@@ -14,8 +17,14 @@ in
     enable = mkOptDisabled';
   };
 
-  config.programs.ssh = lib.mkIf cfg.enable {
-    enable = true;
-    addKeysToAgent = "confirm 1h";
+  config = {
+    programs.ssh = mkIf cfg.enable {
+      inherit (cfg) enable;
+      addKeysToAgent = "confirm 1h";
+    };
+
+    services.ssh-agent = mkIf (cfg.enable && isLinux) {
+      inherit (cfg) enable;
+    };
   };
 }
