@@ -44,7 +44,7 @@ in
     xterm
 
     # editors
-    inputs.neovim-annt.packages.${system}.neovim # vi-like
+    inputs.neovim-annt.packages.${system}.nvf # vi-like
     geany # gui
 
     # browsers
