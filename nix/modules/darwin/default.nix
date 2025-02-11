@@ -20,7 +20,8 @@ in
       defaults = {
         SoftwareUpdate.AutomaticallyInstallMacOSUpdates = false;
         # disable ads
-        CustomUserPreferences."com.apple.AdLib".allowApplePersonalizedAdvertising = false;
+        CustomUserPreferences."com.apple.AdLib".allowApplePersonalizedAdvertising =
+          false;
 
         menuExtraClock =
           let
