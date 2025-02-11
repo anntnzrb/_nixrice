@@ -14,13 +14,18 @@ in
 
   options.${namespace}.cli.git = {
     enable = mkOptDisabled';
+
+    diff = {
+      difftastic.enable = mkOptDisabled';
+    };
+
     lazygit.enable = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {
     programs.git = {
       inherit (cfg) enable;
-      difftastic.enable = true;
+      inherit (cfg.diff) difftastic;
 
       userName = "anntnzrb";
       userEmail = "anntnzrb@proton.me";
