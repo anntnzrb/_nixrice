@@ -10,6 +10,7 @@ in
   imports = [ ./activation.nix ];
 
   config = {
+    services.openssh.enable = true;
     security.pam.enableSudoTouchIdAuth = true;
 
     system = {
@@ -19,8 +20,7 @@ in
       defaults = {
         SoftwareUpdate.AutomaticallyInstallMacOSUpdates = false;
         # disable ads
-        CustomUserPreferences."com.apple.AdLib".allowApplePersonalizedAdvertising =
-          false;
+        CustomUserPreferences."com.apple.AdLib".allowApplePersonalizedAdvertising = false;
 
         menuExtraClock =
           let
