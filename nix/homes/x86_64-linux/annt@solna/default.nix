@@ -14,6 +14,8 @@ let
 in
 {
   liberion = {
+    network.ssh = on;
+
     shells = {
       sessionVariables = {
         BROWSER = "chromium";

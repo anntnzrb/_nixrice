@@ -23,6 +23,8 @@ let
 in
 {
   liberion = {
+    network.ssh = on;
+
     home = {
       keyboard = {
         layout = "us";
