@@ -17,9 +17,13 @@ in
     enable = mkOptDisabled';
   };
 
-  config.wsl = lib.mkIf cfg.enable {
-    inherit (cfg) enable;
-    defaultUser = config.${namespace}.user.name;
-    docker-desktop.enable = true;
+  config = {
+    wsl = lib.mkIf cfg.enable {
+      inherit (cfg) enable;
+      defaultUser = config.${namespace}.user.name;
+      docker-desktop.enable = true;
+    };
+
+    programs.nix-ld.enable = true;
   };
 }
