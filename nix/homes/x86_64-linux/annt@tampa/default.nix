@@ -9,7 +9,6 @@ in
 {
   liberion = {
     secrets.sops.enable = true;
-    network.ssh = on;
 
     shells = {
       sessionVariables.EDITOR = "nvim";

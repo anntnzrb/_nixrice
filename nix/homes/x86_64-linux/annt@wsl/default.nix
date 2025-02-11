@@ -4,8 +4,6 @@ let
 in
 {
   ${namespace} = {
-    network.ssh = on;
-
     shells = {
       sessionVariables = {
         EDITOR = "nvim";
