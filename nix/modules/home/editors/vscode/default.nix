@@ -1,7 +1,6 @@
 {
-  config,
-  pkgs,
   lib,
+  config,
   namespace,
   ...
 }:
@@ -19,7 +18,6 @@ in
   config = lib.mkIf cfg.enable {
     programs.vscode = {
       enable = true;
-      package = pkgs.vscode-fhs;
 
       # extensions can be installed or updated manually
       mutableExtensionsDir = true;

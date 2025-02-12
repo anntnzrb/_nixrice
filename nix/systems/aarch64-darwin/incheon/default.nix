@@ -57,7 +57,6 @@ in
           "ghostty"
 
           # dev
-          "visual-studio-code"
           "rustdesk"
 
           # situational

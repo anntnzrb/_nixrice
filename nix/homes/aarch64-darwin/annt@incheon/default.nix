@@ -48,7 +48,10 @@ in
       zoxide = on;
     };
 
-    editors.neovim = on;
+    editors = {
+      vscode = on;
+      neovim = on;
+    };
 
     desktop = {
       terminal-emulators.ghostty = {
