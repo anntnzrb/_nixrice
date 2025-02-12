@@ -69,7 +69,7 @@ in
     {
       # WhatsApp
       appId = "net.whatsapp.WhatsApp";
-      run = [ (mvNodeToWorkspace 3) ];
+      run = [ (mvNodeToWorkspace 4) ];
     }
     {
       # ChatGPT
