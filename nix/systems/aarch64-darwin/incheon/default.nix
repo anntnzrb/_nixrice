@@ -38,6 +38,8 @@ in
       };
     };
 
+    network.ssh = on;
+
     homebrew = {
       enable = true;
 

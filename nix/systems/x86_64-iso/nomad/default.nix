@@ -31,7 +31,10 @@ in
     };
   };
 
-  networking.wireless.enable = lib.mkForce false;
+  networking = {
+    wireless.enable = lib.mkForce false;
+    ssh = on;
+  };
 
   environment.systemPackages = with pkgs; [
     # tools

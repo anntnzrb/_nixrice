@@ -22,6 +22,7 @@ in
 
     network = {
       networkmanager = on;
+      ssh = on;
     };
   };
 

@@ -10,7 +10,6 @@ in
   imports = [ ./activation.nix ];
 
   config = {
-    services.openssh.enable = true;
     security.pam.enableSudoTouchIdAuth = true;
 
     system = {
