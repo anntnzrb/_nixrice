@@ -5,45 +5,39 @@
   host,
   namespace,
   ...
-
 }:
 let
   inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
 
   cfg = config.${namespace}.network.ssh;
 
-  name = host;
+  nixosCfg = inputs.self.nixosConfigurations or { };
+  darwinCfg = inputs.self.darwinConfigurations or { };
 
-  nixosConfigurations = inputs.self.nixosConfigurations or { };
-  darwinConfigurations = inputs.self.darwinConfigurations or { };
-
-  ## NOTE This is the cause of evaluating all configurations per system
-  ## TODO: Find a more elegant way that doesn't require bloating eval complications
-  other-hosts =
+  remoteHosts =
     lib.filterAttrs (
-      key: host: key != name && (host.config.${namespace}.user.name or null) != null
-    ) nixosConfigurations
-    // darwinConfigurations;
+      hostName: hostCfg:
+      hostName != host && (hostCfg.config.${namespace}.user.name or null) != null
+    ) nixosCfg
+    // darwinCfg;
 
-  other-hosts-config = lib.concatMapStringsSep "\n" (
-    name:
+  remoteHostsCfg = lib.concatMapStringsSep "\n" (
+    remoteHostName:
     let
-      remote = other-hosts.${name};
-      remote-user-name = remote.config.${namespace}.user.name;
-      port-expr =
-        if builtins.hasAttr name inputs.self.nixosConfigurations then
-          "Port ${builtins.toString cfg.port}"
-        else
-          "";
+      remote = remoteHosts.${remoteHostName};
+      remoteUserName = remote.config.${namespace}.user.name;
+      portEntry = lib.optionalString (builtins.hasAttr remoteHostName nixosCfg) ''
+        Port ${builtins.toString cfg.port}
+      '';
     in
     ''
-      Host ${name}
-        Hostname ${name}.local
-        User ${remote-user-name}
+      Host ${remoteHostName}
+        Hostname ${remoteHostName}.local
+        User ${remoteUserName}
         ForwardAgent yes
-        ${port-expr}
+        ${portEntry}
     ''
-  ) (builtins.attrNames other-hosts);
+  ) (builtins.attrNames remoteHosts);
 in
 {
   options.${namespace}.network.ssh = with lib.types; {
@@ -55,16 +49,15 @@ in
   config = lib.mkIf cfg.enable {
     programs.ssh = {
       extraConfig = ''
-        ${other-hosts-config}
-
+        ${remoteHostsCfg}
 
         ${cfg.extraConfig}
       '';
 
-      knownHosts = lib.mapAttrs (_: lib.mkForce) {
-        github-rsa = {
-          hostNames = [ "" ];
-          publicKey = "";
+      knownHosts = {
+        git = {
+          hostNames = [ "git" ];
+          publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG+2YoDrSYPW7ucDqCz/lpNvFzLo4ZY3I1Afg/SV5N3P git";
         };
       };
     };
