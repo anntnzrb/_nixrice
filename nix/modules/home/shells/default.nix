@@ -18,9 +18,7 @@ let
   cfg = config.${namespace}.shells;
 in
 {
-  imports = [
-    ./aliases.nix
-  ];
+  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
 
   options.${namespace}.shells = {
     sessionVariables = mkOpt' (attrsOf str) { };

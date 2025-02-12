@@ -10,10 +10,7 @@ let
   cfg = config.${namespace}.cli.espanso;
 in
 {
-  imports = [
-    ./matches/personal.nix
-    ./matches/dictionary.nix
-  ];
+  imports = lib.snowfall.fs.get-non-default-nix-files ./matches;
 
   options.${namespace}.cli.espanso = {
     enable = mkOptDisabled';

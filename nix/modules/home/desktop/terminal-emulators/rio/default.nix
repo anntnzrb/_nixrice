@@ -14,13 +14,7 @@ let
   cfg = config.${namespace}.desktop.terminal-emulators.rio;
 in
 {
-  imports = [
-    ./window.nix
-    ./ui.nix
-    ./theme.nix
-    ./font.nix
-    ./bind.nix
-  ];
+  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
 
   options.${namespace}.desktop.terminal-emulators.rio = {
     enable = mkOptDisabled';

@@ -1,14 +1,14 @@
-{ modulesPath, inputs, ... }:
+{
+  lib,
+  inputs,
+  modulesPath,
+  ...
+}:
 {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
-
     inputs.nixos-hardware.nixosModules.common-pc-ssd
-
-    ./kernel.nix
-    ./cpu.nix
-    ./gpu.nix
-  ];
+  ] ++ lib.snowfall.fs.get-non-default-nix-files ./.;
 
   fileSystems =
     let

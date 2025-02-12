@@ -13,11 +13,7 @@ let
   cfg = config.${namespace}.services.aerospace;
 in
 {
-  imports = [
-    ./workspaces.nix
-    ./rules.nix
-    ./nodes.nix
-  ];
+  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
 
   options.${namespace}.services.aerospace = {
     enable = mkOptDisabled';

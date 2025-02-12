@@ -10,7 +10,7 @@ let
   cfg = config.${namespace}.cli.git;
 in
 {
-  imports = [ ./lazygit.nix ];
+  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
 
   options.${namespace}.cli.git = {
     enable = mkOptDisabled';

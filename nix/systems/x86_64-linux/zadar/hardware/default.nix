@@ -1,15 +1,21 @@
-{ modulesPath, inputs, ... }:
+{
+  lib,
+  inputs,
+  modulesPath,
+  ...
+}:
+let
+  inherit (inputs.nixos-hardware.nixosModules)
+    common-pc-laptop
+    common-pc-laptop-hdd
+    ;
+in
 {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
-
-    inputs.nixos-hardware.nixosModules.common-pc-laptop
-    inputs.nixos-hardware.nixosModules.common-pc-laptop-hdd
-
-    ./kernel.nix
-    ./cpu.nix
-    ./gpu.nix
-  ];
+    common-pc-laptop
+    common-pc-laptop-hdd
+  ] ++ lib.snowfall.fs.get-non-default-nix-files ./.;
 
   fileSystems =
     let

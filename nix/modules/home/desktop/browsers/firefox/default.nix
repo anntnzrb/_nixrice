@@ -11,11 +11,7 @@ let
   cfg = config.${namespace}.desktop.browsers.firefox;
 in
 {
-  imports = [
-    ./engines.nix
-    ./extensions.nix
-    ./settings.nix
-  ];
+  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
 
   options.${namespace}.desktop.browsers.firefox = {
     enable = mkOptDisabled';

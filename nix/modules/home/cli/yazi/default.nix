@@ -13,10 +13,7 @@ let
   cfg = config.${namespace}.cli.yazi;
 in
 {
-  imports = [
-    ./theme.nix
-    ./plugin.nix
-  ];
+  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
 
   options.${namespace}.cli.yazi = {
     enable = mkOptDisabled';

@@ -10,12 +10,7 @@ let
   cfg = config.${namespace}.shells.zellij;
 in
 {
-  imports = [
-    ./keybinds.nix
-    ./themes.nix
-    ./plugins.nix
-    ./layouts.nix
-  ];
+  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
 
   options.${namespace}.shells.zellij = {
     enable = mkOptDisabled';
