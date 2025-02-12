@@ -62,6 +62,11 @@ in
       run = [ (mvNodeToWorkspace 2) ];
     }
     {
+      # VSCode
+      appId = "com.microsoft.VSCode";
+      run = [ (mvNodeToWorkspace 3) ];
+    }
+    {
       # WhatsApp
       appId = "net.whatsapp.WhatsApp";
       run = [ (mvNodeToWorkspace 3) ];
