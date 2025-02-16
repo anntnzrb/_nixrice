@@ -42,6 +42,15 @@ in
       furtherCallbacks = true;
     }
     {
+      # Bitwarden
+      appId = "com.bitwarden.desktop";
+      run = [
+        (mkLayout "floating")
+        (mvNodeToWorkspace 1)
+      ];
+      furtherCallbacks = true;
+    }
+    {
       # Browser: Firefox
       appId = "org.mozilla.firefox";
       run = [ (mvNodeToWorkspace 1) ];
