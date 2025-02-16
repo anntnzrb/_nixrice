@@ -1,5 +1,25 @@
 {
   "nodes": {
+    "betterfox-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs-stable"
+        ]
+      },
+      "locked": {
+        "lastModified": 1736524287,
+        "narHash": "sha256-V7nZSvgH98ZoeE+wtyXSABv6z7syrERdNsE26gXRO/Q=",
+        "owner": "heitoraugustoln",
+        "repo": "betterfox-nix",
+        "rev": "703d400a087c700d3cc0aa0fe8c079d5bf5840f7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "heitoraugustoln",
+        "repo": "betterfox-nix",
+        "type": "github"
+      }
+    },
     "brew-src": {
       "flake": false,
       "locked": {
@@ -3555,6 +3575,7 @@
     },
     "root": {
       "inputs": {
+        "betterfox-nix": "betterfox-nix",
         "darwin": "darwin",
         "emacs-overlay": "emacs-overlay",
         "firefox-addons": "firefox-addons",

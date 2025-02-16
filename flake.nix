@@ -132,12 +132,6 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    firefox-addons = {
-      # addons (extensions) for firefox as nix expressions
-      url = "gitlab:rycee/nur-expressions/master?dir=pkgs/firefox-addons";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
-    };
-
     emacs-overlay = {
       # bleeding-edge GNU Emacs in nix
       url = "github:nix-community/emacs-overlay/master";
@@ -180,6 +174,22 @@
       # timu-macos
       url = "gitlab:aimebertrand/timu-macos-yazi/main";
       flake = false;
+    };
+
+    # -------------------------------------------------------------------------
+    # firefox
+    # -------------------------------------------------------------------------
+
+    firefox-addons = {
+      # addons (extensions) for firefox as nix expressions
+      url = "gitlab:rycee/nur-expressions/master?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
+
+    betterfox-nix = {
+      # Betterfox integration
+      url = "github:heitoraugustoln/betterfox-nix";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
     };
   };
 }
