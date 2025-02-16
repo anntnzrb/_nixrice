@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   config,
   namespace,
   ...
@@ -17,10 +18,12 @@ in
 
   config = lib.mkIf cfg.enable {
     programs.vscode = {
-      enable = true;
+      inherit (cfg) enable;
 
       # extensions can be installed or updated manually
       mutableExtensionsDir = true;
     };
+
+    home.packages = [ pkgs.victor-mono ];
   };
 }
