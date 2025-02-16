@@ -3,13 +3,12 @@
   pkgs,
   inputs,
   config,
-  system,
   namespace,
   ...
 }:
 let
   inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
-  inherit (inputs.nixpkgs.legacyPackages.${system}) emacs30;
+  inherit (inputs.nixpkgs.legacyPackages.${pkgs.system}) emacs30;
 
   cfg = config.${namespace}.editors.emacs;
 

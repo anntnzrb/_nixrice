@@ -1,13 +1,12 @@
 {
   pkgs,
   inputs,
-  system,
   ...
 }:
 pkgs.mkShellNoCC {
   name = "liberion-shell";
 
-  inherit (inputs.self.checks.${system}.pre-commit-hooks) shellHook;
+  inherit (inputs.self.checks.${pkgs.system}.pre-commit-hooks) shellHook;
 
   nativeBuildInputs = with pkgs; [
     just

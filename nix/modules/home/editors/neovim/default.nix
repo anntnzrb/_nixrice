@@ -1,9 +1,9 @@
 {
   lib,
+  pkgs,
   config,
   inputs,
   namespace,
-  system,
   ...
 }:
 let
@@ -18,7 +18,7 @@ in
 
   config = lib.mkIf cfg.enable {
     home = {
-      packages = [ inputs.neovim-annt.packages.${system}.nvf ];
+      packages = [ inputs.neovim-annt.packages.${pkgs.system}.nvf ];
       shellAliases.v = "nvim";
     };
   };

@@ -1,9 +1,9 @@
 {
   lib,
+  pkgs,
   config,
   inputs,
   namespace,
-  system,
   ...
 }:
 let
@@ -32,7 +32,7 @@ in
   config = lib.mkIf cfg.enable {
     nix-homebrew = {
       enable = true;
-      enableRosetta = system == "aarch64-darwin";
+      enableRosetta = pkgs.system == "aarch64-darwin";
       user = config.${namespace}.user.name;
       autoMigrate = true;
     };

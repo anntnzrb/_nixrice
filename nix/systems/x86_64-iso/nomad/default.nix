@@ -2,7 +2,6 @@
   lib,
   pkgs,
   inputs,
-  system,
   namespace,
   ...
 }:
@@ -47,7 +46,7 @@ in
     xterm
 
     # editors
-    inputs.neovim-annt.packages.${system}.nvf # vi-like
+    inputs.neovim-annt.packages.${pkgs.system}.nvf # vi-like
     geany # gui
 
     # browsers
