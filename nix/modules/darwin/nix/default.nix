@@ -24,6 +24,10 @@ in
         nixpkgs.flake = inputs.nixpkgs;
       };
 
+      extraOptions = ''
+        extra-platforms = x86_64-darwin aarch64-darwin
+      '';
+
       gc.interval = {
         Day = 7;
         Hour = 6;
