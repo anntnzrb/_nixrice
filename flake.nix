@@ -156,13 +156,6 @@
       flake = false;
     };
 
-    yazi-plugins-githead = {
-      ## yazi plugins
-      # githead
-      url = "github:/llanosrocas/githead.yazi/main";
-      flake = false;
-    };
-
     yazi-flavors = {
       # yazi themes
       url = "github:yazi-rs/flavors/main";
