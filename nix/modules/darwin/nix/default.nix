@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  inputs,
   namespace,
   ...
 }:
@@ -18,6 +19,10 @@ in
         "root"
         "@admin"
       ];
+
+      registry = {
+        nixpkgs.flake = inputs.nixpkgs;
+      };
 
       gc.interval = {
         Day = 7;
