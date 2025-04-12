@@ -2,7 +2,6 @@
 {
   lib,
   pkgs,
-  inputs,
   config,
   namespace,
   ...
@@ -13,8 +12,6 @@ let
     mkOptDisabled'
     ;
   inherit (lib.types)
-    nullOr
-    package
     str
     ints
     ;
@@ -27,17 +24,10 @@ let
       pkg = pkgs.iosevka-comfy.comfy-motion;
     };
   };
-
-  mod = "programs/ghostty.nix";
 in
 {
-  disabledModules = [ mod ];
-  imports = [ (import "${inputs.home-manager-unstable}/modules/${mod}") ];
-
   options.${namespace}.desktop.terminal-emulators.ghostty = {
     enable = mkOptDisabled';
-
-    package = mkOpt' (nullOr package) pkgs.ghostty;
 
     font = {
       size = mkOpt' ints.unsigned 10;
@@ -49,7 +39,14 @@ in
     home.packages = lib.attrsets.mapAttrsToList (_: font: font.pkg) fonts;
 
     programs.ghostty = {
-      inherit (cfg) enable package;
+      inherit (cfg) enable;
+
+      package =
+        if pkgs.stdenvNoCC.hostPlatform.isDarwin then
+          pkgs.emptyDirectory # broken on darwin
+        else
+          pkgs.ghostty;
+
       settings = {
         theme = "catppuccin-frappe";
 

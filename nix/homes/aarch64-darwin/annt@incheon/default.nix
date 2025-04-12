@@ -56,7 +56,6 @@ in
     desktop = {
       terminal-emulators.ghostty = {
         enable = true;
-        package = null; # use brew. darwin pkg is broken
         font = {
           size = 15;
         };
