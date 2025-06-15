@@ -26,17 +26,17 @@
 
     nixpkgs = {
       # main nixpkgs reference, most likely pointing to stable
-      url = "github:nixos/nixpkgs/nixos-25.05";
+      url = "https://channels.nixos.org/nixos-25.05/nixexprs.tar.xz";
     };
 
     nixpkgs-stable = {
       # stable version of nixpkgs
-      url = "github:nixos/nixpkgs/nixos-25.05";
+      url = "https://channels.nixos.org/nixos-25.05/nixexprs.tar.xz";
     };
 
     nixpkgs-unstable = {
       # unstable version of nixpkgs
-      url = "github:nixos/nixpkgs/nixpkgs-unstable";
+      url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
     };
 
     nurpkgs = {
