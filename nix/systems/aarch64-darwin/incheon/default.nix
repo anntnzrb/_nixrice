@@ -45,24 +45,13 @@ in
 
       packages = {
         casks = [
-          # apps
           "bitwarden"
-          "chatgpt"
-          "firefox"
-          "whatsapp"
-          "obs"
           "docker"
-          "transmission"
-          "vlc"
           "ghostty"
-
-          # dev
+          "obs"
           "rustdesk"
-
-          # situational
-          #"microsoft-teams"
-          #"microsoft-word"
-          #"zoom"
+          "vlc"
+          "whatsapp"
         ];
       };
     };
