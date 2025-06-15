@@ -15,9 +15,7 @@ let
     };
     zedmono-nerd = {
       name = "ZedMono Nerd Font";
-      pkg = pkgs.nerdfonts.override {
-        fonts = [ "ZedMono" ];
-      };
+      pkg = pkgs.nerd-fonts.zed-mono;
     };
   };
 in

@@ -81,7 +81,7 @@ in
         # fonts
         pkgs.iosevka-comfy.comfy-motion
         pkgs.iosevka-comfy.comfy-wide-motion-duo
-        (pkgs.nerdfonts.override { fonts = [ "ZedMono" ]; })
+        pkgs.nerd-fonts.zed-mono
       ];
 
     home.shellAliases = {
