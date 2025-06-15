@@ -1,7 +1,0 @@
-keys:
-  - &main age1l6alqg2fuht0hvxrk5ehndrhjgux7p9yrf7mpl9dk9s3xcq2y39shcflw0
-creation_rules:
-  - path_regex: nix/secrets/default.yml$
-    key_groups:
-    - age:
-      - *main

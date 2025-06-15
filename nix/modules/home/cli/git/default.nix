@@ -63,10 +63,5 @@ in
       };
     };
 
-    # FIXME: defaultSopsFile is not set
-    #sops.secrets."git/github/token" = { };
-    #home.sessionVariables."GITHUB_TOKEN" = ''
-    #  $(cat ${config.sops.secrets."git/github/token".path})
-    #'';
   };
 }
