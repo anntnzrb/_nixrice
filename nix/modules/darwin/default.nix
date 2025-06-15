@@ -13,7 +13,7 @@ in
     security.pam.services.sudo_local.touchIdAuth = true;
 
     system = {
-      primaryUser = "annt";
+      primaryUser = config.${namespace}.user.name;
       # booting beep/sound
       startup.chime = false;
 
