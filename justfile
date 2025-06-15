@@ -37,7 +37,7 @@ build:
 # build & activate the darwin configuration now
 [macos]
 switch: build
-    ./result/sw/bin/darwin-rebuild switch --flake ".#{{ hostname }}"
+    sudo ./result/sw/bin/darwin-rebuild switch --flake ".#{{ hostname }}"
 
 # -----------------------------------------------------------------------------
 # home-manager
