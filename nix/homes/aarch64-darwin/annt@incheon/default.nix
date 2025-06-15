@@ -54,13 +54,6 @@ in
     };
 
     desktop = {
-      terminal-emulators.ghostty = {
-        enable = true;
-        font = {
-          size = 15;
-        };
-      };
-
       browsers.firefox.enable = true;
     };
   };
