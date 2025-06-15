@@ -7,12 +7,13 @@ let
   _cfg = config.${namespace};
 in
 {
-  imports = [ ./activation.nix ];
+  #imports = [ ./activation.nix ];
 
   config = {
-    security.pam.enableSudoTouchIdAuth = true;
+    security.pam.services.sudo_local.touchIdAuth = true;
 
     system = {
+      primaryUser = "annt";
       # booting beep/sound
       startup.chime = false;
 

@@ -12,8 +12,6 @@ in
   imports = [ (lib.snowfall.fs.get-file "modules/shared/nix/default.nix") ];
 
   config = {
-    services.nix-daemon.enable = true;
-
     nix = {
       settings.trusted-users = [
         "root"
