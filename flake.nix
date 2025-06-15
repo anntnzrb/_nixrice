@@ -28,12 +28,12 @@
 
     nixpkgs = {
       # main nixpkgs reference, most likely pointing to stable
-      url = "github:nixos/nixpkgs/nixos-24.11";
+      url = "github:nixos/nixpkgs/nixos-25.05";
     };
 
     nixpkgs-stable = {
       # stable version of nixpkgs
-      url = "github:nixos/nixpkgs/nixos-24.11";
+      url = "github:nixos/nixpkgs/nixos-25.05";
     };
 
     nixpkgs-unstable = {
@@ -93,7 +93,7 @@
 
     darwin = {
       # nix support on macOS (darwin)
-      url = "github:lnl7/nix-darwin/nix-darwin-24.11";
+      url = "github:lnl7/nix-darwin/nix-darwin-25.05";
       # NOTE: match nixpkgs main ref.
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
@@ -102,8 +102,6 @@
       ## darwin
       # homebrew integration for nix
       url = "github:zhaofengli/nix-homebrew/main";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
-      inputs.nix-darwin.follows = "darwin";
     };
 
     mac-app-util = {
@@ -119,7 +117,7 @@
     home-manager = {
       # allows managing the environment at user level
       # provides modules for many programs
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.05";
 
       # NOTE: match nixpkgs main ref.
       inputs.nixpkgs.follows = "nixpkgs-stable";
