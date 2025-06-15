@@ -22,7 +22,7 @@ in
       enable = true;
       package =
         if pkgs.stdenvNoCC.hostPlatform.isDarwin then
-          pkgs.emptyDirectory
+          null
         else
           pkgs.firefox;
 
@@ -31,7 +31,7 @@ in
         name = "default";
 
         search = {
-          default = "DuckDuckGo";
+          default = "ddg";
           force = true;
         };
       };
