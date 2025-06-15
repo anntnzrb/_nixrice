@@ -4,7 +4,7 @@
   ...
 }:
 {
-  config.programs.firefox.profiles.default.extensions =
+  config.programs.firefox.profiles.default.extensions.packages =
     with inputs.firefox-addons.packages.${pkgs.system}; [
       # utils
       ublock-origin # ad-blocker

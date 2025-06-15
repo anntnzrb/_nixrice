@@ -6,9 +6,10 @@ in
     # ---------------------------------------------------------------------------
     # nix
     # ---------------------------------------------------------------------------
-    "Nix Packages" = {
+    nixpkgs = {
+      name = "Nix Packages";
       definedAliases = [ "@nixp" ];
-      iconUpdateURL = "https://nixos.wiki/favicon.png";
+      icon = "https://nixos.wiki/favicon.png";
       inherit updateInterval;
       urls = [
         {
@@ -27,9 +28,10 @@ in
       ];
     };
 
-    "GitHub: nixpkgs" = {
+    gh-nixpkgs = {
+      name = "GitHub: nixpkgs";
       definedAliases = [ "@gnixp" ];
-      iconUpdateURL = "https://nixos.wiki/favicon.png";
+      icon = "https://nixos.wiki/favicon.png";
       inherit updateInterval;
       urls = [
         {
@@ -49,9 +51,10 @@ in
       ];
     };
 
-    "NixOS Wiki" = {
+    nixos-wiki = {
+      name = "NixOS Wiki";
       definedAliases = [ "@nixw" ];
-      iconUpdateURL = "https://nixos.wiki/favicon.png";
+      icon = "https://nixos.wiki/favicon.png";
       inherit updateInterval;
       urls = [
         {
@@ -66,9 +69,10 @@ in
       ];
     };
 
-    "Noogle" = {
+    noogle = {
+      name = "Noogle";
       definedAliases = [ "@noogle" ];
-      iconUpdateURL = "https://noogle.dev/favicon.png";
+      icon = "https://noogle.dev/favicon.png";
       inherit updateInterval;
       urls = [
         {
@@ -83,9 +87,10 @@ in
       ];
     };
 
-    "GitHub: Home-Manager" = {
+    gh-home-manager = {
+      name = "GitHub: Home-Manager";
       definedAliases = [ "@gnixhm" ];
-      iconUpdateURL = "https://nixos.wiki/favicon.png";
+      icon = "https://nixos.wiki/favicon.png";
       inherit updateInterval;
       urls = [
         {
@@ -109,9 +114,10 @@ in
     # misc
     # ---------------------------------------------------------------------------
 
-    "Arch Wiki" = {
+    arch-wiki = {
+      name = "Arch Wiki";
       definedAliases = [ "@aw" ];
-      iconUpdateURL = "https://wiki.archlinux.org/favicon.ico";
+      icon = "https://wiki.archlinux.org/favicon.ico";
       inherit updateInterval;
       urls = [
         {
@@ -126,9 +132,10 @@ in
       ];
     };
 
-    "GitHub" = {
+    gh = {
+      name = "GitHub";
       definedAliases = [ "@gh" ];
-      iconUpdateURL = "https://github.githubassets.com/favicons/favicon.png";
+      icon = "https://github.githubassets.com/favicons/favicon.png";
       inherit updateInterval;
       urls = [
         {
@@ -147,9 +154,10 @@ in
       ];
     };
 
-    "Hoogle" = {
+    hoogle = {
+      name = "Hoogle";
       definedAliases = [ "@hoogle" ];
-      iconUpdateURL = "https://www.haskell.org/img/favicon.ico";
+      icon = "https://www.haskell.org/img/favicon.ico";
       inherit updateInterval;
       urls = [
         {
