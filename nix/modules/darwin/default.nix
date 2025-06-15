@@ -37,6 +37,6 @@ in
       };
     };
 
-    system.stateVersion = 4;
+    system.stateVersion = 5;
   };
 }
