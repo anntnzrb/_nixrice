@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   namespace,
   ...
 }:
@@ -25,17 +24,6 @@ in
 
     services = {
       aerospace = on;
-
-      skhd = {
-        enable = true;
-        keybindings =
-          let
-            mod = "alt";
-          in
-          {
-            "${mod} - return" = "open -na ${lib.getExe pkgs.alacritty}";
-          };
-      };
     };
 
     network.ssh = on;
