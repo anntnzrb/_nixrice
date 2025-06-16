@@ -101,8 +101,8 @@ in
     # fallback rule
     # foreign nodes go to scratch/dumpster/whatever workspace
     # do not mess with my setup
-    {
-      run = [ (mvNodeToWorkspace 0) ];
-    }
+    #{
+    #  run = [ (mvNodeToWorkspace 0) ];
+    #}
   ];
 }
