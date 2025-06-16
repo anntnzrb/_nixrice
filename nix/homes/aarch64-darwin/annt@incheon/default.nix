@@ -47,12 +47,7 @@ in
     };
 
     editors = {
-      vscode = on;
       neovim = on;
-    };
-
-    desktop = {
-      browsers.firefox.enable = true;
     };
   };
 }
