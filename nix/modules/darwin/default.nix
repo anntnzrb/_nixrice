@@ -7,8 +7,6 @@ let
   _cfg = config.${namespace};
 in
 {
-  #imports = [ ./activation.nix ];
-
   config = {
     security.pam.services.sudo_local.touchIdAuth = true;
 
