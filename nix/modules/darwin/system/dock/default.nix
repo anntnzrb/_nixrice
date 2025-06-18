@@ -18,7 +18,7 @@ in
       show-process-indicators = true;
       show-recents = false;
       showhidden = false; # hide the hidden lol
-      static-only = false; # allow unopened apps to be shown
+      static-only = true;
       tilesize = 40;
     };
 
