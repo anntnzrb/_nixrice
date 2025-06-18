@@ -26,6 +26,8 @@ in
       aerospace = on;
     };
 
+    programs.raycast = on;
+
     network.ssh = on;
 
     homebrew = {
