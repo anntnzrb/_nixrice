@@ -19,8 +19,8 @@ die() {
 
 # early check if Nix is already installed
 nix_check_dir="/nix/store"
-[ -d "${nix_check_dir}" ] && \
-    die "Nix seems to be already installed at ${nix_check_dir}."
+[ -d "${nix_check_dir}" ] \
+    && die "Nix seems to be already installed at ${nix_check_dir}."
 
 # exit if curl is not installed
 ! command -v curl >/dev/null 2>&1 && die "curl is required but not installed."
@@ -32,7 +32,7 @@ curl --proto '=https' \
     -sSf \
     -L "https://install.determinate.systems/nix" \
     | sh -s -- install \
-    --no-confirm \
-    --extra-conf "trusted-users = ${current_user}"
+        --no-confirm \
+        --extra-conf "trusted-users = ${current_user}"
 
 printf "Installation complete.\n"

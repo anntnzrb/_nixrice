@@ -33,7 +33,7 @@ _require_platform() {
         "linux")
             [ "${PLATFORM}" = "Linux" ] || _die "This command requires Linux (detected: ${PLATFORM})"
             ;;
-        "darwin") 
+        "darwin")
             [ "${PLATFORM}" = "Darwin" ] || _die "This command requires macOS (detected: ${PLATFORM})"
             ;;
         *)
@@ -78,7 +78,7 @@ _route_platform_command() {
 
 # Display help information
 _show_help() {
-    cat << 'EOF'
+    cat <<'EOF'
 rice - NixOS/Darwin configuration management script
 
 USAGE:
@@ -243,7 +243,7 @@ main() {
     shift
 
     case "${command}" in
-        "build"|"switch")
+        "build" | "switch")
             _route_platform_command "${command}"
             ;;
         "boot")
@@ -279,7 +279,7 @@ main() {
         "iso-nomad-x86_64-linux")
             cmd_iso_nomad_x86_64_linux
             ;;
-        "help"|"--help"|"-h")
+        "help" | "--help" | "-h")
             _show_help
             ;;
         *)
