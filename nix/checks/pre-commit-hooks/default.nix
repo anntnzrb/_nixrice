@@ -42,6 +42,18 @@ inputs.pre-commit-hooks.lib.${pkgs.system}.run {
         };
       };
 
+    shfmt = {
+      enable = true;
+      package = pkgs.writeShellApplication {
+        name = "shfmt";
+        runtimeInputs = [ pkgs.shfmt ];
+        text = ''
+          shift
+          exec shfmt --posix --write --simplify --indent 4 --binary-next-line --case-indent  "$@"
+        '';
+      };
+    };
+
     # GH actions
     actionlint.enable = true;
   };
