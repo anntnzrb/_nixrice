@@ -1,0 +1,295 @@
+#!/bin/sh
+
+set -eu
+
+# =============================================================================
+# GLOBAL VARIABLES
+# =============================================================================
+
+HOSTNAME="$(uname -n | cut -d "." -f 1)"
+PLATFORM="$(uname -s)"
+
+# =============================================================================
+# INTERNAL HELPER FUNCTIONS
+# =============================================================================
+
+# Print error message and exit with optional code
+_die() {
+    printf "Error: %s\n" "${1}" >&2
+    exit "${2:-1}"
+}
+
+# Validate required argument count
+_require_args() {
+    expected="${1}"
+    actual="${2}"
+    command="${3}"
+    [ "${actual}" -eq "${expected}" ] || _die "${command} requires ${expected} argument(s), got ${actual}"
+}
+
+# Validate platform requirement
+_require_platform() {
+    case "${1}" in
+        "linux")
+            [ "${PLATFORM}" = "Linux" ] || _die "This command requires Linux (detected: ${PLATFORM})"
+            ;;
+        "darwin") 
+            [ "${PLATFORM}" = "Darwin" ] || _die "This command requires macOS (detected: ${PLATFORM})"
+            ;;
+        *)
+            _die "Unknown platform requirement: ${1}"
+            ;;
+    esac
+}
+
+# Build nix flake path
+_build_nix_path() {
+    printf ".#%s" "${1}"
+}
+
+# Commit flake.lock changes with message
+_git_commit_changes() {
+    git add flake.lock && git commit -m "${1}"
+}
+
+# Route platform-specific build/switch commands
+_route_platform_command() {
+    command="${1}"
+    case "${PLATFORM}" in
+        "Linux")
+            case "${command}" in
+                "build") cmd_nixos_build ;;
+                "switch") cmd_nixos_switch ;;
+                *) _die "Unsupported command '${command}' for Linux" ;;
+            esac
+            ;;
+        "Darwin")
+            case "${command}" in
+                "build") cmd_darwin_build ;;
+                "switch") cmd_darwin_switch ;;
+                *) _die "Unsupported command '${command}' for macOS" ;;
+            esac
+            ;;
+        *)
+            _die "Unsupported platform '${PLATFORM}' for command '${command}'"
+            ;;
+    esac
+}
+
+# Display help information
+_show_help() {
+    cat << 'EOF'
+rice - NixOS/Darwin configuration management script
+
+USAGE:
+    rice COMMAND [ARGS...]
+
+COMMANDS:
+    NixOS (Linux only):
+        build               Build the NixOS configuration
+        boot                Build & activate the new NixOS configuration on next boot
+        switch              Build & activate the NixOS configuration now
+
+    Darwin (macOS only):
+        build               Build the darwin configuration
+        switch              Build & activate the darwin configuration now
+
+    Home Manager:
+        hm-build USER HOST  Build the home-manager configuration
+        hm-switch USER HOST Build & activate the home-manager configuration now
+
+    Nix maintenance:
+        nix-clean           Perform a cleanup
+        nix-optimise        Optimise the nix store
+        nix-repair          Attempt to repair the nix store
+
+    Flake management:
+        check               Check flake
+        nix-flake-update-all Update all flake inputs
+        nix-flake-update INPUT Update a single flake input
+        fmt                 Format & check code
+        pre-commit          Format & check code (alias for fmt)
+
+    ISO generation:
+        iso-nomad-x86_64-linux Build nomad (Linux x86_64) ISO
+
+    Other:
+        help                Show this help message
+EOF
+}
+
+# =============================================================================
+# NIXOS COMMANDS
+# =============================================================================
+
+# Build NixOS configuration
+cmd_nixos_build() {
+    _require_platform "linux"
+    nixos-rebuild build --flake .#
+}
+
+# Build and activate NixOS configuration on next boot
+cmd_nixos_boot() {
+    _require_platform "linux"
+    cmd_nixos_build && nixos-rebuild boot --use-remote-sudo --flake .#
+}
+
+# Build and activate NixOS configuration immediately
+cmd_nixos_switch() {
+    _require_platform "linux"
+    cmd_nixos_build && nixos-rebuild switch --use-remote-sudo --flake .#
+}
+
+# =============================================================================
+# DARWIN COMMANDS
+# =============================================================================
+
+# Build Darwin configuration
+cmd_darwin_build() {
+    _require_platform "darwin"
+    nix build "$(_build_nix_path "darwinConfigurations.${HOSTNAME}.system")"
+}
+
+# Build and activate Darwin configuration immediately
+cmd_darwin_switch() {
+    _require_platform "darwin"
+    cmd_darwin_build && sudo ./result/sw/bin/darwin-rebuild switch --flake "$(_build_nix_path "${HOSTNAME}")"
+}
+
+# =============================================================================
+# HOME MANAGER COMMANDS
+# =============================================================================
+
+# Build home-manager configuration
+cmd_hm_build() {
+    _require_args 2 ${#} "hm-build"
+    user="${1}"
+    host="${2}"
+    nix build "$(_build_nix_path "homeConfigurations.${user}@${host}.activationPackage")"
+}
+
+# Build and activate home-manager configuration
+cmd_hm_switch() {
+    _require_args 2 ${#} "hm-switch"
+    cmd_hm_build "${1}" "${2}" && ./result/activate
+}
+
+# =============================================================================
+# NIX MAINTENANCE COMMANDS
+# =============================================================================
+
+# Clean nix cache and run cleanup
+cmd_nix_clean() {
+    rm -rf "${HOME}/.cache/nix/" >/dev/null 2>&1 || true
+    nh clean all && nh clean user
+}
+
+# Clean and optimize nix store
+cmd_nix_optimise() {
+    cmd_nix_clean && sudo nix store optimise
+}
+
+# Clean, optimize and repair nix store
+cmd_nix_repair() {
+    cmd_nix_optimise && sudo nix-store --verify --check-contents --repair
+}
+
+# =============================================================================
+# FLAKE MANAGEMENT COMMANDS
+# =============================================================================
+
+# Check flake validity
+cmd_flake_check() {
+    nix flake check .
+}
+
+# Update all flake inputs with commit
+cmd_nix_flake_update_all() {
+    nix flake update --commit-lock-file --option commit-lockfile-summary 'chore(flake): update lockfile'
+}
+
+# Update specific flake input with commit
+cmd_nix_flake_update() {
+    _require_args 1 ${#} "nix-flake-update"
+    input="${1}"
+    nix flake update "${input}" && _git_commit_changes "chore(flake): update input (${input})"
+}
+
+# Format and check code
+cmd_fmt() {
+    pre-commit run --all-files
+}
+
+# =============================================================================
+# ISO GENERATION COMMANDS
+# =============================================================================
+
+# Build nomad ISO for x86_64-linux
+cmd_iso_nomad_x86_64_linux() {
+    nix build "$(_build_nix_path "isoConfigurations.nomad")"
+}
+
+# =============================================================================
+# MAIN FUNCTION
+# =============================================================================
+
+main() {
+    [ ${#} -eq 0 ] && {
+        _show_help
+        exit 0
+    }
+
+    command="${1}"
+    shift
+
+    case "${command}" in
+        "build"|"switch")
+            _route_platform_command "${command}"
+            ;;
+        "boot")
+            cmd_nixos_boot
+            ;;
+        "hm-build")
+            cmd_hm_build "${@}"
+            ;;
+        "hm-switch")
+            cmd_hm_switch "${@}"
+            ;;
+        "nix-clean")
+            cmd_nix_clean
+            ;;
+        "nix-optimise")
+            cmd_nix_optimise
+            ;;
+        "nix-repair")
+            cmd_nix_repair
+            ;;
+        "check")
+            cmd_flake_check
+            ;;
+        "nix-flake-update-all")
+            cmd_nix_flake_update_all
+            ;;
+        "nix-flake-update")
+            cmd_nix_flake_update "${@}"
+            ;;
+        "fmt")
+            cmd_fmt
+            ;;
+        "iso-nomad-x86_64-linux")
+            cmd_iso_nomad_x86_64_linux
+            ;;
+        "help"|"--help"|"-h")
+            _show_help
+            ;;
+        *)
+            _die "Unknown command: ${command}" 127
+            ;;
+    esac
+}
+
+# =============================================================================
+# SCRIPT EXECUTION
+# =============================================================================
+
+main "${@}"
