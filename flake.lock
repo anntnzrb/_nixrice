@@ -501,10 +501,10 @@
     "nixpkgs-unstable": {
       "locked": {
         "lastModified": 315532800,
-        "narHash": "sha256-0HRxGUoOMtOYnwlMWY0AkuU88WHaI3Q5GEILmsWpI8U=",
-        "rev": "a48741b083d4f36dd79abd9f760c84da6b4dc0e5",
+        "narHash": "sha256-Vt0mHuH+fBF9l8CSV9hpW6TFTOLWE2FbzbbUjGFrJss=",
+        "rev": "b9c03fbbaf84d85bb28eee530c7e9edc4021ca1b",
         "type": "tarball",
-        "url": "https://releases.nixos.org/nixpkgs/nixpkgs-25.11pre823094.a48741b083d4/nixexprs.tar.xz"
+        "url": "https://releases.nixos.org/nixpkgs/nixpkgs-25.11pre823548.b9c03fbbaf84/nixexprs.tar.xz"
       },
       "original": {
         "type": "tarball",
