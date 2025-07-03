@@ -41,7 +41,6 @@ in
     rmfr = "${getExe' uutils "rm"} --recursive --force --verbose";
     wget = "${getExe pkgs.wget} --no-hsts";
     zip = "${getExe pkgs.zip} --recurse-paths --verbose -9";
-    claude = "${config.home.homeDirectory}/.claude/bin/claude";
 
     # generate a 16-byte alphanumeric string
     gen-str = "${getExe' uutils "tr"} --delete --complement 'A-Za-z0-9' < /dev/urandom | ${getExe' uutils "head"} --bytes 16";
