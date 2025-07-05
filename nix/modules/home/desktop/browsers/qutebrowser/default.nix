@@ -1,11 +1,13 @@
 {
-  config,
+  pkgs,
   lib,
+  config,
   namespace,
   ...
 }:
 let
   inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
 
   cfg = config.${namespace}.desktop.browsers.qutebrowser;
 in
@@ -16,6 +18,7 @@ in
   config = lib.mkIf cfg.enable {
     programs.qutebrowser = {
       enable = true;
+      package = if isDarwin then pkgs.emptyDirectory else pkgs.qutebrowser;
 
       loadAutoconfig = false;
       enableDefaultBindings = true;
@@ -47,7 +50,7 @@ in
         qt.chromium.low_end_device_mode = "never";
 
         window = {
-          hide_decoration = true;
+          hide_decoration = if isDarwin then false else true;
           transparent = false;
         };
 
