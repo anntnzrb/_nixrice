@@ -130,6 +130,7 @@
     neovim-annt = {
       # annt's neovim
       url = "github:anntnzrb/nvf/main";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     rio-catppuccin = {
