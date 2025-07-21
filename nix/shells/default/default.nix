@@ -3,7 +3,7 @@
   inputs,
   ...
 }:
-pkgs.mkShellNoCC {
+pkgs.mkShell {
   name = "liberion-shell";
 
   inherit (inputs.self.checks.${pkgs.system}.pre-commit-hooks) shellHook;
