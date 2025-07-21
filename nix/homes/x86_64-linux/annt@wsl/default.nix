@@ -14,8 +14,6 @@ in
         enable = true;
         prompt.starship = on;
       };
-
-      zellij = on;
     };
 
     cli = {
