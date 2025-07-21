@@ -25,6 +25,8 @@ in
         prompt.starship = on;
       };
       preliminaryMessage.disable = true;
+
+      tmux = on;
     };
 
     cli = {
