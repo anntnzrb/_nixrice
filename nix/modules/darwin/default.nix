@@ -24,17 +24,13 @@ in
         CustomUserPreferences."com.apple.AdLib".allowApplePersonalizedAdvertising =
           false;
 
-        menuExtraClock =
-          let
-            always = 1;
-          in
-          {
-            IsAnalog = false;
-            Show24Hour = true;
-            ShowAMPM = false;
-            ShowDate = always;
-            ShowSeconds = false;
-          };
+        menuExtraClock = {
+          IsAnalog = false;
+          Show24Hour = true;
+          ShowAMPM = false;
+          ShowDate = 1; # always
+          ShowSeconds = false;
+        };
       };
     };
 
