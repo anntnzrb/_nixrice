@@ -50,6 +50,6 @@ in
       ];
     };
 
-    home.shellAliases.tmux = "tmux attach";
+    home.shellAliases.tmux = "cd && ${lib.getExe config.programs.tmux.package} attach"; # ensure tmux is started at ~
   };
 }
