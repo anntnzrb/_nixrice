@@ -8,7 +8,10 @@ let
 in
 {
   config = {
-    security.pam.services.sudo_local.touchIdAuth = true;
+    security.pam.services.sudo_local = {
+      touchIdAuth = true;
+      reattach = true;
+    };
 
     system = {
       primaryUser = config.${namespace}.user.name;
