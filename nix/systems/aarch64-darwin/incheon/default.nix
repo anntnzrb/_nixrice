@@ -19,7 +19,7 @@ in
   ${namespace} = {
     system = {
       trackpad = on;
-      ui.menuBar.hide = false;
+      ui.menuBar.hide = true;
     };
 
     services = {
