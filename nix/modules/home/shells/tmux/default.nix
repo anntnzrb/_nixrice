@@ -28,7 +28,7 @@ in
       focusEvents = true;
       mouse = true;
       newSession = true;
-      shortcut = "Space";
+      shortcut = "b";
       terminal = "tmux-256color";
       extraConfig = ''
         set -g status-position top
