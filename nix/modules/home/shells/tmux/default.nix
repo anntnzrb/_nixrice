@@ -26,17 +26,29 @@ in
       escapeTime = 0;
       focusEvents = true;
       mouse = true;
-      newSession = true;
+      newSession = false;
       shortcut = "b";
       terminal = "tmux-256color";
       extraConfig = ''
         set -g status-position top
-        set -g status-right-length 100
-        set -g status-left-length 100
+
+        set -g status-style bg=default,fg=default
+        set -g status-justify left
+        set -g automatic-rename off
+        set -g status-left '[#S] '
+        set -g status-right ' '
+        setw -g window-status-format '#I#F'
+        setw -g window-status-current-format '#[bold]#I#F'
+
         bind -N "Reload tmux configuration" R source-file ${config.xdg.configHome}/tmux/tmux.conf \; display-message "Config reloaded!"
       '';
     };
 
-    home.shellAliases.tmux = "cd && ${lib.getExe config.programs.tmux.package} attach"; # ensure tmux is started at ~
+    # ensure tmux is started at ~
+    home.shellAliases.tmux =
+      let
+        tmux = "${lib.getExe config.programs.tmux.package}";
+      in
+      "${tmux} attach -t main || ${tmux} new -s main";
   };
 }
