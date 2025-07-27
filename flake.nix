@@ -133,6 +133,13 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
+    ghostty-protesilaos = {
+      ## ghostty themes
+      # protesilaos themes: modus-, ef-, ...
+      url = "github:anhsirk0/ghostty-themes/main";
+      flake = false;
+    };
+
     rio-catppuccin = {
       ## rio themes
       # catppuccin

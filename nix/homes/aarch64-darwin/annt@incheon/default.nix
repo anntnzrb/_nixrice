@@ -50,5 +50,7 @@ in
     editors = {
       neovim = on;
     };
+
+    desktop.terminal-emulators.ghostty = on;
   };
 }

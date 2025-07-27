@@ -38,7 +38,6 @@ in
           "bitwarden"
           "visual-studio-code"
           "docker"
-          "ghostty"
           "obs"
           "rustdesk"
           "vlc"

@@ -260,6 +260,23 @@
         "type": "github"
       }
     },
+    "ghostty-protesilaos": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1751700003,
+        "narHash": "sha256-/QE7ek+PezjwIm2JwPhm03oYoe7msadziWL80SGduGI=",
+        "owner": "anhsirk0",
+        "repo": "ghostty-themes",
+        "rev": "f41cef8ebf79c79fa6485066a92d389a9e3fc186",
+        "type": "github"
+      },
+      "original": {
+        "owner": "anhsirk0",
+        "ref": "main",
+        "repo": "ghostty-themes",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -693,6 +710,7 @@
         "darwin": "darwin",
         "emacs-overlay": "emacs-overlay",
         "firefox-addons": "firefox-addons",
+        "ghostty-protesilaos": "ghostty-protesilaos",
         "home-manager": "home-manager",
         "home-manager-unstable": "home-manager-unstable",
         "mac-app-util": "mac-app-util",
