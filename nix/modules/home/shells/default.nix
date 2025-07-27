@@ -28,7 +28,8 @@ in
   config.home = {
     sessionVariables = {
       NIX_SHELL_PRESERVE_PROMPT = "1";
-    } // (lib.optionals (cfg.sessionVariables != null) cfg.sessionVariables);
+    }
+    // (lib.optionals (cfg.sessionVariables != null) cfg.sessionVariables);
 
     # disable "Last Login..." preliminary message
     file.".hushlogin" = lib.mkIf cfg.preliminaryMessage.disable { text = ""; };

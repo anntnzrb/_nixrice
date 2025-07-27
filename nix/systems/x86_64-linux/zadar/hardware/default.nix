@@ -15,7 +15,8 @@ in
     (modulesPath + "/installer/scan/not-detected.nix")
     common-pc-laptop
     common-pc-laptop-hdd
-  ] ++ lib.snowfall.fs.get-non-default-nix-files ./.;
+  ]
+  ++ lib.snowfall.fs.get-non-default-nix-files ./.;
 
   fileSystems =
     let
