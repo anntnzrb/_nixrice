@@ -17,7 +17,7 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@v19
 
       - name: Update Flake Lockfile
-        uses: DeterminateSystems/update-flake-lock@v25
+        uses: DeterminateSystems/update-flake-lock@v27
         with:
           git-author-name: "anntnzrb"
           git-author-email: "anntnzrb@proton.me"
