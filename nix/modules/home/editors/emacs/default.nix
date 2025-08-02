@@ -75,14 +75,15 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages =
-      [ cfg.package ]
-      ++ [
-        # fonts
-        pkgs.iosevka-comfy.comfy-motion
-        pkgs.iosevka-comfy.comfy-wide-motion-duo
-        pkgs.nerd-fonts.zed-mono
-      ];
+    home.packages = [
+      cfg.package
+    ]
+    ++ [
+      # fonts
+      pkgs.iosevka-comfy.comfy-motion
+      pkgs.iosevka-comfy.comfy-wide-motion-duo
+      pkgs.nerd-fonts.zed-mono
+    ];
 
     home.shellAliases = {
       # NOTE: 'disown' is not POSIX
