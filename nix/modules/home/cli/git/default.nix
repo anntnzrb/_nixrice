@@ -21,6 +21,7 @@ in
     };
 
     lazygit.enable = mkOptDisabled';
+    gh.enable = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {
