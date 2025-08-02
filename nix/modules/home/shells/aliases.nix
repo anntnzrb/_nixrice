@@ -23,7 +23,7 @@ let
   };
 
   bat = {
-    flags = "--color=auto --theme='Monokai Extended Origin' --style=full";
+    flags = "--color=auto --style=full";
     bin = "${getExe pkgs.bat} ${bat.flags}";
   };
 in
