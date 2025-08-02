@@ -35,9 +35,7 @@ in
     file.".hushlogin" = lib.mkIf cfg.preliminaryMessage.disable { text = ""; };
 
     packages = with pkgs; [
-      bat
       du-dust
-      eza
       fd
       (ripgrep.override { withPCRE2 = true; })
     ];
