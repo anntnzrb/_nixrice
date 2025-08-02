@@ -23,6 +23,7 @@ in
       };
 
       btop = on;
+      claude = on;
       direnv = on;
       fastfetch = on;
       fzf = on;
