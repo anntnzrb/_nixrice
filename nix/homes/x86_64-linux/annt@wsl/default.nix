@@ -19,6 +19,7 @@ in
     cli = {
       git = {
         enable = true;
+        gh = on;
         lazygit = on;
       };
 
