@@ -43,12 +43,5 @@ in
         bind -N "Reload tmux configuration" R source-file ${config.xdg.configHome}/tmux/tmux.conf \; display-message "Config reloaded!"
       '';
     };
-
-    # ensure tmux is started at ~
-    home.shellAliases.tmux =
-      let
-        tmux = "${lib.getExe config.programs.tmux.package}";
-      in
-      "${tmux} attach -t main || ${tmux} new -s main";
   };
 }
