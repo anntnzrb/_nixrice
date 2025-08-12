@@ -28,6 +28,7 @@ in
       direnv = on;
       fastfetch = on;
       fzf = on;
+      opencode = on;
       tldr = on;
       yt-dlp = on;
       zoxide = on;

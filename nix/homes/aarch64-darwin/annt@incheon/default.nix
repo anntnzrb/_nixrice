@@ -42,6 +42,7 @@ in
       fastfetch = on;
       fzf = on;
       omnix = on;
+      opencode = on;
       tldr = on;
       yazi = on;
       yt-dlp = on;
