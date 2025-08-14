@@ -40,6 +40,7 @@ in
       claude = on;
       direnv = on;
       fastfetch = on;
+      mods = on;
       fzf = on;
       omnix = on;
       opencode = on;

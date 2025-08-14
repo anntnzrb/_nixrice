@@ -30,6 +30,7 @@ in
       direnv = on;
       fastfetch = on;
       fzf = on;
+      mods = on;
       opencode = on;
       tldr = on;
       yt-dlp = on;
