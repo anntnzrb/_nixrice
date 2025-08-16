@@ -14,6 +14,8 @@ in
         enable = true;
         prompt.starship = on;
       };
+
+      tmux = on;
     };
 
     cli = {
