@@ -32,6 +32,7 @@ in
       fzf = on;
       mods = on;
       opencode = on;
+      crush = on;
       tldr = on;
       yt-dlp = on;
       zoxide = on;

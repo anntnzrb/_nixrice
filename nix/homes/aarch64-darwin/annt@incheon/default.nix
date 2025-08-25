@@ -44,6 +44,7 @@ in
       fzf = on;
       omnix = on;
       opencode = on;
+      crush = on;
       tldr = on;
       yazi = on;
       yt-dlp = on;
