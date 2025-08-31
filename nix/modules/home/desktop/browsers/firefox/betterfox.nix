@@ -3,17 +3,14 @@
   ...
 }:
 {
-  imports = [ inputs.betterfox-nix.homeManagerModules.betterfox ];
+  imports = [ inputs.betterfox-nix.homeModules.betterfox ];
 
   config.programs.firefox = {
-    betterfox.enable = true;
-    profiles.default = {
-      betterfox = {
-        enable = true;
-        fastfox.enable = true;
-        peskyfox.enable = true;
-        securefox.enable = true;
-        smoothfox.enable = true;
+    betterfox = {
+      enable = true;
+
+      profiles.default = {
+        enableAllSections = true;
       };
     };
   };
