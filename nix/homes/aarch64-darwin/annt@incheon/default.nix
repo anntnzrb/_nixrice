@@ -39,13 +39,14 @@ in
       btop = on;
       claude = on;
       codex = on;
+      crush = on;
       direnv = on;
       fastfetch = on;
-      mods = on;
       fzf = on;
+      mods = on;
       omnix = on;
       opencode = on;
-      crush = on;
+      qwen = on;
       tldr = on;
       yazi = on;
       yt-dlp = on;

@@ -28,12 +28,13 @@ in
       btop = on;
       claude = on;
       codex = on;
+      crush = on;
       direnv = on;
       fastfetch = on;
       fzf = on;
       mods = on;
       opencode = on;
-      crush = on;
+      qwen = on;
       tldr = on;
       yt-dlp = on;
       zoxide = on;
