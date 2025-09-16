@@ -38,6 +38,7 @@ in
 
       btop = on;
       claude = on;
+      codex = on;
       direnv = on;
       fastfetch = on;
       mods = on;
