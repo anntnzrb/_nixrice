@@ -37,6 +37,7 @@ in
       opencode = on;
       qwen = on;
       tldr = on;
+      uv = on;
       yt-dlp = on;
       zoxide = on;
     };
