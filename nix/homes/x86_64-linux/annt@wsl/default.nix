@@ -26,6 +26,7 @@ in
       };
 
       btop = on;
+      bun = on;
       claude = on;
       codex = on;
       crush = on;
