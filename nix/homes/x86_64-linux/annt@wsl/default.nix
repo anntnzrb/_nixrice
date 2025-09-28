@@ -37,6 +37,7 @@ in
       mods = on;
       opencode = on;
       qwen = on;
+      repomix = on;
       tldr = on;
       uv = on;
       yt-dlp = on;
