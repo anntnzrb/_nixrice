@@ -34,6 +34,7 @@ in
       fastfetch = on;
       fzf = on;
       gemini = on;
+      husky = on;
       mods = on;
       opencode = on;
       qwen = on;
