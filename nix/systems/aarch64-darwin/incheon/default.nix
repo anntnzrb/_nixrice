@@ -18,8 +18,15 @@ in
 
   ${namespace} = {
     system = {
+      keyboard = on;
+      dock = on;
+      finder = on;
       trackpad = on;
-      ui.menuBar.hide = true;
+
+      ui = {
+        enable = true;
+        menuBar.hide = true;
+      };
     };
 
     services = {

@@ -1,9 +1,20 @@
-{ config, namespace, ... }:
+{
+  lib,
+  config,
+  namespace,
+  ...
+}:
 let
-  _cfg = config.${namespace}.system.keyboard;
+  inherit (lib.${namespace}.module) mkOptDisabled';
+
+  cfg = config.${namespace}.system.keyboard;
 in
 {
-  config = {
+  options.${namespace}.system.keyboard = {
+    enable = mkOptDisabled';
+  };
+
+  config = lib.mkIf cfg.enable {
     system = {
       # press-and-hold for accent keys
       # may be disabled to favor key repetition

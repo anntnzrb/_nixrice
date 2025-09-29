@@ -1,6 +1,13 @@
-{ config, namespace, ... }:
+{
+  lib,
+  config,
+  namespace,
+  ...
+}:
 let
-  _cfg = config.${namespace}.system.finder;
+  inherit (lib.${namespace}.module) mkOptDisabled';
+
+  cfg = config.${namespace}.system.finder;
 
   searchScope = {
     thisMac = null;
@@ -14,7 +21,11 @@ let
   };
 in
 {
-  config = {
+  options.${namespace}.system.finder = {
+    enable = mkOptDisabled';
+  };
+
+  config = lib.mkIf cfg.enable {
     system.defaults = {
       finder = {
         AppleShowAllExtensions = true;
