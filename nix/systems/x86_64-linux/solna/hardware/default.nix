@@ -2,9 +2,11 @@
   lib,
   inputs,
   modulesPath,
+  namespace,
   ...
 }:
 let
+  inherit (lib.${namespace}.module) on;
   inherit (inputs.nixos-hardware.nixosModules)
     common-pc-laptop
     common-pc-laptop-ssd
@@ -45,14 +47,12 @@ in
       };
     };
 
-  zramSwap = {
-    enable = true;
+  zramSwap = on // {
     algorithm = "zstd";
     memoryPercent = 50; # ~4GB
   };
 
-  powerManagement = {
-    enable = true;
+  powerManagement = on // {
     cpuFreqGovernor = "performance";
   };
 }

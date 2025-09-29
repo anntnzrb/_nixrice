@@ -13,15 +13,13 @@ in
         EDITOR = "nvim";
       };
 
-      bash = {
-        enable = true;
+      bash = on // {
         prompt.starship = on;
       };
     };
 
     cli = {
-      git = {
-        enable = true;
+      git = on // {
         lazygit = on;
       };
 

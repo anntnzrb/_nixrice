@@ -15,7 +15,7 @@ let
   };
 in
 {
-  services.openssh.enable = true;
+  services.openssh = on;
 
   environment.systemPackages = with pkgs; [
     # tools

@@ -16,17 +16,14 @@ let
 in
 {
   services = {
-    displayManager = {
-      enable = true;
-      autoLogin = {
-        enable = true;
+    displayManager = on // {
+      autoLogin = on // {
         user = login.name;
       };
     };
 
-    xserver = {
-      enable = true;
-      desktopManager.cinnamon.enable = true;
+    xserver = on // {
+      desktopManager.cinnamon = on;
     };
   };
 

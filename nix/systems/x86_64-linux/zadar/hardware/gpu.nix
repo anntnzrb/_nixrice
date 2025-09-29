@@ -1,13 +1,21 @@
-_: {
+{
+  lib,
+  namespace,
+  ...
+}:
+let
+  inherit (lib.${namespace}.module) on;
+in
+{
   services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware = {
-    graphics.enable = true;
+    graphics = on;
 
     nvidia = {
       open = false;
       nvidiaSettings = true;
-      modesetting.enable = true;
+      modesetting = on;
     };
   };
 }

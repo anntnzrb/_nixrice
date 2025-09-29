@@ -1,18 +1,26 @@
 {
+  lib,
+  namespace,
+  ...
+}:
+let
+  inherit (lib.${namespace}.module) on;
+in
+{
   services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware = {
-    graphics.enable = true;
+    graphics = on;
 
     nvidia = {
       open = false;
       nvidiaSettings = true;
-      modesetting.enable = true;
+      modesetting = on;
 
       # this enables having an external nvidia-card-connected display on the
       # nvidia card; also enables the mobo-connected display
       prime = {
-        sync.enable = true;
+        sync = on;
         intelBusId = "PCI:0:2:0";
         nvidiaBusId = "PCI:1:0:0";
       };

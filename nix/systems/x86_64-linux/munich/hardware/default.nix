@@ -2,8 +2,12 @@
   lib,
   inputs,
   modulesPath,
+  namespace,
   ...
 }:
+let
+  inherit (lib.${namespace}.module) on;
+in
 {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
@@ -41,8 +45,7 @@
       };
     };
 
-  zramSwap = {
-    enable = true;
+  zramSwap = on // {
     algorithm = "zstd";
     memoryPercent = 40; # ~12GB
   };

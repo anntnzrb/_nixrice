@@ -20,8 +20,7 @@ in
     shells = {
       sessionVariables.EDITOR = "nvim";
 
-      zsh = {
-        enable = true;
+      zsh = on // {
         prompt.starship = on;
       };
       preliminaryMessage.disable = true;
@@ -30,8 +29,7 @@ in
     };
 
     cli = {
-      git = {
-        enable = true;
+      git = on // {
         gh = on;
         lazygit = on;
       };

@@ -9,7 +9,7 @@ in
 {
   # zsh as an interactive shell; this is a forced default
   # customization is done via hm
-  programs.zsh.enable = true;
+  programs.zsh = on;
 
   nix.settings = {
     max-jobs = 8;
@@ -23,8 +23,7 @@ in
       finder = on;
       trackpad = on;
 
-      ui = {
-        enable = true;
+      ui = on // {
         menuBar.hide = true;
       };
     };
@@ -35,9 +34,7 @@ in
 
     network.ssh = on;
 
-    homebrew = {
-      enable = true;
-
+    homebrew = on // {
       packages = {
         casks = [
           "bitwarden"

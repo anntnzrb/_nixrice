@@ -22,15 +22,13 @@ in
         TERMINAL = "alacritty";
       };
 
-      bash = {
-        enable = true;
+      bash = on // {
         prompt.starship = on;
       };
     };
 
     cli = {
-      git = {
-        enable = true;
+      git = on // {
         lazygit = on;
       };
 
@@ -49,8 +47,7 @@ in
     };
 
     desktop = {
-      sxhkd = {
-        enable = true;
+      sxhkd = on // {
         timeout = 3;
         cancelKey = "Escape";
       };
@@ -59,9 +56,8 @@ in
 
       window-managers = {
         xorg = {
-          awesomewm = {
-            enable = true;
-            compositor.picom.enable = true;
+          awesomewm = on // {
+            compositor.picom = on;
             inherit autoStart;
           };
         };
@@ -83,8 +79,7 @@ in
     };
   };
 
-  services.cbatticon = {
-    enable = true;
+  services.cbatticon = on // {
     updateIntervalSeconds = 30;
     lowLevelPercent = 25;
     criticalLevelPercent = 10;

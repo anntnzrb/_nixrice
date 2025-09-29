@@ -10,8 +10,7 @@ in
       };
       preliminaryMessage.disable = true;
 
-      bash = {
-        enable = true;
+      bash = on // {
         prompt.starship = on;
       };
 
@@ -19,8 +18,7 @@ in
     };
 
     cli = {
-      git = {
-        enable = true;
+      git = on // {
         gh = on;
         lazygit = on;
       };

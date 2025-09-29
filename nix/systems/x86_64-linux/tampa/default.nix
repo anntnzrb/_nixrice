@@ -9,7 +9,7 @@ let
 in
 {
   ${namespace} = {
-    wsl.enable = true;
+    wsl = on;
 
     network.ssh = on;
   };
