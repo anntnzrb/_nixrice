@@ -17,7 +17,7 @@ in
   };
   config = lib.mkIf cfg.enable {
     programs.qutebrowser = {
-      enable = true;
+      inherit (cfg) enable;
       package = if isDarwin then pkgs.emptyDirectory else pkgs.qutebrowser;
 
       loadAutoconfig = false;

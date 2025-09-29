@@ -20,7 +20,7 @@ in
 
   config = lib.mkIf cfg.enable {
     programs.alacritty = {
-      enable = true;
+      inherit (cfg) enable;
 
       settings = {
         working_directory = "None";

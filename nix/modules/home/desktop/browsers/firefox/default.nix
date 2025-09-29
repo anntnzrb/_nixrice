@@ -19,7 +19,7 @@ in
 
   config = lib.mkIf cfg.enable {
     programs.firefox = {
-      enable = true;
+      inherit (cfg) enable;
       package = if pkgs.stdenvNoCC.hostPlatform.isDarwin then null else pkgs.firefox;
 
       profiles.default = {

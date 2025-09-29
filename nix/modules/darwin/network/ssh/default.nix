@@ -13,6 +13,8 @@ in
   ];
 
   config = lib.mkIf cfg.enable {
-    services.openssh.enable = true;
+    services.openssh = {
+      inherit (cfg) enable;
+    };
   };
 }

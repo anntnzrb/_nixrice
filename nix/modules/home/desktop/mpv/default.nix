@@ -16,7 +16,7 @@ in
   };
   config = lib.mkIf cfg.enable {
     programs.mpv = {
-      enable = true;
+      inherit (cfg) enable;
       scripts = with pkgs.mpvScripts; [
         uosc
         thumbfast

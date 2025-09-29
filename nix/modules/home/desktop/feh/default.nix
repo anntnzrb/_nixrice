@@ -17,7 +17,7 @@ in
 
   config = lib.mkIf cfg.enable {
     programs.feh = {
-      enable = true;
+      inherit (cfg) enable;
     };
 
     xdg.desktopEntries.feh = {

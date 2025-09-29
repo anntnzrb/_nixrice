@@ -16,7 +16,7 @@ in
 
   config = lib.mkIf cfg.enable {
     programs.zathura = {
-      enable = true;
+      inherit (cfg) enable;
 
       options = {
         sandbox = "none";

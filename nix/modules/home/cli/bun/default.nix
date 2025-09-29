@@ -15,6 +15,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.bun.enable = true;
+    programs.bun = {
+      inherit (cfg) enable;
+    };
   };
 }

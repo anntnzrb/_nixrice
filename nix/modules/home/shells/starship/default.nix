@@ -16,7 +16,7 @@ in
 
   config = lib.mkIf cfg.enable {
     programs.starship = {
-      enable = true;
+      inherit (cfg) enable;
 
       settings = {
         add_newline = false;

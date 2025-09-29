@@ -18,7 +18,7 @@ in
 
   config = lib.mkIf cfg.enable {
     programs.zsh = {
-      enable = true;
+      inherit (cfg) enable;
       dotDir = ".config/zsh";
 
       enableCompletion = true;

@@ -16,7 +16,7 @@ in
 
   config = lib.mkIf cfg.enable {
     programs.btop = {
-      enable = true;
+      inherit (cfg) enable;
 
       settings = {
         vim_keys = true;

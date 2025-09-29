@@ -16,7 +16,7 @@ in
 
   config = lib.mkIf cfg.enable {
     programs.wofi = {
-      enable = true;
+      inherit (cfg) enable;
 
       settings = {
         location = "bottom-right";

@@ -17,6 +17,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    services.espanso.enable = true;
+    services.espanso = {
+      inherit (cfg) enable;
+    };
   };
 }

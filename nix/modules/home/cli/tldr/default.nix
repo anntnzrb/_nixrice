@@ -16,7 +16,7 @@ in
 
   config = lib.mkIf cfg.enable {
     programs.tealdeer = {
-      enable = true;
+      inherit (cfg) enable;
 
       settings = {
         directories = {

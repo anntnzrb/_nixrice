@@ -22,7 +22,9 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    services.aerospace.enable = true;
+    services.aerospace = {
+      inherit (cfg) enable;
+    };
 
     # goodies
     # cf. https://nikitabobko.github.io/AeroSpace/goodies

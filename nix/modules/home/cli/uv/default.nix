@@ -15,6 +15,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.uv.enable = true;
+    programs.uv = {
+      inherit (cfg) enable;
+    };
   };
 }

@@ -14,5 +14,9 @@ in
     enable = mkOptDisabled';
   };
 
-  config = lib.mkIf cfg.enable { programs.obs-studio.enable = true; };
+  config = lib.mkIf cfg.enable {
+    programs.obs-studio = {
+      inherit (cfg) enable;
+    };
+  };
 }

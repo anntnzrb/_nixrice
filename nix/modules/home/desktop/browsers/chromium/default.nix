@@ -16,7 +16,7 @@ in
   };
   config = lib.mkIf cfg.enable {
     programs.chromium = {
-      enable = true;
+      inherit (cfg) enable;
 
       dictionaries = [ pkgs.hunspellDictsChromium.en_US ];
       extensions = [
