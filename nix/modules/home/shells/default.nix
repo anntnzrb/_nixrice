@@ -26,6 +26,8 @@ in
   };
 
   config.home = {
+    sessionPath = [ "${config.home.homeDirectory}/.local/bin" ];
+
     sessionVariables = {
       NIX_SHELL_PRESERVE_PROMPT = "1";
     }
