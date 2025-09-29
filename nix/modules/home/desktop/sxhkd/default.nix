@@ -29,7 +29,7 @@ in
 
   config = lib.mkIf cfg.enable {
     services.sxhkd = {
-      enable = true;
+      inherit (cfg) enable;
 
       extraOptions = [
         "-m 1"

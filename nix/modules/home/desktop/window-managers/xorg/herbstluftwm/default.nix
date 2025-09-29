@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
+  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled' on;
   inherit (lib.types) attrsOf str;
   inherit (lib)
     mkMerge
@@ -30,13 +30,12 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    ${namespace}.common.xorg = {
-      enable = true;
+    ${namespace}.common.xorg = on // {
       inherit (cfg.compositor) picom;
     };
 
     xsession.windowManager.herbstluftwm = rec {
-      enable = true;
+      inherit (cfg) enable;
 
       tags = map toString (range 1 9);
 

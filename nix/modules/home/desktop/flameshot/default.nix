@@ -16,7 +16,7 @@ in
 
   config = lib.mkIf cfg.enable {
     services.flameshot = {
-      enable = true;
+      inherit (cfg) enable;
       settings = {
         General = {
           autoCloseIdleDaemon = true;

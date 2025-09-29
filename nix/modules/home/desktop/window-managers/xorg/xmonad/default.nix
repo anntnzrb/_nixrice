@@ -9,6 +9,7 @@ let
   inherit (lib.${namespace}.module)
     mkOpt'
     mkOptDisabled'
+    on
     ;
   inherit (lib.types)
     listOf
@@ -27,22 +28,19 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    ${namespace}.common.xorg = {
-      enable = true;
+    ${namespace}.common.xorg = on // {
       inherit (cfg.compositor) picom;
     };
 
     xsession = {
       initExtra = parseAutoStartList cfg.autoStart;
-      windowManager.xmonad = {
-        enable = true;
+      windowManager.xmonad = on // {
         enableContribAndExtras = true;
       };
     };
 
     xdg.configFile = {
-      xmonad = {
-        enable = true;
+      xmonad = on // {
         source = ./xmonad;
         target = "xmonad";
         recursive = true;

@@ -27,7 +27,7 @@ in
 
   config = lib.mkIf cfg.enable {
     services.gammastep = {
-      enable = true;
+      inherit (cfg) enable;
 
       inherit (cfg) latitude longitude tray;
 

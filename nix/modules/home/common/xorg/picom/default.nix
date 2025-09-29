@@ -21,7 +21,7 @@ in
 
   config = lib.mkIf cfg.enable {
     services.picom = {
-      enable = true;
+      inherit (cfg) enable;
 
       inherit (cfg) backend vSync;
 

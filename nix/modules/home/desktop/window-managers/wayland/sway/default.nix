@@ -55,7 +55,7 @@ in
     };
 
     wayland.windowManager.sway = {
-      enable = true;
+      inherit (cfg) enable;
       xwayland = true;
 
       wrapperFeatures = {
@@ -279,7 +279,7 @@ in
     };
 
     programs.waybar = {
-      enable = true;
+      inherit (cfg) enable;
 
       style = readFile ./style.css;
 

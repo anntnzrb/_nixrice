@@ -12,7 +12,7 @@ in
 {
   config = mkIf cfg.enable {
     programs.lazygit = mkIf cfg.lazygit.enable {
-      enable = true;
+      inherit (cfg.lazygit) enable;
       settings = {
         gui.showCommandLog = false;
         git.paging.externalDiffCommand = mkIf cfg.diff.difftastic.enable "difft --color=always --display=inline";

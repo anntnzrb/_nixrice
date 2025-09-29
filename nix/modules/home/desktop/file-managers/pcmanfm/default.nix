@@ -9,6 +9,7 @@ let
   inherit (lib.${namespace}.module)
     mkOpt'
     mkOptDisabled'
+    on
     ;
   inherit (lib.types)
     attrsOf
@@ -49,8 +50,7 @@ in
     home.packages = [ pkgs.pcmanfm ];
 
     xdg.configFile = {
-      "pcmanfm" = {
-        enable = true;
+      "pcmanfm" = on // {
         target = "pcmanfm/pcmanfm.conf";
         text = lib.generators.toINI { } cfg.settings;
       };

@@ -9,6 +9,7 @@ let
   inherit (lib.${namespace}.module)
     mkOpt'
     mkOptDisabled'
+    on
     ;
   inherit (lib.types)
     listOf
@@ -34,19 +35,17 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    ${namespace}.common.xorg = {
-      enable = true;
+    ${namespace}.common.xorg = on // {
       inherit (cfg.compositor) picom;
     };
 
     xsession = {
-      windowManager.awesome.enable = true;
+      windowManager.awesome = on;
       initExtra = parseAutoStartList cfg.autoStart;
     };
 
     xdg.configFile = {
-      awesomewm = {
-        enable = true;
+      awesomewm = on // {
         source = ./awesome;
         target = "awesome";
         recursive = true;
