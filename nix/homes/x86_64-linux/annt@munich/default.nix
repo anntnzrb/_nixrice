@@ -87,21 +87,18 @@ in
             autoStart = autoStart.defaults ++ autoStart.xrandr;
           };
 
-          herbstluftwm = {
-            enable = false;
+          herbstluftwm = off // {
             compositor.picom = on;
           };
 
-          xmonad = {
-            enable = false;
+          xmonad = off // {
             compositor.picom = on;
             autoStart = autoStart.defaults ++ autoStart.xrandr;
           };
         };
 
         wayland = {
-          sway = {
-            enable = false;
+          sway = off // {
             autoStart = autoStart.defaults;
             output = {
               HDMI-A-3 = {
@@ -118,8 +115,7 @@ in
             };
           };
 
-          hyprland = {
-            enable = false;
+          hyprland = off // {
             waybar = on;
             autoStartApps = autoStart.defaults;
             monitor = [

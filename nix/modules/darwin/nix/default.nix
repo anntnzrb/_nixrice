@@ -5,6 +5,8 @@
   ...
 }:
 let
+  inherit (lib.${namespace}.module) off;
+
   cfg = config.${namespace}.nix;
 in
 {
@@ -13,6 +15,6 @@ in
   ];
 
   config = lib.mkIf cfg.enable {
-    nix.enable = false;
+    nix = off;
   };
 }

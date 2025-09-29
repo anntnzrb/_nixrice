@@ -10,6 +10,7 @@ let
   inherit (lib.${namespace}.module)
     mkOpt'
     mkOptDisabled'
+    off
     ;
   inherit (lib.types)
     listOf
@@ -49,8 +50,7 @@ in
         cfg = "settings.json";
       in
       {
-        zed = {
-          enable = false;
+        zed = off // {
           source = ./${cfg};
           target = "${config.xdg.configHome}/zed/${cfg}";
           recursive = true;

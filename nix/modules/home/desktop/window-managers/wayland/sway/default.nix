@@ -9,6 +9,7 @@ let
   inherit (lib.${namespace}.module)
     mkOpt'
     mkOptDisabled'
+    off
     ;
   inherit (lib)
     foldl'
@@ -318,8 +319,7 @@ in
       };
     };
 
-    programs.i3status-rust = {
-      enable = false;
+    programs.i3status-rust = off // {
 
       bars = {
         default = {
