@@ -5,12 +5,14 @@
   ...
 }:
 let
-  _cfg = config.${namespace}.nix;
+  cfg = config.${namespace}.nix;
 in
 {
-  imports = [ (lib.snowfall.fs.get-file "modules/shared/nix/default.nix") ];
+  imports = [
+    (lib.snowfall.fs.get-file "modules/shared/nix/default.nix")
+  ];
 
-  config = {
+  config = lib.mkIf cfg.enable {
     nix = {
       settings.trusted-users = [
         "root"

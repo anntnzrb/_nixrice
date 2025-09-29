@@ -5,16 +5,20 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt';
+  inherit (lib.${namespace}.module)
+    mkOpt'
+    mkOptEnabled'
+    ;
 
   cfg = config.${namespace}.user;
 in
 {
   options.${namespace}.user = {
+    enable = mkOptEnabled';
     name = mkOpt' lib.types.str "annt";
   };
 
-  config = {
+  config = lib.mkIf cfg.enable {
     users.users.${cfg.name} = {
       inherit (cfg) name;
     };

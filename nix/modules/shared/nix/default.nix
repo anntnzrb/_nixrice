@@ -1,13 +1,20 @@
 {
+  lib,
   config,
   namespace,
   ...
 }:
 let
-  _cfg = config.${namespace}.nix;
+  inherit (lib.${namespace}.module) mkOptEnabled';
+
+  cfg = config.${namespace}.nix;
 in
 {
-  config = {
+  options.${namespace}.nix = {
+    enable = mkOptEnabled';
+  };
+
+  config = lib.mkIf cfg.enable {
     nix = {
       settings = {
         experimental-features = [

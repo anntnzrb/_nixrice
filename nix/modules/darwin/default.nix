@@ -1,13 +1,20 @@
 {
+  lib,
   config,
   namespace,
   ...
 }:
 let
-  _cfg = config.${namespace};
+  inherit (lib.${namespace}.module) mkOptEnabled';
+
+  cfg = config.${namespace}.darwin;
 in
 {
-  config = {
+  options.${namespace}.darwin = {
+    enable = mkOptEnabled';
+  };
+
+  config = lib.mkIf cfg.enable {
     security.pam.services.sudo_local = {
       touchIdAuth = true;
       reattach = true;

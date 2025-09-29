@@ -32,7 +32,6 @@ in
 
   networking = {
     wireless.enable = lib.mkForce false;
-    ssh = on;
   };
 
   environment.systemPackages = with pkgs; [
@@ -68,6 +67,7 @@ in
 
     network = {
       networkmanager = on;
+      ssh = on;
     };
   };
 }

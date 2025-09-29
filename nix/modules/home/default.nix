@@ -5,7 +5,10 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt';
+  inherit (lib.${namespace}.module)
+    mkOpt'
+    mkOptEnabled'
+    ;
   inherit (lib.types)
     str
     ints
@@ -15,6 +18,7 @@ let
 in
 {
   options.${namespace}.home = {
+    enable = mkOptEnabled';
     keyboard = {
       layout = mkOpt' str "us";
       variant = mkOpt' str "altgr-intl";
@@ -23,7 +27,7 @@ in
     };
   };
 
-  config = {
+  config = lib.mkIf cfg.enable {
     home = {
       keyboard = {
         inherit (cfg.keyboard) layout variant;

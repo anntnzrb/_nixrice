@@ -21,6 +21,7 @@ let
 in
 {
   options.${namespace}.user = {
+    enable = mkOptEnabled';
     name = mkOpt' str "annt";
     isNormalUser = mkOptEnabled';
     initialPassword = mkOpt' (nullOr str) "pass";
@@ -29,7 +30,7 @@ in
     authorizedKeys = mkOpt' (listOf singleLineStr) [ ];
   };
 
-  config = {
+  config = lib.mkIf cfg.enable {
     users.users.${cfg.name} = {
       inherit (cfg)
         name

@@ -1,11 +1,18 @@
 {
+  lib,
   config,
   namespace,
   ...
 }:
 let
-  _cfg = config.${namespace}.nix;
+  cfg = config.${namespace}.nix;
 in
 {
-  config.nix.enable = false;
+  imports = [
+    (lib.snowfall.fs.get-file "modules/shared/nix/default.nix")
+  ];
+
+  config = lib.mkIf cfg.enable {
+    nix.enable = false;
+  };
 }

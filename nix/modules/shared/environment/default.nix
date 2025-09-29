@@ -1,14 +1,21 @@
 {
+  lib,
   pkgs,
   config,
   namespace,
   ...
 }:
 let
-  _cfg = config.${namespace}.environment;
+  inherit (lib.${namespace}.module) mkOptEnabled';
+
+  cfg = config.${namespace}.environment;
 in
 {
-  config = {
+  options.${namespace}.environment = {
+    enable = mkOptEnabled';
+  };
+
+  config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
       # tools
       git

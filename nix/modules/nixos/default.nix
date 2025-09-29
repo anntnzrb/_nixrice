@@ -1,13 +1,20 @@
 {
+  lib,
   config,
   namespace,
   ...
 }:
 let
-  _cfg = config.${namespace};
+  inherit (lib.${namespace}.module) mkOptEnabled';
+
+  cfg = config.${namespace}.nixos;
 in
 {
-  config = {
+  options.${namespace}.nixos = {
+    enable = mkOptEnabled';
+  };
+
+  config = lib.mkIf cfg.enable {
     time.timeZone = "America/Guayaquil";
 
     i18n = rec {
