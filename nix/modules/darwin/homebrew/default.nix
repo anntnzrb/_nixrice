@@ -31,14 +31,14 @@ in
 
   config = lib.mkIf cfg.enable {
     nix-homebrew = {
-      enable = true;
+      inherit (cfg) enable;
       enableRosetta = pkgs.system == "aarch64-darwin";
       user = config.${namespace}.user.name;
       autoMigrate = true;
     };
 
     homebrew = {
-      enable = true;
+      inherit (cfg) enable;
       global.autoUpdate = false;
       onActivation = {
         autoUpdate = false;

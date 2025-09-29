@@ -16,7 +16,7 @@ in
 
   config = {
     services.sketchybar = lib.mkIf cfg.sketchybar.enable {
-      enable = true;
+      inherit (cfg.sketchybar) enable;
     };
   };
 }

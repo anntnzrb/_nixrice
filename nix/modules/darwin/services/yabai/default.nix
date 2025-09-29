@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.module) mkOptDisabled' on;
   inherit (lib) concatStringsSep getAttr attrNames;
 
   cfg = config.${namespace}.services.yabai;
@@ -27,7 +27,7 @@ in
 
   config = lib.mkIf cfg.enable {
     services.yabai = {
-      enable = true;
+      inherit (cfg) enable;
 
       config = {
         layout = "bsp";
@@ -190,8 +190,7 @@ in
         '';
     };
 
-    ${namespace}.services.skhd = {
-      enable = true;
+    ${namespace}.services.skhd = on // {
 
       keybindings = {
         "alt - k" = "yabai -m window --focus north";

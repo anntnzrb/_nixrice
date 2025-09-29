@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.module) mkOptDisabled' off;
 
   cfg = config.${namespace}.boot.bootloader.grub;
 in
@@ -16,10 +16,10 @@ in
 
   config = lib.mkIf cfg.enable {
     boot.loader = {
-      systemd-boot.enable = false;
+      systemd-boot = off;
 
       grub = {
-        enable = true;
+        inherit (cfg) enable;
 
         configurationLimit = 20;
         device = "nodev";

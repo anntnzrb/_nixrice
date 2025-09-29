@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptEnabled';
+  inherit (lib.${namespace}.module) mkOptEnabled' off on;
 
   cfg = config.${namespace}.nix;
 in
@@ -39,9 +39,9 @@ in
     };
 
     documentation = {
-      doc.enable = false;
-      info.enable = false;
-      man.enable = true;
+      doc = off;
+      info = off;
+      man = on;
     };
   };
 }
