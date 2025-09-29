@@ -8,6 +8,7 @@ let
   inherit (lib.${namespace}.module)
     mkOpt'
     mkOptEnabled'
+    on
     ;
   inherit (lib.types)
     str
@@ -36,6 +37,6 @@ in
     };
 
     systemd.user.startServices = "sd-switch";
-    programs.home-manager.enable = true;
+    programs.home-manager = on;
   };
 }

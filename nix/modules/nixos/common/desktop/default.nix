@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.module) mkOptDisabled' on;
 
   cfg = config.${namespace}.common.desktop;
 in
@@ -15,8 +15,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    services.gnome.gnome-keyring.enable = true;
-    programs.dconf.enable = true;
-    security.polkit.enable = true;
+    services.gnome.gnome-keyring = on;
+    programs.dconf = on;
+    security.polkit = on;
   };
 }

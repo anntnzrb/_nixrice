@@ -18,7 +18,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.virtualbox = {
       host = {
-        enable = true;
+        inherit (cfg) enable;
 
         inherit (cfg) enableExtensionPack; # causes recompilation
       };

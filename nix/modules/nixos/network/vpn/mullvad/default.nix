@@ -17,7 +17,7 @@ in
 
   config = lib.mkIf cfg.enable {
     services.mullvad-vpn = {
-      enable = true;
+      inherit (cfg) enable;
       package = pkgs.mullvad-vpn;
       enableExcludeWrapper = false;
     };

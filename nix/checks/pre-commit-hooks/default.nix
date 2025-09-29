@@ -1,22 +1,25 @@
 {
-  inputs,
+  lib,
   pkgs,
+  inputs,
+  namespace,
   ...
 }:
+let
+  inherit (lib.${namespace}.module) on;
+in
 inputs.pre-commit-hooks.lib.${pkgs.system}.run {
   src = inputs.self;
 
   hooks = {
     # nix
-    flake-checker.enable = true;
+    flake-checker = on;
 
-    nixfmt-rfc-style = {
-      enable = true;
+    nixfmt-rfc-style = on // {
       settings.width = 80;
     };
 
-    deadnix = {
-      enable = true;
+    deadnix = on // {
       settings = {
         edit = true;
         noUnderscore = true;
@@ -30,8 +33,8 @@ inputs.pre-commit-hooks.lib.${pkgs.system}.run {
         };
         disabled-lints = [ "repeated_keys" ];
       in
-      {
-        enable = true;
+      on
+      // {
         package = pkgs.writeShellApplication {
           name = "statix";
           runtimeInputs = [ pkgs.statix ];
@@ -42,8 +45,7 @@ inputs.pre-commit-hooks.lib.${pkgs.system}.run {
         };
       };
 
-    shfmt = {
-      enable = true;
+    shfmt = on // {
       package = pkgs.writeShellApplication {
         name = "shfmt";
         runtimeInputs = [ pkgs.shfmt ];
@@ -55,6 +57,6 @@ inputs.pre-commit-hooks.lib.${pkgs.system}.run {
     };
 
     # GH actions
-    actionlint.enable = true;
+    actionlint = on;
   };
 }

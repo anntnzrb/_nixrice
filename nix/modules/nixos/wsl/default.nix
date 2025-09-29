@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.module) mkOptDisabled' on;
 
   cfg = config.${namespace}.wsl;
 in
@@ -21,9 +21,9 @@ in
     wsl = lib.mkIf cfg.enable {
       inherit (cfg) enable;
       defaultUser = config.${namespace}.user.name;
-      docker-desktop.enable = true;
+      docker-desktop = on;
     };
 
-    programs.nix-ld.enable = true;
+    programs.nix-ld = on;
   };
 }

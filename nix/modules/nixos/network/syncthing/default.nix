@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.module) mkOptDisabled' on;
 
   cfg = config.${namespace}.network.syncthing;
 in
@@ -20,8 +20,7 @@ in
       syncPath = "/home/${user}/lib/sync";
     in
     lib.mkIf cfg.enable {
-      services.syncthing = {
-        enable = true;
+      services.syncthing = on // {
         systemService = true;
 
         # devices & folders will not persist if configured via UI
@@ -47,16 +46,14 @@ in
               devices = [ "bergkamp" ];
             in
             {
-              notes = {
-                enable = true;
+              notes = on // {
                 label = "notes";
                 path = "${syncPath}/notes";
                 versioning.type = "trashcan";
                 inherit devices;
               };
 
-              bergkamp = {
-                enable = true;
+              bergkamp = on // {
                 label = "bergkamp";
                 path = "${syncPath}/bergkamp";
                 versioning.type = "trashcan";

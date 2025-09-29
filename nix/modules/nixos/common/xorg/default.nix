@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.module) mkOptDisabled' on;
 
   cfg = config.${namespace}.common.xorg;
 in
@@ -17,7 +17,7 @@ in
 
   config = lib.mkIf cfg.enable {
     services.xserver = {
-      enable = true;
+      inherit (cfg) enable;
       autorun = false;
       excludePackages = with pkgs; [
         xorg.iceauth
@@ -28,7 +28,7 @@ in
         xterm
       ];
 
-      displayManager.startx.enable = true;
+      displayManager.startx = on;
     };
   };
 }

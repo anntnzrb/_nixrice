@@ -18,7 +18,9 @@ in
   config = lib.mkIf cfg.enable {
     networking.useDHCP = false;
 
-    networking.networkmanager.enable = true;
+    networking.networkmanager = {
+      inherit (cfg) enable;
+    };
     environment.systemPackages = [ pkgs.networkmanagerapplet ];
   };
 }

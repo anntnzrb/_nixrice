@@ -6,7 +6,10 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.module)
+    mkOptDisabled'
+    on
+    ;
 
   cfg = config.${namespace}.hardware.audio;
 in
@@ -16,15 +19,13 @@ in
   };
 
   config = lib.mkIf cfg.pipewire.enable {
-    security.rtkit.enable = true;
+    security.rtkit = on;
 
-    services.pipewire = {
-      enable = true;
-
-      alsa.enable = true;
-      audio.enable = true;
-      pulse.enable = true;
-      wireplumber.enable = true;
+    services.pipewire = on // {
+      alsa = on;
+      audio = on;
+      pulse = on;
+      wireplumber = on;
     };
 
     environment.systemPackages = with pkgs; [

@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.module) mkOptDisabled' on;
 
   cfg = config.${namespace}.virtualisation.docker;
 in
@@ -17,12 +17,11 @@ in
 
   config = lib.mkIf cfg.enable {
     virtualisation.docker = {
-      enable = true;
+      inherit (cfg) enable;
 
       inherit (cfg) enableOnBoot;
 
-      autoPrune = {
-        enable = true;
+      autoPrune = on // {
         dates = "weekly";
       };
     };

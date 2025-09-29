@@ -16,7 +16,7 @@ in
 
   config = lib.mkIf cfg.enable {
     services.keyd = {
-      enable = true;
+      inherit (cfg) enable;
 
       keyboards.main.settings = {
         "main" = {

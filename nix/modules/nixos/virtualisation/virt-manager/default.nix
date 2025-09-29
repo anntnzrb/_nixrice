@@ -16,11 +16,13 @@ in
 
   config = lib.mkIf cfg.enable {
     virtualisation.libvirtd = {
-      enable = true;
+      inherit (cfg) enable;
       onShutdown = "shutdown";
     };
 
-    programs.virt-manager.enable = true;
+    programs.virt-manager = {
+      inherit (cfg) enable;
+    };
 
     ${namespace}.user.extraGroups = [ "libvirtd" ];
   };
