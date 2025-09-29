@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptEnabled';
+  inherit (lib.${namespace}.module) mkOptEnabled' on;
 
   cfg = config.${namespace}.xdg;
   homeDir = "${config.home.homeDirectory}";
@@ -20,18 +20,17 @@ in
 
   config = lib.mkIf cfg.enable {
     xdg = lib.mkIf pkgs.stdenvNoCC.hostPlatform.isLinux {
-      enable = true;
+      inherit (cfg) enable;
 
       cacheHome = "${homeDir}/.cache";
       configHome = "${homeDir}/.config";
       dataHome = "${localDir}/share";
       stateHome = "${localDir}/state";
 
-      mime.enable = true;
-      mimeApps.enable = true;
+      mime = on;
+      mimeApps = on;
 
-      userDirs = {
-        enable = true;
+      userDirs = on // {
         createDirectories = true;
 
         desktop = "${homeDir}/desktop";

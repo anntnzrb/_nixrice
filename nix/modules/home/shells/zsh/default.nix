@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.module) mkOptDisabled' on;
 
   cfg = config.${namespace}.shells.zsh;
 in
@@ -22,8 +22,8 @@ in
       dotDir = ".config/zsh";
 
       enableCompletion = true;
-      autosuggestion.enable = true;
-      syntaxHighlighting.enable = true;
+      autosuggestion = on;
+      syntaxHighlighting = on;
 
       history = {
         path = "${config.xdg.dataHome}/zsh_history";

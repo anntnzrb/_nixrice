@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.module) mkOptDisabled' on;
 
   cfg = config.${namespace}.cli.fastfetch;
 in
@@ -23,8 +23,7 @@ in
         cfg = "config.jsonc";
       in
       {
-        fastfetch = {
-          enable = true;
+        fastfetch = on // {
           source = ./${cfg};
           target = "${config.xdg.configHome}/fastfetch/${cfg}";
           recursive = true;

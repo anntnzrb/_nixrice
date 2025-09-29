@@ -8,6 +8,7 @@ let
   inherit (lib.${namespace}.module)
     mkOpt'
     mkOptDisabled'
+    on
     ;
   inherit (lib)
     genList
@@ -38,8 +39,8 @@ in
     };
 
     wayland.windowManager.hyprland = {
-      enable = true;
-      xwayland.enable = true;
+      inherit (cfg) enable;
+      xwayland = on;
 
       extraConfig = lib.readFile ./hyprland.conf;
 
@@ -69,7 +70,7 @@ in
     };
 
     programs.waybar = lib.mkIf cfg.waybar.enable {
-      enable = true;
+      inherit (cfg.waybar) enable;
 
       settings = {
         mainBar = {

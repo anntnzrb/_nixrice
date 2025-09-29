@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.module) mkOptDisabled' on;
 
   exe = lib.getExe config.programs.direnv.package;
 
@@ -20,7 +20,7 @@ in
     programs.direnv = {
       inherit (cfg) enable;
       silent = true;
-      nix-direnv.enable = true;
+      nix-direnv = on;
     };
 
     home.shellAliases.dirrr = "${exe} allow && ${exe} reload";

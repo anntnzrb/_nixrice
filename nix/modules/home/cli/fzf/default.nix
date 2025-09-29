@@ -23,7 +23,7 @@ in
         treeCmd = "${getExe pkgs.eza} --color=automatic --icons -T";
       in
       rec {
-        enable = true;
+        inherit (cfg) enable;
 
         defaultCommand = "${getExe pkgs.fd} --type f";
 
