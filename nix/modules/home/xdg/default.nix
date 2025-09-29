@@ -2,15 +2,23 @@
   config,
   lib,
   pkgs,
+  namespace,
   ...
 }:
 let
+  inherit (lib.${namespace}.module) mkOptEnabled';
+
+  cfg = config.${namespace}.xdg;
   homeDir = "${config.home.homeDirectory}";
   libDir = "${homeDir}/lib";
   localDir = "${homeDir}/.local";
 in
 {
-  config = {
+  options.${namespace}.xdg = {
+    enable = mkOptEnabled';
+  };
+
+  config = lib.mkIf cfg.enable {
     xdg = lib.mkIf pkgs.stdenvNoCC.hostPlatform.isLinux {
       enable = true;
 

@@ -5,14 +5,14 @@
   ...
 }:
 let
-  _cfg = config.${namespace}.network.ssh;
+  cfg = config.${namespace}.network.ssh;
 in
 {
   imports = [
     (lib.snowfall.fs.get-file "modules/shared/network/ssh/default.nix")
   ];
 
-  config = {
+  config = lib.mkIf cfg.enable {
     services.openssh.enable = true;
   };
 }
