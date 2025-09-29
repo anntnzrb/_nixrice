@@ -1,13 +1,20 @@
 {
+  lib,
   config,
   namespace,
   ...
 }:
 let
-  _cfg = config.${namespace}.boot.bootloader;
+  inherit (lib.${namespace}.module) mkOptEnabled';
+
+  cfg = config.${namespace}.boot.bootloader;
 in
 {
-  config = {
+  options.${namespace}.boot.bootloader = {
+    enable = mkOptEnabled';
+  };
+
+  config = lib.mkIf cfg.enable {
     boot.loader = {
       timeout = 10;
       efi.canTouchEfiVariables = true;

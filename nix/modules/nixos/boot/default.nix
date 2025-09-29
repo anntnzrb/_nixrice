@@ -1,13 +1,20 @@
 {
+  lib,
   config,
   namespace,
   ...
 }:
 let
-  _cfg = config.${namespace}.boot;
+  inherit (lib.${namespace}.module) mkOptEnabled';
+
+  cfg = config.${namespace}.boot;
 in
 {
-  config = {
+  options.${namespace}.boot = {
+    enable = mkOptEnabled';
+  };
+
+  config = lib.mkIf cfg.enable {
     boot = {
       consoleLogLevel = 3;
       tmp.cleanOnBoot = true;
