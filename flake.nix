@@ -51,7 +51,8 @@
     snowfall-lib = {
       # snowfall-lib is an opinionated flake framework
       # it forces a predefined schema
-      url = "github:snowfallorg/lib/main";
+      # url = "github:snowfallorg/lib/main";
+      url = "github:anntnzrb/snowfall-lib/main";
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
 
