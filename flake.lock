@@ -802,11 +802,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1759986391,
-        "narHash": "sha256-4dF6KjBBpSpv77TwmbZPDJeh2JgTe49yklu4BUVVd/0=",
+        "lastModified": 1759988077,
+        "narHash": "sha256-LUel3DQ6WoHwkb9R88awz9tGzGwBGrJJyQjn81qgeuM=",
         "owner": "anntnzrb",
         "repo": "snowfall-lib",
-        "rev": "7d7ff85b418e434b342b8fd5abc7b2b5a74dcf33",
+        "rev": "1e41848ba9a198bd3cf9fda4603894e23d1da9a2",
         "type": "github"
       },
       "original": {
