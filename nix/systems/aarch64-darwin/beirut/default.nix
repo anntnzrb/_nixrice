@@ -24,7 +24,7 @@ in
       trackpad = on;
 
       ui = on // {
-        menuBar.hide = true;
+        menuBar.hide = false;
       };
     };
 
