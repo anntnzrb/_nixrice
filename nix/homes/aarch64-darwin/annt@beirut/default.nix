@@ -52,7 +52,10 @@ in
       qwen = on;
     };
 
-    editors.neovim = on;
+    editors = {
+      neovim = on;
+      vscode = on;
+    };
 
     desktop.terminal-emulators.ghostty = on;
   };
