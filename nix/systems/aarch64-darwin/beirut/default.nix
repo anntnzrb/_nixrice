@@ -35,10 +35,13 @@ in
     homebrew = on // {
       packages = {
         casks = [
-          "docker"
-          "obs"
+          "docker-desktop"
           "rustdesk"
         ];
+        masApps = {
+          "WhatsApp Messenger" = 310633997;
+          "Bitwarden" = 1352778147;
+        };
       };
     };
   };
