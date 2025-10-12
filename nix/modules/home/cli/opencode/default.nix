@@ -17,6 +17,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.shellAliases.opencode = "bunx --bun opencode-ai@latest";
+    home.shellAliases.opencode = "bun x opencode-ai@latest --";
   };
 }

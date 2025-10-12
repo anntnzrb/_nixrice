@@ -17,6 +17,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.shellAliases.qwen = "bunx --bun @qwen-code/qwen-code@latest -- --yolo";
+    home.shellAliases.qwen = "bun x @qwen-code/qwen-code@latest -- --yolo";
   };
 }

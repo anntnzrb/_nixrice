@@ -15,6 +15,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.shellAliases.codex = "bunx --bun @openai/codex@latest --";
+    home.shellAliases.codex = "bun x @openai/codex@latest --";
   };
 }

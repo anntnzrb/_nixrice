@@ -17,6 +17,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.shellAliases.crush = "bunx --bun @charmland/crush -- --yolo";
+    home.shellAliases.crush = "bun x @charmland/crush -- --yolo";
   };
 }

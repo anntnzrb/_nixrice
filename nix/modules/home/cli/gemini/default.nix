@@ -17,6 +17,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.shellAliases.gemini = "bunx --bun @google/gemini-cli@latest";
+    home.shellAliases.gemini = "bun x @google/gemini-cli@latest --";
   };
 }
