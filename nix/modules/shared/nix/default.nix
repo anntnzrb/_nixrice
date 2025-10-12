@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   config,
   namespace,
   ...
@@ -35,7 +36,7 @@ in
         ];
       };
 
-      gc.automatic = true;
+      gc.automatic = pkgs.stdenvNoCC.hostPlatform.isLinux;
     };
 
     documentation = {
