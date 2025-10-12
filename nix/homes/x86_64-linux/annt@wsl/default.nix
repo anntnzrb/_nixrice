@@ -25,22 +25,24 @@ in
 
       btop = on;
       bun = on;
-      claude = on;
-      codex = on;
-      crush = on;
       direnv = on;
       fastfetch = on;
       fzf = on;
       gemini = on;
       husky = on;
-      mods = on;
-      opencode = on;
-      qwen = on;
       repomix = on;
       tldr = on;
       uv = on;
       yt-dlp = on;
       zoxide = on;
+
+      # AI
+      claude = on;
+      codex = on;
+      crush = on;
+      mods = on;
+      opencode = on;
+      qwen = on;
     };
 
     editors = {
