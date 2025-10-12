@@ -14,6 +14,8 @@ let
   inherit (lib.types)
     listOf
     str
+    attrsOf
+    ints
     ;
 
   cfg = config.${namespace}.homebrew;
@@ -26,6 +28,7 @@ in
 
     packages = {
       casks = mkOpt' (listOf str) [ ];
+      masApps = mkOpt' (attrsOf ints.positive) [ ];
     };
   };
 
@@ -45,7 +48,7 @@ in
         upgrade = false;
       };
 
-      inherit (cfg.packages) casks;
+      inherit (cfg.packages) casks masApps;
     };
 
     environment.variables = {
