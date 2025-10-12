@@ -6,7 +6,7 @@
 | -------------------- | ------------------------------------------------------- |
 | **Model**            | MacBook Air 13-inch (MW123LL/A, Early 2025)            |
 | **CPU**              | Apple M4 Chip with 10-core CPU (4 performance + 6 efficiency) |
-| **GPU**              | Apple M4 10-core GPU with hardware-accelerated ray tracing |
+| **GPU**              | Apple M4 8-core GPU with hardware-accelerated ray tracing |
 | **Neural Engine**    | 16-core Neural Engine                                  |
 | **RAM**              | 16GB Unified Memory                                    |
 | **Storage**          | 256 GB SSD                                             |
