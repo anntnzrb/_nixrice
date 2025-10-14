@@ -33,6 +33,10 @@ in
       userEmail = "anntnzrb@proton.me";
 
       extraConfig = {
+        core = {
+          autocrlf = "input";
+          eol = "lf";
+        };
         init.defaultBranch = "main";
         fetch.prune = true;
         rebase.autoStash = true;
