@@ -59,6 +59,9 @@ in
       vscode = on;
     };
 
-    desktop.terminal-emulators.ghostty = on;
+    desktop = {
+      terminal-emulators.ghostty = on;
+      browsers.firefox = on;
+    };
   };
 }
