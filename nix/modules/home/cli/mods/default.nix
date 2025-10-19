@@ -29,7 +29,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.sessionPath = [ "${config.home.homeDirectory}/.claude/bin" ];
     programs.mods = {
       inherit (cfg) enable;
       inherit package;
