@@ -35,6 +35,7 @@ in
     homebrew = on // {
       packages = {
         casks = [
+          "aldente"
           "docker-desktop"
           "rustdesk"
         ];

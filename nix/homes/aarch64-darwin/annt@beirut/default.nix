@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   inputs,
   namespace,
   ...
@@ -10,10 +9,6 @@ let
 in
 {
   imports = [ inputs.mac-app-util.homeManagerModules.default ];
-
-  home.packages = with pkgs; [
-    aldente
-  ];
 
   liberion = {
     shells = {
