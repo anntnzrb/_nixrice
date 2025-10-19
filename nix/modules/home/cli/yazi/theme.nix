@@ -1,5 +1,7 @@
 {
   lib,
+  config,
+  namespace,
   inputs,
   ...
 }:
@@ -8,6 +10,8 @@ let
     yazi-flavors
     yazi-timu-macos
     ;
+
+  cfg = config.${namespace}.cli.yazi;
 
   themeDir = "yazi/flavors";
 
@@ -18,9 +22,11 @@ let
   };
 in
 {
-  config.xdg.configFile = lib.mapAttrs' (
-    name: src: lib.nameValuePair "${themeDir}/${name}.yazi" { source = src; }
-  ) themes;
+  config = lib.mkIf cfg.enable {
+    xdg.configFile = lib.mapAttrs' (
+      name: src: lib.nameValuePair "${themeDir}/${name}.yazi" { source = src; }
+    ) themes;
 
-  config.programs.yazi.theme.flavor.use = "timu-macos-dark";
+    programs.yazi.theme.flavor.use = "timu-macos-dark";
+  };
 }
