@@ -35,13 +35,12 @@ in
 
       settings = {
         default-api = "github-models";
-        default-model = "openai/gpt-4.1-mini";
+        default-model = "openai/gpt-5-mini";
         apis.github-models = {
           base-url = "https://models.github.ai/inference";
           api-key-env = "GITHUB_PERSONAL_ACCESS_TOKEN";
           models = {
-            "openai/gpt-4.1".max-input-chars = 392000;
-            "openai/gpt-4.1-mini".max-input-chars = 392000;
+            "openai/gpt-5-mini".max-input-chars = 800000;
           };
         };
       };
