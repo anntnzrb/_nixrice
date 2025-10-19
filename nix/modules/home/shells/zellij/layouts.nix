@@ -1,8 +1,12 @@
 {
   lib,
+  config,
+  namespace,
   ...
 }:
 let
+  cfg = config.${namespace}.shells.zellij;
+
   layoutsDir = "zellij/layouts";
 
   # layout generator
@@ -17,10 +21,12 @@ let
     ) { } names;
 in
 {
-  config.programs.zellij.settings.default_layout = "welcome";
+  config = lib.mkIf cfg.enable {
+    programs.zellij.settings.default_layout = "welcome";
 
-  config.xdg.configFile = mkLayouts [
-    "base"
-    "rice"
-  ];
+    xdg.configFile = mkLayouts [
+      "base"
+      "rice"
+    ];
+  };
 }
