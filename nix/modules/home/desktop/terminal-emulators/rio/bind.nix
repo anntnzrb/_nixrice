@@ -1,5 +1,14 @@
-_: {
-  config.programs.rio.settings.bindings.keys = [
+{
+  lib,
+  config,
+  namespace,
+  ...
+}:
+let
+  cfg = config.${namespace}.desktop.terminal-emulators.rio;
+in
+lib.mkIf cfg.enable {
+  programs.rio.settings.bindings.keys = [
     {
       key = "c";
       "with" = "control | shift";

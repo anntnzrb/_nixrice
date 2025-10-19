@@ -1,5 +1,14 @@
-_: {
-  config.programs.rio.settings = {
+{
+  lib,
+  config,
+  namespace,
+  ...
+}:
+let
+  cfg = config.${namespace}.desktop.terminal-emulators.rio;
+in
+lib.mkIf cfg.enable {
+  programs.rio.settings = {
     window = {
       opacity = 0.8;
       blur = true;

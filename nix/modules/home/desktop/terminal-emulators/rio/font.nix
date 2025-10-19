@@ -19,36 +19,34 @@ let
     };
   };
 in
-{
-  config = {
-    home.packages = lib.attrsets.mapAttrsToList (_: font: font.pkg) fonts;
+lib.mkIf cfg.enable {
+  home.packages = lib.attrsets.mapAttrsToList (_: font: font.pkg) fonts;
 
-    programs.rio.settings.fonts = {
-      inherit (cfg.font) size;
+  programs.rio.settings.fonts = {
+    inherit (cfg.font) size;
 
-      regular = {
-        family = fonts.iosevka-comfy-motion.name;
-        style = "Normal";
-        weight = 400;
-      };
+    regular = {
+      family = fonts.iosevka-comfy-motion.name;
+      style = "Normal";
+      weight = 400;
+    };
 
-      bold = {
-        family = fonts.iosevka-comfy-motion.name;
-        style = "Normal";
-        weight = 800;
-      };
+    bold = {
+      family = fonts.iosevka-comfy-motion.name;
+      style = "Normal";
+      weight = 800;
+    };
 
-      italic = {
-        family = fonts.iosevka-comfy-motion.name;
-        style = "Italic";
-        weight = 400;
-      };
+    italic = {
+      family = fonts.iosevka-comfy-motion.name;
+      style = "Italic";
+      weight = 400;
+    };
 
-      bold-italic = {
-        family = fonts.iosevka-comfy-motion.name;
-        style = "Italic";
-        weight = 800;
-      };
+    bold-italic = {
+      family = fonts.iosevka-comfy-motion.name;
+      style = "Italic";
+      weight = 800;
     };
   };
 }
