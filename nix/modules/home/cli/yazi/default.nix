@@ -25,7 +25,7 @@ in
     shellWrapperName = "yy";
 
     settings = {
-      manager = {
+      mgr = {
         ratio = [
           1 # left
           3 # middle
