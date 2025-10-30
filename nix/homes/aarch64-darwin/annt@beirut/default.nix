@@ -49,10 +49,7 @@ in
       qwen = on;
     };
 
-    editors = {
-      neovim = on;
-      vscode = on;
-    };
+    editors.neovim = on;
 
     desktop = {
       terminal-emulators.ghostty = on;
