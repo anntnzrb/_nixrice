@@ -44,7 +44,6 @@ in
         # Finder
         appId = "com.apple.finder";
         run = [ (mkLayout "floating") ];
-        furtherCallbacks = true;
       }
       {
         # Bitwarden
@@ -53,7 +52,6 @@ in
           (mkLayout "floating")
           (mvNodeToWorkspace 1)
         ];
-        furtherCallbacks = true;
       }
       {
         # Browser: Firefox
@@ -94,21 +92,17 @@ in
         # Docker (Desktop)
         appId = "com.electron.dockerdesktop";
         run = [ (mkLayout "floating") ];
-        furtherCallbacks = true;
       }
       {
         # RustDesk
         appId = "com.carriez.rustdesk";
         run = [ (mkLayout "floating") ];
-        furtherCallbacks = true;
       }
 
-      # fallback rule
-      # foreign nodes go to scratch/dumpster/whatever workspace
-      # do not mess with my setup
-      #{
-      #  run = [ (mvNodeToWorkspace 0) ];
-      #}
+      # default rule: make all other windows floating anywhere
+      {
+        run = [ (mkLayout "floating") ];
+      }
     ];
   };
 }
