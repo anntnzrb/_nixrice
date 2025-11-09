@@ -564,10 +564,10 @@
     "nixpkgs-unstable": {
       "locked": {
         "lastModified": 315532800,
-        "narHash": "sha256-RsbXQcmJSyXJbskIJl8cQq322CooE9tx+T5lkeF9iLI=",
-        "rev": "e99366c665bdd53b7b500ccdc5226675cfc51f45",
+        "narHash": "sha256-RpDoXu4dMzS4Q3qq3vdlTXbL8ZLn42i5QPD5X0RPqT0=",
+        "rev": "e1ebeec86b771e9d387dd02d82ffdc77ac753abc",
         "type": "tarball",
-        "url": "https://releases.nixos.org/nixpkgs/nixpkgs-25.11pre885943.e99366c665bd/nixexprs.tar.xz"
+        "url": "https://releases.nixos.org/nixpkgs/nixpkgs-25.11pre890836.e1ebeec86b77/nixexprs.tar.xz"
       },
       "original": {
         "type": "tarball",
