@@ -14,6 +14,9 @@ in
     shells = {
       sessionVariables.EDITOR = "nvim";
 
+      fish = on // {
+        prompt.starship = on;
+      };
       zsh = on // {
         prompt.starship = on;
       };
