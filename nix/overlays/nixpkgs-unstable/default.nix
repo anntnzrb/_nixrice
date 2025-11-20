@@ -7,5 +7,6 @@ _final: _prev: {
     vscode
     aider-chat
     zed-editor
+    emacs-macport
     ;
 }
