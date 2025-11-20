@@ -15,7 +15,7 @@ let
       workspace ? null,
 
       duringStartup ? null,
-      furtherCallbacks ? false,
+      furtherCallbacks ? true,
 
       run,
     }:
