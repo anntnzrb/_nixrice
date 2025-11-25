@@ -14,12 +14,10 @@ let
   nixosCfg = inputs.self.nixosConfigurations or { };
   darwinCfg = inputs.self.darwinConfigurations or { };
 
-  remoteHosts =
-    lib.filterAttrs (
-      hostName: hostCfg:
-      hostName != host && (hostCfg.config.${namespace}.user.name or null) != null
-    ) nixosCfg
-    // darwinCfg;
+  remoteHosts = lib.filterAttrs (
+    hostName: hostCfg:
+    hostName != host && (hostCfg.config.${namespace}.user.name or null) != null
+  ) (nixosCfg // darwinCfg);
 
   remoteHostsCfg = lib.concatMapStringsSep "\n" (
     remoteHostName:

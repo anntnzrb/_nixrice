@@ -47,12 +47,12 @@ in
 
     xdg.configFile =
       let
-        cfg = "settings.json";
+        configFile = "settings.json";
       in
       {
         zed = off // {
-          source = ./${cfg};
-          target = "${config.xdg.configHome}/zed/${cfg}";
+          source = ./${configFile};
+          target = "zed/${configFile}";
           recursive = true;
         };
       };

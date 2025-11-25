@@ -20,12 +20,12 @@ in
 
     xdg.configFile =
       let
-        cfg = "config.jsonc";
+        configFile = "config.jsonc";
       in
       {
         fastfetch = on // {
-          source = ./${cfg};
-          target = "${config.xdg.configHome}/fastfetch/${cfg}";
+          source = ./${configFile};
+          target = "fastfetch/${configFile}";
           recursive = true;
         };
       };
