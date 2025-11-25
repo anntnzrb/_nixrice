@@ -15,7 +15,9 @@ in
       inherit (cfg.lazygit) enable;
       settings = {
         gui.showCommandLog = false;
-        git.paging.externalDiffCommand = mkIf cfg.diff.difftastic.enable "difft --color=always --display=inline";
+      }
+      // lib.optionalAttrs cfg.diff.difftastic.enable {
+        git.paging.externalDiffCommand = "difft --color=always --display=inline";
       };
     };
 
