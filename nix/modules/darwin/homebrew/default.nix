@@ -28,7 +28,7 @@ in
 
     packages = {
       casks = mkOpt' (listOf str) [ ];
-      masApps = mkOpt' (attrsOf ints.positive) [ ];
+      masApps = mkOpt' (attrsOf ints.positive) { };
     };
   };
 
