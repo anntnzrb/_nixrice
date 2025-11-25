@@ -34,7 +34,7 @@ in
     home = {
       shellAliases = {
         Hyprland = "printf 'Do not use this command. To launch Hyprland use the 'wm-exec-hypr' wrapper.\n' >&2";
-        wm-exec-hypr = "\Hyrpland";
+        wm-exec-hypr = "\\Hyprland";
       };
     };
 
