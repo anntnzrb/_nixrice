@@ -25,7 +25,7 @@ in
 
     compositor.picom.enable = mkOptDisabled';
 
-    autoStart = mkOpt' (attrsOf str) [ ];
+    autoStart = mkOpt' (attrsOf str) { };
     keys.super = mkOpt' str "Mod4";
   };
 
