@@ -24,7 +24,7 @@ in
   config.programs.rio = lib.mkIf cfg.enable {
     inherit (cfg) enable;
     settings = {
-      option-as-alt = lib.optionals pkgs.stdenvNoCC.hostPlatform.isDarwin "both";
+      option-as-alt = lib.mkIf pkgs.stdenvNoCC.hostPlatform.isDarwin "both";
       use-fork = false; # prefer clean process
       confirm-before-quit = false;
 
