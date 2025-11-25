@@ -31,7 +31,7 @@ in
         XAUTHORITY = "${config.xdg.stateHome}/.Xauthority";
       };
       shellAliases = {
-        startx = "printf 'Do not use this command. Use the appropiate wrapper for launching the graphic environment.\n' >2&1";
+        startx = "printf 'Do not use this command. Use the appropriate wrapper for launching the graphic environment.\n' >&2";
       };
 
       packages = with pkgs; [
