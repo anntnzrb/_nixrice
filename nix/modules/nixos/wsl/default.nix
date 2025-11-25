@@ -17,8 +17,8 @@ in
     enable = mkOptDisabled';
   };
 
-  config = {
-    wsl = lib.mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
+    wsl = {
       inherit (cfg) enable;
       defaultUser = config.${namespace}.user.name;
       docker-desktop = on;
