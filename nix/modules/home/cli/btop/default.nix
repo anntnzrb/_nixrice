@@ -37,7 +37,7 @@ in
       };
     };
 
-    services.sxhkd = {
+    services.sxhkd = lib.mkIf config.services.sxhkd.enable {
       keybindings = {
         "super + Return ; i" = "${config.home.sessionVariables.TERMINAL} -e btop";
       };
