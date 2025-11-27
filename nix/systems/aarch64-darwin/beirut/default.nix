@@ -1,5 +1,6 @@
 {
   lib,
+  inputs,
   namespace,
   ...
 }:
@@ -7,6 +8,7 @@ let
   inherit (lib.${namespace}.module) on;
 in
 {
+  imports = [ inputs.nix-tools.darwinModules.battery-control ];
   # zsh as an interactive shell; this is a forced default
   # customization is done via hm
   programs.zsh = on;
@@ -14,6 +16,12 @@ in
   nix.settings = {
     max-jobs = 10;
     cores = 8;
+  };
+
+  battery-control.clamp-service = {
+    enable = true;
+    min = 50;
+    max = 80;
   };
 
   ${namespace} = {
@@ -35,7 +43,6 @@ in
     homebrew = on // {
       packages = {
         casks = [
-          "aldente"
           "docker-desktop"
           "rustdesk"
         ];
