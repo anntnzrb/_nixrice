@@ -49,7 +49,7 @@ in
     dir-empty-print = "${getExe pkgs.fd} --color=always --type empty --type directory .";
     dir-empty-rm = "${getExe pkgs.fd} --color=always --type empty --type directory . --exec ${getExe' uutils "rmdir"} --verbose {} \;";
     file-empty-print = "${getExe pkgs.fd} --color=always --type empty --type file .";
-    file-empty-rm = "${getExe pkgs.fd} --color=always --type empty --type directory . --exec ${getExe' uutils "rm"} --verbose {} \;";
+    file-empty-rm = "${getExe pkgs.fd} --color=always --type empty --type file . --exec ${getExe' uutils "rm"} --verbose {} \;";
 
     # network
     tnet = "${getExe pkgs.unixtools.ping} --count 4 8.8.8.8";
