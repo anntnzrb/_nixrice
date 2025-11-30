@@ -59,12 +59,9 @@ in
         ps = "push";
         st = "status -sb";
 
-        # function-aliases
-        nuke = "!f() { git reset --hard && git clean -fdx }; f";
-
-        qc = "!f() { git commit -m \"`date '+%F :: %T (%Z)'`\" }; f";
-
-        srp = "!f() { git diff --quiet && git diff --cached --quiet || git stash push -m \"local\" && git rebase --merge && git stash pop; }; f";
+        nuke = "!git reset --hard && git clean -fdx";
+        qc = "!git commit -m \"$(date '+%F :: %T (%Z)')\"";
+        srp = "!git diff --quiet && git diff --cached --quiet || git stash push -m 'local' && git rebase --merge && git stash pop";
       };
     };
 
