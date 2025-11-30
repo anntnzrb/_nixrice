@@ -443,44 +443,6 @@
         "type": "github"
       }
     },
-    "nix-tools": {
-      "inputs": {
-        "cl-nix-lite": [
-          "mac-app-util",
-          "cl-nix-lite"
-        ],
-        "flake-parts": [
-          "betterfox-nix",
-          "flake-parts"
-        ],
-        "flake-utils": [],
-        "nixpkgs": [
-          "nixpkgs-stable"
-        ],
-        "systems": [
-          "mac-app-util",
-          "systems"
-        ],
-        "treefmt-nix": [
-          "mac-app-util",
-          "treefmt-nix"
-        ]
-      },
-      "locked": {
-        "lastModified": 1763964525,
-        "narHash": "sha256-SEXWQnFbKiM9W6zfRQVP4II6WomvX4h16H0L9RkdoeI=",
-        "owner": "hraban",
-        "repo": "nix-tools",
-        "rev": "d9ca2cc40e1d87dfae42449809c6c29216d69eec",
-        "type": "github"
-      },
-      "original": {
-        "owner": "hraban",
-        "ref": "master",
-        "repo": "nix-tools",
-        "type": "github"
-      }
-    },
     "nixlib": {
       "locked": {
         "lastModified": 1736643958,
@@ -817,7 +779,6 @@
         "mac-app-util": "mac-app-util",
         "neovim-annt": "neovim-annt",
         "nix-homebrew": "nix-homebrew",
-        "nix-tools": "nix-tools",
         "nixos-generators": "nixos-generators",
         "nixos-hardware": "nixos-hardware",
         "nixos-wsl": "nixos-wsl",

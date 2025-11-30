@@ -103,18 +103,6 @@
       url = "github:hraban/mac-app-util/master";
     };
 
-    nix-tools = {
-      ## darwin
-      # battery control & other macOS utilities
-      url = "github:hraban/nix-tools/master";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
-      inputs.cl-nix-lite.follows = "mac-app-util/cl-nix-lite";
-      inputs.systems.follows = "mac-app-util/systems";
-      inputs.treefmt-nix.follows = "mac-app-util/treefmt-nix";
-      inputs.flake-utils.follows = "";
-      inputs.flake-parts.follows = "betterfox-nix/flake-parts";
-    };
-
     # -------------------------------------------------------------------------
     # misc
     # -------------------------------------------------------------------------
