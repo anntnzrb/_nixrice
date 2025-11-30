@@ -5,4 +5,5 @@ result*
 .DS_Store
 .aider*
 /.pre-commit-config.yaml
+tmp/
 CLAUDE.md
