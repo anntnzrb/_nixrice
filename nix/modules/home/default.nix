@@ -36,6 +36,11 @@ in
       stateVersion = "22.05";
     };
 
+    # disable manual generation (workaround for home-manager#7935)
+    manual.manpages.enable = false;
+    manual.html.enable = false;
+    manual.json.enable = false;
+
     systemd.user.startServices = "sd-switch";
     programs.home-manager = on;
   };
