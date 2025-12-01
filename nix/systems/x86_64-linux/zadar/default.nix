@@ -28,11 +28,9 @@ in
 
   console.font = "${pkgs.terminus_font}/share/fonts/consolefonts/ter-v8n.psf.gz";
 
-  services = {
-    logind = {
-      lidSwitch = "ignore";
-      lidSwitchDocked = "ignore";
-      lidSwitchExternalPower = "ignore";
-    };
+  services.logind.settings.Login = {
+    HandleLidSwitch = "ignore";
+    HandleLidSwitchDocked = "ignore";
+    HandleLidSwitchExternalPower = "ignore";
   };
 }
