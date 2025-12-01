@@ -19,7 +19,7 @@ in
   config = lib.mkIf cfg.enable {
     programs.zsh = {
       inherit (cfg) enable;
-      dotDir = ".config/zsh";
+      dotDir = "${config.xdg.configHome}/zsh";
 
       enableCompletion = true;
       autosuggestion = on;

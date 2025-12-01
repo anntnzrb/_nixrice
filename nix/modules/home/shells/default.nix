@@ -37,7 +37,7 @@ in
     file.".hushlogin" = lib.mkIf cfg.preliminaryMessage.disable { text = ""; };
 
     packages = with pkgs; [
-      du-dust
+      dust
       fd
       (ripgrep.override { withPCRE2 = true; })
     ];
