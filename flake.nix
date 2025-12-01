@@ -26,12 +26,12 @@
 
     nixpkgs = {
       # main nixpkgs reference, most likely pointing to stable
-      url = "https://channels.nixos.org/nixos-25.05/nixexprs.tar.xz";
+      url = "https://channels.nixos.org/nixos-25.11/nixexprs.tar.xz";
     };
 
     nixpkgs-stable = {
       # stable version of nixpkgs
-      url = "https://channels.nixos.org/nixos-25.05/nixexprs.tar.xz";
+      url = "https://channels.nixos.org/nixos-25.11/nixexprs.tar.xz";
     };
 
     nixpkgs-unstable = {
@@ -86,7 +86,7 @@
 
     darwin = {
       # nix support on macOS (darwin)
-      url = "github:lnl7/nix-darwin/nix-darwin-25.05";
+      url = "github:lnl7/nix-darwin/nix-darwin-25.11";
       # NOTE: match nixpkgs main ref.
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
@@ -110,7 +110,7 @@
     home-manager = {
       # allows managing the environment at user level
       # provides modules for many programs
-      url = "github:nix-community/home-manager/release-25.05";
+      url = "github:nix-community/home-manager/release-25.11";
 
       # NOTE: match nixpkgs main ref.
       inputs.nixpkgs.follows = "nixpkgs-stable";
