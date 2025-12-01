@@ -42,7 +42,7 @@ in
     xterm
 
     # editors
-    inputs.neovim-annt.packages.${pkgs.system}.nvf # vi-like
+    inputs.neovim-annt.packages.${pkgs.stdenv.hostPlatform.system}.nvf # vi-like
     geany # gui
 
     # browsers

@@ -8,7 +8,7 @@
 let
   inherit (lib.${namespace}.module) on;
 in
-inputs.pre-commit-hooks.lib.${pkgs.system}.run {
+inputs.pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
   src = inputs.self;
 
   hooks = {

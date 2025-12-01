@@ -12,7 +12,7 @@ in
 {
   config = lib.mkIf cfg.enable {
     programs.firefox.profiles.default.extensions.packages =
-      with inputs.firefox-addons.packages.${pkgs.system}; [
+      with inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system}; [
         # utils
         ublock-origin # ad-blocker
         #clearurls # broken

@@ -35,7 +35,7 @@ in
   config = lib.mkIf cfg.enable {
     nix-homebrew = {
       inherit (cfg) enable;
-      enableRosetta = pkgs.system == "aarch64-darwin";
+      enableRosetta = pkgs.stdenv.hostPlatform.system == "aarch64-darwin";
       user = config.${namespace}.user.name;
       autoMigrate = true;
     };

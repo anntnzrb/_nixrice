@@ -30,7 +30,7 @@ in
 
       package =
         if pkgs.stdenvNoCC.hostPlatform.isDarwin then
-          inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}.ghostty-bin
+          inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.ghostty-bin
         else
           pkgs.ghostty;
       clearDefaultKeybinds = true;
