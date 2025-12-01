@@ -25,14 +25,17 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    programs.difftastic = cfg.diff.difftastic;
+
     programs.git = {
       inherit (cfg) enable;
-      inherit (cfg.diff) difftastic;
 
-      userName = "anntnzrb";
-      userEmail = "anntnzrb@proton.me";
+      settings = {
+        user = {
+          name = "anntnzrb";
+          email = "anntnzrb@proton.me";
+        };
 
-      extraConfig = {
         core = {
           autocrlf = "input";
           eol = "lf";
@@ -45,23 +48,23 @@ in
           autoSetupRemote = true;
           default = "current";
         };
-      };
 
-      aliases = {
-        br = "branch -ailv";
-        ca = "commit --amend";
-        cm = "commit -m";
-        co = "checkout";
-        cob = "checkout -b";
-        d = "diff";
-        lg = "log --all --graph --decorate --stat";
-        ls = "ls-files";
-        ps = "push";
-        st = "status -sb";
+        alias = {
+          br = "branch -ailv";
+          ca = "commit --amend";
+          cm = "commit -m";
+          co = "checkout";
+          cob = "checkout -b";
+          d = "diff";
+          lg = "log --all --graph --decorate --stat";
+          ls = "ls-files";
+          ps = "push";
+          st = "status -sb";
 
-        nuke = "!git reset --hard && git clean -fdx";
-        qc = "!git commit -m \"$(date '+%F :: %T (%Z)')\"";
-        srp = "!git diff --quiet && git diff --cached --quiet || git stash push -m 'local' && git rebase --merge && git stash pop";
+          nuke = "!git reset --hard && git clean -fdx";
+          qc = "!git commit -m \"$(date '+%F :: %T (%Z)')\"";
+          srp = "!git diff --quiet && git diff --cached --quiet || git stash push -m 'local' && git rebase --merge && git stash pop";
+        };
       };
     };
 
