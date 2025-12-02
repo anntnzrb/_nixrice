@@ -405,7 +405,9 @@
           "flake-parts"
         ],
         "nixpkgs": [
-          "nixpkgs-unstable"
+          "neovim-annt",
+          "nvf",
+          "nixpkgs"
         ],
         "nvf": "nvf"
       },
