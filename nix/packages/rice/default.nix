@@ -8,9 +8,9 @@ let
 in
 pkgs.writeShellApplication {
   name = exe;
-  runtimeInputs = [ pkgs.rust-script ];
+  runtimeInputs = [ pkgs.uv ];
   text = ''
-    exec rust-script ${inputs.self + "/bin/rice.rs"} "$@"
+    exec uv run ${inputs.self + "/bin/rice.py"} "$@"
   '';
   meta.mainProgram = exe;
 }
