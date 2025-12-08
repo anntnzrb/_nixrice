@@ -41,19 +41,6 @@ in
   config = lib.mkIf cfg.enable {
     services.aerospace.settings.on-window-detected = mkRules [
       {
-        # Finder
-        appId = "com.apple.finder";
-        run = [ (mkLayout "floating") ];
-      }
-      {
-        # Bitwarden
-        appId = "com.bitwarden.desktop";
-        run = [
-          (mkLayout "floating")
-          (mvNodeToWorkspace 1)
-        ];
-      }
-      {
         # Browser: Firefox
         appId = "org.mozilla.firefox";
         run = [ (mvNodeToWorkspace 1) ];
@@ -88,17 +75,6 @@ in
         appId = "com.openai.chat";
         run = [ (mvNodeToWorkspace 4) ];
       }
-      {
-        # Docker (Desktop)
-        appId = "com.electron.dockerdesktop";
-        run = [ (mkLayout "floating") ];
-      }
-      {
-        # RustDesk
-        appId = "com.carriez.rustdesk";
-        run = [ (mkLayout "floating") ];
-      }
-
       # default rule: make all other windows floating anywhere
       {
         run = [ (mkLayout "floating") ];
