@@ -1,8 +1,8 @@
 name: Nix Flake Lock Input Update
 on:
-  workflow_dispatch: # manual triggering
+  workflow_dispatch:
   schedule:
-    - cron: "5 6 * * 1" # every Monday @ 06:05
+    - cron: "5 6 * * 1"
 
 permissions:
   contents: write
@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-
       - uses: DeterminateSystems/nix-installer-action@v21
 
       - name: Update Flake Lockfile
@@ -21,18 +20,11 @@ jobs:
         uses: DeterminateSystems/update-flake-lock@v28
         with:
           inputs: nixpkgs-unstable nurpkgs
-
-          git-author-name: "anntnzrb"
-          git-author-email: "anntnzrb@proton.me"
-          git-committer-name: "github-actions[bot]"
-          git-committer-email: "github-actions[bot]@users.noreply.github.com"
-          pr-title: "chore(flake): update lockfile"
-          pr-labels: |
-            dependencies
-            merge-queue
+          git-author-name: ${{ github.repository_owner }}
+          git-author-email: ${{ github.repository_owner }}@users.noreply.github.com
 
       - name: Enable auto-merge
-        if: ${{ steps.update.outputs.pull-request-number }}
+        if: steps.update.outputs.pull-request-number
         run: gh pr merge --auto --rebase ${{ steps.update.outputs.pull-request-number }}
         env:
           GH_TOKEN: ${{ github.token }}
