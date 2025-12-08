@@ -36,7 +36,7 @@ in
       packages = {
         casks = [
           "aldente"
-          "docker-desktop"
+          "orbstack"
           "rustdesk"
         ];
         masApps = {
