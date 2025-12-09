@@ -37,7 +37,6 @@ in
         casks = [
           "aldente"
           "orbstack"
-          "rustdesk"
         ];
         masApps = {
           "WhatsApp Messenger" = 310633997;
