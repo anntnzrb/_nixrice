@@ -34,7 +34,6 @@ in
       btop = on;
       bun = on;
       direnv = on;
-      fastfetch = on;
       fzf = on;
       omnix = on;
       tldr = on;
