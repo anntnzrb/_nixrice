@@ -39,7 +39,11 @@ in
         core = {
           autocrlf = "input";
           eol = "lf";
+          untrackedCache = true;
+          fsmonitor = true;
         };
+        feature.manyFiles = true;
+        index.version = 4;
         init.defaultBranch = "main";
         fetch.prune = true;
         rebase.autoStash = true;
