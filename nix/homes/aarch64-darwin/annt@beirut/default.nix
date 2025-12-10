@@ -35,7 +35,6 @@ in
       bun = on;
       direnv = on;
       fzf = on;
-      omnix = on;
       tldr = on;
       uv = on;
       yazi = on;
