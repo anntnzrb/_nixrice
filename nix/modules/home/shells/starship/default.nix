@@ -20,6 +20,8 @@ in
 
       settings = {
         add_newline = false;
+        command_timeout = 1000;
+        scan_timeout = 10;
 
         format = ''
           $username@$hostname $os $directory$all$time $shell$cmd_duration $character
@@ -46,6 +48,15 @@ in
 
         git_branch = {
           ignore_branches = [ ];
+        };
+
+        git_status = {
+          ignore_submodules = true;
+          format = "([$all_status]($style) )";
+        };
+
+        git_metrics = {
+          disabled = true;
         };
 
         hostname = {
