@@ -45,7 +45,6 @@ class SubApp(StrEnum):
     DARWIN = "darwin"
     NIX = "nix"
     FLAKE = "flake"
-    ISO = "iso"
 
 
 # Output
@@ -179,15 +178,6 @@ TASKS: dict[SubApp, dict[str, dict[TaskKey, Any]]] = {
             TaskKey.OK: "Format complete",
         },
     },
-    SubApp.ISO: {
-        "build": {
-            TaskKey.HELP: "Build ISO configuration",
-            TaskKey.INFO: "Building ISO: {config}...",
-            TaskKey.CMD: ["nix", "build", ".#isoConfigurations.{config}"],
-            TaskKey.OK: "ISO build complete",
-            TaskKey.ARG: "config",
-        },
-    },
 }
 
 
@@ -245,7 +235,6 @@ SUBS: dict[SubApp, typer.Typer] = {
         (SubApp.DARWIN, "Darwin commands"),
         (SubApp.NIX, "Nix maintenance"),
         (SubApp.FLAKE, "Flake management"),
-        (SubApp.ISO, "ISO generation"),
     ]
 }
 for n, sub in SUBS.items():
@@ -273,8 +262,8 @@ def system_switch() -> None:
 # Special: home (args)
 @SUBS[SubApp.HOME].command("build")
 def home_build(
-    user: Annotated[str, typer.Argument()] = os.getenv("RICE_USER", "annt"),
-    host: Annotated[str, typer.Argument()] = os.getenv("RICE_HOST", "wsl"),
+    user: Annotated[str, typer.Argument()] = "annt",
+    host: Annotated[str, typer.Argument()] = "wsl",
 ) -> None:
     """Build home-manager configuration."""
     task(
@@ -286,8 +275,8 @@ def home_build(
 
 @SUBS[SubApp.HOME].command("switch")
 def home_switch(
-    user: Annotated[str, typer.Argument()] = os.getenv("RICE_USER", "annt"),
-    host: Annotated[str, typer.Argument()] = os.getenv("RICE_HOST", "wsl"),
+    user: Annotated[str, typer.Argument()] = "annt",
+    host: Annotated[str, typer.Argument()] = "wsl",
 ) -> None:
     """Build and activate home-manager configuration."""
     home_build(user, host)
