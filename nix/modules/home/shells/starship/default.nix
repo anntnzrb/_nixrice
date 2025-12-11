@@ -20,8 +20,8 @@ in
 
       settings = {
         add_newline = false;
-        command_timeout = 1000;
-        scan_timeout = 10;
+        command_timeout = 2000;
+        scan_timeout = 30;
 
         format = ''
           $username@$hostname $os $directory$all$time $shell$cmd_duration $character
@@ -55,7 +55,15 @@ in
           format = "([$all_status]($style) )";
         };
 
+        git_commit = {
+          disabled = true;
+        };
+
         git_metrics = {
+          disabled = true;
+        };
+
+        git_state = {
           disabled = true;
         };
 
