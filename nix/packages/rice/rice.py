@@ -203,7 +203,7 @@ def register(sub: typer.Typer, tasks: dict[str, dict[TaskKey, Any]]) -> None:
                 return cmd
             else:
 
-                def cmd() -> None:
+                def cmd_noarg() -> None:
                     if (d := t.get(TaskKey.DARWIN)) is not None:
                         _require(Platform.DARWIN if d else Platform.LINUX)
                     ctx = {"host": _host()}
@@ -214,7 +214,7 @@ def register(sub: typer.Typer, tasks: dict[str, dict[TaskKey, Any]]) -> None:
                         sudo=t.get(TaskKey.SUDO, False),
                     )
 
-                return cmd
+                return cmd_noarg
 
         sub.command(name, help=hlp)(make())
 
