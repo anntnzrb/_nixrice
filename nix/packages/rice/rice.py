@@ -1,12 +1,13 @@
-#!/usr/bin/env -S uv run --script
-# /// script
-# dependencies = ["typer"]
-# ///
 """NixOS/Darwin configuration management."""
 
-import os, shutil, socket, subprocess, sys
+import os
+import shutil
+import socket
+import subprocess
+import sys
 from enum import StrEnum
 from typing import Annotated, Any
+
 import typer
 import typer.rich_utils
 

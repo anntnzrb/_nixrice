@@ -1,16 +1,11 @@
 {
   pkgs,
-  inputs,
   ...
 }:
 let
   exe = "rice";
 in
-pkgs.writeShellApplication {
-  name = exe;
-  runtimeInputs = [ pkgs.uv ];
-  text = ''
-    exec uv run ${inputs.self + "/bin/rice.py"} "$@"
-  '';
-  meta.mainProgram = exe;
-}
+pkgs.writers.writePython3Bin exe {
+  libraries = [ pkgs.python3Packages.typer ];
+  flakeIgnore = [ "E501" ];
+} (builtins.readFile ./${exe}.py)
