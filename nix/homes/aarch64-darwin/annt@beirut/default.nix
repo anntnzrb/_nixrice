@@ -42,6 +42,7 @@ in
       zoxide = on;
 
       # AI
+      chutes = on;
       claude = on;
       codex = on;
       crush = on;
