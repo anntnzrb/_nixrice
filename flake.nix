@@ -168,8 +168,15 @@
     };
 
     # -------------------------------------------------------------------------
-    # firefox
+    # browsers
     # -------------------------------------------------------------------------
+
+    zen-browser = {
+      # zen browser (firefox fork)
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.home-manager.follows = "home-manager";
+    };
 
     firefox-addons = {
       # addons (extensions) for firefox as nix expressions

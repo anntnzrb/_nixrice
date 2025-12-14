@@ -54,8 +54,8 @@ in
     editors.neovim = on;
 
     desktop = {
+      browsers.zen = on;
       terminal-emulators.ghostty = on;
-      browsers.firefox = on;
     };
   };
 }

@@ -793,7 +793,8 @@
         "rio-dracula": "rio-dracula",
         "snowfall-lib": "snowfall-lib",
         "yazi-flavors": "yazi-flavors",
-        "yazi-timu-macos": "yazi-timu-macos"
+        "yazi-timu-macos": "yazi-timu-macos",
+        "zen-browser": "zen-browser"
       }
     },
     "snowfall-lib": {
@@ -944,6 +945,29 @@
         "ref": "main",
         "repo": "timu-macos-yazi",
         "type": "gitlab"
+      }
+    },
+    "zen-browser": {
+      "inputs": {
+        "home-manager": [
+          "home-manager"
+        ],
+        "nixpkgs": [
+          "nixpkgs-unstable"
+        ]
+      },
+      "locked": {
+        "lastModified": 1765589985,
+        "narHash": "sha256-jsaE3UG7BpthBJZtaXCCuH1rYdQBauUA3Otv3NF20FM=",
+        "owner": "0xc000022070",
+        "repo": "zen-browser-flake",
+        "rev": "c79311e5b4f299ab3713b23dfbc98c853bb5f070",
+        "type": "github"
+      },
+      "original": {
+        "owner": "0xc000022070",
+        "repo": "zen-browser-flake",
+        "type": "github"
       }
     }
   },
