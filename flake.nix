@@ -41,7 +41,7 @@
 
     nurpkgs = {
       # self hosted nix expressions
-      url = "github:anntnzrb/nurpkgs/main";
+      url = "https://github.com/anntnzrb/nurpkgs/archive/main.tar.gz";
     };
 
     # -------------------------------------------------------------------------
@@ -76,12 +76,12 @@
 
     nixos-hardware = {
       # is a collection of hardware modules for systems
-      url = "github:NixOS/nixos-hardware/master";
+      url = "https://github.com/NixOS/nixos-hardware/archive/master.tar.gz";
     };
 
     nixos-wsl = {
       # NixOS support on WSL
-      url = "github:nix-community/nixos-wsl/main";
+      url = "https://github.com/nix-community/nixos-wsl/archive/main.tar.gz";
     };
 
     darwin = {
@@ -94,13 +94,13 @@
     nix-homebrew = {
       ## darwin
       # homebrew integration for nix
-      url = "github:zhaofengli/nix-homebrew/main";
+      url = "https://github.com/zhaofengli/nix-homebrew/archive/main.tar.gz";
     };
 
     mac-app-util = {
       ## darwin
       # allows nix-managed programs to be indexed by macOS Spotlight
-      url = "github:hraban/mac-app-util/master";
+      url = "https://github.com/hraban/mac-app-util/archive/master.tar.gz";
     };
 
     # -------------------------------------------------------------------------
@@ -125,45 +125,45 @@
 
     emacs-overlay = {
       # bleeding-edge GNU Emacs in nix
-      url = "github:nix-community/emacs-overlay/master";
+      url = "https://github.com/nix-community/emacs-overlay/archive/master.tar.gz";
     };
 
     neovim-annt = {
       # annt's neovim
-      url = "github:anntnzrb/nvf/main";
+      url = "https://github.com/anntnzrb/nvf/archive/main.tar.gz";
     };
 
     ghostty-protesilaos = {
       ## ghostty themes
       # protesilaos themes: modus-, ef-, ...
-      url = "github:anhsirk0/ghostty-themes/main";
+      url = "https://github.com/anhsirk0/ghostty-themes/archive/main.tar.gz";
       flake = false;
     };
 
     rio-catppuccin = {
       ## rio themes
       # catppuccin
-      url = "github:catppuccin/rio/main";
+      url = "https://github.com/catppuccin/rio/archive/main.tar.gz";
       flake = false;
     };
 
     rio-dracula = {
       ## rio themes
       # dracula
-      url = "github:dracula/rio-terminal/main";
+      url = "https://github.com/dracula/rio-terminal/archive/main.tar.gz";
       flake = false;
     };
 
     yazi-flavors = {
       # yazi themes
-      url = "github:yazi-rs/flavors/main";
+      url = "https://github.com/yazi-rs/flavors/archive/main.tar.gz";
       flake = false;
     };
 
     yazi-timu-macos = {
       ## yazi themes
       # timu-macos
-      url = "gitlab:aimebertrand/timu-macos-yazi/main";
+      url = "https://gitlab.com/aimebertrand/timu-macos-yazi/-/archive/main/timu-macos-yazi-main.tar.gz";
       flake = false;
     };
 
