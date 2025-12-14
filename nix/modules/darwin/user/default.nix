@@ -5,18 +5,12 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptEnabled'
-    ;
-
   cfg = config.${namespace}.user;
 in
 {
-  options.${namespace}.user = {
-    enable = mkOptEnabled';
-    name = mkOpt' lib.types.str "annt";
-  };
+  imports = [
+    (lib.snowfall.fs.get-file "modules/shared/user/default.nix")
+  ];
 
   config = lib.mkIf cfg.enable {
     users.users.${cfg.name} = {

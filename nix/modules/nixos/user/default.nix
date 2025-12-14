@@ -20,9 +20,11 @@ let
   cfg = config.${namespace}.user;
 in
 {
+  imports = [
+    (lib.snowfall.fs.get-file "modules/shared/user/default.nix")
+  ];
+
   options.${namespace}.user = {
-    enable = mkOptEnabled';
-    name = mkOpt' str "annt";
     isNormalUser = mkOptEnabled';
     initialPassword = mkOpt' (nullOr str) "pass";
     extraGroups = mkOpt' (listOf str) [ ];
