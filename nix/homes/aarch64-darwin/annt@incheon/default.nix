@@ -13,10 +13,9 @@ in
   liberion = {
     shells = {
       sessionVariables.EDITOR = "nvim";
+      prompt.starship = on;
 
-      zsh = on // {
-        prompt.starship = on;
-      };
+      zsh = on;
       preliminaryMessage.disable = true;
 
       tmux = on;

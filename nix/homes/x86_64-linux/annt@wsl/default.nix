@@ -9,10 +9,9 @@ in
         EDITOR = "nvim";
       };
       preliminaryMessage.disable = true;
+      prompt.starship = on;
 
-      bash = on // {
-        prompt.starship = on;
-      };
+      bash = on;
 
       tmux = on;
     };

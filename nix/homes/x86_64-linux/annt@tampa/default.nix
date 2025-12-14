@@ -10,10 +10,9 @@ in
   liberion = {
     shells = {
       sessionVariables.EDITOR = "nvim";
+      prompt.starship = on;
 
-      bash = on // {
-        prompt.starship = on;
-      };
+      bash = on;
     };
 
     cli = {

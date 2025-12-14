@@ -39,10 +39,9 @@ in
         FILE = "pcmanfm";
         TERMINAL = "alacritty";
       };
+      prompt.starship = on;
 
-      bash = on // {
-        prompt.starship = on;
-      };
+      bash = on;
     };
 
     cli = {
