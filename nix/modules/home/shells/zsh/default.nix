@@ -8,12 +8,11 @@ let
   inherit (lib.${namespace}.module) mkOptDisabled' on;
 
   cfg = config.${namespace}.shells.zsh;
+  shellsCfg = config.${namespace}.shells;
 in
 {
   options.${namespace}.shells.zsh = {
     enable = mkOptDisabled';
-
-    prompt.starship.enable = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {
@@ -29,25 +28,7 @@ in
         path = "${config.xdg.dataHome}/zsh_history";
         extended = true;
         size = 5000;
-        ignorePatterns = [
-          "&"
-          "ls"
-          "cd"
-          "cd -"
-          "pwd"
-          "exit"
-          "clear"
-          "history"
-          "*password*"
-          "*secret*"
-          "*token*"
-        ];
-      };
-    };
-
-    ${namespace}.shells = {
-      starship = {
-        inherit (cfg.prompt.starship) enable;
+        ignorePatterns = shellsCfg.historyIgnore;
       };
     };
   };

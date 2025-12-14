@@ -8,12 +8,11 @@ let
   inherit (lib.${namespace}.module) mkOptDisabled';
 
   cfg = config.${namespace}.shells.bash;
+  shellsCfg = config.${namespace}.shells;
 in
 {
   options.${namespace}.shells.bash = {
     enable = mkOptDisabled';
-
-    prompt.starship.enable = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {
@@ -35,25 +34,7 @@ in
       historyFile = "${config.xdg.dataHome}/bash_history";
       historyFileSize = 1000 * 1000;
       historySize = 100 * 100;
-      historyIgnore = [
-        "&"
-        "ls"
-        "cd"
-        "cd -"
-        "pwd"
-        "exit"
-        "clear"
-        "history"
-        "*password*"
-        "*secret*"
-        "*token*"
-      ];
-    };
-
-    ${namespace}.shells = {
-      starship = {
-        inherit (cfg.prompt.starship) enable;
-      };
+      inherit (shellsCfg) historyIgnore;
     };
   };
 }

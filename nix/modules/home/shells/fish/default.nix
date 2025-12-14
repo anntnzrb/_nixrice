@@ -12,8 +12,6 @@ in
 {
   options.${namespace}.shells.fish = {
     enable = mkOptDisabled';
-
-    prompt.starship.enable = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {
@@ -22,12 +20,6 @@ in
       interactiveShellInit = ''
         set -g fish_greeting # disable greeting
       '';
-    };
-
-    ${namespace}.shells = {
-      starship = {
-        inherit (cfg.prompt.starship) enable;
-      };
     };
   };
 }
