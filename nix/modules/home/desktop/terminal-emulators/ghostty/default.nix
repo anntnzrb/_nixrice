@@ -35,7 +35,7 @@ in
           pkgs.ghostty;
       clearDefaultKeybinds = true;
       settings = {
-        theme = "ef-dream";
+        theme = "ef-elea-light";
         font-size = 16;
         keybind = [
           "shift+enter=text:\n" # newline
