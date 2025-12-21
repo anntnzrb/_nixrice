@@ -41,7 +41,7 @@
 
     nurpkgs = {
       # self hosted nix expressions
-      url = "https://github.com/anntnzrb/nurpkgs/archive/main.tar.gz";
+      url = "github:anntnzrb/nurpkgs/main";
     };
 
     # -------------------------------------------------------------------------
@@ -76,12 +76,12 @@
 
     nixos-hardware = {
       # is a collection of hardware modules for systems
-      url = "https://github.com/NixOS/nixos-hardware/archive/master.tar.gz";
+      url = "github:NixOS/nixos-hardware/master";
     };
 
     nixos-wsl = {
       # NixOS support on WSL
-      url = "https://github.com/nix-community/nixos-wsl/archive/main.tar.gz";
+      url = "github:nix-community/NixOS-WSL/main";
     };
 
     darwin = {
@@ -94,13 +94,13 @@
     nix-homebrew = {
       ## darwin
       # homebrew integration for nix
-      url = "https://github.com/zhaofengli/nix-homebrew/archive/main.tar.gz";
+      url = "github:zhaofengli/nix-homebrew/main";
     };
 
     mac-app-util = {
       ## darwin
       # allows nix-managed programs to be indexed by macOS Spotlight
-      url = "https://github.com/hraban/mac-app-util/archive/master.tar.gz";
+      url = "github:hraban/mac-app-util/master";
     };
 
     # -------------------------------------------------------------------------
@@ -125,12 +125,12 @@
 
     emacs-overlay = {
       # bleeding-edge GNU Emacs in nix
-      url = "https://github.com/nix-community/emacs-overlay/archive/master.tar.gz";
+      url = "github:nix-community/emacs-overlay/master";
     };
 
     neovim-annt = {
       # annt's neovim
-      url = "https://github.com/anntnzrb/nvf/archive/main.tar.gz";
+      url = "github:anntnzrb/nvf/main";
     };
 
     ghostty-protesilaos = {
