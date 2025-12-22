@@ -97,10 +97,11 @@
       url = "github:zhaofengli/nix-homebrew/main";
     };
 
-    mac-app-util = {
+    nix-spotlight = {
       ## darwin
       # allows nix-managed programs to be indexed by macOS Spotlight
-      url = "github:hraban/mac-app-util/master";
+      url = "github:anntnzrb/nix-spotlight/main";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     # -------------------------------------------------------------------------
