@@ -1,6 +1,5 @@
 {
   lib,
-  inputs,
   namespace,
   ...
 }:
@@ -8,8 +7,6 @@ let
   inherit (lib.${namespace}.module) on;
 in
 {
-  imports = [ inputs.mac-app-util.homeManagerModules.default ];
-
   liberion = {
     shells = {
       sessionVariables.EDITOR = "nvim";
