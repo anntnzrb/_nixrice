@@ -10,10 +10,10 @@ let
     mkOptDisabled'
     ;
 
-  cfg = config.${namespace}.common.xorg.picom;
+  cfg = config.${namespace}.shared.xorg.picom;
 in
 {
-  options.${namespace}.common.xorg.picom = {
+  options.${namespace}.shared.xorg.picom = {
     enable = mkOptDisabled';
     backend = mkOpt' lib.types.str "glx";
     vSync = mkOptDisabled';

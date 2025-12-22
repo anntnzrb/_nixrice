@@ -8,10 +8,10 @@
 let
   inherit (lib.${namespace}.module) mkOptDisabled';
 
-  cfg = config.${namespace}.common.xorg;
+  cfg = config.${namespace}.shared.xorg;
 in
 {
-  options.${namespace}.common.xorg = {
+  options.${namespace}.shared.xorg = {
     enable = mkOptDisabled';
   };
 
