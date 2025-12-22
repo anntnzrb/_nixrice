@@ -28,7 +28,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    ${namespace}.common.xorg = on // {
+    ${namespace}.shared.xorg = on // {
       inherit (cfg.compositor) picom;
     };
 
