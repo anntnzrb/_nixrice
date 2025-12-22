@@ -17,6 +17,19 @@
       overlays = [ inputs.emacs-overlay.overlays.default ];
 
       channels-config.allowUnfree = true;
+
+      outputs-builder =
+        channels:
+        let
+          pkgs = channels.nixpkgs;
+        in
+        {
+          formatter = pkgs.writeShellApplication {
+            name = "formatter";
+            runtimeInputs = [ pkgs.pre-commit ];
+            text = "pre-commit run --all-files";
+          };
+        };
     };
 
   inputs = {
