@@ -21,13 +21,17 @@
       outputs-builder =
         channels:
         let
-          pkgs = channels.nixpkgs;
+          inherit (channels) nixpkgs;
+          inherit (nixpkgs.stdenv.hostPlatform) system;
+          inherit (inputs.self.checks.${system}) pre-commit-hooks;
         in
         {
-          formatter = pkgs.writeShellApplication {
+          formatter = nixpkgs.writeShellApplication {
             name = "formatter";
-            runtimeInputs = [ pkgs.pre-commit ];
-            text = "pre-commit run --all-files";
+            runtimeInputs = pre-commit-hooks.enabledPackages;
+            text = ''
+              pre-commit run --all-files -c ${pre-commit-hooks.config.configFile}
+            '';
           };
         };
     };
