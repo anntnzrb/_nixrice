@@ -19,8 +19,10 @@ let
     opencode = "opencode";
     crush = "crush";
     codex = "codex";
+    droid = "droid";
     gemini = "gemini-cli";
     goose = "goose-cli";
+    kilo = "kilocode-cli";
     qwen = "qwen-code";
   };
 

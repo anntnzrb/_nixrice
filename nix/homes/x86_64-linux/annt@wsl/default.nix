@@ -39,7 +39,10 @@ in
         claude-code = on;
         codex = on;
         crush = on;
+        droid = on;
         gemini = on;
+        goose = on;
+        kilo = on;
         opencode = on;
         qwen = on;
       };
