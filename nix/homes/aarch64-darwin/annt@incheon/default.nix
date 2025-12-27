@@ -31,18 +31,6 @@ in
       omnix = on;
       tldr = on;
       yazi = on;
-
-      llmAgents = {
-        claude-code = on;
-        codex = on;
-        crush = on;
-        droid = on;
-        gemini = on;
-        goose = on;
-        kilo = on;
-        opencode = on;
-        qwen = on;
-      };
       yt-dlp = on;
       zoxide = on;
     };
