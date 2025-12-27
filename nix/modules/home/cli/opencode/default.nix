@@ -2,6 +2,7 @@
   lib,
   config,
   namespace,
+  pkgs,
   ...
 }:
 let
@@ -10,6 +11,12 @@ let
     ;
 
   cfg = config.${namespace}.cli.opencode;
+
+  opencode-wrapped = pkgs.writeShellApplication {
+    name = "opencode";
+    text = builtins.readFile ./opencode-wrapped.sh;
+  };
+
 in
 {
   options.${namespace}.cli.opencode = {
@@ -17,6 +24,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.shellAliases.opencode = "bun x opencode-ai@latest";
+    home.packages = [ opencode-wrapped ];
   };
 }
