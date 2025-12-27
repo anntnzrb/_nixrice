@@ -25,18 +25,21 @@ in
       };
 
       btop = on;
-      claude = on;
-      codex = on;
-      crush = on;
       direnv = on;
       fastfetch = on;
       fzf = on;
-      mods = on;
       omnix = on;
-      opencode = on;
-      qwen = on;
       tldr = on;
       yazi = on;
+
+      llmAgents = {
+        claude-code = on;
+        codex = on;
+        crush = on;
+        mods = on;
+        opencode = on;
+        qwen = on;
+      };
       yt-dlp = on;
       zoxide = on;
     };

@@ -35,14 +35,15 @@ in
       yt-dlp = on;
       zoxide = on;
 
-      # AI
-      chutes = on;
-      claude = on;
-      codex = on;
-      crush = on;
-      mods = on;
-      opencode = on;
-      qwen = on;
+      llmAgents = {
+        chutes = on;
+        claude-code = on;
+        codex = on;
+        crush = on;
+        mods = on;
+        opencode = on;
+        qwen = on;
+      };
     };
 
     editors.neovim = on;

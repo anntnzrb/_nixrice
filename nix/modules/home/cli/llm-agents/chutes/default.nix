@@ -8,10 +8,10 @@
 let
   inherit (lib.${namespace}.module) mkOptDisabled';
 
-  cfg = config.${namespace}.cli.chutes;
+  cfg = config.${namespace}.cli.llmAgents.chutes;
 in
 {
-  options.${namespace}.cli.chutes = {
+  options.${namespace}.cli.llmAgents.chutes = {
     enable = mkOptDisabled';
   };
 

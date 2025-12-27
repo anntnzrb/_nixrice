@@ -8,7 +8,7 @@
 let
   inherit (lib.${namespace}.module) mkOptDisabled';
 
-  cfg = config.${namespace}.cli.mods;
+  cfg = config.${namespace}.cli.llmAgents.mods;
 
   package = pkgs.writeShellApplication {
     name = "mods";
@@ -24,7 +24,7 @@ let
   };
 in
 {
-  options.${namespace}.cli.mods = {
+  options.${namespace}.cli.llmAgents.mods = {
     enable = mkOptDisabled';
   };
 

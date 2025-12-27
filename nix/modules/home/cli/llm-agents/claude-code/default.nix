@@ -5,14 +5,12 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOptDisabled'
-    ;
+  inherit (lib.${namespace}.module) mkOptDisabled';
 
-  cfg = config.${namespace}.cli.claude;
+  cfg = config.${namespace}.cli.llmAgents.claude-code;
 in
 {
-  options.${namespace}.cli.claude = {
+  options.${namespace}.cli.llmAgents.claude-code = {
     enable = mkOptDisabled';
   };
 

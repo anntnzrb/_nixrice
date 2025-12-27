@@ -27,7 +27,6 @@ in
       direnv = on;
       fastfetch = on;
       fzf = on;
-      gemini = on;
       husky = on;
       repomix = on;
       tldr = on;
@@ -35,14 +34,16 @@ in
       yt-dlp = on;
       zoxide = on;
 
-      # AI
-      chutes = on;
-      claude = on;
-      codex = on;
-      crush = on;
-      mods = on;
-      opencode = on;
-      qwen = on;
+      llmAgents = {
+        chutes = on;
+        claude-code = on;
+        codex = on;
+        crush = on;
+        gemini = on;
+        mods = on;
+        opencode = on;
+        qwen = on;
+      };
     };
 
     editors = {
