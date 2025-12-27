@@ -108,6 +108,13 @@
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
 
+    determinate = {
+      # determinate nix-darwin module for custom nix settings
+      url = "github:DeterminateSystems/determinate/main";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+      inputs.nix.follows = "";
+    };
+
     nix-homebrew = {
       ## darwin
       # homebrew integration for nix
