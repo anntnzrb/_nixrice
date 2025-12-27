@@ -20,9 +20,9 @@ in
 
   config = lib.mkIf cfg.enable {
     # Close Zen before activation to prevent database locks (spaces/pins)
-    home.activation.closeZenBeforeActivation = config.lib.dag.entryBefore [
-      "writeBoundary"
-    ] "pkill -15 zen 2>/dev/null || :";
+    # home.activation.closeZenBeforeActivation = config.lib.dag.entryBefore [
+    #   "writeBoundary"
+    # ] "pkill -15 zen 2>/dev/null || :";
 
     programs.zen-browser = {
       inherit (cfg) enable;
