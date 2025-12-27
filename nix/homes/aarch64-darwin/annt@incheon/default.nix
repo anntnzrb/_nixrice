@@ -36,7 +36,6 @@ in
         claude-code = on;
         codex = on;
         crush = on;
-        mods = on;
         opencode = on;
         qwen = on;
       };

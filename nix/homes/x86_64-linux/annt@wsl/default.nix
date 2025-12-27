@@ -40,7 +40,6 @@ in
         codex = on;
         crush = on;
         gemini = on;
-        mods = on;
         opencode = on;
         qwen = on;
       };
