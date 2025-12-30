@@ -53,6 +53,7 @@ in
 
     desktop = {
       terminal-emulators.ghostty = on;
+      browsers.firefox = on;
     };
   };
 }
