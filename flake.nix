@@ -14,7 +14,10 @@
         meta.title = namespace;
       };
 
-      overlays = [ inputs.emacs-overlay.overlays.default ];
+      overlays = [
+        inputs.emacs-overlay.overlays.default
+        inputs.nixpkgs-firefox-darwin.overlay
+      ];
 
       channels-config.allowUnfree = true;
 
@@ -211,7 +214,13 @@
 
     betterfox-nix = {
       # Betterfox integration
-      url = "github:heitoraugustoln/betterfox-nix";
+      url = "github:heitoraugustoln/betterfox-nix/main";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
+
+    nixpkgs-firefox-darwin = {
+      # Firefox binary builds for macOS (official Mozilla DMGs)
+      url = "github:bandithedoge/nixpkgs-firefox-darwin/main";
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
   };

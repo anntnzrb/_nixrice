@@ -19,6 +19,7 @@
       },
       "original": {
         "owner": "heitoraugustoln",
+        "ref": "main",
         "repo": "betterfox-nix",
         "type": "github"
       }
@@ -536,6 +537,27 @@
         "type": "github"
       }
     },
+    "nixpkgs-firefox-darwin": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs-stable"
+        ]
+      },
+      "locked": {
+        "lastModified": 1767056993,
+        "narHash": "sha256-6J6kJJbHls/J6uVXLoeyNUW5XnB9QZEic2lsjNQzpuk=",
+        "owner": "bandithedoge",
+        "repo": "nixpkgs-firefox-darwin",
+        "rev": "eff9d3df8cae517d4b7eba029328268ae92cef87",
+        "type": "github"
+      },
+      "original": {
+        "owner": "bandithedoge",
+        "ref": "main",
+        "repo": "nixpkgs-firefox-darwin",
+        "type": "github"
+      }
+    },
     "nixpkgs-stable": {
       "locked": {
         "lastModified": 1766014764,
@@ -748,6 +770,7 @@
         "nixos-hardware": "nixos-hardware",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_4",
+        "nixpkgs-firefox-darwin": "nixpkgs-firefox-darwin",
         "nixpkgs-stable": "nixpkgs-stable_2",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nurpkgs": "nurpkgs",
