@@ -6,7 +6,8 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) on getModuleFiles;
+  inherit (lib.${namespace}.module) on;
+  inherit (lib.${namespace}.fs) getModuleFiles;
   inherit (inputs.nixos-hardware.nixosModules)
     common-pc-laptop
     common-pc-laptop-hdd

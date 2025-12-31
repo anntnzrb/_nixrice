@@ -9,8 +9,8 @@ let
   inherit (lib.${namespace}.module)
     mkOpt'
     mkOptDisabled'
-    getModuleFiles
     ;
+  inherit (lib.${namespace}.fs) getModuleFiles;
   inherit (lib.types)
     attrsOf
     listOf

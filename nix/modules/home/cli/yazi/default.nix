@@ -8,8 +8,8 @@ let
   inherit (lib.${namespace}.module)
     mkOptEnabled'
     mkOptDisabled'
-    getModuleFiles
     ;
+  inherit (lib.${namespace}.fs) getModuleFiles;
 
   cfg = config.${namespace}.cli.yazi;
 in

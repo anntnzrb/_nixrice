@@ -6,7 +6,8 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled' getModuleFiles;
+  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.fs) getModuleFiles;
   inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
 
   firefoxLib = import ./lib.nix { inherit lib; };

@@ -5,7 +5,8 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled' getModuleFiles;
+  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.fs) getModuleFiles;
 
   cfg = config.${namespace}.cli.espanso;
 in
