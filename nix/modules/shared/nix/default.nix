@@ -17,10 +17,37 @@ let
 
   cfg = config.${namespace}.nix;
 
+  /**
+    Attribute set type for Nix cache substituters.
+
+    # Type
+
+    ```
+    cachesType :: AttrSet String
+    ```
+  */
   cachesType = attrsOf str;
+
+  /**
+    List type for strings.
+
+    # Type
+
+    ```
+    stringListType :: [String]
+    ```
+  */
   stringListType = listOf str;
 
-  # Attrset substituter URL -> public key
+  /**
+    Default Nix cache substituters and their public keys.
+
+    # Type
+
+    ```
+    cachesDefault :: AttrSet String
+    ```
+  */
   cachesDefault = {
     "https://nix-community.cachix.org" =
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=";

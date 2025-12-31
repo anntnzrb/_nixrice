@@ -14,6 +14,31 @@ let
 
   cfg = config.${namespace}.services.aerospace;
 
+  /**
+    Generate workspace keybindings for a command.
+
+    # Example
+
+    ```nix
+    mkWorkspaceBindings "workspace" "m-ctrl"
+    =>
+    { "m-ctrl-0" = "workspace 0"; "m-ctrl-1" = "workspace 1"; ... }
+    ```
+
+    # Type
+
+    ```
+    mkWorkspaceBindings :: String -> String -> AttrSet
+    ```
+
+    # Arguments
+
+    cmd
+    : The workspace command to bind (e.g., "workspace" or "move-node-to-workspace")
+
+    prefix
+    : The key binding prefix (e.g., modifier key combination)
+  */
   mkWorkspaceBindings =
     cmd: prefix:
     lib.listToAttrs (

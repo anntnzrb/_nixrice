@@ -1,3 +1,12 @@
+/**
+  CLI wrapper for the Chutes LLM API. Provides a shell script to interact with LLMs via https://llm.chutes.ai.
+
+  # Type
+
+  ```
+  package :: Derivation
+  ```
+*/
 {
   pkgs,
   ...

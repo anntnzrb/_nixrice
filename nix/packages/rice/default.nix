@@ -1,3 +1,12 @@
+/**
+  CLI tool for managing Nix flake dotfiles with the rice repository structure.
+
+  # Type
+
+  ```
+  rice :: Derivation
+  ```
+*/
 {
   pkgs,
   ...

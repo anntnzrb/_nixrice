@@ -4,6 +4,14 @@
     /**
       Create an option with specified type, default value, and description.
 
+      # Example
+
+      ```nix
+      mkOpt lib.types.str "hello" "A greeting message"
+      =>
+      { type = <str>; default = "hello"; description = "A greeting message"; }
+      ```
+
       # Type
 
       ```
@@ -28,6 +36,14 @@
     /**
       Create an option with specified type and default value, no description.
 
+      # Example
+
+      ```nix
+      mkOpt' lib.types.int 42
+      =>
+      { type = <int>; default = 42; description = null; }
+      ```
+
       # Type
 
       ```
@@ -38,6 +54,14 @@
 
     /**
       Create a boolean option defaulting to true, with description.
+
+      # Example
+
+      ```nix
+      mkOptEnabled "Enable the feature"
+      =>
+      { type = <bool>; default = true; description = "Enable the feature"; }
+      ```
 
       # Type
 
@@ -50,6 +74,14 @@
     /**
       Create a boolean option defaulting to true, no description.
 
+      # Example
+
+      ```nix
+      mkOptEnabled'
+      =>
+      { type = <bool>; default = true; description = null; }
+      ```
+
       # Type
 
       ```
@@ -61,6 +93,14 @@
     /**
       Create a boolean option defaulting to false, with description.
 
+      # Example
+
+      ```nix
+      mkOptDisabled "Enable experimental feature"
+      =>
+      { type = <bool>; default = false; description = "Enable experimental feature"; }
+      ```
+
       # Type
 
       ```
@@ -71,6 +111,14 @@
 
     /**
       Create a boolean option defaulting to false, no description.
+
+      # Example
+
+      ```nix
+      mkOptDisabled'
+      =>
+      { type = <bool>; default = false; description = null; }
+      ```
 
       # Type
 

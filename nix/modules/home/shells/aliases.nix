@@ -16,11 +16,69 @@ let
 
   uutils = pkgs.uutils-coreutils-noprefix;
 
+  /**
+    Configuration for eza, a modern replacement for ls.
+
+    # Example
+
+    ```nix
+    eza.flags
+    =>
+    "--color=auto --group-directories-first --icons"
+
+    eza.bin
+    =>
+    "/run/current-system/sw/bin/eza --color=auto --group-directories-first --icons"
+    ```
+
+    # Type
+
+    ```
+    { flags :: String, bin :: String }
+    ```
+
+    # Fields
+
+    flags
+    : CLI flags passed to eza
+
+    bin
+    : Full path to eza executable with flags applied
+  */
   eza = {
     flags = "--color=auto --group-directories-first --icons";
     bin = "${getExe pkgs.eza} ${eza.flags}";
   };
 
+  /**
+    Configuration for bat, a cat clone with syntax highlighting and paging.
+
+    # Example
+
+    ```nix
+    bat.flags
+    =>
+    "--color=auto --style=full"
+
+    bat.bin
+    =>
+    "/run/current-system/sw/bin/bat --color=auto --style=full"
+    ```
+
+    # Type
+
+    ```
+    { flags :: String, bin :: String }
+    ```
+
+    # Fields
+
+    flags
+    : CLI flags passed to bat
+
+    bin
+    : Full path to bat executable with flags applied
+  */
   bat = {
     flags = "--color=auto --style=full";
     bin = "${getExe pkgs.bat} ${bat.flags}";

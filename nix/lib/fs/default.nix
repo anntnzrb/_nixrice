@@ -4,6 +4,14 @@
     /**
       Get all regular files in a directory.
 
+      # Example
+
+      ```nix
+      getFiles ./my-module
+      =>
+      [ ./my-module/foo.nix ./my-module/bar.txt ]
+      ```
+
       # Type
 
       ```
@@ -20,6 +28,18 @@
     /**
       Check if path has .nix extension.
 
+      # Example
+
+      ```nix
+      isNixFile ./foo.nix
+      =>
+      true
+
+      isNixFile ./bar.txt
+      =>
+      false
+      ```
+
       # Type
 
       ```
@@ -34,13 +54,13 @@
       # Example
 
       ```nix
-      getModuleFiles { path = ./.; }
+      getModuleFiles { path = ./my-module; }
       =>
-      [ ./foo.nix ./bar.nix ]
+      [ ./my-module/foo.nix ./my-module/bar.nix ]
 
-      getModuleFiles { path = ./.; ignore = [ "lib.nix" ]; }
+      getModuleFiles { path = ./my-module; ignore = [ "lib.nix" ]; }
       =>
-      [ ./foo.nix ./bar.nix ]
+      [ ./my-module/foo.nix ./my-module/bar.nix ]
       ```
 
       # Type
