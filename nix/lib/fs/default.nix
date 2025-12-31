@@ -1,8 +1,15 @@
 { lib, ... }:
 {
   fs = rec {
-    ## Get all regular files in a directory.
-    #@ Path -> [Path]
+    /**
+      Get all regular files in a directory.
+
+      # Type
+
+      ```
+      getFiles :: Path -> [Path]
+      ```
+    */
     getFiles =
       path:
       lib.pipe (builtins.readDir path) [
@@ -10,14 +17,46 @@
         (lib.mapAttrsToList (name: _: path + "/${name}"))
       ];
 
-    ## Check if path has .nix extension.
-    #@ Path -> Bool
+    /**
+      Check if path has .nix extension.
+
+      # Type
+
+      ```
+      isNixFile :: Path -> Bool
+      ```
+    */
     isNixFile = path: lib.hasSuffix ".nix" (baseNameOf path);
 
-    ## Get importable module files (*.nix except default.nix).
-    ## Usage: getModuleFiles { path = ./.; }
-    ##        getModuleFiles { path = ./.; ignore = [ "lib.nix" ]; }
-    #@ { path :: Path, ignore :: [String] } -> [Path]
+    /**
+      Get importable module files (*.nix except default.nix).
+
+      # Example
+
+      ```nix
+      getModuleFiles { path = ./.; }
+      =>
+      [ ./foo.nix ./bar.nix ]
+
+      getModuleFiles { path = ./.; ignore = [ "lib.nix" ]; }
+      =>
+      [ ./foo.nix ./bar.nix ]
+      ```
+
+      # Type
+
+      ```
+      getModuleFiles :: { path :: Path, ignore :: [String] } -> [Path]
+      ```
+
+      # Arguments
+
+      path
+      : The directory to scan for module files
+
+      ignore
+      : List of filenames to exclude (default: [])
+    */
     getModuleFiles =
       {
         path,
