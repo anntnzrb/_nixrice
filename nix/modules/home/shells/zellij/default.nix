@@ -5,12 +5,12 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled' getModuleFiles';
+  inherit (lib.${namespace}.module) mkOptDisabled' getModuleFiles;
 
   cfg = config.${namespace}.shells.zellij;
 in
 {
-  imports = getModuleFiles' ./.;
+  imports = getModuleFiles { path = ./.; };
 
   options.${namespace}.shells.zellij = {
     enable = mkOptDisabled';

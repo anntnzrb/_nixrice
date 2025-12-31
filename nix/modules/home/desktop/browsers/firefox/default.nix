@@ -14,7 +14,10 @@ let
   hasFirefoxBin = pkgs ? firefox-bin;
 in
 {
-  imports = getModuleFiles ./. [ "lib.nix" ];
+  imports = getModuleFiles {
+    path = ./.;
+    ignore = [ "lib.nix" ];
+  };
 
   options.${namespace}.desktop.browsers.firefox = {
     enable = mkOptDisabled';

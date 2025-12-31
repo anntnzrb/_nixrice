@@ -6,14 +6,14 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) on getModuleFiles';
+  inherit (lib.${namespace}.module) on getModuleFiles;
 in
 {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     inputs.nixos-hardware.nixosModules.common-pc-ssd
   ]
-  ++ getModuleFiles' ./.;
+  ++ getModuleFiles { path = ./.; };
 
   fileSystems =
     let

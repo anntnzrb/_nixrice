@@ -5,12 +5,12 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled' getModuleFiles';
+  inherit (lib.${namespace}.module) mkOptDisabled' getModuleFiles;
 
   cfg = config.${namespace}.cli.git;
 in
 {
-  imports = getModuleFiles' ./.;
+  imports = getModuleFiles { path = ./.; };
 
   options.${namespace}.cli.git = {
     enable = mkOptDisabled';

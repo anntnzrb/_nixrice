@@ -5,12 +5,12 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled' getModuleFiles';
+  inherit (lib.${namespace}.module) mkOptDisabled' getModuleFiles;
 
   cfg = config.${namespace}.cli.espanso;
 in
 {
-  imports = getModuleFiles' ./matches;
+  imports = getModuleFiles { path = ./matches; };
 
   options.${namespace}.cli.espanso = {
     enable = mkOptDisabled';

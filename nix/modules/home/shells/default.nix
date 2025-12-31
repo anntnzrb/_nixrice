@@ -9,7 +9,7 @@ let
   inherit (lib.${namespace}.module)
     mkOpt'
     mkOptDisabled'
-    getModuleFiles'
+    getModuleFiles
     ;
   inherit (lib.types)
     attrsOf
@@ -20,7 +20,7 @@ let
   cfg = config.${namespace}.shells;
 in
 {
-  imports = getModuleFiles' ./.;
+  imports = getModuleFiles { path = ./.; };
 
   options.${namespace}.shells = {
     sessionVariables = mkOpt' (attrsOf str) { };

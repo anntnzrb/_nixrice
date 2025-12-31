@@ -54,11 +54,15 @@
     #@ Path -> Bool
     isNixFile = path: lib.hasSuffix ".nix" (baseNameOf path);
 
-    ## Get importable module files (*.nix except default.nix), with ignore list.
-    ## Usage: getModuleFiles ./. [ "lib.nix" "helpers.nix" ]
-    #@ Path -> [String] -> [Path]
+    ## Get importable module files (*.nix except default.nix).
+    ## Usage: getModuleFiles { path = ./.; }
+    ##        getModuleFiles { path = ./.; ignore = [ "lib.nix" ]; }
+    #@ { path :: Path, ignore :: [String] } -> [Path]
     getModuleFiles =
-      path: ignore:
+      {
+        path,
+        ignore ? [ ],
+      }:
       builtins.filter (
         f:
         let
@@ -66,42 +70,5 @@
         in
         isNixFile f && name != "default.nix" && !(builtins.elem name ignore)
       ) (getFiles path);
-
-    ## Prime variant: no ignore list.
-    ## Usage: getModuleFiles' ./.
-    #@ Path -> [Path]
-    getModuleFiles' = path: getModuleFiles path [ ];
-
-    ## Recursive variant with ignore list.
-    #@ Path -> [String] -> [Path]
-    getModuleFilesRecursive =
-      path: ignore:
-      let
-        entries = builtins.readDir path;
-        process =
-          name: kind:
-          let
-            fullPath = path + "/${name}";
-            baseName = baseNameOf fullPath;
-          in
-          if kind == "directory" then
-            getModuleFilesRecursive fullPath ignore
-          else if kind == "regular" then
-            if
-              isNixFile fullPath
-              && baseName != "default.nix"
-              && !(builtins.elem baseName ignore)
-            then
-              [ fullPath ]
-            else
-              [ ]
-          else
-            [ ];
-      in
-      lib.flatten (lib.mapAttrsToList process entries);
-
-    ## Recursive prime variant: no ignore list.
-    #@ Path -> [Path]
-    getModuleFilesRecursive' = path: getModuleFilesRecursive path [ ];
   };
 }

@@ -9,13 +9,13 @@ let
   inherit (lib.${namespace}.module)
     mkOpt'
     mkOptDisabled'
-    getModuleFiles'
+    getModuleFiles
     ;
 
   cfg = config.${namespace}.desktop.terminal-emulators.rio;
 in
 {
-  imports = getModuleFiles' ./.;
+  imports = getModuleFiles { path = ./.; };
 
   options.${namespace}.desktop.terminal-emulators.rio = {
     enable = mkOptDisabled';

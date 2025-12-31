@@ -8,13 +8,13 @@ let
   inherit (lib.${namespace}.module)
     mkOpt'
     mkOptDisabled'
-    getModuleFiles'
+    getModuleFiles
     ;
 
   cfg = config.${namespace}.services.aerospace;
 in
 {
-  imports = getModuleFiles' ./.;
+  imports = getModuleFiles { path = ./.; };
 
   options.${namespace}.services.aerospace = {
     enable = mkOptDisabled';

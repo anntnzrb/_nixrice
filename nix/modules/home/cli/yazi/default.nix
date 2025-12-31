@@ -8,13 +8,13 @@ let
   inherit (lib.${namespace}.module)
     mkOptEnabled'
     mkOptDisabled'
-    getModuleFiles'
+    getModuleFiles
     ;
 
   cfg = config.${namespace}.cli.yazi;
 in
 {
-  imports = getModuleFiles' ./.;
+  imports = getModuleFiles { path = ./.; };
 
   options.${namespace}.cli.yazi = {
     enable = mkOptDisabled';
