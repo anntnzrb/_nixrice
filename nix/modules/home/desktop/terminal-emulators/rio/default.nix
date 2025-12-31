@@ -9,12 +9,13 @@ let
   inherit (lib.${namespace}.module)
     mkOpt'
     mkOptDisabled'
+    getModuleFiles'
     ;
 
   cfg = config.${namespace}.desktop.terminal-emulators.rio;
 in
 {
-  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
+  imports = getModuleFiles' ./.;
 
   options.${namespace}.desktop.terminal-emulators.rio = {
     enable = mkOptDisabled';

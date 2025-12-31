@@ -5,12 +5,12 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.module) mkOptDisabled' getModuleFiles';
 
   cfg = config.${namespace}.shells.zellij;
 in
 {
-  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
+  imports = getModuleFiles' ./.;
 
   options.${namespace}.shells.zellij = {
     enable = mkOptDisabled';

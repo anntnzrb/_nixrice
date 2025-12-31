@@ -5,12 +5,12 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.module) mkOptDisabled' getModuleFiles';
 
   cfg = config.${namespace}.cli.git;
 in
 {
-  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
+  imports = getModuleFiles' ./.;
 
   options.${namespace}.cli.git = {
     enable = mkOptDisabled';

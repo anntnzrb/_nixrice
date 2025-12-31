@@ -9,6 +9,7 @@ let
   inherit (lib.${namespace}.module)
     mkOpt'
     mkOptDisabled'
+    getModuleFiles'
     ;
   inherit (lib.types)
     attrsOf
@@ -19,7 +20,7 @@ let
   cfg = config.${namespace}.shells;
 in
 {
-  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
+  imports = getModuleFiles' ./.;
 
   options.${namespace}.shells = {
     sessionVariables = mkOpt' (attrsOf str) { };

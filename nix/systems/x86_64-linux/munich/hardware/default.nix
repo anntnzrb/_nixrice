@@ -6,14 +6,14 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) on;
+  inherit (lib.${namespace}.module) on getModuleFiles';
 in
 {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     inputs.nixos-hardware.nixosModules.common-pc-ssd
   ]
-  ++ lib.snowfall.fs.get-non-default-nix-files ./.;
+  ++ getModuleFiles' ./.;
 
   fileSystems =
     let

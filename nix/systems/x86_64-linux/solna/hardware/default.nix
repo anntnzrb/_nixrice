@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) on;
+  inherit (lib.${namespace}.module) on getModuleFiles';
   inherit (inputs.nixos-hardware.nixosModules)
     common-pc-laptop
     common-pc-laptop-ssd
@@ -18,7 +18,7 @@ in
     common-pc-laptop
     common-pc-laptop-ssd
   ]
-  ++ lib.snowfall.fs.get-non-default-nix-files ./.;
+  ++ getModuleFiles' ./.;
 
   fileSystems =
     let

@@ -8,12 +8,13 @@ let
   inherit (lib.${namespace}.module)
     mkOptEnabled'
     mkOptDisabled'
+    getModuleFiles'
     ;
 
   cfg = config.${namespace}.cli.yazi;
 in
 {
-  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
+  imports = getModuleFiles' ./.;
 
   options.${namespace}.cli.yazi = {
     enable = mkOptDisabled';

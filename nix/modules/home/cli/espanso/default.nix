@@ -5,12 +5,12 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.module) mkOptDisabled' getModuleFiles';
 
   cfg = config.${namespace}.cli.espanso;
 in
 {
-  imports = lib.snowfall.fs.get-non-default-nix-files ./matches;
+  imports = getModuleFiles' ./matches;
 
   options.${namespace}.cli.espanso = {
     enable = mkOptDisabled';

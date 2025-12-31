@@ -8,12 +8,13 @@ let
   inherit (lib.${namespace}.module)
     mkOpt'
     mkOptDisabled'
+    getModuleFiles'
     ;
 
   cfg = config.${namespace}.services.aerospace;
 in
 {
-  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
+  imports = getModuleFiles' ./.;
 
   options.${namespace}.services.aerospace = {
     enable = mkOptDisabled';
