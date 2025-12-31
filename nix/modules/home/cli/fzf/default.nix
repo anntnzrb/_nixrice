@@ -21,11 +21,11 @@ in
       let
         catCmd = "${getExe pkgs.bat} --color=auto -P";
         treeCmd = "${getExe pkgs.eza} --color=automatic --icons -T";
-      in
-      rec {
-        inherit (cfg) enable;
-
         defaultCommand = "${getExe pkgs.fd} --type f";
+      in
+      {
+        inherit (cfg) enable;
+        inherit defaultCommand;
 
         # CTL-R
         historyWidgetOptions = [

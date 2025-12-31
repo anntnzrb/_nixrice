@@ -8,11 +8,15 @@
 
       src = ./nix;
 
-      snowfall = rec {
-        namespace = "liberion";
-        meta.name = namespace;
-        meta.title = namespace;
-      };
+      snowfall =
+        let
+          namespace = "liberion";
+        in
+        {
+          inherit namespace;
+          meta.name = namespace;
+          meta.title = namespace;
+        };
 
       overlays = [
         inputs.emacs-overlay.overlays.default

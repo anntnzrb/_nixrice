@@ -2,8 +2,7 @@
 { lib }:
 let
   inherit (lib) types mkOption mkEnableOption;
-in
-rec {
+
   # ---------------------------------------------------------------------------
   # Types
   # ---------------------------------------------------------------------------
@@ -296,4 +295,20 @@ rec {
       ${buttonsToCss cfg.hideButtons}
     ''}
   '';
+in
+{
+  inherit
+    sidebarVisibility
+    sidebarPosition
+    sidebarTool
+    smoothfoxPreset
+    mkUiOptions
+    mkPrivacyOptions
+    mkBetterfoxOptions
+    mkSearchOptions
+    uiToSettings
+    privacyToSettings
+    buttonsToCss
+    uiToUserChrome
+    ;
 }

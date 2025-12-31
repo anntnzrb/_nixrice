@@ -63,220 +63,226 @@ in
         gtk = true;
       };
 
-      config = rec {
-        inherit (cfg) output;
-        inherit (cfg) modifier;
-
-        up = "k";
-        down = "j";
-        right = "l";
-        left = "h";
-
-        startup = map (cmd: { command = cmd; }) cfg.autoStart;
-
-        colors = {
-          background = "#1C1B19";
-
-          focused = {
-            background = "#3A3A3A";
-            border = "#918175";
-            childBorder = "#918175";
-            indicator = "#FBB829";
-            text = "#FBB829";
+      config =
+        let
+          fonts = {
+            names = [ "Iosevka Comfy Motion" ];
+            style = "SemiLight Italic";
+            size = 11.0;
           };
+        in
+        {
+          inherit (cfg) output modifier;
+          inherit fonts;
 
-          unfocused = {
-            background = "#262626";
-            border = "#262626";
-            childBorder = "#262626";
-            indicator = "#262626";
-            text = "#918175";
-          };
+          up = "k";
+          down = "j";
+          right = "l";
+          left = "h";
 
-          focusedInactive = {
-            background = "#3A3A3A";
-            border = "#3A3A3A";
-            childBorder = "#3A3A3A";
-            indicator = "#3A3A3A";
-            text = "#918175";
-          };
+          startup = map (cmd: { command = cmd; }) cfg.autoStart;
 
-          placeholder = {
-            background = "#121212";
-            border = "#3A3A3A";
-            childBorder = "#3A3A3A";
-            indicator = "#3A3A3A";
-            text = "#918175";
-          };
+          colors = {
+            background = "#1C1B19";
 
-          urgent = {
-            background = "#262626";
-            border = "#EF2F27";
-            childBorder = "#EF2F27";
-            indicator = "#EF2F27";
-            text = "#EF2F27";
-          };
-        };
-
-        fonts = {
-          names = [ "Iosevka Comfy Motion" ];
-          style = "SemiLight Italic";
-          size = 11.0;
-        };
-
-        window = {
-          titlebar = true;
-          border = 3;
-        };
-
-        bars = [
-          {
-            inherit fonts;
-
-            # TODO: check if this was solved. i3status-rs should generate the proper file.
-            # statusCommand = "i3status-rs ${config.xdg.configHome}/i3status-rust/config-default.toml";
-            command = "waybar";
-            position = "top";
-            trayOutput = "*";
-
-            colors = rec {
-              background = "#1C1B19";
-              focusedBackground = background;
-
-              activeWorkspace = {
-                background = "#3A3A3A";
-                border = "#3A3A3A";
-                text = "#918175";
-              };
-
-              focusedWorkspace = {
-                background = "#3A3A3A";
-                border = "#918175";
-                text = "#FBB829";
-              };
-
-              inactiveWorkspace = {
-                background = "#262626";
-                border = "#3A3A3A";
-                text = "#918175";
-              };
-
-              urgentWorkspace = {
-                background = "#E02C6D";
-                border = "#E02C6D";
-                text = "#FCE8C3";
-              };
+            focused = {
+              background = "#3A3A3A";
+              border = "#918175";
+              childBorder = "#918175";
+              indicator = "#FBB829";
+              text = "#FBB829";
             };
-          }
-        ];
 
-        keybindings =
-          let
-            mod = modifier;
-            modShift = "${mod}+Shift";
-            modAlt = "${mod}+Alt";
-            numWorkspaces = 9;
-
-            genFocusMoveBinds = bind: {
-              "${mod}+${bind.key}" = "focus ${bind.dir}";
-              "${modShift}+${bind.key}" = "move ${bind.dir}";
+            unfocused = {
+              background = "#262626";
+              border = "#262626";
+              childBorder = "#262626";
+              indicator = "#262626";
+              text = "#918175";
             };
-            genWorkspaceBinds =
-              i:
-              let
-                ws = toString i;
-              in
-              {
-                "${mod}+${ws}" = "workspace number ${ws}";
-                "${modShift}+${ws}" = "move container to workspace number ${ws}";
+
+            focusedInactive = {
+              background = "#3A3A3A";
+              border = "#3A3A3A";
+              childBorder = "#3A3A3A";
+              indicator = "#3A3A3A";
+              text = "#918175";
+            };
+
+            placeholder = {
+              background = "#121212";
+              border = "#3A3A3A";
+              childBorder = "#3A3A3A";
+              indicator = "#3A3A3A";
+              text = "#918175";
+            };
+
+            urgent = {
+              background = "#262626";
+              border = "#EF2F27";
+              childBorder = "#EF2F27";
+              indicator = "#EF2F27";
+              text = "#EF2F27";
+            };
+          };
+
+          window = {
+            titlebar = true;
+            border = 3;
+          };
+
+          bars = [
+            {
+              inherit fonts;
+
+              # TODO: check if this was solved. i3status-rs should generate the proper file.
+              # statusCommand = "i3status-rs ${config.xdg.configHome}/i3status-rust/config-default.toml";
+              command = "waybar";
+              position = "top";
+              trayOutput = "*";
+
+              colors =
+                let
+                  background = "#1C1B19";
+                in
+                {
+                  inherit background;
+                  focusedBackground = background;
+
+                  activeWorkspace = {
+                    background = "#3A3A3A";
+                    border = "#3A3A3A";
+                    text = "#918175";
+                  };
+
+                  focusedWorkspace = {
+                    background = "#3A3A3A";
+                    border = "#918175";
+                    text = "#FBB829";
+                  };
+
+                  inactiveWorkspace = {
+                    background = "#262626";
+                    border = "#3A3A3A";
+                    text = "#918175";
+                  };
+
+                  urgentWorkspace = {
+                    background = "#E02C6D";
+                    border = "#E02C6D";
+                    text = "#FCE8C3";
+                  };
+                };
+            }
+          ];
+
+          keybindings =
+            let
+              mod = cfg.modifier;
+              modShift = "${mod}+Shift";
+              modAlt = "${mod}+Alt";
+              numWorkspaces = 9;
+
+              genFocusMoveBinds = bind: {
+                "${mod}+${bind.key}" = "focus ${bind.dir}";
+                "${modShift}+${bind.key}" = "move ${bind.dir}";
               };
-          in
-          {
-            # TODO: mv
-            "${mod}+Return" = "exec ${config.home.sessionVariables.TERMINAL}";
-            "${mod}+d" = "exec bemenu-run";
+              genWorkspaceBinds =
+                i:
+                let
+                  ws = toString i;
+                in
+                {
+                  "${mod}+${ws}" = "workspace number ${ws}";
+                  "${modShift}+${ws}" = "move container to workspace number ${ws}";
+                };
+            in
+            {
+              # TODO: mv
+              "${mod}+Return" = "exec ${config.home.sessionVariables.TERMINAL}";
+              "${mod}+d" = "exec bemenu-run";
 
-            "${modShift}+q" = "kill";
-            "${modAlt}+r" = "reload";
-            "${modAlt}+q" = "exit";
+              "${modShift}+q" = "kill";
+              "${modAlt}+r" = "reload";
+              "${modAlt}+q" = "exit";
 
-            "${modShift}+space" = "floating toggle";
-            "${modShift}+f" = "fullscreen toggle";
-          }
-          // foldl' (a: b: a // b) { } (
-            map genFocusMoveBinds [
-              {
-                key = "h";
-                dir = "left";
-              }
-              {
-                key = "j";
-                dir = "down";
-              }
-              {
-                key = "k";
-                dir = "up";
-              }
-              {
-                key = "l";
-                dir = "right";
-              }
+              "${modShift}+space" = "floating toggle";
+              "${modShift}+f" = "fullscreen toggle";
+            }
+            // foldl' (a: b: a // b) { } (
+              map genFocusMoveBinds [
+                {
+                  key = "h";
+                  dir = "left";
+                }
+                {
+                  key = "j";
+                  dir = "down";
+                }
+                {
+                  key = "k";
+                  dir = "up";
+                }
+                {
+                  key = "l";
+                  dir = "right";
+                }
 
-              {
-                key = "Left";
-                dir = "left";
-              }
-              {
-                key = "Down";
-                dir = "down";
-              }
-              {
-                key = "Up";
-                dir = "up";
-              }
-              {
-                key = "Right";
-                dir = "right";
-              }
-            ]
-            ++ map genWorkspaceBinds (genList (x: x + 1) numWorkspaces)
-          );
+                {
+                  key = "Left";
+                  dir = "left";
+                }
+                {
+                  key = "Down";
+                  dir = "down";
+                }
+                {
+                  key = "Up";
+                  dir = "up";
+                }
+                {
+                  key = "Right";
+                  dir = "right";
+                }
+              ]
+              ++ map genWorkspaceBinds (genList (x: x + 1) numWorkspaces)
+            );
 
-        gaps = {
-          inner = 10;
-        };
-
-        input = {
-          "*" = {
-            # keyboard
-            xkb_model = cfg.keyboard.layout;
-            xkb_layout = cfg.keyboard.layout;
-            xkb_variant = cfg.keyboard.variant;
-            repeat_delay = toString config.${namespace}.home.keyboard.autoRepeatDelay;
-            repeat_rate = toString config.${namespace}.home.keyboard.autoRepeatInterval;
-
-            # mouse/touchpad
-            accel_profile = "flat";
-            drag = "true";
-            dwt = "true";
-            natural_scroll = "false";
-            scroll_method = "two_finger";
-            tap = "true";
+          gaps = {
+            inner = 10;
           };
-        };
 
-        seat = {
-          "*" = {
-            hide_cursor = "2000";
+          input = {
+            "*" = {
+              # keyboard
+              xkb_model = cfg.keyboard.layout;
+              xkb_layout = cfg.keyboard.layout;
+              xkb_variant = cfg.keyboard.variant;
+              repeat_delay = toString config.${namespace}.home.keyboard.autoRepeatDelay;
+              repeat_rate = toString config.${namespace}.home.keyboard.autoRepeatInterval;
+
+              # mouse/touchpad
+              accel_profile = "flat";
+              drag = "true";
+              dwt = "true";
+              natural_scroll = "false";
+              scroll_method = "two_finger";
+              tap = "true";
+            };
           };
-        };
 
-        menu = "";
-        terminal = "";
-        modes = { };
-        workspaceLayout = "default";
-        workspaceAutoBackAndForth = false;
-      };
+          seat = {
+            "*" = {
+              hide_cursor = "2000";
+            };
+          };
+
+          menu = "";
+          terminal = "";
+          modes = { };
+          workspaceLayout = "default";
+          workspaceAutoBackAndForth = false;
+        };
     };
 
     programs.waybar = {
