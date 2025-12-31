@@ -9,29 +9,27 @@ let
   inherit (lib.${namespace}.module) on;
 
   cfg = config.${namespace}.desktop.browsers.firefox;
+
+  smoothfoxSettingName =
+    {
+      "sharpen-scrolling" = "sharpen-scrolling";
+      "smooth-scrolling" = "smooth-scrolling";
+      "instant-scrolling" = "instant-scrolling";
+      "natural-smooth-scrolling-v3" = "natural-smooth-scrolling-v3";
+    }
+    .${cfg.betterfox.smoothfox};
 in
 {
   imports = [ inputs.betterfox-nix.homeModules.betterfox ];
 
-  config = lib.mkIf cfg.enable {
-    programs.firefox = {
-      betterfox = on // {
-        profiles.default = {
-          enableAllSections = true;
+  config = lib.mkIf (cfg.enable && cfg.betterfox.enable) {
+    programs.firefox.betterfox = on // {
+      profiles.default = {
+        enableAllSections = true;
 
-          settings = {
-            # snappy scrolling (60Hz)
-            smoothfox.sharpen-scrolling.enable = true;
-          };
+        settings = lib.optionalAttrs (cfg.betterfox.smoothfox != null) {
+          smoothfox.${smoothfoxSettingName}.enable = true;
         };
-      };
-
-      profiles.default.settings = {
-        # clear cache on close
-        "privacy.sanitize.sanitizeOnShutdown" = true;
-        "privacy.clearOnShutdown_v2.cache" = true;
-        "privacy.clearOnShutdown_v2.cookiesAndStorage" = false;
-        "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" = false;
       };
     };
   };

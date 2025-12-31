@@ -6,18 +6,23 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.module) mkOptDisabled' getModuleFiles;
   inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
 
+  firefoxLib = import ./lib.nix { inherit lib; };
   cfg = config.${namespace}.desktop.browsers.firefox;
-
   hasFirefoxBin = pkgs ? firefox-bin;
 in
 {
-  imports = lib.snowfall.fs.get-non-default-nix-files ./.;
+  imports = getModuleFiles ./. [ "lib.nix" ];
 
   options.${namespace}.desktop.browsers.firefox = {
     enable = mkOptDisabled';
+
+    ui = firefoxLib.mkUiOptions;
+    privacy = firefoxLib.mkPrivacyOptions;
+    betterfox = firefoxLib.mkBetterfoxOptions;
+    search = firefoxLib.mkSearchOptions;
   };
 
   config = lib.mkIf cfg.enable {
@@ -26,6 +31,7 @@ in
         assertion = isDarwin -> hasFirefoxBin;
         message = ''
           Firefox on Darwin requires the nixpkgs-firefox-darwin overlay.
+          Add 'inputs.nixpkgs-firefox-darwin.overlay' to your flake overlays.
         '';
       }
       {
@@ -42,13 +48,8 @@ in
       package = if isDarwin then null else pkgs.firefox;
 
       profiles.default = {
-        id = 0; # default
+        id = 0;
         name = "default";
-
-        search = {
-          default = "ddg";
-          force = true;
-        };
       };
     };
   };
