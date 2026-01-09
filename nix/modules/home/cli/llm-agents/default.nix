@@ -9,94 +9,103 @@ let
   inherit (lib.${namespace}.module) mkOptDisabled';
   inherit (lib)
     mapAttrs'
+    mapAttrsToList
     nameValuePair
     mkIf
     mkMerge
     ;
 
-  # wrapper-based agents: name -> flake attr mapping
+  # agents: name -> { type, ... }
+  # type "npm": runs via `bun x <package>@<version>`
+  # type "nix": runs via nix flake
   agents = {
-    opencode = "opencode";
-    crush = "crush";
-    codex = "codex";
-    droid = "droid";
-    gemini = "gemini-cli";
-    goose = "goose-cli";
-    kilo = "kilocode-cli";
-    qwen = "qwen-code";
+    opencode = {
+      type = "npm";
+      package = "opencode-ai";
+    };
+    gemini = {
+      type = "npm";
+      package = "@google/gemini-cli";
+    };
+    qwen = {
+      type = "npm";
+      package = "@qwen-code/qwen-code";
+    };
+    kilo = {
+      type = "npm";
+      package = "@kilocode/cli";
+    };
+    codex = {
+      type = "npm";
+      package = "@openai/codex";
+    };
+    crush = {
+      type = "npm";
+      package = "@charmland/crush";
+    };
+    goose = {
+      type = "nix";
+      attr = "goose-cli";
+    };
+    droid = {
+      type = "nix";
+      attr = "droid";
+    };
   };
 
   /**
-    Create an option for an LLM agent.
-
-    # Example
-
-    ```nix
-    mkAgentOption "opencode" null
-    =>
-    { name = "opencode"; value = { enable = <option>; }; }
-    ```
+    Create a wrapper derivation for an agent.
 
     # Type
 
     ```
-    mkAgentOption :: String -> Any -> NamedValue
+    mkWrapper :: String -> AttrSet -> Derivation
     ```
-
-    # Arguments
-
-    name
-    : The agent name identifier
-
-    The second argument is ignored (used for mapAttrs application).
   */
-  mkAgentOption = name: _: nameValuePair name { enable = mkOptDisabled'; };
-
-  /**
-    Create configuration for an LLM agent wrapper.
-
-    # Example
-
-    ```nix
-    mkAgentConfig "opencode" "opencode"
-    =>
-    { enable = true; home.packages = [ <wrapper derivation> ]; }
-    ```
-
-    # Type
-
-    ```
-    mkAgentConfig :: String -> String -> AttrSet
-    ```
-
-    # Arguments
-
-    name
-    : The agent name identifier
-
-    attr
-    : The flake reference for the agent package
-  */
-  mkAgentConfig =
-    name: attr:
-    let
-      cfg = config.${namespace}.cli.llmAgents.${name};
-      wrapper = pkgs.writeShellApplication {
+  mkWrapper =
+    name: spec:
+    if spec.type == "npm" then
+      pkgs.writeShellApplication {
         inherit name;
         text = ''
-          exec ${pkgs.runtimeShell} ${./llm-agent-wrapper.sh} ${attr} "$@"
+          VERSION="latest"
+          while [ $# -gt 0 ]; do
+            case "$1" in
+              -v|--version) VERSION="$2"; shift 2 ;;
+              --) shift; break ;;
+              *) break ;;
+            esac
+          done
+          exec ${pkgs.bun}/bin/bun x "${spec.package}@$VERSION" "$@"
         '';
+      }
+    else
+      pkgs.writeShellApplication {
+        inherit name;
+        text = ''exec ${pkgs.runtimeShell} ${./nix-agent-wrapper.sh} ${spec.attr} "$@"'';
       };
+
+  /**
+    Create module configuration for an agent.
+
+    # Type
+
+    ```
+    mkAgentConfig :: String -> AttrSet -> AttrSet
+    ```
+  */
+  mkAgentConfig =
+    name: spec:
+    let
+      cfg = config.${namespace}.cli.llmAgents.${name};
     in
-    mkIf cfg.enable { home.packages = [ wrapper ]; };
+    mkIf cfg.enable { home.packages = [ (mkWrapper name spec) ]; };
 
 in
 {
-  options.${namespace}.cli.llmAgents = mapAttrs' mkAgentOption agents;
+  options.${namespace}.cli.llmAgents = mapAttrs' (
+    name: _: nameValuePair name { enable = mkOptDisabled'; }
+  ) agents;
 
-  config = mkMerge (
-    lib.attrValues (
-      mapAttrs' (name: attr: nameValuePair name (mkAgentConfig name attr)) agents
-    )
-  );
+  config = mkMerge (mapAttrsToList mkAgentConfig agents);
 }
