@@ -37,6 +37,7 @@ in
       settings = {
         theme = "ef-elea-light";
         font-size = 16;
+        macos-option-as-alt = true;
         keybind = [
           "shift+enter=text:\n" # newline
           "super+c=copy_to_clipboard"
