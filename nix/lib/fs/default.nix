@@ -1,5 +1,26 @@
 { lib, ... }:
 let
+  nixRoot = ../../.;
+
+  /**
+    Get a repo-relative file inside `nix/`.
+
+    # Example
+
+    ```nix
+    getFile "modules/shared/nix/default.nix"
+    =>
+    /path/to/repo/nix/modules/shared/nix/default.nix
+    ```
+
+    # Type
+
+    ```
+    getFile :: String -> Path
+    ```
+  */
+  getFile = relPath: nixRoot + "/${relPath}";
+
   /**
     Get all regular files in a directory.
 
@@ -91,6 +112,11 @@ let
 in
 {
   fs = {
-    inherit getFiles isNixFile getModuleFiles;
+    inherit
+      getFiles
+      isNixFile
+      getModuleFiles
+      getFile
+      ;
   };
 }
