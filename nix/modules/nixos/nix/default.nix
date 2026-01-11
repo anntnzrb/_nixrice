@@ -9,7 +9,7 @@ let
 in
 {
   imports = [
-    (lib.snowfall.fs.get-file "modules/shared/nix/default.nix")
+    (lib.${namespace}.fs.getFile "modules/shared/nix/default.nix")
   ];
 
   config = lib.mkIf cfg.enable {

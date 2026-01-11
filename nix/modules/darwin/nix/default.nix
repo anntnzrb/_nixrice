@@ -12,7 +12,7 @@ let
 in
 {
   imports = [
-    (lib.snowfall.fs.get-file "modules/shared/nix/default.nix")
+    (lib.${namespace}.fs.getFile "modules/shared/nix/default.nix")
     inputs.determinate.darwinModules.default
   ];
 

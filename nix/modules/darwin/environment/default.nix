@@ -1,9 +1,10 @@
 {
   lib,
+  namespace,
   ...
 }:
 {
   imports = [
-    (lib.snowfall.fs.get-file "modules/shared/environment/default.nix")
+    (lib.${namespace}.fs.getFile "modules/shared/environment/default.nix")
   ];
 }
