@@ -23,6 +23,10 @@ let
       type = "npm";
       package = "opencode-ai";
     };
+    pi = {
+      type = "npm";
+      package = "@mariozechner/pi-coding-agent";
+    };
     gemini = {
       type = "npm";
       package = "@google/gemini-cli";

@@ -44,6 +44,7 @@ in
         goose = on;
         kilo = on;
         opencode = on;
+        pi = on;
         qwen = on;
       };
     };
