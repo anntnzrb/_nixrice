@@ -12,3 +12,6 @@ This repo is a Nix Flake–driven dotfiles system built atop `snowfall-lib`. Thi
 2. **Conditional activation**: All config gated by `lib.mkIf cfg.enable` 
 3. **Namespace isolation**: Use prefix exclusively
 4. **Fail-safe defaults**: Features disabled by default, explicit opt-in
+
+### Build / Test
+- Full gate: ensure all files tracked, then run `nix flake check`
