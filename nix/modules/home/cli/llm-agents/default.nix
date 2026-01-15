@@ -75,7 +75,19 @@ let
           VERSION="latest"
           while [ $# -gt 0 ]; do
             case "$1" in
-              -v|--version) VERSION="$2"; shift 2 ;;
+              --version0)
+                if [ $# -ge 2 ] && [ -n "''${2-}" ] && [ "''${2#-}" = "$2" ]; then
+                  VERSION="$2"
+                  shift 2
+                  continue
+                fi
+                break
+                ;;
+              --version0=*)
+                VERSION="''${1#*=}"
+                shift
+                continue
+                ;;
               --) shift; break ;;
               *) break ;;
             esac
