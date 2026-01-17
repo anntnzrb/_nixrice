@@ -23,6 +23,8 @@ let
 in
 {
   liberion = {
+    suites.core = on;
+
     home = {
       keyboard = {
         layout = "us";
@@ -35,34 +37,20 @@ in
     shells = {
       sessionVariables = {
         BROWSER = "firefox";
-        EDITOR = "nvim";
         FILE = "pcmanfm";
         TERMINAL = "alacritty";
       };
-      prompt.starship = on;
 
       bash = on;
     };
 
     cli = {
-      git = on // {
-        lazygit = on;
-      };
-
-      btop = on;
-      direnv = on;
-      fastfetch = on;
-      fzf = on;
       neofetch = off;
       simple-mtpfs = on;
-      tldr = on;
-      yt-dlp = on;
-      zoxide = on;
     };
 
     editors = {
       emacs = on;
-      neovim = on;
       vscode = on;
     };
 

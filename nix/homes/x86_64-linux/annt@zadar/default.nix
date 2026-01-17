@@ -8,30 +8,15 @@ let
 in
 {
   liberion = {
-    shells = {
-      sessionVariables = {
-        EDITOR = "nvim";
-      };
-      prompt.starship = on;
+    suites.core = on;
 
+    shells = {
       bash = on;
     };
 
     cli = {
-      git = on // {
-        lazygit = on;
-      };
-
-      btop = on;
-      direnv = on;
       fastfetch = on;
-      fzf = on;
       simple-mtpfs = on;
-      zoxide = on;
-    };
-
-    editors = {
-      neovim = on;
     };
   };
 }

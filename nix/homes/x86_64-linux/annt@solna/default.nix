@@ -14,35 +14,20 @@ let
 in
 {
   liberion = {
+    suites.core = on;
+
     shells = {
       sessionVariables = {
         BROWSER = "chromium";
-        EDITOR = "nvim";
         FILE = "pcmanfm";
         TERMINAL = "alacritty";
       };
-      prompt.starship = on;
 
       bash = on;
     };
 
     cli = {
-      git = on // {
-        lazygit = on;
-      };
-
-      btop = on;
-      direnv = on;
-      fastfetch = on;
-      fzf = on;
       simple-mtpfs = on;
-      tldr = on;
-      yt-dlp = on;
-      zoxide = on;
-    };
-
-    editors = {
-      neovim = on;
     };
 
     desktop = {

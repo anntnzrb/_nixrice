@@ -8,49 +8,20 @@ let
 in
 {
   liberion = {
-    shells = {
-      sessionVariables.EDITOR = "nvim";
-      prompt.starship = on;
+    suites.core = on;
+    suites.llmAgents = on;
 
+    shells = {
       fish = on;
       zsh = on;
-      preliminaryMessage.disable = true;
-
-      tmux = on;
     };
 
     cli = {
-      git = on // {
-        gh = on;
-        lazygit = on;
-      };
-
-      btop = on;
-      bun = on;
-      direnv = on;
-      fzf = on;
+      git.gh = on;
       tldr = on;
-      uv = on;
       yazi = on;
       yt-dlp = on;
-      zoxide = on;
-
-      llmAgents = {
-        chutes = on;
-        claude-code = on;
-        codex = on;
-        crush = on;
-        droid = on;
-        gemini = on;
-        goose = on;
-        kilo = on;
-        opencode = on;
-        pi = on;
-        qwen = on;
-      };
     };
-
-    editors.neovim = on;
 
     desktop = {
       terminal-emulators.ghostty = on;
