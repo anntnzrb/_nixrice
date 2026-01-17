@@ -1,1 +1,0 @@
-../annt@beirut/default.nix
