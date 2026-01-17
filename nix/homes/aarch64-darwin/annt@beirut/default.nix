@@ -17,10 +17,6 @@ in
       zsh = on;
     };
 
-    cli = {
-      git.gh = on;
-    };
-
     desktop = {
       terminal-emulators.ghostty = on;
       browsers.firefox = on;

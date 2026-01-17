@@ -13,8 +13,5 @@ in
       bash = on;
     };
 
-    cli = {
-      git.gh = on;
-    };
   };
 }

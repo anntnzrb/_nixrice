@@ -27,9 +27,6 @@ in
       bash = on;
     };
 
-    cli = {
-    };
-
     desktop = {
       sxhkd = on // {
         timeout = 3;
