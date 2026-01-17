@@ -48,3 +48,6 @@ Include host-specific configurations like display settings, autostart programs, 
 
 **Modular Composition:**
 Leverage nested attribute sets to organize related features while keeping unused options available but disabled.
+
+**Suites:**
+Use suites to bundle shared choices across home systems and keep host files thin.
