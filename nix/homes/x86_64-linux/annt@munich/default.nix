@@ -24,6 +24,7 @@ in
 {
   liberion = {
     suites.core = on;
+    suites.cli = on;
 
     home = {
       keyboard = {

@@ -15,6 +15,7 @@ in
 {
   liberion = {
     suites.core = on;
+    suites.cli = on;
 
     shells = {
       sessionVariables = {

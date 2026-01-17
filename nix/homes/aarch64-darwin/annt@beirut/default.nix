@@ -9,6 +9,7 @@ in
 {
   liberion = {
     suites.core = on;
+    suites.cli = on;
     suites.llmAgents = on;
 
     shells = {
