@@ -32,6 +32,7 @@ in
         fastfetch = on;
         fzf = on;
         tldr = on;
+        yazi = on;
         yt-dlp = on;
         zoxide = on;
       };
