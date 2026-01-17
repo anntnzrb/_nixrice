@@ -19,9 +19,6 @@ in
 
     cli = {
       git.gh = on;
-      tldr = on;
-      yazi = on;
-      yt-dlp = on;
     };
 
     desktop = {

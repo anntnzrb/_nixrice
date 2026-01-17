@@ -6,6 +6,7 @@ in
   ${namespace} = {
     suites.core = on;
     suites.cli = on;
+    suites.dev = on;
     suites.llmAgents = on;
 
     shells = {
@@ -14,8 +15,6 @@ in
 
     cli = {
       git.gh = on;
-      husky = on;
-      repomix = on;
     };
   };
 }

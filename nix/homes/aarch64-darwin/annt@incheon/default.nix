@@ -10,6 +10,7 @@ in
   liberion = {
     suites.core = on;
     suites.cli = on;
+    suites.dev = on;
 
     shells = {
       zsh = on;
@@ -17,8 +18,6 @@ in
 
     cli = {
       git.gh = on;
-      omnix = on;
-      yazi = on;
     };
 
     desktop.terminal-emulators.ghostty = on;

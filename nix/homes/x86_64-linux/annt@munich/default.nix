@@ -47,7 +47,6 @@ in
 
     cli = {
       neofetch = off;
-      simple-mtpfs = on;
     };
 
     editors = {

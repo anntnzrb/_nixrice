@@ -28,7 +28,6 @@ in
     };
 
     cli = {
-      simple-mtpfs = on;
     };
 
     desktop = {

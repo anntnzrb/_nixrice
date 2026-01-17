@@ -16,8 +16,6 @@ in
     };
 
     cli = {
-      fastfetch = on;
-      simple-mtpfs = on;
     };
   };
 }
