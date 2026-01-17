@@ -16,10 +16,6 @@ in
     # no dual-boot. systemd-boot suffices
     boot.bootloader.systemd-boot = on;
 
-    hardware = {
-      keyboard.keyd = on;
-    };
-
     network = {
       networkmanager = on;
       ssh = on;
