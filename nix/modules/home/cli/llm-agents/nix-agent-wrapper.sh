@@ -1,6 +1,13 @@
 #!/bin/sh
 set -eu
 
+# SCRIPT_DIR
+# Wrapper directory
+SCRIPT_DIR="${0%/*}"
+
+# shellcheck source=agent-wrapper-common.sh
+. "${SCRIPT_DIR}/agent-wrapper-common.sh"
+
 FLAKE="github:numtide/llm-agents.nix/main"
 REFRESH_SECS=$((8 * 60 * 60))
 
@@ -30,4 +37,4 @@ last=0
     && nix flake metadata --refresh "${FLAKE}" >/dev/null 2>&1 || :
 [ $((now - last)) -ge "${REFRESH_SECS}" ] && printf '%s\n' "${now}" >"${STAMP_FILE}" || :
 
-exec nix --accept-flake-config run "${FLAKE}#${ATTR}" -- "$@"
+run_exec nix --accept-flake-config run "${FLAKE}#${ATTR}" -- "$@"

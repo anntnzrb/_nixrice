@@ -15,13 +15,38 @@ let
     mkMerge
     ;
 
+  wrapperDir = "lib/llm-agents";
+
+  wrappers = pkgs.runCommand "llm-agent-wrappers" { } ''
+    mkdir -p "$out/${wrapperDir}"
+    cp ${./agent-wrapper-common.sh} "$out/${wrapperDir}/agent-wrapper-common.sh"
+    cp ${./js-agent-wrapper.sh} "$out/${wrapperDir}/js-agent-wrapper.sh"
+    cp ${./script-agent-wrapper.sh} "$out/${wrapperDir}/script-agent-wrapper.sh"
+    cp ${./nix-agent-wrapper.sh} "$out/${wrapperDir}/nix-agent-wrapper.sh"
+    chmod 755 "$out/${wrapperDir}/agent-wrapper-common.sh"
+    chmod 755 "$out/${wrapperDir}/js-agent-wrapper.sh"
+    chmod 755 "$out/${wrapperDir}/script-agent-wrapper.sh"
+    chmod 755 "$out/${wrapperDir}/nix-agent-wrapper.sh"
+  '';
+
   # agents: name -> { type, ... }
   # type "npm": runs via `bun x <package>@<version>`
   # type "nix": runs via nix flake
+  # type "script": runs a local script via runner
   agents = {
     opencode = {
       type = "npm";
       package = "opencode-ai";
+    };
+    claude = {
+      type = "script";
+      runner = "${pkgs.bun}/bin/bun";
+      script = "${config.home.homeDirectory}/.config/agents/tools/claude/bin/lib/claude.ts";
+    };
+    chutes = {
+      type = "script";
+      runner = "${pkgs.runtimeShell}";
+      script = "${config.home.homeDirectory}/.config/agents/tools/chutes/bin/chutes";
     };
     pi = {
       type = "npm";
@@ -72,33 +97,25 @@ let
       pkgs.writeShellApplication {
         inherit name;
         text = ''
-          VERSION="latest"
-          while [ $# -gt 0 ]; do
-            case "$1" in
-              --version0)
-                if [ $# -ge 2 ] && [ -n "''${2-}" ] && [ "''${2#-}" = "$2" ]; then
-                  VERSION="$2"
-                  shift 2
-                  continue
-                fi
-                break
-                ;;
-              --version0=*)
-                VERSION="''${1#*=}"
-                shift
-                continue
-                ;;
-              --) shift; break ;;
-              *) break ;;
-            esac
-          done
-          exec ${pkgs.bun}/bin/bun x "${spec.package}@$VERSION" "$@"
+          exec ${pkgs.runtimeShell} ${wrappers}/${wrapperDir}/js-agent-wrapper.sh \
+            ${pkgs.bun}/bin/bun ${spec.package} "$@"
+        '';
+      }
+    else if spec.type == "script" then
+      pkgs.writeShellApplication {
+        inherit name;
+        text = ''
+          exec ${pkgs.runtimeShell} ${wrappers}/${wrapperDir}/script-agent-wrapper.sh \
+            ${spec.runner} ${spec.script} "$@"
         '';
       }
     else
       pkgs.writeShellApplication {
         inherit name;
-        text = ''exec ${pkgs.runtimeShell} ${./nix-agent-wrapper.sh} ${spec.attr} "$@"'';
+        text = ''
+          exec ${pkgs.runtimeShell} ${wrappers}/${wrapperDir}/nix-agent-wrapper.sh \
+            ${spec.attr} "$@"
+        '';
       };
 
   /**
@@ -115,7 +132,12 @@ let
     let
       cfg = config.${namespace}.cli.llmAgents.${name};
     in
-    mkIf cfg.enable { home.packages = [ (mkWrapper name spec) ]; };
+    mkIf cfg.enable (mkMerge [
+      { home.packages = [ (mkWrapper name spec) ]; }
+      (mkIf (name == "codex") {
+        home.sessionVariables.CODEX_HOME = "${config.home.homeDirectory}/.config/codex";
+      })
+    ]);
 
 in
 {
