@@ -1,17 +1,25 @@
-{ lib, namespace, ... }:
+{
+  lib,
+  namespace,
+  ...
+}:
 let
   inherit (lib.${namespace}.module) on;
 in
 {
-  ${namespace} = {
+  liberion = {
     suites.core = on;
     suites.cli = on;
-    suites.dev = on;
     suites.llmAgents = on;
 
     shells = {
-      bash = on;
+      fish = on;
+      zsh = on;
     };
 
+    desktop = {
+      terminal-emulators.ghostty = on;
+      browsers.firefox = on;
+    };
   };
 }

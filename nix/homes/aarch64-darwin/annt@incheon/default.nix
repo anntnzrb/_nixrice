@@ -10,12 +10,16 @@ in
   liberion = {
     suites.core = on;
     suites.cli = on;
-    suites.dev = on;
+    suites.llmAgents = on;
 
     shells = {
+      fish = on;
       zsh = on;
     };
 
-    desktop.terminal-emulators.ghostty = on;
+    desktop = {
+      terminal-emulators.ghostty = on;
+      browsers.firefox = on;
+    };
   };
 }
