@@ -145,6 +145,22 @@ in
       };
     };
 
+    home.activation.clawdbotLaunchdPreUnload =
+      config.lib.dag.entryBefore
+        [
+          "setupLaunchAgents"
+        ]
+        ''
+          label="${clawdbot.launchd.label}"
+          domain="${clawdbot.launchd.domain}"
+          launchctl="${clawdbot.launchd.launchctlBin}"
+
+          if "$launchctl" print "$domain/$label" >/dev/null 2>&1; then
+            "$launchctl" bootout "$domain/$label" 2>/dev/null || true
+            "$launchctl" remove "$label" 2>/dev/null || true
+          fi
+        '';
+
     home.activation.clawdbotLaunchdRestart =
       config.lib.dag.entryAfter
         [
