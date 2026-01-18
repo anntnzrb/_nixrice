@@ -17,6 +17,7 @@ let
 
   cfg = config.${namespace}.cli.clawdbot;
 
+  inherit (pkgs.stdenv.hostPlatform) isDarwin;
   homeDir = config.home.homeDirectory;
   telegramAllowFromDefault = [ 8518708886 ];
   providersData = import ./providers.nix { inherit homeDir; };
@@ -112,7 +113,7 @@ in
         enable = true;
         package = clawdbotWrapperPackage;
 
-        launchd = {
+        launchd = lib.mkIf isDarwin {
           enable = true;
           inherit (clawdbot.launchd) label;
         };
@@ -145,7 +146,7 @@ in
       };
     };
 
-    home.activation.clawdbotLaunchdPreUnload =
+    home.activation.clawdbotLaunchdPreUnload = lib.mkIf isDarwin (
       config.lib.dag.entryBefore
         [
           "setupLaunchAgents"
@@ -159,9 +160,10 @@ in
             "$launchctl" bootout "$domain/$label" 2>/dev/null || true
             "$launchctl" remove "$label" 2>/dev/null || true
           fi
-        '';
+        ''
+    );
 
-    home.activation.clawdbotLaunchdRestart =
+    home.activation.clawdbotLaunchdRestart = lib.mkIf isDarwin (
       config.lib.dag.entryAfter
         [
           "clawdbotLaunchdRelink"
@@ -181,6 +183,7 @@ in
             "$launchctl" bootstrap "$domain" "$plist" 2>/dev/null || true
             "$launchctl" kickstart -k "$domain/$label" 2>/dev/null || true
           fi
-        '';
+        ''
+    );
   };
 }
