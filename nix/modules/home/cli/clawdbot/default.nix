@@ -167,6 +167,7 @@ in
       config.lib.dag.entryAfter
         [
           "clawdbotLaunchdRelink"
+          "setupLaunchAgents"
         ]
         ''
           label="${clawdbot.launchd.label}"
