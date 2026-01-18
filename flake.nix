@@ -21,6 +21,7 @@
       overlays = [
         inputs.emacs-overlay.overlays.default
         inputs.nixpkgs-firefox-darwin.overlay
+        inputs.nix-clawdbot.overlays.default
       ];
 
       channels-config.allowUnfree = true;
@@ -86,6 +87,16 @@
       url = "github:cachix/git-hooks.nix/master";
       inputs.nixpkgs.follows = "nixpkgs-stable";
       inputs.gitignore.follows = "";
+    };
+
+    # -------------------------------------------------------------------------
+    # agents
+    # -------------------------------------------------------------------------
+
+    nix-clawdbot = {
+      url = "github:clawdbot/nix-clawdbot/main";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.home-manager.follows = "home-manager";
     };
 
     # -------------------------------------------------------------------------
