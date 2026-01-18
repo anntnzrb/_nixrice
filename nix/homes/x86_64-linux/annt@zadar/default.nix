@@ -8,8 +8,12 @@ let
 in
 {
   liberion = {
-    suites.core = on;
-    suites.cli = on;
+    suites = {
+      cli = on;
+      core = on;
+      dev = on;
+      llmAgents = on;
+    };
 
     shells.bash = on;
   };

@@ -8,14 +8,14 @@ let
 in
 {
   liberion = {
-    suites.core = on;
-    suites.cli = on;
-    suites.llmAgents = on;
-
-    shells = {
-      fish = on;
-      zsh = on;
+    suites = {
+      cli = on;
+      core = on;
+      dev = on;
+      llmAgents = on;
     };
+
+    shells.zsh = on;
 
     desktop = {
       terminal-emulators.ghostty = on;
