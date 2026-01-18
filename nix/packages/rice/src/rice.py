@@ -104,7 +104,7 @@ NIXOS_BUILD = Task(
 NIXOS_BOOT = Task(
     help="Build and activate on next boot",
     info="Setting boot...",
-    cmd=("nixos-rebuild", "boot", "--use-remote-sudo", "--flake", ".#"),
+    cmd=("nixos-rebuild", "boot", "--sudo", "--flake", ".#"),
     ok="Boot set",
     platform=Platform.LINUX,
 )
@@ -112,7 +112,7 @@ NIXOS_BOOT = Task(
 NIXOS_SWITCH = Task(
     help="Build and switch immediately",
     info="Switching...",
-    cmd=("nixos-rebuild", "switch", "--use-remote-sudo", "--flake", ".#"),
+    cmd=("nixos-rebuild", "switch", "--sudo", "--flake", ".#"),
     ok="NixOS switch complete",
     platform=Platform.LINUX,
 )
