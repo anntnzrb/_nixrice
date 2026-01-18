@@ -29,6 +29,22 @@ let
       cfg.provider.apiKeyFile
     else
       selectedProvider.apiKeyFile;
+  mkdirCommand =
+    let
+      enabledInstances = lib.filterAttrs (_: inst: inst.enable or false) (
+        config.programs.clawdbot.instances or { }
+      );
+      dirs = lib.flatten (
+        lib.mapAttrsToList (_: inst: [
+          inst.stateDir
+          inst.workspaceDir
+          (builtins.dirOf inst.logPath)
+        ]) enabledInstances
+      );
+    in
+    lib.optionalString (dirs != [ ]) ''
+      ${pkgs.coreutils}/bin/mkdir -p ${lib.concatStringsSep " " dirs}
+    '';
   defaults = {
     documentsDir = ./documents;
     telegram = {
@@ -184,6 +200,16 @@ in
             "$launchctl" bootstrap "$domain" "$plist" 2>/dev/null || true
             "$launchctl" kickstart -k "$domain/$label" 2>/dev/null || true
           fi
+        ''
+    );
+
+    home.activation.clawdbotDirs = lib.mkForce (
+      config.lib.dag.entryAfter
+        [
+          "writeBoundary"
+        ]
+        ''
+          ${mkdirCommand}
         ''
     );
   };
