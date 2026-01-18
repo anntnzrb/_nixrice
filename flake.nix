@@ -95,8 +95,6 @@
 
     nix-clawdbot = {
       url = "github:clawdbot/nix-clawdbot/main";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-      inputs.home-manager.follows = "home-manager";
     };
 
     # -------------------------------------------------------------------------
