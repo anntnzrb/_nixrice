@@ -12,5 +12,12 @@ in
     (lib.${namespace}.fs.getFile "modules/shared/network/ssh/default.nix")
   ];
 
-  config = lib.mkIf cfg.enable { };
+  config = lib.mkIf cfg.enable {
+    services.openssh = {
+      inherit (cfg) enable;
+      ports = [ cfg.port ];
+    };
+
+    networking.firewall.allowedTCPPorts = [ cfg.port ];
+  };
 }
