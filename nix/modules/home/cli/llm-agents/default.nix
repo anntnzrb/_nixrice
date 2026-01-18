@@ -137,6 +137,9 @@ let
       (mkIf (name == "codex") {
         home.sessionVariables.CODEX_HOME = "${config.home.homeDirectory}/.config/codex";
       })
+      (mkIf (name == "pi") {
+        home.sessionVariables.PI_CODING_AGENT_DIR = "${config.home.homeDirectory}/.config/pi/agent";
+      })
     ]);
 
 in
