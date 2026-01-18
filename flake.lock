@@ -996,8 +996,8 @@
     "yazi-flavors": {
       "flake": false,
       "locked": {
-        "lastModified": 1767573407,
-        "narHash": "sha256-RrF97Lg9v0LV+XseJw4RrdbXlv+LJzfooOgqHD+LGcw=",
+        "lastModified": 1768756605,
+        "narHash": "sha256-xGnebGuSOZpQl/QhuZkwgrjfAlfbEtruA9UVe030mZM=",
         "type": "tarball",
         "url": "https://github.com/yazi-rs/flavors/archive/main.tar.gz"
       },
