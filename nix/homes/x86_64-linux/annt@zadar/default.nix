@@ -16,5 +16,7 @@ in
     };
 
     shells.bash = on;
+
+    cli.clawdbot = on;
   };
 }
