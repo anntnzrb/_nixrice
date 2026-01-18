@@ -1,18 +1,18 @@
 # shellcheck shell=bash
 set -euo pipefail
 
-minimax_env="@minimaxApiKeyEnv@"
-minimax_file="@minimaxKeyFile@"
-if [ ! -f "$minimax_file" ]; then
-    echo "MINIMAX API key file not found: $minimax_file" >&2
+provider_env="@providerApiKeyEnv@"
+provider_key_file="@providerApiKeyFile@"
+if [ ! -f "$provider_key_file" ]; then
+    echo "API key file not found: $provider_key_file" >&2
     exit 1
 fi
 
-minimax_key="$(/bin/cat "$minimax_file")"
-if [ -z "$minimax_key" ]; then
-    echo "MINIMAX API key file is empty: $minimax_file" >&2
+provider_key="$(/bin/cat "$provider_key_file")"
+if [ -z "$provider_key" ]; then
+    echo "API key file is empty: $provider_key_file" >&2
     exit 1
 fi
 
-export "${minimax_env}=${minimax_key}"
+export "${provider_env}=${provider_key}"
 exec clawdbot "$@"

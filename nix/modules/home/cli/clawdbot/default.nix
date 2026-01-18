@@ -19,43 +19,20 @@ let
 
   homeDir = config.home.homeDirectory;
   telegramAllowFromDefault = [ 8518708886 ];
-  minimaxApiKeyEnv = "MINIMAX_API_KEY";
-  minimaxApiKeyRef = "\${MINIMAX_API_KEY}";
-  minimaxProviderName = "minimax";
-  minimaxModelId = "MiniMax-M2.1";
-  minimaxModelName = "MiniMax M2.1";
-  minimaxModelInputs = [ "text" ];
-  minimaxApi = {
-    baseUrl = "https://api.minimax.io/v1";
-    transport = "openai-completions";
-  };
-  minimaxLimits = {
-    contextWindow = 200000;
-    maxTokens = 8192;
-  };
-  minimaxCost = {
-    input = 15;
-    output = 60;
-    cacheRead = 2;
-    cacheWrite = 10;
-  };
+  providersData = import ./providers.nix { inherit homeDir; };
+  inherit (providersData) providers defaultProvider;
+  providerName = cfg.provider.name;
+  selectedProvider = providers.${providerName};
+  providerApiKeyFile =
+    if cfg.provider.apiKeyFile != null then
+      cfg.provider.apiKeyFile
+    else
+      selectedProvider.apiKeyFile;
   defaults = {
     documentsDir = ./documents;
     telegram = {
-      botTokenFile = "${homeDir}/.secrets/telegram-bot-token";
+      botTokenFile = "${homeDir}/.secrets/clawdbot-telegram-bot-token";
       allowFrom = telegramAllowFromDefault;
-    };
-    minimax = {
-      keyFile = "${homeDir}/.secrets/minimax-api-key";
-      apiKeyEnv = minimaxApiKeyEnv;
-      apiKeyRef = minimaxApiKeyRef;
-      providerName = minimaxProviderName;
-      modelId = minimaxModelId;
-      modelName = minimaxModelName;
-      modelInputs = minimaxModelInputs;
-      api = minimaxApi;
-      limits = minimaxLimits;
-      cost = minimaxCost;
     };
     config = {
       modelsMode = "merge";
@@ -68,35 +45,18 @@ let
     };
   };
 
-  minimaxModelPrimary = "${minimaxProviderName}/${minimaxModelId}";
-  minimax = {
-    model = {
-      id = minimaxModelId;
-      name = minimaxModelName;
-      primary = minimaxModelPrimary;
-      inputs = minimaxModelInputs;
-    };
-    provider = {
-      name = minimaxProviderName;
-      api = minimaxApi;
-      apiKeyRef = minimaxApiKeyRef;
-    };
-    limits = minimaxLimits;
-    cost = minimaxCost;
-  };
-
   clawdbot = {
     inherit (defaults) launchd;
     secrets = {
-      minimaxKeyFile = cfg.minimax.keyFile;
+      providerKeyFile = providerApiKeyFile;
       telegramTokenFile = cfg.telegram.botTokenFile;
     };
     telegramAllowFrom = cfg.telegram.allowFrom;
   };
   clawdbotWrapperScript =
     lib.replaceStrings
-      [ "@minimaxApiKeyEnv@" "@minimaxKeyFile@" ]
-      [ minimaxApiKeyEnv clawdbot.secrets.minimaxKeyFile ]
+      [ "@providerApiKeyEnv@" "@providerApiKeyFile@" ]
+      [ selectedProvider.apiKeyEnv clawdbot.secrets.providerKeyFile ]
       (builtins.readFile ./clawdbot-wrapper.sh);
   clawdbotWrapperPackage = pkgs.writeShellApplication {
     name = "clawdbot";
@@ -112,21 +72,29 @@ in
 
     documents = mkOpt' path defaults.documentsDir;
 
+    provider = {
+      name = mkOpt' str defaultProvider;
+      apiKeyFile = mkOpt' (lib.types.nullOr str) null;
+    };
+
     telegram = {
       botTokenFile = mkOpt' str defaults.telegram.botTokenFile;
       allowFrom = mkOpt' (listOf int) defaults.telegram.allowFrom;
     };
-
-    minimax = {
-      keyFile = mkOpt' str defaults.minimax.keyFile;
-    };
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = lib.hasAttr providerName providers;
+        message = "Unknown Clawdbot provider '${providerName}'. Add it in providers.nix.";
+      }
+    ];
+
     programs.clawdbot = {
       enable = true;
       inherit (cfg) documents;
-      defaults.model = minimax.model.primary;
+      defaults.model = selectedProvider.model.primary;
       firstParty = {
         summarize.enable = false;
         peekaboo.enable = false;
@@ -156,20 +124,19 @@ in
         };
 
         configOverrides = {
-          agents.defaults.model.primary = minimax.model.primary;
+          agents.defaults.model.primary = selectedProvider.model.primary;
           models = {
             mode = defaults.config.modelsMode;
-            providers.${minimax.provider.name} = {
-              inherit (minimax.provider.api) baseUrl;
-              apiKey = minimax.provider.apiKeyRef;
-              api = minimax.provider.api.transport;
+            providers.${providerName} = {
+              inherit (selectedProvider.api) baseUrl;
+              apiKey = selectedProvider.apiKeyRef;
+              api = selectedProvider.api.transport;
               models = [
                 {
-                  inherit (minimax.model) id name;
-                  reasoning = false;
-                  input = minimax.model.inputs;
-                  inherit (minimax) cost;
-                  inherit (minimax.limits) contextWindow maxTokens;
+                  inherit (selectedProvider.model) id name reasoning;
+                  input = selectedProvider.model.inputs;
+                  inherit (selectedProvider) cost;
+                  inherit (selectedProvider.limits) contextWindow maxTokens;
                 }
               ];
             };
