@@ -7,14 +7,46 @@ let
   inherit (lib.${namespace}.module) on;
 in
 {
-  liberion = {
-    suites = {
-      cli = on;
-      core = on;
-      dev = on;
-      llmAgents = on;
+  ${namespace} = {
+    shells = {
+      sessionVariables = {
+        EDITOR = "nvim";
+      };
+      preliminaryMessage.disable = true;
+      prompt.starship = on;
+
+      bash = on;
+
+      tmux = on;
     };
 
-    shells.zsh = on;
+    cli = {
+      git = on // {
+        gh = on;
+        lazygit = on;
+      };
+
+      btop = on;
+      bun = on;
+      direnv = on;
+      fastfetch = on;
+      fzf = on;
+      husky = on;
+      repomix = on;
+      tldr = on;
+      uv = on;
+      yt-dlp = on;
+      zoxide = on;
+
+      llmAgents = {
+        codex = on;
+        opencode = on;
+        pi = on;
+      };
+    };
+
+    editors = {
+      neovim = on;
+    };
   };
 }
