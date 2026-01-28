@@ -9,6 +9,8 @@ let
 in
 {
   ${namespace} = {
+    user = on;
+
     wsl = on;
 
     network.ssh = on;

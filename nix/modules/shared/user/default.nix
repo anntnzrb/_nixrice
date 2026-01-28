@@ -6,13 +6,13 @@
 let
   inherit (lib.${namespace}.module)
     mkOpt'
-    mkOptEnabled'
+    mkOptDisabled'
     ;
   inherit (lib.types) str;
 in
 {
   options.${namespace}.user = {
-    enable = mkOptEnabled';
+    enable = mkOptDisabled';
     name = mkOpt' str "annt";
   };
 }

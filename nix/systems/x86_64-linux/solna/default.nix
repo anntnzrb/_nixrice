@@ -10,6 +10,8 @@ in
   imports = [ ./hardware ];
 
   ${namespace} = {
+    user = on;
+
     # no dual-boot. systemd-boot suffices
     boot.bootloader.systemd-boot = on;
 

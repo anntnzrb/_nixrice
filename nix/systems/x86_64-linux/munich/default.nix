@@ -12,6 +12,8 @@ in
   time.hardwareClockInLocalTime = true; # dual-boot
 
   ${namespace} = {
+    user = on;
+
     # GRUB because of dual-boot
     boot.bootloader.grub = on;
 

@@ -54,7 +54,7 @@ in
   ];
 
   ${namespace} = {
-    user = {
+    user = on // {
       inherit (login) name initialPassword;
     };
 
