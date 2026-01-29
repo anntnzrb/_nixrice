@@ -134,14 +134,7 @@ let
     in
     mkIf cfg.enable (mkMerge [
       { home.packages = [ (mkWrapper name spec) ]; }
-      (mkIf (name == "codex") {
-        home.sessionVariables.CODEX_HOME = "${config.home.homeDirectory}/.config/codex";
-      })
-      (mkIf (name == "pi") {
-        home.sessionVariables.PI_CODING_AGENT_DIR = "${config.home.homeDirectory}/.config/pi/agent";
-      })
     ]);
-
 in
 {
   options.${namespace}.cli.llmAgents = mapAttrs' (
