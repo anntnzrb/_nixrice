@@ -8,16 +8,38 @@
 }:
 let
   inherit (lib.${namespace}.module)
+    mkOpt'
     mkOptDisabled'
     ;
+  inherit (lib.types)
+    nullOr
+    str
+    ;
 
-  themesDir = "ghostty/themes";
+  ghosttyDir = "ghostty";
+  ghosttyConfigHome = "${config.xdg.configHome}/${ghosttyDir}";
+  themesDir = "${ghosttyDir}/themes";
 
   cfg = config.${namespace}.desktop.terminal-emulators.ghostty;
+
+  normalizeLocalConfigFile =
+    value:
+    if value == null then
+      null
+    else
+      let
+        optional = lib.hasPrefix "?" value;
+        raw = if optional then lib.removePrefix "?" value else value;
+        abs = if lib.hasPrefix "/" raw then raw else "${ghosttyConfigHome}/${raw}";
+      in
+      if optional then "?${abs}" else abs;
+
+  localConfigFile = normalizeLocalConfigFile cfg.localConfigFile;
 in
 {
   options.${namespace}.desktop.terminal-emulators.ghostty = {
     enable = mkOptDisabled';
+    localConfigFile = mkOpt' (nullOr str) "?local.conf";
   };
 
   config = lib.mkIf cfg.enable {
@@ -53,6 +75,9 @@ in
           "super+zero=reset_font_size"
 
         ];
+      }
+      // lib.optionalAttrs (localConfigFile != null) {
+        "config-file" = localConfigFile;
       };
     };
   };
