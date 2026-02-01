@@ -28,7 +28,10 @@ in
       };
     };
 
-    services.aerospace = on;
+    services = {
+      aerospace = on;
+      tailscale = on;
+    };
 
     network.ssh = on;
 
