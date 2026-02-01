@@ -194,10 +194,15 @@ let
   # Convert privacy options to Firefox settings
   privacyToSettings = cfg: {
     "privacy.sanitize.sanitizeOnShutdown" = cfg.sanitizeOnShutdown.enable;
+    "privacy.clearOnShutdown.browsingHistoryAndDownloads" = false;
     "privacy.clearOnShutdown_v2.cache" = cfg.sanitizeOnShutdown.cache;
     "privacy.clearOnShutdown_v2.cookiesAndStorage" = cfg.sanitizeOnShutdown.cookies;
+    "privacy.clearOnShutdown_v2.browsingHistoryAndDownloads" = false;
+    "privacy.clearOnShutdown_v2.formdata" = false;
     "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" =
       cfg.sanitizeOnShutdown.history;
+    "privacy.clearOnShutdown.formdata" = false;
+    "privacy.clearOnShutdown.history" = false;
     "identity.fxaccounts.enabled" = !cfg.disableSync;
     "browser.newtabpage.activity-stream.feeds.section.highlights" =
       !cfg.disableNewTabHighlights;
