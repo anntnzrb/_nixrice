@@ -51,17 +51,17 @@
 
     nixpkgs = {
       # main nixpkgs reference, most likely pointing to stable
-      url = "https://channels.nixos.org/nixos-25.11/nixexprs.tar.xz";
+      url = "github:NixOS/nixpkgs/nixos-25.11";
     };
 
     nixpkgs-stable = {
       # stable version of nixpkgs
-      url = "https://channels.nixos.org/nixos-25.11/nixexprs.tar.xz";
+      url = "github:NixOS/nixpkgs/nixos-25.11";
     };
 
     nixpkgs-unstable = {
       # unstable version of nixpkgs
-      url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
+      url = "github:NixOS/nixpkgs/nixos-unstable";
     };
 
     nurpkgs = {
@@ -177,34 +177,34 @@
     ghostty-protesilaos = {
       ## ghostty themes
       # protesilaos themes: modus-, ef-, ...
-      url = "https://github.com/anhsirk0/ghostty-themes/archive/main.tar.gz";
+      url = "github:anhsirk0/ghostty-themes/main";
       flake = false;
     };
 
     rio-catppuccin = {
       ## rio themes
       # catppuccin
-      url = "https://github.com/catppuccin/rio/archive/main.tar.gz";
+      url = "github:catppuccin/rio/main";
       flake = false;
     };
 
     rio-dracula = {
       ## rio themes
       # dracula
-      url = "https://github.com/dracula/rio-terminal/archive/main.tar.gz";
+      url = "github:dracula/rio-terminal/main";
       flake = false;
     };
 
     yazi-flavors = {
       # yazi themes
-      url = "https://github.com/yazi-rs/flavors/archive/main.tar.gz";
+      url = "github:yazi-rs/flavors/main";
       flake = false;
     };
 
     yazi-timu-macos = {
       ## yazi themes
       # timu-macos
-      url = "https://gitlab.com/aimebertrand/timu-macos-yazi/-/archive/main/timu-macos-yazi-main.tar.gz";
+      url = "gitlab:aimebertrand/timu-macos-yazi/main";
       flake = false;
     };
 
@@ -214,7 +214,7 @@
 
     zen-browser = {
       # zen browser (firefox fork)
-      url = "github:0xc000022070/zen-browser-flake";
+      url = "github:0xc000022070/zen-browser-flake/main";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
       inputs.home-manager.follows = "home-manager";
     };
