@@ -315,8 +315,8 @@
     "ghostty-protesilaos": {
       "flake": false,
       "locked": {
-        "lastModified": 1751700003,
-        "narHash": "sha256-/QE7ek+PezjwIm2JwPhm03oYoe7msadziWL80SGduGI=",
+        "lastModified": 1769788168,
+        "narHash": "sha256-rLwDCcHCzszB78XFmDEFOZG6yHmRWklrPBDcnErgm5w=",
         "type": "tarball",
         "url": "https://github.com/anhsirk0/ghostty-themes/archive/main.tar.gz"
       },
