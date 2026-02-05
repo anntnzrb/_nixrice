@@ -809,14 +809,15 @@
         "flake-utils-plus": "flake-utils-plus",
         "nixpkgs": [
           "nixpkgs-stable"
-        ]
+        ],
+        "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1765730668,
-        "narHash": "sha256-mr/Co6a4RCuu7e0gIIbVnJWP628NTTpnIFAy2PDa7tY=",
+        "lastModified": 1770326807,
+        "narHash": "sha256-WIVHrQuEGxiheDkqEaNMEJGHxGE4GZVLITfmiD9V/rU=",
         "owner": "anntnzrb",
         "repo": "snowfall-lib",
-        "rev": "9e192f695563b008ae2680cfc6bde37a782244df",
+        "rev": "81e5a40275563a6d2f81f1e1d065ea3414dd806f",
         "type": "github"
       },
       "original": {
@@ -884,6 +885,28 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "treefmt-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "snowfall-lib",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1770228511,
+        "narHash": "sha256-wQ6NJSuFqAEmIg2VMnLdCnUc0b7vslUohqqGGD+Fyxk=",
+        "owner": "numtide",
+        "repo": "treefmt-nix",
+        "rev": "337a4fe074be1042a35086f15481d763b8ddc0e7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "ref": "main",
+        "repo": "treefmt-nix",
         "type": "github"
       }
     },
