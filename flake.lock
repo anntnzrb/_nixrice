@@ -311,6 +311,33 @@
         "type": "github"
       }
     },
+    "git-hooks-nix": {
+      "inputs": {
+        "flake-compat": [
+          "neovim-annt"
+        ],
+        "gitignore": [
+          "neovim-annt"
+        ],
+        "nixpkgs": [
+          "neovim-annt",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1769939035,
+        "narHash": "sha256-Fok2AmefgVA0+eprw2NDwqKkPGEI5wvR+twiZagBvrg=",
+        "owner": "cachix",
+        "repo": "git-hooks.nix",
+        "rev": "a8ca480175326551d6c4121498316261cbb5b260",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cachix",
+        "repo": "git-hooks.nix",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -388,6 +415,7 @@
       "inputs": {
         "ef-themes": "ef-themes",
         "flake-parts": "flake-parts_2",
+        "git-hooks-nix": "git-hooks-nix",
         "import-tree": "import-tree_2",
         "nixpkgs": "nixpkgs_2",
         "nixvim": "nixvim",
@@ -396,11 +424,11 @@
         "vim-spell-es-sug": "vim-spell-es-sug"
       },
       "locked": {
-        "lastModified": 1770403757,
-        "narHash": "sha256-styJ1PtQyUgE3kYo9EbTROrO8OnBMzUzpLk8Khj/His=",
+        "lastModified": 1770443874,
+        "narHash": "sha256-Cd3dB+M73xJwCnNln7HB8xa2t+HsVJWo7aJA1US4AKY=",
         "owner": "anntnzrb",
         "repo": "nixvim",
-        "rev": "6ebeb4016c2230174383c66d3a80dcfc817e8aa4",
+        "rev": "4e45935c8a78e84132dc2a375489702fc6fea5c3",
         "type": "github"
       },
       "original": {
