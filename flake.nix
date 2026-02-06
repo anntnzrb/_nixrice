@@ -162,7 +162,7 @@
 
     neovim-annt = {
       # annt's neovim
-      url = "github:anntnzrb/nvf/main";
+      url = "github:anntnzrb/nixvim/main";
     };
 
     ghostty-protesilaos = {
