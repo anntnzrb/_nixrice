@@ -21,7 +21,7 @@ in
     nix = off;
 
     # Custom settings written to /etc/nix/nix.custom.conf
-    determinate-nix.customSettings = {
+    determinateNix.customSettings = {
       extra-substituters = cfg.substituters;
       trusted-substituters = cfg.substituters;
       extra-trusted-public-keys = cfg.trustedPublicKeys;
