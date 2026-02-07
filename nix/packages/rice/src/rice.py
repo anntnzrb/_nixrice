@@ -1,5 +1,8 @@
 """NixOS/Darwin configuration management."""
 
+# ruff: noqa: T201
+
+import os
 import shutil
 import socket
 import subprocess
@@ -12,18 +15,27 @@ from typing import Annotated
 import typer
 import typer.rich_utils
 
-typer.rich_utils._print_options_panel = lambda *a, **kw: None  # noqa: SLF001
+
+def _noop_options_panel(*_args: object, **_kwargs: object) -> None:
+    """Disable Typer option panel output for compact help rendering."""
+
+
+typer.rich_utils._print_options_panel = _noop_options_panel  # noqa: SLF001
 
 
 # === Types ===
 
 
 class Platform(StrEnum):
+    """Supported operating systems."""
+
     DARWIN = "darwin"
     LINUX = "linux"
 
 
 class Ansi(StrEnum):
+    """ANSI color escape sequences used by terminal output."""
+
     GREEN = "\x1b[1;32m"
     RED = "\x1b[1;31m"
     BLUE = "\x1b[1;34m"
@@ -53,14 +65,17 @@ PLATFORM = Platform.DARWIN if sys.platform == "darwin" else Platform.LINUX
 
 
 def ok(msg: str) -> None:
+    """Print a success message."""
     print(f"{Ansi.GREEN}✓{Ansi.RESET} {msg}")
 
 
 def err(msg: str) -> None:
+    """Print an error message."""
     print(f"{Ansi.RED}✗{Ansi.RESET} {msg}", file=sys.stderr)
 
 
 def info(msg: str) -> None:
+    """Print an informational message."""
     print(f"{Ansi.BLUE}→{Ansi.RESET} {msg}")
 
 
@@ -68,14 +83,25 @@ def info(msg: str) -> None:
 
 
 def run(cmd: list[str], *, sudo: bool = False) -> None:
+    """Run a command, optionally prefixed with sudo."""
     if sudo:
         cmd = ["sudo", *cmd]
     print(f"{Ansi.DIM}$ {' '.join(cmd)}{Ansi.RESET}")
-    subprocess.run(cmd, check=True)
+    pid = os.posix_spawnp(cmd[0], cmd, os.environ)
+    _, status = os.waitpid(pid, 0)
+    if os.WIFEXITED(status):
+        returncode = os.WEXITSTATUS(status)
+    elif os.WIFSIGNALED(status):
+        returncode = -os.WTERMSIG(status)
+    else:
+        returncode = status
+    if returncode != 0:
+        raise subprocess.CalledProcessError(returncode, cmd)
 
 
 def require_platform(platform: Platform) -> None:
-    if PLATFORM != platform:
+    """Exit if the current platform does not match the required platform."""
+    if platform != PLATFORM:
         name = "macOS" if platform == Platform.DARWIN else "Linux"
         err(f"Requires {name}")
         raise typer.Exit(1)
@@ -176,6 +202,7 @@ app = typer.Typer(
 
 
 def subapp(help_text: str) -> typer.Typer:
+    """Create a Typer sub-application with shared defaults."""
     return typer.Typer(help=help_text, no_args_is_help=True, options_metavar="")
 
 
@@ -186,11 +213,13 @@ app.add_typer(system_app, name="system")
 
 @system_app.command("build", help="Build system configuration")
 def system_build() -> None:
+    """Build the active system configuration."""
     exec_task(DARWIN_BUILD if PLATFORM == Platform.DARWIN else NIXOS_BUILD)
 
 
 @system_app.command("switch", help="Build and switch immediately")
 def system_switch() -> None:
+    """Build and switch the active system configuration."""
     if PLATFORM == Platform.DARWIN:
         exec_task(DARWIN_BUILD)
         exec_task(DARWIN_SWITCH)
@@ -209,6 +238,7 @@ def home_build(
     user: Annotated[str, typer.Argument()] = "annt",
     host: Annotated[str, typer.Argument()] = "wsl",
 ) -> None:
+    """Build a Home Manager configuration."""
     info(f"Building home-manager for {user}@{host}...")
     run(["nix", "build", f".#homeConfigurations.{user}@{host}.activationPackage"])
     ok("Home-manager build complete")
@@ -219,6 +249,7 @@ def home_switch(
     user: Annotated[str, typer.Argument()] = "annt",
     host: Annotated[str, typer.Argument()] = "wsl",
 ) -> None:
+    """Build and activate a Home Manager configuration."""
     home_build(user, host)
     info("Activating home-manager...")
     run(["./result/activate"])
@@ -232,16 +263,19 @@ app.add_typer(nixos_app, name="nixos")
 
 @nixos_app.command("build", help=NIXOS_BUILD.help)
 def nixos_build() -> None:
+    """Build the NixOS configuration."""
     exec_task(NIXOS_BUILD)
 
 
 @nixos_app.command("boot", help=NIXOS_BOOT.help)
 def nixos_boot() -> None:
+    """Build and stage the NixOS configuration for next boot."""
     exec_task(NIXOS_BOOT)
 
 
 @nixos_app.command("switch", help=NIXOS_SWITCH.help)
 def nixos_switch() -> None:
+    """Build and switch to the NixOS configuration."""
     exec_task(NIXOS_SWITCH)
 
 
@@ -252,11 +286,13 @@ app.add_typer(darwin_app, name="darwin")
 
 @darwin_app.command("build", help=DARWIN_BUILD.help)
 def darwin_build() -> None:
+    """Build the Darwin configuration."""
     exec_task(DARWIN_BUILD)
 
 
 @darwin_app.command("switch", help=DARWIN_SWITCH.help)
 def darwin_switch() -> None:
+    """Build and switch to the Darwin configuration."""
     exec_task(DARWIN_SWITCH)
 
 
@@ -267,16 +303,19 @@ app.add_typer(nix_app, name="nix")
 
 @nix_app.command("optimise", help=NIX_OPTIMISE.help)
 def nix_optimise() -> None:
+    """Optimize the nix store."""
     exec_task(NIX_OPTIMISE)
 
 
 @nix_app.command("repair", help=NIX_REPAIR.help)
 def nix_repair() -> None:
+    """Repair the nix store."""
     exec_task(NIX_REPAIR)
 
 
 @nix_app.command("clean", help="Clean nix cache and run cleanup")
 def nix_clean() -> None:
+    """Clean nix caches and run cleanup tasks."""
     info("Cleaning nix cache...")
     shutil.rmtree(Path.home() / ".cache/nix", ignore_errors=True)
     run(["nh", "clean", "all"])
@@ -291,11 +330,13 @@ app.add_typer(flake_app, name="flake")
 
 @flake_app.command("check", help=FLAKE_CHECK.help)
 def flake_check() -> None:
+    """Run `nix flake check`."""
     exec_task(FLAKE_CHECK)
 
 
 @flake_app.command("fmt", help=FLAKE_FMT.help)
 def flake_fmt() -> None:
+    """Run repository formatting hooks."""
     exec_task(FLAKE_FMT)
 
 
@@ -303,6 +344,7 @@ def flake_fmt() -> None:
 def flake_update(
     name: Annotated[str, typer.Argument(help='Input to update (or "all")')],
 ) -> None:
+    """Update one flake input or all inputs."""
     if name == "all":
         info("Updating all flake inputs...")
         run(
@@ -314,7 +356,7 @@ def flake_update(
                 "--option",
                 "commit-lockfile-summary",
                 "chore(flake): update lockfile",
-            ]
+            ],
         )
         ok("Flake update complete")
     else:
