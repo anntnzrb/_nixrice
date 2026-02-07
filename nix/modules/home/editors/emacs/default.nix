@@ -22,7 +22,7 @@ let
 
         # nix
         pkgs.nixd # LSP
-        pkgs.nixfmt-rfc-style # fmt
+        pkgs.nixfmt # fmt
 
         # binds
         evil

@@ -15,7 +15,7 @@ inputs.pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
     # nix
     flake-checker = on;
 
-    nixfmt-rfc-style = on // {
+    nixfmt = on // {
       settings.width = 80;
     };
 

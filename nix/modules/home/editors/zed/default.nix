@@ -27,7 +27,7 @@ in
 
     extraPackages = mkOpt' (listOf package) [
       pkgs.nixd
-      pkgs.nixfmt-rfc-style
+      pkgs.nixfmt
     ];
   };
 
