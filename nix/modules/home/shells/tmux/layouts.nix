@@ -13,7 +13,13 @@ let
   cfg = config.${namespace}.shells.tmux;
   cockpitCfg = cfg.layouts.cockpit;
 
-  cockpitScriptPath = "${config.xdg.configHome}/tmux/scripts/cockpit-reset.sh";
+  scriptDir = "tmux/scripts";
+  scriptName = "cockpit-reset.sh";
+  scriptRelPath = "${scriptDir}/${scriptName}";
+  scriptSource = ./scripts/cockpit-reset.sh;
+  cockpitScriptPath = "${config.xdg.configHome}/${scriptRelPath}";
+  bindDescription = "Reset current window to cockpit layout";
+  promptLabel = "Project name";
 in
 {
   options.${namespace}.shells.tmux.layouts.cockpit = {
@@ -22,13 +28,13 @@ in
   };
 
   config = lib.mkIf (cfg.enable && cockpitCfg.enable) {
-    xdg.configFile."tmux/scripts/cockpit-reset.sh" = {
-      source = ./scripts/cockpit-reset.sh;
+    xdg.configFile."${scriptRelPath}" = {
+      source = scriptSource;
       executable = true;
     };
 
     programs.tmux.extraConfig = lib.mkAfter ''
-      bind -N "Reset current window to cockpit layout" ${cockpitCfg.bind} command-prompt -I "#W" -p "Project name" "run-shell '${cockpitScriptPath} \"%%\" \"#{window_id}\" \"#{pane_current_path}\"'"
+      bind -N "${bindDescription}" ${cockpitCfg.bind} command-prompt -I "#W" -p "${promptLabel}" "run-shell '${cockpitScriptPath} \"%%\" \"#{window_id}\" \"#{pane_current_path}\"'"
     '';
   };
 }
