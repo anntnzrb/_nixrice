@@ -6,10 +6,13 @@
 }:
 let
   inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.fs) getModuleFiles;
 
   cfg = config.${namespace}.shells.tmux;
 in
 {
+  imports = getModuleFiles { path = ./.; };
+
   options.${namespace}.shells.tmux = {
     enable = mkOptDisabled';
   };
@@ -37,8 +40,8 @@ in
         set -g automatic-rename off
         set -g status-left '[#S] '
         set -g status-right ' '
-        setw -g window-status-format '#I#F'
-        setw -g window-status-current-format '#[bold]#I#F'
+        setw -g window-status-format '#I:#W#F'
+        setw -g window-status-current-format '#[bold]#I:#W#F'
 
         bind -N "Reload tmux configuration" R source-file ${config.xdg.configHome}/tmux/tmux.conf \; display-message "Config reloaded!"
       '';
