@@ -18,7 +18,7 @@ in
           {
             disableStartupPopups = true;
             gui = {
-              mouseEvents = false;
+              mouseEvents = true;
               showCommandLog = false;
             };
             spinner.rate = 100;
