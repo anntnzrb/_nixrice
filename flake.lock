@@ -159,6 +159,28 @@
         "type": "github"
       }
     },
+    "fenix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs-stable"
+        ],
+        "rust-analyzer-src": "rust-analyzer-src"
+      },
+      "locked": {
+        "lastModified": 1769929675,
+        "narHash": "sha256-EBpe7sXCPLs+qVePXbA7kc+Kmpmp0pWysEpjjEWTK+E=",
+        "owner": "nix-community",
+        "repo": "fenix",
+        "rev": "78d518f5ca32a86dc767de481160dbae640c70cf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "ref": "monthly",
+        "repo": "fenix",
+        "type": "github"
+      }
+    },
     "firefox-addons": {
       "inputs": {
         "nixpkgs": [
@@ -810,6 +832,7 @@
         "darwin": "darwin",
         "determinate": "determinate",
         "emacs-overlay": "emacs-overlay",
+        "fenix": "fenix",
         "firefox-addons": "firefox-addons",
         "ghostty-protesilaos": "ghostty-protesilaos",
         "home-manager": "home-manager",
@@ -832,6 +855,23 @@
         "yazi-flavors": "yazi-flavors",
         "yazi-timu-macos": "yazi-timu-macos",
         "zen-browser": "zen-browser"
+      }
+    },
+    "rust-analyzer-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1769857242,
+        "narHash": "sha256-3eKpRRzKz0KzY7CJzRXFm4POwEqbuTohyQ2ajI/zKvg=",
+        "owner": "rust-lang",
+        "repo": "rust-analyzer",
+        "rev": "17304e9c7e11d26139672d3d77aa498b1cae0d69",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rust-lang",
+        "ref": "nightly",
+        "repo": "rust-analyzer",
+        "type": "github"
       }
     },
     "snowfall-lib": {

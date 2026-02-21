@@ -33,6 +33,7 @@ in
       fzf = on;
       husky = on;
       repomix = on;
+      rust = on;
       tldr = on;
       uv = on;
       yt-dlp = on;

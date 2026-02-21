@@ -88,6 +88,12 @@
       inputs.gitignore.follows = "";
     };
 
+    fenix = {
+      # rust toolchains (nightly/stable/beta)
+      url = "github:nix-community/fenix/monthly";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
+
     # -------------------------------------------------------------------------
     # systems
     # -------------------------------------------------------------------------
