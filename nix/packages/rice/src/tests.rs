@@ -52,7 +52,7 @@ fn task_context_substitution_works() {
 #[test]
 fn platform_requirement_errors_on_mismatch() {
     let result = require_platform(Platform::Linux, Platform::Darwin);
-    assert!(matches!(result, Err(AppError::Platform("Linux"))));
+    assert_eq!(result.unwrap_err().to_string(), "Requires Linux");
 }
 
 #[test]

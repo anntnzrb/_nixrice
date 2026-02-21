@@ -1,3 +1,4 @@
+use anyhow::{Result, bail};
 use clap::{Parser, Subcommand};
 use std::env;
 use std::ffi::OsString;
@@ -5,7 +6,6 @@ use std::ffi::OsString;
 use std::os::unix::process::ExitStatusExt;
 use std::path::PathBuf;
 use std::process::Command;
-use thiserror::Error;
 
 const GREEN: &str = "\x1b[1;32m";
 const RED: &str = "\x1b[1;31m";
@@ -219,16 +219,6 @@ enum FlakeCommands {
     },
 }
 
-#[derive(Debug, Error)]
-enum AppError {
-    #[error("Requires {0}")]
-    Platform(&'static str),
-    #[error("command failed: {0}")]
-    CommandFailed(String),
-    #[error("{0}")]
-    Io(#[from] std::io::Error),
-}
-
 const fn current_platform() -> Platform {
     if cfg!(target_os = "macos") {
         Platform::Darwin
@@ -259,7 +249,7 @@ fn with_context(template: &str, host: &str) -> String {
     template.replace(HOST_TOKEN, host)
 }
 
-fn require_platform(required: Platform, current: Platform) -> Result<(), AppError> {
+fn require_platform(required: Platform, current: Platform) -> Result<()> {
     if required == current {
         return Ok(());
     }
@@ -268,11 +258,10 @@ fn require_platform(required: Platform, current: Platform) -> Result<(), AppErro
         Platform::Darwin => "macOS",
         Platform::Linux => "Linux",
     };
-    err(&format!("Requires {name}"));
-    Err(AppError::Platform(name))
+    bail!("Requires {name}");
 }
 
-fn run(mut cmd: Vec<String>, sudo: bool) -> Result<(), AppError> {
+fn run(mut cmd: Vec<String>, sudo: bool) -> Result<()> {
     if sudo {
         cmd.insert(0, "sudo".to_string());
     }
@@ -292,13 +281,10 @@ fn run(mut cmd: Vec<String>, sudo: bool) -> Result<(), AppError> {
     #[cfg(not(unix))]
     let code = status.code().unwrap_or(1);
 
-    Err(AppError::CommandFailed(format!(
-        "{} (exit: {code})",
-        cmd.join(" ")
-    )))
+    bail!("command failed: {} (exit: {code})", cmd.join(" "));
 }
 
-fn exec_task(task: Task, host: &str, current: Platform) -> Result<(), AppError> {
+fn exec_task(task: Task, host: &str, current: Platform) -> Result<()> {
     if let Some(required) = task.platform {
         require_platform(required, current)?;
     }
@@ -316,7 +302,7 @@ fn exec_task(task: Task, host: &str, current: Platform) -> Result<(), AppError> 
     Ok(())
 }
 
-fn home_build(user: &str, host: &str) -> Result<(), AppError> {
+fn home_build(user: &str, host: &str) -> Result<()> {
     info(&format!("Building home-manager for {user}@{host}..."));
     run(
         vec![
@@ -330,7 +316,7 @@ fn home_build(user: &str, host: &str) -> Result<(), AppError> {
     Ok(())
 }
 
-fn home_switch(user: &str, host: &str) -> Result<(), AppError> {
+fn home_switch(user: &str, host: &str) -> Result<()> {
     home_build(user, host)?;
     info("Activating home-manager...");
     run(vec!["./result/activate".to_string()], false)?;
@@ -338,7 +324,7 @@ fn home_switch(user: &str, host: &str) -> Result<(), AppError> {
     Ok(())
 }
 
-fn nix_clean() -> Result<(), AppError> {
+fn nix_clean() -> Result<()> {
     info("Cleaning nix cache...");
 
     if let Some(home) = env::var_os("HOME") {
@@ -358,7 +344,7 @@ fn nix_clean() -> Result<(), AppError> {
     Ok(())
 }
 
-fn flake_update(name: &str) -> Result<(), AppError> {
+fn flake_update(name: &str) -> Result<()> {
     if name == "all" {
         info("Updating all flake inputs...");
         run(
@@ -408,7 +394,7 @@ fn flake_update(name: &str) -> Result<(), AppError> {
     Ok(())
 }
 
-fn run_cli(cli: Cli) -> Result<(), AppError> {
+fn run_cli(cli: Cli) -> Result<()> {
     let host = host_shortname();
     let current = current_platform();
 
@@ -466,9 +452,7 @@ fn run_cli(cli: Cli) -> Result<(), AppError> {
 fn main() {
     let cli = Cli::parse();
     if let Err(error) = run_cli(cli) {
-        if !matches!(error, AppError::Platform(_)) {
-            err(&error.to_string());
-        }
+        err(&error.to_string());
         std::process::exit(1);
     }
 }
