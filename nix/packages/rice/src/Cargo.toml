@@ -14,9 +14,9 @@ name = "rice"
 path = "main.rs"
 
 [dependencies]
-anyhow = "1.0.102"
-clap = { version = "4.5.32", features = ["derive"] }
-hostname = "0.4.0"
+anyhow = { version = "1.0.102", default-features = false, features = ["std"] }
+clap = { version = "4.5.32", default-features = false, features = ["derive", "std", "help", "usage", "error-context", "suggestions"] }
+hostname = { version = "0.4.0", default-features = false }
 
 [lints.clippy]
 all = "deny"
