@@ -1,11 +1,14 @@
-//! Tests for parser defaults and helper behavior.
+//! Parser and lightweight helper tests.
 
-use super::*;
+use crate::actions;
+use crate::cli::{Commands, FlakeCommands, HomeCommands};
+use crate::tasks::{DARWIN_BUILD, Platform};
+use crate::unit_tests::support::parse_cli;
 
 /// Validate default positional values for home build.
 #[test]
 fn parse_home_build_defaults() {
-    let cli = Cli::try_parse_from(["rice", "home", "build"]).expect("parse should succeed");
+    let cli = parse_cli(&["rice", "home", "build"]);
     match cli.command {
         Commands::Home { command } => match command {
             HomeCommands::Build { user, host } => {
@@ -25,8 +28,7 @@ fn parse_home_build_defaults() {
 /// Validate custom positional values for home switch.
 #[test]
 fn parse_home_switch_overrides_defaults() {
-    let cli = Cli::try_parse_from(["rice", "home", "switch", "alice", "mbp"])
-        .expect("parse should succeed");
+    let cli = parse_cli(&["rice", "home", "switch", "alice", "mbp"]);
     match cli.command {
         Commands::Home { command } => match command {
             HomeCommands::Switch { user, host } => {
@@ -43,29 +45,10 @@ fn parse_home_switch_overrides_defaults() {
     }
 }
 
-/// Validate host token substitution in task command templates.
-#[test]
-fn task_context_substitution_works() {
-    let cmd = DARWIN_BUILD
-        .cmd
-        .iter()
-        .map(|arg| with_context(arg, "beirut"))
-        .collect::<Vec<_>>();
-    assert_eq!(cmd[2], ".#darwinConfigurations.beirut.system");
-}
-
-/// Validate platform requirement error for mismatched platform.
-#[test]
-fn platform_requirement_errors_on_mismatch() {
-    let result = require_platform(Platform::Linux, Platform::Darwin);
-    assert_eq!(result.unwrap_err().to_string(), "Requires Linux");
-}
-
 /// Validate `flake update all` argument parsing.
 #[test]
 fn parse_flake_update_all() {
-    let cli =
-        Cli::try_parse_from(["rice", "flake", "update", "all"]).expect("parse should succeed");
+    let cli = parse_cli(&["rice", "flake", "update", "all"]);
     match cli.command {
         Commands::Flake { command } => match command {
             FlakeCommands::Update { name } => assert_eq!(name, "all"),
@@ -77,4 +60,34 @@ fn parse_flake_update_all() {
         | Commands::Darwin { .. }
         | Commands::Nix { .. } => panic!("expected flake command"),
     }
+}
+
+/// Validate host token substitution in task command templates.
+#[test]
+fn task_context_substitution_works() {
+    let cmd = DARWIN_BUILD
+        .cmd
+        .iter()
+        .map(|arg| actions::with_context(arg, "beirut"))
+        .collect::<Vec<_>>();
+    assert_eq!(cmd[2], ".#darwinConfigurations.beirut.system");
+}
+
+/// Validate the detected platform matches compile-time target configuration.
+#[test]
+fn current_platform_matches_target_cfg() {
+    let expected = if cfg!(target_os = "macos") {
+        Platform::Darwin
+    } else {
+        Platform::Linux
+    };
+    assert_eq!(actions::current_platform(), expected);
+}
+
+/// Validate hostname helper returns short segment without dots.
+#[test]
+fn host_shortname_has_no_domain_suffix() {
+    let host = actions::host_shortname();
+    assert!(!host.is_empty());
+    assert!(!host.contains('.'));
 }

@@ -13,6 +13,9 @@ categories = ["command-line-utilities", "development-tools"]
 name = "rice"
 path = "main.rs"
 
+[lib]
+path = "lib.rs"
+
 [dependencies]
 anyhow = { version = "1.0.102", default-features = false, features = ["std"] }
 clap = { version = "4.5.32", default-features = false, features = ["derive", "std", "help", "usage", "error-context", "suggestions"] }
@@ -49,8 +52,9 @@ unescaped_backticks = "deny"
 redundant_explicit_links = "deny"
 
 [lints.clippy]
-all = "deny"
-pedantic = "deny"
-nursery = "deny"
-cargo = "deny"
+all = { level = "deny", priority = -1 }
+pedantic = { level = "deny", priority = -1 }
+nursery = { level = "deny", priority = -1 }
+cargo = { level = "deny", priority = -1 }
 "missing-docs-in-private-items" = "deny"
+redundant_pub_crate = { level = "allow", priority = 1 }
