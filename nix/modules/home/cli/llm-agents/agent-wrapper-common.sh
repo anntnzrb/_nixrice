@@ -18,7 +18,7 @@ AGENTS_HOME="${HOME}/.config/agents"
 
 # SYNC
 # Sync script path
-SYNC="${AGENTS_HOME}/bin/sync.py"
+SYNC="${AGENTS_HOME}/bin/sync.rs"
 
 # die
 # Emit error and exit
