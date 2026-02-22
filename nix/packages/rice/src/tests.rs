@@ -1,5 +1,8 @@
+//! Tests for parser defaults and helper behavior.
+
 use super::*;
 
+/// Validate default positional values for home build.
 #[test]
 fn parse_home_build_defaults() {
     let cli = Cli::try_parse_from(["rice", "home", "build"]).expect("parse should succeed");
@@ -19,6 +22,7 @@ fn parse_home_build_defaults() {
     }
 }
 
+/// Validate custom positional values for home switch.
 #[test]
 fn parse_home_switch_overrides_defaults() {
     let cli = Cli::try_parse_from(["rice", "home", "switch", "alice", "mbp"])
@@ -39,6 +43,7 @@ fn parse_home_switch_overrides_defaults() {
     }
 }
 
+/// Validate host token substitution in task command templates.
 #[test]
 fn task_context_substitution_works() {
     let cmd = DARWIN_BUILD
@@ -49,12 +54,14 @@ fn task_context_substitution_works() {
     assert_eq!(cmd[2], ".#darwinConfigurations.beirut.system");
 }
 
+/// Validate platform requirement error for mismatched platform.
 #[test]
 fn platform_requirement_errors_on_mismatch() {
     let result = require_platform(Platform::Linux, Platform::Darwin);
     assert_eq!(result.unwrap_err().to_string(), "Requires Linux");
 }
 
+/// Validate `flake update all` argument parsing.
 #[test]
 fn parse_flake_update_all() {
     let cli =
