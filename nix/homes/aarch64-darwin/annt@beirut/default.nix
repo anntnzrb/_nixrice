@@ -17,9 +17,6 @@ in
 
     shells.zsh = on;
 
-    desktop = {
-      terminal-emulators.ghostty = on;
-      browsers.firefox = on;
-    };
+    desktop.terminal-emulators.ghostty = on;
   };
 }
