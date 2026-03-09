@@ -5,27 +5,17 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptDisabled'
-    ;
-  inherit (lib.${namespace}.fs) getModuleFiles;
+  inherit (lib.${namespace}.module) mkOptDisabled';
 
   cfg = config.${namespace}.services.aerospace;
 in
 {
-  imports = getModuleFiles { path = ./.; };
-
   options.${namespace}.services.aerospace = {
     enable = mkOptDisabled';
-
-    modifier = mkOpt' lib.types.str "alt";
   };
 
   config = lib.mkIf cfg.enable {
-    services.aerospace = {
-      inherit (cfg) enable;
-    };
+    services.aerospace.enable = true;
 
     # goodies
     # cf. https://nikitabobko.github.io/AeroSpace/goodies
