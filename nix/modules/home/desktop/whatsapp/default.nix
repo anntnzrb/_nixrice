@@ -19,8 +19,11 @@ let
 
   cfg = config.${namespace}.desktop.whatsapp;
   idleCfg = cfg.idleQuit;
+  sleepCfg = cfg.sleepQuit;
 
-  enabled = cfg.enable && idleCfg.enable;
+  idleEnabled = cfg.enable && idleCfg.enable;
+  sleepEnabled = cfg.enable && sleepCfg.enable;
+  anyEnabled = idleEnabled || sleepEnabled;
   homeDir = config.home.homeDirectory;
 
   stateDirDefault = "${homeDir}/Library/Application Support/liberion/whatsapp-idle-guard";
@@ -40,6 +43,17 @@ let
     (if idleCfg.initializeOnFirstSeen then "1" else "0")
   ];
 
+  sleepQuitArgs = [
+    idleCfg.bundleId
+    idleCfg.appName
+    sleepCfg.mode
+    (toString sleepCfg.killGraceSeconds)
+  ];
+
+  sleepQuitCommand = lib.escapeShellArgs (
+    [ (lib.getExe sleepQuit) ] ++ sleepQuitArgs
+  );
+
   idleGuard = pkgs.writeShellApplication {
     name = "whatsapp-idle-guard";
     runtimeInputs = with pkgs; [
@@ -49,6 +63,16 @@ let
       gawk
     ];
     text = builtins.readFile ./whatsapp-idle-guard.sh;
+  };
+
+  sleepQuit = pkgs.writeShellApplication {
+    name = "whatsapp-sleep-quit";
+    runtimeInputs = with pkgs; [
+      coreutils
+      gnugrep
+      gnused
+    ];
+    text = builtins.readFile ./whatsapp-sleep-quit.sh;
   };
 
   ensureDirs = pkgs.writeShellApplication {
@@ -83,6 +107,17 @@ in
       resetOnFrontmost = mkOpt' bool true;
       initializeOnFirstSeen = mkOpt' bool true;
     };
+
+    sleepQuit = {
+      enable = mkOpt' bool true;
+      mode = mkOpt' (enum [
+        "term"
+        "term-then-kill"
+      ]) "term-then-kill";
+      killGraceSeconds = mkOpt' ints.positive 5;
+      onDisplaySleep = mkOpt' bool true;
+      onSystemSleep = mkOpt' bool true;
+    };
   };
 
   config = lib.mkMerge [
@@ -95,11 +130,20 @@ in
       ];
     })
 
-    (lib.mkIf enabled {
+    (lib.mkIf anyEnabled {
       assertions = [
         {
           assertion = idleCfg.bundleId != "";
-          message = "${namespace}.desktop.whatsapp.idleQuit.bundleId must be set when idle quit is enabled.";
+          message = "${namespace}.desktop.whatsapp.idleQuit.bundleId must be set when the WhatsApp guard is enabled.";
+        }
+        {
+          assertion =
+            (!sleepEnabled) || sleepCfg.onDisplaySleep || sleepCfg.onSystemSleep;
+          message = "${namespace}.desktop.whatsapp.sleepQuit must enable at least one trigger.";
+        }
+        {
+          assertion = (!sleepEnabled) || (sleepCfg.killGraceSeconds < 15);
+          message = "${namespace}.desktop.whatsapp.sleepQuit.killGraceSeconds must stay below 15 seconds for sleepwatcher hooks.";
         }
       ];
 
@@ -110,7 +154,9 @@ in
               ${lib.escapeShellArg idleCfg.stateDir} \
               ${lib.escapeShellArg idleCfg.logDir}
           '';
+    })
 
+    (lib.mkIf idleEnabled {
       launchd.agents.whatsapp-idle-guard = {
         enable = true;
         config = {
@@ -121,6 +167,31 @@ in
           LimitLoadToSessionType = [ "Aqua" ];
           StandardOutPath = outLogFile;
           StandardErrorPath = errLogFile;
+        };
+      };
+    })
+
+    (lib.mkIf sleepEnabled {
+      launchd.agents.whatsapp-sleepwatcher = {
+        enable = true;
+        config = {
+          ProgramArguments = [
+            "${pkgs.sleepwatcher}/bin/sleepwatcher"
+          ]
+          ++ lib.optionals sleepCfg.onSystemSleep [
+            "-s"
+            sleepQuitCommand
+          ]
+          ++ lib.optionals sleepCfg.onDisplaySleep [
+            "-S"
+            sleepQuitCommand
+          ];
+          KeepAlive = true;
+          RunAtLoad = true;
+          ProcessType = "Background";
+          LimitLoadToSessionType = [ "Aqua" ];
+          StandardOutPath = "${idleCfg.logDir}/whatsapp-sleepwatcher.log";
+          StandardErrorPath = "${idleCfg.logDir}/whatsapp-sleepwatcher.error.log";
         };
       };
     })
