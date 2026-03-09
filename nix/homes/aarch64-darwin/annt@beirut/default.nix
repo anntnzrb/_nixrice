@@ -17,6 +17,9 @@ in
 
     shells.zsh = on;
 
-    desktop.terminal-emulators.ghostty = on;
+    desktop = {
+      terminal-emulators.ghostty = on;
+      whatsapp = on;
+    };
   };
 }
