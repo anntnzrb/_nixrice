@@ -19,6 +19,7 @@ in
 
     desktop = {
       terminal-emulators.ghostty = on;
+      window-managers.darwin.yashiki = on;
       whatsapp = on;
     };
   };

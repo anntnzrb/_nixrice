@@ -29,6 +29,7 @@ in
     };
 
     services = {
+      yashiki = on;
       tailscale = on;
     };
 
