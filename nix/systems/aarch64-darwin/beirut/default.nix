@@ -29,7 +29,6 @@ in
     };
 
     services = {
-      aerospace = on;
       tailscale = on;
     };
 
