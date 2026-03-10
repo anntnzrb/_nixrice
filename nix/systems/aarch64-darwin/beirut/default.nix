@@ -32,6 +32,7 @@ in
       aldente = on;
       bitwarden = on;
       orbstack = on;
+      raycast = on;
       whatsapp = on;
     };
 
