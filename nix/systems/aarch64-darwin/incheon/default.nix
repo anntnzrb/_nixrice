@@ -34,6 +34,7 @@ in
       orbstack = on;
       rustdesk = on;
       vlc = on;
+      vscode = on;
       whatsapp = on;
     };
 
@@ -43,8 +44,6 @@ in
 
     network.ssh = on;
 
-    homebrew = on // {
-      packages.casks = [ "visual-studio-code" ];
-    };
+    homebrew = on;
   };
 }

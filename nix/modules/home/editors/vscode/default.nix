@@ -7,6 +7,7 @@
 }:
 let
   inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
 
   cfg = config.${namespace}.editors.vscode;
 
@@ -19,6 +20,8 @@ in
   config = lib.mkIf cfg.enable {
     programs.vscode = {
       inherit (cfg) enable;
+
+      package = if isDarwin then null else pkgs.vscode;
 
       # extensions can be installed or updated manually
       mutableExtensionsDir = true;
