@@ -10,6 +10,7 @@ let
     mkOpt'
     mkOptDisabled'
     ;
+  inherit (lib.${namespace}.launchd.home) mkAgent;
   inherit (lib.types)
     bool
     enum
@@ -156,44 +157,40 @@ in
           '';
     })
 
-    (lib.mkIf idleEnabled {
-      launchd.agents.whatsapp-idle-guard = {
-        enable = true;
-        config = {
-          ProgramArguments = [ (lib.getExe idleGuard) ] ++ idleGuardArgs;
-          RunAtLoad = true;
-          StartInterval = idleCfg.pollSeconds;
-          ProcessType = "Background";
-          LimitLoadToSessionType = [ "Aqua" ];
-          StandardOutPath = outLogFile;
-          StandardErrorPath = errLogFile;
-        };
+    (lib.mkIf idleEnabled (mkAgent {
+      name = "whatsapp-idle-guard";
+      serviceConfig = {
+        ProgramArguments = [ (lib.getExe idleGuard) ] ++ idleGuardArgs;
+        RunAtLoad = true;
+        StartInterval = idleCfg.pollSeconds;
+        ProcessType = "Background";
+        LimitLoadToSessionType = [ "Aqua" ];
+        StandardOutPath = outLogFile;
+        StandardErrorPath = errLogFile;
       };
-    })
+    }))
 
-    (lib.mkIf sleepEnabled {
-      launchd.agents.whatsapp-sleepwatcher = {
-        enable = true;
-        config = {
-          ProgramArguments = [
-            "${pkgs.sleepwatcher}/bin/sleepwatcher"
-          ]
-          ++ lib.optionals sleepCfg.onSystemSleep [
-            "-s"
-            sleepQuitCommand
-          ]
-          ++ lib.optionals sleepCfg.onDisplaySleep [
-            "-S"
-            sleepQuitCommand
-          ];
-          KeepAlive = true;
-          RunAtLoad = true;
-          ProcessType = "Background";
-          LimitLoadToSessionType = [ "Aqua" ];
-          StandardOutPath = "${idleCfg.logDir}/whatsapp-sleepwatcher.log";
-          StandardErrorPath = "${idleCfg.logDir}/whatsapp-sleepwatcher.error.log";
-        };
+    (lib.mkIf sleepEnabled (mkAgent {
+      name = "whatsapp-sleepwatcher";
+      serviceConfig = {
+        ProgramArguments = [
+          "${pkgs.sleepwatcher}/bin/sleepwatcher"
+        ]
+        ++ lib.optionals sleepCfg.onSystemSleep [
+          "-s"
+          sleepQuitCommand
+        ]
+        ++ lib.optionals sleepCfg.onDisplaySleep [
+          "-S"
+          sleepQuitCommand
+        ];
+        KeepAlive = true;
+        RunAtLoad = true;
+        ProcessType = "Background";
+        LimitLoadToSessionType = [ "Aqua" ];
+        StandardOutPath = "${idleCfg.logDir}/whatsapp-sleepwatcher.log";
+        StandardErrorPath = "${idleCfg.logDir}/whatsapp-sleepwatcher.error.log";
       };
-    })
+    }))
   ];
 }

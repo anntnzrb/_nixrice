@@ -9,6 +9,7 @@ let
     mkOptDisabled'
     on
     ;
+  inherit (lib.${namespace}.launchd.darwin) mkAgent;
 
   cfg = config.${namespace}.services.yashiki;
   aerospaceCfg = config.${namespace}.services.aerospace;
@@ -18,29 +19,32 @@ in
     enable = mkOptDisabled';
   };
 
-  config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = !aerospaceCfg.enable;
-        message = "${namespace}.services.yashiki cannot be enabled together with ${namespace}.services.aerospace.";
-      }
-    ];
-
-    ${namespace}.homebrew = on;
-
-    homebrew = {
-      taps = [ "typester/yashiki" ];
-      casks = [
+  config = lib.mkIf cfg.enable (
+    {
+      assertions = [
         {
-          name = "yashiki";
-          args = {
-            no_quarantine = true;
-          };
+          assertion = !aerospaceCfg.enable;
+          message = "${namespace}.services.yashiki cannot be enabled together with ${namespace}.services.aerospace.";
         }
       ];
-    };
 
-    launchd.user.agents.yashiki = {
+      ${namespace}.homebrew = on;
+
+      homebrew = {
+        taps = [ "typester/yashiki" ];
+        casks = [
+          {
+            name = "yashiki";
+            args = {
+              no_quarantine = true;
+            };
+          }
+        ];
+      };
+    }
+    // mkAgent {
+      name = "yashiki";
+      managedBy = "${namespace}.services.yashiki.enable";
       serviceConfig = {
         ProgramArguments = [
           "/Applications/Yashiki.app/Contents/MacOS/yashiki"
@@ -54,7 +58,6 @@ in
           PATH = "/opt/homebrew/bin:${config.environment.systemPath}";
         };
       };
-      managedBy = "${namespace}.services.yashiki.enable";
-    };
-  };
+    }
+  );
 }
