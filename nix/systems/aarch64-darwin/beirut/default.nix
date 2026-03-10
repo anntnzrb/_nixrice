@@ -30,7 +30,9 @@ in
 
     programs = {
       aldente = on;
+      bitwarden = on;
       orbstack = on;
+      whatsapp = on;
     };
 
     services = {
@@ -40,11 +42,6 @@ in
 
     network.ssh = on;
 
-    homebrew = on // {
-      packages.masApps = {
-        "WhatsApp Messenger" = 310633997;
-        "Bitwarden" = 1352778147;
-      };
-    };
+    homebrew = on;
   };
 }

@@ -29,10 +29,12 @@ in
     };
 
     programs = {
+      bitwarden = on;
       obs = on;
       orbstack = on;
       rustdesk = on;
       vlc = on;
+      whatsapp = on;
     };
 
     services = {
@@ -42,11 +44,7 @@ in
     network.ssh = on;
 
     homebrew = on // {
-      packages.casks = [
-        "bitwarden"
-        "visual-studio-code"
-        "whatsapp"
-      ];
+      packages.casks = [ "visual-studio-code" ];
     };
   };
 }
