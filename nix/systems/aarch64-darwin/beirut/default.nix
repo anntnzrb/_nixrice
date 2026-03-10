@@ -28,6 +28,11 @@ in
       };
     };
 
+    programs = {
+      aldente = on;
+      orbstack = on;
+    };
+
     services = {
       yashiki = on;
       tailscale = on;
@@ -36,15 +41,9 @@ in
     network.ssh = on;
 
     homebrew = on // {
-      packages = {
-        casks = [
-          "aldente"
-          "orbstack"
-        ];
-        masApps = {
-          "WhatsApp Messenger" = 310633997;
-          "Bitwarden" = 1352778147;
-        };
+      packages.masApps = {
+        "WhatsApp Messenger" = 310633997;
+        "Bitwarden" = 1352778147;
       };
     };
   };

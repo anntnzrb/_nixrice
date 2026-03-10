@@ -28,6 +28,13 @@ in
       };
     };
 
+    programs = {
+      obs = on;
+      orbstack = on;
+      rustdesk = on;
+      vlc = on;
+    };
+
     services = {
       aerospace = on;
     };
@@ -35,17 +42,11 @@ in
     network.ssh = on;
 
     homebrew = on // {
-      packages = {
-        casks = [
-          "bitwarden"
-          "visual-studio-code"
-          "docker"
-          "obs"
-          "rustdesk"
-          "vlc"
-          "whatsapp"
-        ];
-      };
+      packages.casks = [
+        "bitwarden"
+        "visual-studio-code"
+        "whatsapp"
+      ];
     };
   };
 }
