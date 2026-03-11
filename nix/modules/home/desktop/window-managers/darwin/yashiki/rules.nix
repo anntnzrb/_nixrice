@@ -30,13 +30,6 @@ in
             actions = [ "tags 4" ];
           }
           {
-            appId = "net.whatsapp.WhatsApp";
-            actions = [
-              "tags 8"
-              "float"
-            ];
-          }
-          {
             appId = "com.openai.chat";
             actions = [
               "tags 8"
