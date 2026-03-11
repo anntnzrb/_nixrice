@@ -25,6 +25,7 @@ in
       goose = on;
       kilo = on;
       opencode = on;
+      omp = on;
       pi = on;
       qwen = on;
     };

@@ -76,6 +76,10 @@ let
       type = "nix";
       attr = "droid";
     };
+    omp = {
+      type = "nix";
+      attr = "omp";
+    };
   };
 
   /**
