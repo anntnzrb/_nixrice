@@ -16,6 +16,7 @@ in
     services.openssh = {
       inherit (cfg) enable;
       ports = [ cfg.port ];
+      settings.PasswordAuthentication = false;
     };
 
     networking.firewall.allowedTCPPorts = [ cfg.port ];
