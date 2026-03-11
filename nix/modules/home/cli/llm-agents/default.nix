@@ -20,28 +20,24 @@ let
   wrappers = pkgs.runCommand "llm-agent-wrappers" { } ''
     mkdir -p "$out/${wrapperDir}"
     cp ${./agent-wrapper-common.sh} "$out/${wrapperDir}/agent-wrapper-common.sh"
-    cp ${./js-agent-wrapper.sh} "$out/${wrapperDir}/js-agent-wrapper.sh"
     cp ${./script-agent-wrapper.sh} "$out/${wrapperDir}/script-agent-wrapper.sh"
     cp ${./nix-agent-wrapper.sh} "$out/${wrapperDir}/nix-agent-wrapper.sh"
     chmod 755 "$out/${wrapperDir}/agent-wrapper-common.sh"
-    chmod 755 "$out/${wrapperDir}/js-agent-wrapper.sh"
     chmod 755 "$out/${wrapperDir}/script-agent-wrapper.sh"
     chmod 755 "$out/${wrapperDir}/nix-agent-wrapper.sh"
   '';
 
   # agents: name -> { type, ... }
-  # type "npm": runs via `bun x <package>@<version>`
-  # type "nix": runs via nix flake
+  # type "nix": runs via llm-agents.nix flake attr
   # type "script": runs a local script via runner
   agents = {
     opencode = {
-      type = "npm";
-      package = "opencode-ai";
+      type = "nix";
+      attr = "opencode";
     };
     claude = {
-      type = "script";
-      runner = "${pkgs.bun}/bin/bun";
-      script = "${config.home.homeDirectory}/.config/agents/tools/claude/bin/lib/claude.ts";
+      type = "nix";
+      attr = "claude-code";
     };
     chutes = {
       type = "script";
@@ -49,28 +45,28 @@ let
       script = "${config.home.homeDirectory}/.config/agents/tools/chutes/bin/chutes";
     };
     pi = {
-      type = "npm";
-      package = "@mariozechner/pi-coding-agent";
+      type = "nix";
+      attr = "pi";
     };
     gemini = {
-      type = "npm";
-      package = "@google/gemini-cli";
+      type = "nix";
+      attr = "gemini-cli";
     };
     qwen = {
-      type = "npm";
-      package = "@qwen-code/qwen-code";
+      type = "nix";
+      attr = "qwen-code";
     };
     kilo = {
-      type = "npm";
-      package = "@kilocode/cli";
+      type = "nix";
+      attr = "kilocode-cli";
     };
     codex = {
-      type = "npm";
-      package = "@openai/codex";
+      type = "nix";
+      attr = "codex";
     };
     crush = {
-      type = "npm";
-      package = "@charmland/crush";
+      type = "nix";
+      attr = "crush";
     };
     goose = {
       type = "nix";
@@ -93,15 +89,7 @@ let
   */
   mkWrapper =
     name: spec:
-    if spec.type == "npm" then
-      pkgs.writeShellApplication {
-        inherit name;
-        text = ''
-          exec ${pkgs.runtimeShell} ${wrappers}/${wrapperDir}/js-agent-wrapper.sh \
-            ${pkgs.bun}/bin/bun ${spec.package} "$@"
-        '';
-      }
-    else if spec.type == "script" then
+    if spec.type == "script" then
       pkgs.writeShellApplication {
         inherit name;
         text = ''

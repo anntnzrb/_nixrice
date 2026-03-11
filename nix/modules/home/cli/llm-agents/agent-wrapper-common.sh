@@ -8,10 +8,6 @@ EXIT_MISSING_DIR="1"
 # Exit code for missing argument
 EXIT_MISSING_ARG="2"
 
-# DEFAULT_VERSION
-# Default version for js runner packages
-DEFAULT_VERSION="latest"
-
 # AGENTS_HOME
 # Root of agents repo
 AGENTS_HOME="${HOME}/.config/agents"
@@ -52,37 +48,6 @@ run_sync() {
     require_dir "${AGENTS_HOME}"
     "${SYNC}"
     return 0
-}
-
-# parse_version
-# Parse --version0 flags and emit version
-parse_version() {
-    version="${DEFAULT_VERSION}"
-    while [ $# -gt 0 ]; do
-        case "$1" in
-            --version0)
-                if [ $# -ge 2 ] && [ -n "${2-}" ] && [ "${2#-}" = "$2" ]; then
-                    version="$2"
-                    shift 2
-                    continue
-                fi
-                break
-                ;;
-            --version0=*)
-                version="${1#*=}"
-                shift
-                continue
-                ;;
-            --)
-                shift
-                break
-                ;;
-            *)
-                break
-                ;;
-        esac
-    done
-    printf '%s\n' "${version}"
 }
 
 # run_exec

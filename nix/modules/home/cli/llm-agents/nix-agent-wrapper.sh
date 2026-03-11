@@ -12,16 +12,10 @@ FLAKE="github:numtide/llm-agents.nix/main"
 REFRESH_SECS=$((8 * 60 * 60))
 
 ATTR="${1:-}"
-[ -n "${ATTR}" ] || {
-    printf '%s\n' "llm-agent: missing attribute" >&2
-    exit 2
-}
+require_arg "${ATTR}" "attribute"
 shift
 
-command -v nix >/dev/null 2>&1 || {
-    printf '%s\n' "llm-agent: nix not found" >&2
-    exit 127
-}
+command -v nix >/dev/null 2>&1 || die "nix not found" 127
 
 CACHE_HOME="${XDG_CACHE_HOME:-${HOME}/.cache}"
 STAMP_DIR="${CACHE_HOME}/llm-agents/${ATTR}"
