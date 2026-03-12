@@ -14,6 +14,10 @@ in
       yashikiLib.mkRules
         [
           {
+            appName = "*";
+            actions = [ "float" ];
+          }
+          {
             appId = "org.mozilla.firefox";
             actions = [ "tags 1" ];
           }
