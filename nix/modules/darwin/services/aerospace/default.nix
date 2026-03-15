@@ -5,16 +5,22 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
-
   cfg = config.${namespace}.services.aerospace;
 in
 {
   options.${namespace}.services.aerospace = {
-    enable = mkOptDisabled';
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      internal = true;
+    };
   };
 
   config = lib.mkIf cfg.enable {
+    warnings = [
+      "${namespace}.services.aerospace is a legacy compatibility shim. Prefer ${namespace}.desktop.window-managers.darwin.aerospace."
+    ];
+
     services.aerospace.enable = true;
 
     # goodies

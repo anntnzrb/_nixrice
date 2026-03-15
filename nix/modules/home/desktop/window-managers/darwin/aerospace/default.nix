@@ -41,18 +41,11 @@ in
 
     programs.aerospace = {
       enable = true;
-      package = null;
-      launchd.enable = false;
+      launchd.enable = true;
       userSettings = {
         start-at-login = false;
         after-login-command = [ ];
       };
     };
-
-    home.activation.aerospaceRestart =
-      config.lib.dag.entryAfter [ "linkGeneration" ]
-        ''
-          /bin/launchctl kickstart -k gui/$(id -u)/org.nixos.aerospace >/dev/null 2>&1 || true
-        '';
   };
 }

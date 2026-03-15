@@ -6,7 +6,6 @@
 }:
 let
   inherit (lib.${namespace}.module)
-    mkOptDisabled'
     on
     ;
   inherit (lib.${namespace}.launchd.darwin) mkAgent;
@@ -16,11 +15,19 @@ let
 in
 {
   options.${namespace}.services.yashiki = {
-    enable = mkOptDisabled';
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      internal = true;
+    };
   };
 
   config = lib.mkIf cfg.enable (
     {
+      warnings = [
+        "${namespace}.services.yashiki is a legacy compatibility shim. Prefer ${namespace}.desktop.window-managers.darwin.yashiki."
+      ];
+
       assertions = [
         {
           assertion = !aerospaceCfg.enable;

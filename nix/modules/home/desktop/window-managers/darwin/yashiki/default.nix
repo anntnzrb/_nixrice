@@ -11,6 +11,7 @@ let
     filter
     ;
   inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.launchd.home) mkAgent;
   inherit (lib.${namespace}.fs) getModuleFiles;
   inherit (lib.types) listOf str;
 
@@ -56,23 +57,35 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = pkgs.stdenv.hostPlatform.isDarwin;
-        message = "${namespace}.desktop.window-managers.darwin.yashiki is only supported on Darwin.";
-      }
-    ];
+  config = lib.mkIf cfg.enable (
+    {
+      assertions = [
+        {
+          assertion = pkgs.stdenv.hostPlatform.isDarwin;
+          message = "${namespace}.desktop.window-managers.darwin.yashiki is only supported on Darwin.";
+        }
+      ];
 
-    xdg.configFile."yashiki/init" = {
-      source = pkgs.writeShellScript "yashiki-init" script;
-      executable = true;
-    };
-
-    home.activation.yashikiRestart =
-      config.lib.dag.entryAfter [ "linkGeneration" ]
-        ''
-          /bin/launchctl kickstart -k gui/$(id -u)/org.nixos.yashiki >/dev/null 2>&1 || true
-        '';
-  };
+      xdg.configFile."yashiki/init" = {
+        source = pkgs.writeShellScript "yashiki-init" script;
+        executable = true;
+      };
+    }
+    // mkAgent {
+      name = "yashiki";
+      serviceConfig = {
+        ProgramArguments = [
+          "/Applications/Yashiki.app/Contents/MacOS/yashiki"
+          "start"
+        ];
+        RunAtLoad = true;
+        KeepAlive = true;
+        ProcessType = "Interactive";
+        LimitLoadToSessionType = [ "Aqua" ];
+        EnvironmentVariables = {
+          PATH = "/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin";
+        };
+      };
+    }
+  );
 }
