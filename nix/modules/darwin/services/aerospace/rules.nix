@@ -16,6 +16,11 @@ in
         run = [ (aerospaceLib.mvNodeToWorkspace 1) ];
       }
       {
+        appId = "org.gnu.Emacs";
+        furtherCallbacks = false;
+        run = [ (aerospaceLib.mkLayout "tiling") ];
+      }
+      {
         appId = "org.alacritty";
         run = [ (aerospaceLib.mvNodeToWorkspace 2) ];
       }

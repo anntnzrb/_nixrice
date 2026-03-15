@@ -18,6 +18,10 @@ in
             actions = [ "float" ];
           }
           {
+            appId = "org.gnu.Emacs";
+            actions = [ "no-float" ];
+          }
+          {
             appId = "org.mozilla.firefox";
             actions = [ "tags 1" ];
           }
