@@ -29,7 +29,6 @@ in
           key = "alt-l";
           action = "window-focus right";
         }
-
         {
           key = "alt-shift-h";
           action = "window-swap left";
@@ -46,7 +45,6 @@ in
           key = "alt-shift-l";
           action = "window-swap right";
         }
-
         {
           key = "alt-shift-f";
           action = "window-toggle-float";
@@ -55,7 +53,6 @@ in
           key = "alt-shift-space";
           action = "window-toggle-float";
         }
-
         {
           key = "alt-shift-t";
           action = "layout-set tatami";

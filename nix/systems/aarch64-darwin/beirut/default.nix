@@ -36,6 +36,7 @@ in
       whatsapp = on;
     };
 
+    desktop.window-managers.darwin.aerospace = on;
     services.tailscale = on;
 
     network.ssh = on;

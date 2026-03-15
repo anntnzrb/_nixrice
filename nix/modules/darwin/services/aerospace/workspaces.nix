@@ -10,7 +10,7 @@ let
 in
 {
   config = lib.mkIf cfg.enable {
-    programs.aerospace.userSettings.mode.main.binding =
+    services.aerospace.settings.mode.main.binding =
       (aerospaceLib.mkWorkspaceBindings cfg.workspaceRange "workspace" cfg.modifier)
       // (aerospaceLib.mkWorkspaceBindings cfg.workspaceRange "move-node-to-workspace"
         "${cfg.modifier}-shift"

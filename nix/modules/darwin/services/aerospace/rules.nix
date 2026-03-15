@@ -10,7 +10,7 @@ let
 in
 {
   config = lib.mkIf cfg.enable {
-    programs.aerospace.userSettings.on-window-detected = aerospaceLib.mkRules [
+    services.aerospace.settings.on-window-detected = aerospaceLib.mkRules [
       {
         appId = "org.mozilla.firefox";
         run = [ (aerospaceLib.mvNodeToWorkspace 1) ];

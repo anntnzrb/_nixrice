@@ -10,7 +10,7 @@ let
 in
 {
   config = lib.mkIf cfg.enable {
-    programs.aerospace.userSettings = {
+    services.aerospace.settings = {
       accordion-padding = 0;
       gaps = {
         inner = {
