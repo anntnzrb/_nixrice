@@ -36,10 +36,7 @@ in
       whatsapp = on;
     };
 
-    services = {
-      yashiki = on;
-      tailscale = on;
-    };
+    services.tailscale = on;
 
     network.ssh = on;
 

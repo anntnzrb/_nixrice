@@ -38,10 +38,6 @@ in
       whatsapp = on;
     };
 
-    services = {
-      aerospace = on;
-    };
-
     network.ssh = on;
 
     homebrew = on;
