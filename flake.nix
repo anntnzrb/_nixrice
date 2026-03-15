@@ -19,7 +19,6 @@
         };
 
       overlays = [
-        inputs.emacs-overlay.overlays.default
         inputs.nixpkgs-firefox-darwin.overlay
       ];
 
@@ -159,11 +158,6 @@
       # used for unmerged new modules
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-
-    emacs-overlay = {
-      # bleeding-edge GNU Emacs in nix
-      url = "github:nix-community/emacs-overlay/master";
     };
 
     neovim-annt = {
