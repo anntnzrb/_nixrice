@@ -16,6 +16,7 @@ in
     };
 
     shells.zsh = on;
+    editors.emacs = on;
 
     desktop = {
       terminal-emulators.ghostty = on;

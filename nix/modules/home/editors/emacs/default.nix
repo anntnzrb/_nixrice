@@ -1,17 +1,12 @@
 {
   lib,
   pkgs,
-  inputs,
   config,
   namespace,
   ...
 }:
 let
   inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
-  inherit (inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system})
-    emacs30
-    ;
-
   cfg = config.${namespace}.editors.emacs;
 
   mkEmacsPackage =
@@ -19,46 +14,7 @@ let
     (pkgs.emacsPackagesFor pkg).emacsWithPackages (
       epkgs: with epkgs; [
         pkgs.coreutils-prefixed # provides gls
-
-        # nix
-        pkgs.nixd # LSP
-        pkgs.nixfmt # fmt
-
-        # binds
-        evil
-        evil-collection
-
-        treesit-grammars.with-all-grammars
-
-        # themes
-        ef-themes
-
-        # font
-        fontaine
-
-        pulsar
-
-        corfu
-        envrc
-        consult
-        orderless
-
-        # minibuffer
-        vertico
-        marginalia
-        embark
-        embark-consult
-
-        # AI
-        gptel
-
-        # fmt
-        apheleia
-
-        # langs
-        nix-ts-mode
-        gleam-ts-mode
-        markdown-mode
+        vterm
       ]
     );
 in
@@ -66,25 +22,12 @@ in
   options.${namespace}.editors.emacs = {
     enable = mkOptDisabled';
 
-    package = mkOpt' lib.types.package (
-      mkEmacsPackage (
-        emacs30.override {
-          withNativeCompilation = true;
-          withTreeSitter = true;
-        }
-      )
-    );
+    package = mkOpt' lib.types.package (mkEmacsPackage pkgs.emacs30);
   };
 
   config = lib.mkIf cfg.enable {
     home.packages = [
       cfg.package
-    ]
-    ++ [
-      # fonts
-      pkgs.iosevka-comfy.comfy-motion
-      pkgs.iosevka-comfy.comfy-wide-motion-duo
-      pkgs.nerd-fonts.zed-mono
     ];
 
     home.shellAliases = {
