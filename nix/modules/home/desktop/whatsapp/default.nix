@@ -27,8 +27,8 @@ let
   anyEnabled = idleEnabled || sleepEnabled;
   homeDir = config.home.homeDirectory;
 
-  stateDirDefault = "${homeDir}/Library/Application Support/liberion/whatsapp-idle-guard";
-  logDirDefault = "${homeDir}/Library/Logs/liberion";
+  stateDirDefault = "${homeDir}/Library/Application Support/rice/whatsapp-idle-guard";
+  logDirDefault = "${homeDir}/Library/Logs/rice";
 
   outLogFile = "${idleCfg.logDir}/whatsapp-idle-guard.log";
   errLogFile = "${idleCfg.logDir}/whatsapp-idle-guard.error.log";

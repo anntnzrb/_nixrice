@@ -1,6 +1,6 @@
 # AGENTS.md - Module System
 
-Modules are the core implementation units that define feature behavior across platforms. Each module provides a single, focused capability using standardized patterns and the liberion namespace.
+Modules are the core implementation units that define feature behavior across platforms. Each module provides a single, focused capability using standardized patterns and the namespace.
 
 ### 1. Directory Structure
 

@@ -7,7 +7,7 @@ let
   inherit (lib.${namespace}.module) on;
 in
 {
-  liberion = {
+  ${namespace} = {
     suites = {
       cli = on;
       core = on;

@@ -1,10 +1,11 @@
 {
   pkgs,
   inputs,
+  namespace,
   ...
 }:
 pkgs.mkShell {
-  name = "liberion-shell";
+  name = "${namespace}-shell";
 
   inherit (inputs.self.checks.${pkgs.stdenv.hostPlatform.system}.pre-commit-hooks)
     shellHook
