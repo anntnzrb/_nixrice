@@ -20,6 +20,10 @@ in
       tmux = on;
     };
 
+    suites = {
+      llmAgents = on;
+    };
+
     cli = {
       git = on // {
         gh = on;
@@ -38,12 +42,6 @@ in
       uv = on;
       yt-dlp = on;
       zoxide = on;
-
-      llmAgents = {
-        codex = on;
-        opencode = on;
-        pi = on;
-      };
     };
 
     editors = {
