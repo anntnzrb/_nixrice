@@ -96,6 +96,9 @@ let
     if spec.type == "script" then
       pkgs.writeShellApplication {
         inherit name;
+        runtimeInputs = with pkgs; [
+          coreutils
+        ];
         text = ''
           exec ${pkgs.runtimeShell} ${wrappers}/${wrapperDir}/script-agent-wrapper.sh \
             ${spec.runner} ${spec.script} "$@"
@@ -104,6 +107,9 @@ let
     else
       pkgs.writeShellApplication {
         inherit name;
+        runtimeInputs = with pkgs; [
+          coreutils
+        ];
         text = ''
           exec ${pkgs.runtimeShell} ${wrappers}/${wrapperDir}/nix-agent-wrapper.sh \
             ${spec.attr} "$@"
