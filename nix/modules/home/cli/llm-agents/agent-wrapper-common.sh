@@ -14,7 +14,7 @@ AGENTS_HOME="${HOME}/.config/agents"
 
 # SYNC
 # Sync script path
-SYNC="${AGENTS_HOME}/bin/sync.rs"
+SYNC="${AGENTS_HOME}/bin/sync"
 
 # SYNC_TIMEOUT_SECS
 # Max sync runtime before forced cleanup
