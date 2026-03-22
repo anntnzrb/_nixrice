@@ -112,7 +112,7 @@ let
         ];
         text = ''
           exec ${pkgs.runtimeShell} ${wrappers}/${wrapperDir}/nix-agent-wrapper.sh \
-            ${spec.attr} "$@"
+            ${spec.attr} ${name} "$@"
         '';
       };
 
