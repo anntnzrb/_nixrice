@@ -20,7 +20,6 @@ in
       husky = on;
       repomix = on;
       bun = on;
-      rust = on;
       uv = on;
     };
   };
