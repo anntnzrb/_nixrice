@@ -146,14 +146,14 @@ let
   mkAgentConfig =
     name: spec:
     let
-      cfg = config.${namespace}.cli.llmAgents.${name};
+      cfg = config.${namespace}.cli."llm-agents".${name};
     in
     mkIf cfg.enable (mkMerge [
       { home.packages = [ (mkWrapper name spec) ]; }
     ]);
 in
 {
-  options.${namespace}.cli.llmAgents = mapAttrs' (
+  options.${namespace}.cli."llm-agents" = mapAttrs' (
     name: _: nameValuePair name { enable = mkOptDisabled'; }
   ) agents;
 

@@ -7,15 +7,15 @@
 let
   inherit (lib.${namespace}.module) mkOptDisabled' on;
 
-  cfg = config.${namespace}.suites.llmAgents;
+  cfg = config.${namespace}.suites."llm-agents";
 in
 {
-  options.${namespace}.suites.llmAgents = {
+  options.${namespace}.suites."llm-agents" = {
     enable = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {
-    ${namespace}.cli.llmAgents = {
+    ${namespace}.cli."llm-agents" = {
       chutes = on;
       claude = on;
       codex = on;
