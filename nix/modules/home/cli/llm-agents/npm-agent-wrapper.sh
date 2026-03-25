@@ -3,7 +3,7 @@ set -eu
 
 # DEFAULT_VERSION
 # Default version for npm packages. Empty means resolve unpinned latest-ish package name via bun x
-DEFAULT_VERSION=""
+DEFAULT_VERSION="latest"
 
 # BUN
 # Bun executable path
