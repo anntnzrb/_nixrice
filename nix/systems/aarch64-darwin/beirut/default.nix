@@ -29,7 +29,6 @@ in
     };
 
     programs = {
-      aldente = on;
       bitwarden = on;
       orbstack = on;
       raycast = on;
