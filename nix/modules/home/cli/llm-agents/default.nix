@@ -3,6 +3,7 @@
   config,
   namespace,
   pkgs,
+  inputs,
   ...
 }:
 let
@@ -16,6 +17,14 @@ let
     ;
 
   wrapperDir = "lib/llm-agents";
+  bunPkg =
+    inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.bun;
+  bunExe = "${bunPkg}/bin/bun";
+  shell = pkgs.runtimeShell;
+  coreRuntimeInputs = [
+    bunPkg
+    pkgs.coreutils
+  ];
 
   wrappers = pkgs.runCommand "llm-agent-wrappers" { } ''
     mkdir -p "$out/${wrapperDir}"
@@ -40,7 +49,7 @@ let
     };
     claude = {
       type = "script";
-      runner = "${pkgs.bun}/bin/bun";
+      runner = bunExe;
       script = "${config.home.homeDirectory}/.config/agents/tools/claude/bin/lib/claude.ts";
     };
     chutes = {
@@ -86,6 +95,12 @@ let
     };
   };
 
+  mkShellWrapper =
+    name: runtimeInputs: text:
+    pkgs.writeShellApplication {
+      inherit name runtimeInputs text;
+    };
+
   /**
     Create a wrapper derivation for an agent.
 
@@ -98,41 +113,25 @@ let
   mkWrapper =
     name: spec:
     if spec.type == "npm" then
-      pkgs.writeShellApplication {
-        inherit name;
-        runtimeInputs = with pkgs; [
-          bun
-          nodejs
-        ];
-        text = ''
-          exec ${pkgs.runtimeShell} ${wrappers}/${wrapperDir}/npm-agent-wrapper.sh \
-            ${pkgs.bun}/bin/bun ${spec.package} "$@"
-        '';
-      }
+      mkShellWrapper name
+        [
+          bunPkg
+          pkgs.nodejs
+        ]
+        ''
+          exec ${shell} ${wrappers}/${wrapperDir}/npm-agent-wrapper.sh \
+            ${bunExe} ${spec.package} "$@"
+        ''
     else if spec.type == "script" then
-      pkgs.writeShellApplication {
-        inherit name;
-        runtimeInputs = with pkgs; [
-          bun
-          coreutils
-        ];
-        text = ''
-          exec ${pkgs.runtimeShell} ${wrappers}/${wrapperDir}/script-agent-wrapper.sh \
-            ${spec.runner} ${spec.script} "$@"
-        '';
-      }
+      mkShellWrapper name coreRuntimeInputs ''
+        exec ${shell} ${wrappers}/${wrapperDir}/script-agent-wrapper.sh \
+          ${spec.runner} ${spec.script} "$@"
+      ''
     else
-      pkgs.writeShellApplication {
-        inherit name;
-        runtimeInputs = with pkgs; [
-          bun
-          coreutils
-        ];
-        text = ''
-          exec ${pkgs.runtimeShell} ${wrappers}/${wrapperDir}/nix-agent-wrapper.sh \
-            ${spec.attr} ${name} "$@"
-        '';
-      };
+      mkShellWrapper name coreRuntimeInputs ''
+        exec ${shell} ${wrappers}/${wrapperDir}/nix-agent-wrapper.sh \
+          ${spec.attr} ${name} "$@"
+      '';
 
   /**
     Create module configuration for an agent.
