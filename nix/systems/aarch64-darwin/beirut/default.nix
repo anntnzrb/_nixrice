@@ -31,7 +31,6 @@ in
     programs = {
       bitwarden = on;
       orbstack = on;
-      raycast = on;
       whatsapp = on;
     };
 
