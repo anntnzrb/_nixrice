@@ -43,6 +43,10 @@ in
         setw -g window-status-format '#I:#W#F'
         setw -g window-status-current-format '#[bold]#I:#W#F'
 
+        bind '"' split-window -v -c '#{pane_current_path}'
+        bind % split-window -h -c '#{pane_current_path}'
+        bind c new-window -c '#{pane_current_path}'
+
         bind -N "Reload tmux configuration" R source-file ${config.xdg.configHome}/tmux/tmux.conf \; display-message "Config reloaded!"
       '';
     };
