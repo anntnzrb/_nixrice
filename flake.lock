@@ -10,11 +10,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1765765778,
-        "narHash": "sha256-w7nVSCFHEcTcrbQEzVdx5MaE+7iTaAtLHjV2jfOTSCI=",
+        "lastModified": 1774983044,
+        "narHash": "sha256-XfoC6wpoDN3CNVY8U6tqpPa0oiHoKpE9G9xYNfI1ZME=",
         "owner": "heitoraugustoln",
         "repo": "betterfox-nix",
-        "rev": "b3dae410c6f9e632955c67d77791ae231a7dd3c3",
+        "rev": "a18e05401186690925d5c493240908852cdb43ea",
         "type": "github"
       },
       "original": {
