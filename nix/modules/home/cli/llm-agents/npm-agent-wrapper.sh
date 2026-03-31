@@ -1,6 +1,13 @@
 #!/bin/sh
 set -eu
 
+# SCRIPT_DIR
+# Wrapper directory
+SCRIPT_DIR="${0%/*}"
+
+# shellcheck source=agent-wrapper-common.sh
+. "${SCRIPT_DIR}/agent-wrapper-common.sh"
+
 # DEFAULT_VERSION
 # Default version for npm packages. Empty means resolve unpinned latest-ish package name via bun x
 DEFAULT_VERSION="latest"
@@ -12,16 +19,6 @@ BUN="${1:-}"
 # PACKAGE
 # npm package name
 PACKAGE="${2:-}"
-
-require_arg() {
-    value="${1}"
-    label="${2}"
-    [ -n "${value}" ] || {
-        printf '%s\n' "llm-agent: missing ${label}" >&2
-        exit 2
-    }
-    return 0
-}
 
 require_arg "${BUN}" "bun"
 require_arg "${PACKAGE}" "package"
@@ -57,4 +54,4 @@ done
 PACKAGE_SPEC="${PACKAGE}"
 [ -n "${VERSION}" ] && PACKAGE_SPEC="${PACKAGE}@${VERSION}"
 
-exec "${BUN}" x "${PACKAGE_SPEC}" "$@"
+run_exec "${BUN}" x "${PACKAGE_SPEC}" "$@"
