@@ -115,7 +115,7 @@
 
     darwin = {
       # nix support on macOS (darwin)
-      url = "github:nix-darwin/nix-darwin/nix-darwin-25.11";
+      url = "github:lnl7/nix-darwin/nix-darwin-25.11";
       # NOTE: match nixpkgs main ref.
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
