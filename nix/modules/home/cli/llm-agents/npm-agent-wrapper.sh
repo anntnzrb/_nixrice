@@ -1,6 +1,18 @@
 #!/bin/sh
 set -eu
 
+# Keep npm-backed interactive CLIs responsive: try sync first, but cap the
+# preflight aggressively and continue launch if sync fails or stalls.
+LLM_AGENT_SYNC_TIMEOUT_SECS="${LLM_AGENT_SYNC_TIMEOUT_SECS:-5}"
+LLM_AGENT_SYNC_TERM_GRACE_SECS="${LLM_AGENT_SYNC_TERM_GRACE_SECS:-1}"
+
+# SCRIPT_DIR
+# Wrapper directory
+SCRIPT_DIR="${0%/*}"
+
+# shellcheck source=agent-wrapper-common.sh
+. "${SCRIPT_DIR}/agent-wrapper-common.sh"
+
 # DEFAULT_VERSION
 # Default version for npm packages. Empty means resolve unpinned latest-ish package name via bun x
 DEFAULT_VERSION="latest"
@@ -12,16 +24,6 @@ BUN="${1:-}"
 # PACKAGE
 # npm package name
 PACKAGE="${2:-}"
-
-require_arg() {
-    value="${1}"
-    label="${2}"
-    [ -n "${value}" ] || {
-        printf '%s\n' "llm-agent: missing ${label}" >&2
-        exit 2
-    }
-    return 0
-}
 
 require_arg "${BUN}" "bun"
 require_arg "${PACKAGE}" "package"
@@ -56,5 +58,9 @@ done
 
 PACKAGE_SPEC="${PACKAGE}"
 [ -n "${VERSION}" ] && PACKAGE_SPEC="${PACKAGE}@${VERSION}"
+
+if ! run_sync; then
+    printf '%s\n' "llm-agent: warning: continuing launch without completed sync" >&2
+fi
 
 exec "${BUN}" x "${PACKAGE_SPEC}" "$@"
