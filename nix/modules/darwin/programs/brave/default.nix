@@ -52,17 +52,21 @@ in
     brave_policy_target="$brave_policy_dir/com.brave.Browser.plist"
     brave_policy_source="${bravePolicyPlist}"
 
-    if [[ "${if cfg.enable then "1" else "0"}" = "1" ]]; then
+    ${lib.optionalString cfg.enable ''
       mkdir -p "$brave_policy_dir"
 
-      if [[ ! -e "$brave_policy_target" ]] || ! cmp -s "$brave_policy_source" "$brave_policy_target"; then
-        install -m 0644 "$brave_policy_source" "$brave_policy_target"
-        chown root:wheel "$brave_policy_target"
+      if [ ! -e "$brave_policy_target" ] || ! cmp -s "$brave_policy_source" "$brave_policy_target"; then
+          install -m 0644 "$brave_policy_source" "$brave_policy_target"
+          chown root:wheel "$brave_policy_target"
+          killall cfprefsd >/dev/null 2>&1 || :
+      fi
+    ''}
+
+    ${lib.optionalString (!cfg.enable) ''
+      if [ -e "$brave_policy_target" ]; then
+        rm -f "$brave_policy_target"
         killall cfprefsd >/dev/null 2>&1 || :
       fi
-    elif [[ -e "$brave_policy_target" ]]; then
-      rm -f "$brave_policy_target"
-      killall cfprefsd >/dev/null 2>&1 || :
-    fi
+    ''}
   '';
 }
