@@ -19,6 +19,7 @@ in
     editors.emacs = on;
 
     desktop = {
+      browsers.brave = on;
       terminal-emulators.ghostty = on;
       whatsapp = on;
     };
