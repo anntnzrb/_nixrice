@@ -13,7 +13,12 @@ inputs.pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
 
   hooks = {
     # nix
-    flake-checker = on;
+    flake-checker = on // {
+      # Keep structural flake.lock checks, but don't fail CI on input age.
+      entry = "${pkgs.flake-checker}/bin/flake-checker --check-owner --check-supported";
+      files = "(^flake\\.nix$|^flake\\.lock$)";
+      pass_filenames = false;
+    };
 
     nixfmt = on // {
       settings.width = 80;
