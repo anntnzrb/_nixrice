@@ -160,15 +160,29 @@ start_sync_timer() {
     rm -f "${SYNC_TIMEOUT_FLAG}"
 
     (
-        trap 'exit 0' TERM HUP INT
-        sleep "${SYNC_TIMEOUT_SECS}" || exit 0
+        sleep_pid=""
+        stop_sleep() {
+            [ -n "${sleep_pid}" ] || exit 0
+            kill "${sleep_pid}" 2>/dev/null || :
+            wait "${sleep_pid}" 2>/dev/null || :
+            exit 0
+        }
+        trap 'stop_sleep' TERM HUP INT
+
+        sleep "${SYNC_TIMEOUT_SECS}" &
+        sleep_pid=$!
+        wait "${sleep_pid}" || exit 0
+        sleep_pid=""
         kill -0 "${SYNC_PID}" 2>/dev/null || exit 0
 
         printf '%s\n' "llm-agent: sync timed out after ${SYNC_TIMEOUT_SECS}s" >&2
         : >"${SYNC_TIMEOUT_FLAG}"
         sync_signal TERM
 
-        sleep "${SYNC_TERM_GRACE_SECS}" || exit 0
+        sleep "${SYNC_TERM_GRACE_SECS}" &
+        sleep_pid=$!
+        wait "${sleep_pid}" || exit 0
+        sleep_pid=""
         kill -0 "${SYNC_PID}" 2>/dev/null || exit 0
         sync_signal KILL
     ) &
