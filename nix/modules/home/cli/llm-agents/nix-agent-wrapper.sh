@@ -11,11 +11,15 @@ SCRIPT_DIR="${0%/*}"
 FLAKE="github:numtide/llm-agents.nix/main"
 REFRESH_SECS=$((8 * 60 * 60))
 
-ATTR="${1:-}"
+SYNC_RUNNER_ARG="${1:-}"
+SYNC_SCRIPT_ARG="${2:-}"
+set_sync_command "${SYNC_RUNNER_ARG}" "${SYNC_SCRIPT_ARG}"
+
+ATTR="${3:-}"
 require_arg "${ATTR}" "attribute"
-BIN_NAME="${2:-}"
+BIN_NAME="${4:-}"
 require_arg "${BIN_NAME}" "binary name"
-shift 2
+shift 4
 
 command -v nix >/dev/null 2>&1 || die "nix not found" 127
 

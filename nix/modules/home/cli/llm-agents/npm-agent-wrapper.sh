@@ -1,11 +1,6 @@
 #!/bin/sh
 set -eu
 
-# Keep npm-backed interactive CLIs responsive: try sync first, but cap the
-# preflight aggressively and continue launch if sync fails or stalls.
-LLM_AGENT_SYNC_TIMEOUT_SECS="${LLM_AGENT_SYNC_TIMEOUT_SECS:-5}"
-LLM_AGENT_SYNC_TERM_GRACE_SECS="${LLM_AGENT_SYNC_TERM_GRACE_SECS:-1}"
-
 # SCRIPT_DIR
 # Wrapper directory
 SCRIPT_DIR="${0%/*}"
@@ -21,14 +16,19 @@ DEFAULT_VERSION="latest"
 # Bun executable path
 BUN="${1:-}"
 
+# SYNC_SCRIPT
+# Sync script path
+SYNC_SCRIPT_ARG="${2:-}"
+
 # PACKAGE
 # npm package name
-PACKAGE="${2:-}"
+PACKAGE="${3:-}"
 
 require_arg "${BUN}" "bun"
+set_sync_command "${BUN}" "${SYNC_SCRIPT_ARG}"
 require_arg "${PACKAGE}" "package"
 
-shift 2
+shift 3
 
 VERSION="${DEFAULT_VERSION}"
 while [ $# -gt 0 ]; do
@@ -59,8 +59,6 @@ done
 PACKAGE_SPEC="${PACKAGE}"
 [ -n "${VERSION}" ] && PACKAGE_SPEC="${PACKAGE}@${VERSION}"
 
-if ! run_sync; then
-    printf '%s\n' "llm-agent: warning: continuing launch without completed sync" >&2
-fi
+try_sync
 
 exec "${BUN}" x "${PACKAGE_SPEC}" "$@"

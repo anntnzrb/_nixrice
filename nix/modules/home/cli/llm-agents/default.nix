@@ -21,6 +21,7 @@ let
     inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.bun;
   bunExe = "${bunPkg}/bin/bun";
   shell = pkgs.runtimeShell;
+  syncScript = "${config.home.homeDirectory}/.config/agents/sync/src/cli.ts";
   coreRuntimeInputs = [
     bunPkg
     pkgs.coreutils
@@ -120,17 +121,17 @@ let
         ]
         ''
           exec ${shell} ${wrappers}/${wrapperDir}/npm-agent-wrapper.sh \
-            ${bunExe} ${spec.package} "$@"
+            ${bunExe} ${syncScript} ${spec.package} "$@"
         ''
     else if spec.type == "script" then
       mkShellWrapper name coreRuntimeInputs ''
         exec ${shell} ${wrappers}/${wrapperDir}/script-agent-wrapper.sh \
-          ${spec.runner} ${spec.script} "$@"
+          ${bunExe} ${syncScript} ${spec.runner} ${spec.script} "$@"
       ''
     else
       mkShellWrapper name coreRuntimeInputs ''
         exec ${shell} ${wrappers}/${wrapperDir}/nix-agent-wrapper.sh \
-          ${spec.attr} ${name} "$@"
+          ${bunExe} ${syncScript} ${spec.attr} ${name} "$@"
       '';
 
   /**

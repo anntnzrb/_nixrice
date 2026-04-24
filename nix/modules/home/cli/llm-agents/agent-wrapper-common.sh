@@ -12,17 +12,21 @@ EXIT_MISSING_ARG="2"
 # Root of agents repo
 AGENTS_HOME="${HOME}/.config/agents"
 
-# SYNC
-# Sync script path
-SYNC="${AGENTS_HOME}/bin/sync"
+# SYNC_RUNNER
+# Runtime used to execute the sync script. Set by wrapper entrypoint.
+SYNC_RUNNER=""
+
+# SYNC_SCRIPT
+# Sync script path. Set by wrapper entrypoint.
+SYNC_SCRIPT=""
 
 # SYNC_TIMEOUT_SECS
-# Max sync runtime before forced cleanup
-SYNC_TIMEOUT_SECS="${LLM_AGENT_SYNC_TIMEOUT_SECS:-300}"
+# Max launch-time sync runtime before forced cleanup.
+SYNC_TIMEOUT_SECS="60"
 
 # SYNC_TERM_GRACE_SECS
-# Grace period before escalating to SIGKILL
-SYNC_TERM_GRACE_SECS="${LLM_AGENT_SYNC_TERM_GRACE_SECS:-5}"
+# Grace period before escalating to SIGKILL.
+SYNC_TERM_GRACE_SECS="2"
 
 SYNC_PID=""
 SYNC_PGID=""
@@ -65,6 +69,16 @@ require_uint() {
 require_dir() {
     path="${1}"
     [ -d "${path}" ] || die "missing agents dir: ${path}" "${EXIT_MISSING_DIR}"
+    return 0
+}
+
+# set_sync_command
+# Configure sync runner and script path
+set_sync_command() {
+    SYNC_RUNNER="${1:-}"
+    SYNC_SCRIPT="${2:-}"
+    require_arg "${SYNC_RUNNER}" "sync runner"
+    require_arg "${SYNC_SCRIPT}" "sync script"
     return 0
 }
 
@@ -165,7 +179,15 @@ start_sync_timer() {
 # run_sync
 # Run sync after checking agents dir
 run_sync() {
-    require_dir "${AGENTS_HOME}"
+    if [ ! -d "${AGENTS_HOME}" ]; then
+        printf '%s\n' "llm-agent: missing agents dir: ${AGENTS_HOME}" >&2
+        return "${EXIT_MISSING_DIR}"
+    fi
+    require_arg "${SYNC_RUNNER}" "sync runner"
+    if [ ! -f "${SYNC_SCRIPT}" ]; then
+        printf '%s\n' "llm-agent: missing sync script: ${SYNC_SCRIPT}" >&2
+        return "${EXIT_MISSING_DIR}"
+    fi
     require_uint "${SYNC_TIMEOUT_SECS}" "sync timeout"
     require_uint "${SYNC_TERM_GRACE_SECS}" "sync grace period"
 
@@ -174,7 +196,7 @@ run_sync() {
     trap 'on_wrapper_signal INT' INT
     trap 'on_wrapper_signal TERM' TERM
 
-    "${SYNC}" &
+    "${SYNC_RUNNER}" "${SYNC_SCRIPT}" &
     SYNC_PID=$!
     SYNC_PGID=""
     start_sync_timer
@@ -196,9 +218,18 @@ run_sync() {
     return "${status}"
 }
 
+# try_sync
+# Run sync; warn and continue on failure.
+try_sync() {
+    if ! run_sync; then
+        printf '%s\n' "llm-agent: warning: continuing launch without completed sync" >&2
+    fi
+    return 0
+}
+
 # run_exec
-# Run sync then exec command
+# Try sync then exec command.
 run_exec() {
-    run_sync
+    try_sync
     exec "$@"
 }
