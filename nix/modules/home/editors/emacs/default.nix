@@ -32,7 +32,7 @@ in
 
     home.shellAliases = {
       # NOTE: 'disown' is not POSIX
-      eee = "nohup ${cfg.package}/bin/emacs >/tmp/emacs-nohup.out 2>&1 & disown";
+      eee = "${lib.getExe' pkgs.coreutils "nohup"} ${lib.getExe cfg.package} >/tmp/emacs-nohup.out 2>&1 & disown";
     };
   };
 }

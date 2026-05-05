@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   config,
   namespace,
   ...
@@ -45,7 +46,7 @@ in
 
     home.shellAliases = {
       zll = "cd && ${lib.getExe config.programs.zellij.package}"; # ensure zellij is started at ~
-      zllk = "pkill -x zellij";
+      zllk = "${lib.getExe pkgs.killall} zellij";
     };
   };
 }

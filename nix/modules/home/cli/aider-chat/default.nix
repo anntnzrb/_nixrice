@@ -18,7 +18,7 @@ in
   config = lib.mkIf cfg.enable {
     home = {
       packages = [ pkgs.aider-chat ];
-      shellAliases.aider = "aider --cache-prompts --pretty --stream";
+      shellAliases.aider = "${lib.getExe pkgs.aider-chat} --cache-prompts --pretty --stream";
     };
   };
 }
