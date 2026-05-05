@@ -10,11 +10,13 @@ let
     optionalAttrs
     ;
 
+  inherit (pkgs)
+    coreutils
+    ;
+
   inherit (pkgs.stdenvNoCC.hostPlatform)
     isLinux
     ;
-
-  uutils = pkgs.uutils-coreutils-noprefix;
 
   /**
     Configuration for eza, a modern replacement for ls.
@@ -90,23 +92,23 @@ in
     # misc
     # ----------------------------------------------------------------------
     ".." = "cd ..";
-    cp = "${getExe' uutils "cp"} --recursive --interactive --verbose";
+    cp = "${getExe' coreutils "cp"} --recursive --interactive --verbose";
     diff = "${getExe' pkgs.diffutils "diff"} --color=auto";
-    mkdir = "${getExe' uutils "mkdir"} --parents --verbose";
-    mv = "${getExe' uutils "mv"} --interactive --verbose";
-    rm = "${getExe' uutils "rm"} --verbose";
-    rmfr = "${getExe' uutils "rm"} --recursive --force --verbose";
+    mkdir = "${getExe' coreutils "mkdir"} --parents --verbose";
+    mv = "${getExe' coreutils "mv"} --interactive --verbose";
+    rm = "${getExe' coreutils "rm"} --verbose";
+    rmfr = "${getExe' coreutils "rm"} --recursive --force --verbose";
     wget = "${getExe pkgs.wget} --no-hsts";
     zip = "${getExe pkgs.zip} --recurse-paths --verbose -9";
 
     # generate a 16-byte alphanumeric string
-    gen-str = "${getExe' uutils "tr"} --delete --complement 'A-Za-z0-9' < /dev/urandom | ${getExe' uutils "head"} --bytes 16";
+    gen-str = "${getExe' coreutils "tr"} --delete --complement 'A-Za-z0-9' < /dev/urandom | ${getExe' coreutils "head"} --bytes 16";
 
     # empty files management
     dir-empty-print = "${getExe pkgs.fd} --color=always --type empty --type directory .";
-    dir-empty-rm = "${getExe pkgs.fd} --color=always --type empty --type directory . --exec ${getExe' uutils "rmdir"} --verbose {} \;";
+    dir-empty-rm = "${getExe pkgs.fd} --color=always --type empty --type directory . --exec ${getExe' coreutils "rmdir"} --verbose {} \;";
     file-empty-print = "${getExe pkgs.fd} --color=always --type empty --type file .";
-    file-empty-rm = "${getExe pkgs.fd} --color=always --type empty --type file . --exec ${getExe' uutils "rm"} --verbose {} \;";
+    file-empty-rm = "${getExe pkgs.fd} --color=always --type empty --type file . --exec ${getExe' coreutils "rm"} --verbose {} \;";
 
     # network
     tnet = "${getExe pkgs.unixtools.ping} -c 4 8.8.8.8";
