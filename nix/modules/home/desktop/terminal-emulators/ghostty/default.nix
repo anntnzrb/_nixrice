@@ -66,6 +66,23 @@ in
           "super+v=paste_from_clipboard"
           "super+comma=open_config"
           "super+n=new_window"
+          "super+t=new_tab"
+          "super+digit_1=goto_tab:1"
+          "super+1=goto_tab:1"
+          "super+digit_2=goto_tab:2"
+          "super+2=goto_tab:2"
+          "super+digit_3=goto_tab:3"
+          "super+3=goto_tab:3"
+          "super+digit_4=goto_tab:4"
+          "super+4=goto_tab:4"
+          "super+digit_5=goto_tab:5"
+          "super+5=goto_tab:5"
+          "super+digit_6=goto_tab:6"
+          "super+6=goto_tab:6"
+          "super+digit_7=goto_tab:7"
+          "super+7=goto_tab:7"
+          "super+digit_8=goto_tab:8"
+          "super+8=goto_tab:8"
           "super+q=quit"
           "super+w=close_window"
 
@@ -73,6 +90,7 @@ in
           "super+plus=increase_font_size:1"
           "super+minus=decrease_font_size:1"
           "super+zero=reset_font_size"
+          "super+ctrl+f=toggle_fullscreen"
 
         ];
       }
