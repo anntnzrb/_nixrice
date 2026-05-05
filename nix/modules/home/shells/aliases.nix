@@ -5,9 +5,9 @@
 }:
 let
   inherit (lib)
-    mkIf
     getExe
     getExe'
+    optionalAttrs
     ;
 
   inherit (pkgs.stdenvNoCC.hostPlatform)
@@ -109,15 +109,12 @@ in
     file-empty-rm = "${getExe pkgs.fd} --color=always --type empty --type file . --exec ${getExe' uutils "rm"} --verbose {} \;";
 
     # network
-    tnet = "${getExe pkgs.unixtools.ping} --count 4 8.8.8.8";
+    tnet = "${getExe pkgs.unixtools.ping} -c 4 8.8.8.8";
     "ip?" =
       "${getExe' pkgs.curlMinimal "curl"} --fail --silent --show-error --location icanhazip.com";
     "local-ip?" = ''
       ${getExe pkgs.unixtools.ifconfig} | ${getExe pkgs.gawk} '/inet / { if ($2 != "127.0.0.1") { print $2; exit } }'
     '';
-
-    # linux
-    lsblk = mkIf isLinux "lsblk --all --ascii";
 
     # ----------------------------------------------------------------------
     # nix
@@ -143,5 +140,8 @@ in
     # cat/less => bat
     cat = "${bat.bin} --paging=never";
     less = "${bat.bin}";
+  }
+  // optionalAttrs isLinux {
+    lsblk = "${getExe' pkgs.util-linux "lsblk"} --all --ascii";
   };
 }
