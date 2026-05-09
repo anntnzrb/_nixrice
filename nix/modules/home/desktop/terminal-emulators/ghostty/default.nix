@@ -84,7 +84,7 @@ in
           "super+digit_8=goto_tab:8"
           "super+8=goto_tab:8"
           "super+q=quit"
-          "super+w=close_window"
+          "super+w=close_surface"
 
           "super+equal=increase_font_size:1"
           "super+plus=increase_font_size:1"
