@@ -60,7 +60,7 @@ let
     };
     pi = {
       type = "npm";
-      package = "@mariozechner/pi-coding-agent";
+      package = "@earendil-works/pi-coding-agent";
     };
     gemini = {
       type = "npm";
