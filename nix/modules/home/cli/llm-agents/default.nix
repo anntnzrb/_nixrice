@@ -91,8 +91,8 @@ let
       attr = "droid";
     };
     omp = {
-      type = "npm";
-      package = "@oh-my-pi/pi-coding-agent";
+      type = "nix";
+      attr = "omp";
     };
   };
 
