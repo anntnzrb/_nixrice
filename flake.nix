@@ -93,6 +93,12 @@
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
 
+    llm-agents-nix = {
+      # bleeding-edge Bun binary package
+      url = "github:numtide/llm-agents.nix/main";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
     # -------------------------------------------------------------------------
     # systems
     # -------------------------------------------------------------------------

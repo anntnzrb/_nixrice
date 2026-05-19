@@ -1,11 +1,13 @@
 {
   channels,
+  inputs,
   ...
 }:
-_final: _prev: {
+_final: prev: {
+  bun = inputs.llm-agents-nix.packages.${prev.stdenv.hostPlatform.system}.bun-bin;
+
   inherit (channels.nixpkgs-unstable)
     aider-chat
-    bun
     emacs-macport
     vscode
     zed-editor

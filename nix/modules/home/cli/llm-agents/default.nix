@@ -3,7 +3,6 @@
   config,
   namespace,
   pkgs,
-  inputs,
   ...
 }:
 let
@@ -17,8 +16,7 @@ let
     ;
 
   wrapperDir = "lib/llm-agents";
-  bunPkg =
-    inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.bun;
+  bunPkg = pkgs.bun;
   bunExe = "${bunPkg}/bin/bun";
   shell = pkgs.runtimeShell;
   syncScript = "${config.home.homeDirectory}/.config/agents/sync/src/cli.ts";
@@ -91,8 +89,8 @@ let
       attr = "droid";
     };
     omp = {
-      type = "nix";
-      attr = "omp";
+      type = "npm";
+      package = "@oh-my-pi/pi-coding-agent@latest";
     };
   };
 
