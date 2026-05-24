@@ -4,7 +4,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) on off;
+  inherit (lib.${namespace}.module) on;
 in
 {
   # zsh as an interactive shell; this is a forced default
@@ -35,7 +35,7 @@ in
     };
 
     desktop.window-managers.darwin.aerospace = on;
-    services.tailscale = off;
+    services.tailscale = on;
 
     network.ssh = on;
 
