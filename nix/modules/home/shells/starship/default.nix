@@ -8,6 +8,14 @@ let
   inherit (lib.${namespace}.module) mkOptDisabled';
 
   cfg = config.${namespace}.shells.starship;
+
+  # avoid `$all`
+  promptModules = [
+    "$git_branch"
+    "$git_status"
+    "$nix_shell"
+    "$direnv"
+  ];
 in
 {
   options.${namespace}.shells.starship = {
@@ -20,12 +28,11 @@ in
 
       settings = {
         add_newline = false;
-        command_timeout = 2000;
-        scan_timeout = 30;
+        command_timeout = 500;
+        scan_timeout = 10;
+        follow_symlinks = false;
 
-        format = ''
-          $username@$hostname $os $directory$all$time $shell$cmd_duration $character
-        '';
+        format = "$username@$hostname $os $directory${lib.concatStrings promptModules}$time $shell$cmd_duration $character";
 
         character = {
           success_symbol = "[➜ ](bold green)";
