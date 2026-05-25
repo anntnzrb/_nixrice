@@ -15,7 +15,7 @@ test("parse home build defaults", () => {
   assert.equal(cli.command._tag, "Home");
   assert.equal(cli.command.command._tag, "Build");
   assert.equal(cli.command.command.user, "annt");
-  assert.equal(cli.command.command.host, "wsl");
+  assert.equal(cli.command.command.host, undefined);
 });
 
 test("parse home switch overrides defaults", () => {

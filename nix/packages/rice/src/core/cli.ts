@@ -13,8 +13,8 @@ export type Command =
 export type SystemCommand = "Build" | "Switch";
 
 export type HomeCommand =
-  | { readonly _tag: "Build"; readonly user: string; readonly host: string }
-  | { readonly _tag: "Switch"; readonly user: string; readonly host: string };
+  | { readonly _tag: "Build"; readonly user: string; readonly host?: string }
+  | { readonly _tag: "Switch"; readonly user: string; readonly host?: string };
 
 export type NixosCommand = "Build" | "Boot" | "Switch";
 export type DarwinCommand = "Build" | "Switch";
@@ -166,14 +166,13 @@ const parseHome = (args: readonly string[]): ParseResult => {
   }
 
   const user = rest[0] ?? "annt";
-  const host = rest[1] ?? "wsl";
   return success({
     command: {
       _tag: "Home",
       command:
         subcommand === "build"
-          ? { _tag: "Build", user, host }
-          : { _tag: "Switch", user, host },
+          ? { _tag: "Build", user, host: rest[1] }
+          : { _tag: "Switch", user, host: rest[1] },
     },
   });
 };

@@ -44,20 +44,20 @@ test("parse accepts argv without the binary prefix", () => {
   });
 });
 
-test("parse home build keeps default host when only user is provided", () => {
+test("parse home build leaves host unset when only user is provided", () => {
   const cli = parseCli(["rice", "home", "build", "alice"]);
   assert.equal(cli.command._tag, "Home");
   assert.equal(cli.command.command._tag, "Build");
   assert.equal(cli.command.command.user, "alice");
-  assert.equal(cli.command.command.host, "wsl");
+  assert.equal(cli.command.command.host, undefined);
 });
 
-test("parse home switch uses defaults when user and host are omitted", () => {
+test("parse home switch uses default user and leaves host unset when omitted", () => {
   const cli = parseCli(["rice", "home", "switch"]);
   assert.equal(cli.command._tag, "Home");
   assert.equal(cli.command.command._tag, "Switch");
   assert.equal(cli.command.command.user, "annt");
-  assert.equal(cli.command.command.host, "wsl");
+  assert.equal(cli.command.command.host, undefined);
 });
 
 test("parse home command treats trailing help flag as group help", () => {

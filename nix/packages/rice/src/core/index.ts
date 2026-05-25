@@ -49,13 +49,16 @@ const runSystem = (
 
 const runHome = (
   command: HomeCommand,
+  host: string,
   runtime: actions.ActionRuntime,
 ): Effect.Effect<void, Error> => {
+  const targetHost = command.host ?? host;
+
   switch (command._tag) {
     case "Build":
-      return actions.homeBuild(command.user, command.host, runtime);
+      return actions.homeBuild(command.user, targetHost, runtime);
     case "Switch":
-      return actions.homeSwitch(command.user, command.host, runtime);
+      return actions.homeSwitch(command.user, targetHost, runtime);
   }
 };
 
@@ -140,7 +143,7 @@ export const runCliWithContext = (
     case "System":
       return runSystem(cli.command.command, host, current, runtime);
     case "Home":
-      return runHome(cli.command.command, runtime);
+      return runHome(cli.command.command, host, runtime);
     case "Nixos":
       return runNixos(cli.command.command, host, current, runtime);
     case "Darwin":

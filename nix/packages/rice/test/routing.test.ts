@@ -93,6 +93,31 @@ test("home build runs single step", async () => {
   ]);
 });
 
+test("home build defaults to current host when host is omitted", async () => {
+  const { error, commands } = await runCliCapture(
+    ["rice", "home", "build", "alice"],
+    "beirut",
+    "darwin",
+  );
+  assert.equal(error, undefined);
+  assert.deepEqual(commands, [
+    cmd(["nix", "build", ".#homeConfigurations.alice@beirut.activationPackage"]),
+  ]);
+});
+
+test("home switch defaults to current host when user and host are omitted", async () => {
+  const { error, commands } = await runCliCapture(
+    ["rice", "home", "switch"],
+    "beirut",
+    "darwin",
+  );
+  assert.equal(error, undefined);
+  assert.deepEqual(commands, [
+    cmd(["nix", "build", ".#homeConfigurations.annt@beirut.activationPackage"]),
+    cmd(["./result/activate"]),
+  ]);
+});
+
 test("home switch runs build then activate", async () => {
   const { error, commands } = await runCliCapture(
     ["rice", "home", "switch", "alice", "mbp"],
