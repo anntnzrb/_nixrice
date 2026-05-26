@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   config,
   namespace,
   ...
@@ -17,6 +18,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    ${namespace}.homebrew.packages.casks = [ "orbstack" ];
+    environment.systemPackages = [ pkgs.orbstack ];
   };
 }
