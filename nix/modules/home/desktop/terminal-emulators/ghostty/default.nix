@@ -21,6 +21,21 @@ let
   themesDir = "${ghosttyDir}/themes";
 
   cfg = config.${namespace}.desktop.terminal-emulators.ghostty;
+  inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
+  ghosttyPackage =
+    if isDarwin then
+      inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.ghostty-bin
+    else
+      pkgs.ghostty;
+  # Ghostty's Darwin bundle ships numeric terminfo dirs; compiling a small DB
+  # keeps consumers like Codex from failing terminal capability lookup.
+  ghosttyTerminfo =
+    pkgs.runCommand "ghostty-terminfo" { nativeBuildInputs = [ pkgs.ncurses ]; }
+      ''
+        mkdir -p "$out"
+        infocmp -A "${ghosttyPackage}/Applications/Ghostty.app/Contents/Resources/terminfo" xterm-ghostty \
+          | tic -x -o "$out" -
+      '';
 
   normalizeLocalConfigFile =
     value:
@@ -50,11 +65,7 @@ in
 
       installBatSyntax = true;
 
-      package =
-        if pkgs.stdenvNoCC.hostPlatform.isDarwin then
-          inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.ghostty-bin
-        else
-          pkgs.ghostty;
+      package = ghosttyPackage;
       clearDefaultKeybinds = true;
       settings = {
         theme = "ef-elea-light";
@@ -93,6 +104,10 @@ in
           "super+ctrl+f=toggle_fullscreen"
 
         ];
+      }
+      // lib.optionalAttrs isDarwin {
+        # Prefer the normalized store DB over Ghostty's app-bundle TERMINFO.
+        env = "TERMINFO=${ghosttyTerminfo}";
       }
       // lib.optionalAttrs (localConfigFile != null) {
         "config-file" = localConfigFile;
