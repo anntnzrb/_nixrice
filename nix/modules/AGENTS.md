@@ -42,10 +42,10 @@ nix/modules/
 
 **Key Principles:**
 - **Single responsibility** - One feature per module
-- **Conditional activation** - All config gated by `lib.mkIf cfg.enable`
+- **Conditional activation** - Feature modules gate config with `lib.mkIf cfg.enable`
 - **Namespace isolation** - Use prefix exclusively
 - **Option standardization** - Use helper functions
-
+- **Baseline modules** - Some root/shared modules are intentionally default-enabled by the host layer as Snowfall baselines; keep leaf feature modules opt-in unless they are part of that established baseline
 ### 4. Cross-Module Integration
 
 **Enabling Other Modules:**
