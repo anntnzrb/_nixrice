@@ -2,10 +2,10 @@
   lib,
   config,
   namespace,
+  firefoxLib,
   ...
 }:
 let
-  firefoxLib = import ./lib.nix { inherit lib; };
   cfg = config.${namespace}.desktop.browsers.firefox;
 in
 {

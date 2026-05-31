@@ -29,32 +29,37 @@ in
     search = firefoxLib.mkSearchOptions;
   };
 
-  config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = isDarwin -> hasFirefoxBin;
-        message = ''
-          Firefox on Darwin requires the nixpkgs-firefox-darwin overlay.
-          Add 'inputs.nixpkgs-firefox-darwin.overlay' to your flake overlays.
-        '';
-      }
-      {
-        assertion = !isDarwin -> (pkgs ? firefox);
-        message = "Firefox package not found in nixpkgs.";
-      }
-    ];
+  config = lib.mkMerge [
+    {
+      _module.args.firefoxLib = firefoxLib;
+    }
+    (lib.mkIf cfg.enable {
+      assertions = [
+        {
+          assertion = isDarwin -> hasFirefoxBin;
+          message = ''
+            Firefox on Darwin requires the nixpkgs-firefox-darwin overlay.
+            Add 'inputs.nixpkgs-firefox-darwin.overlay' to your flake overlays.
+          '';
+        }
+        {
+          assertion = !isDarwin -> (pkgs ? firefox);
+          message = "Firefox package not found in nixpkgs.";
+        }
+      ];
 
-    # on darwin, install firefox-bin separately (wrapper not supported)
-    home.packages = lib.mkIf isDarwin [ pkgs.firefox-bin ];
+      # on darwin, install firefox-bin separately (wrapper not supported)
+      home.packages = lib.mkIf isDarwin [ pkgs.firefox-bin ];
 
-    programs.firefox = {
-      inherit (cfg) enable;
-      package = if isDarwin then null else pkgs.firefox;
+      programs.firefox = {
+        inherit (cfg) enable;
+        package = if isDarwin then null else pkgs.firefox;
 
-      profiles.default = {
-        id = 0;
-        name = "default";
+        profiles.default = {
+          id = 0;
+          name = "default";
+        };
       };
-    };
-  };
+    })
+  ];
 }
