@@ -8,12 +8,7 @@ let
 in
 {
   ${namespace} = {
-    suites = {
-      cli = on;
-      core = on;
-      dev = on;
-      "llm-agents" = on;
-    };
+    suites.common = on;
 
     shells.bash = on;
   };

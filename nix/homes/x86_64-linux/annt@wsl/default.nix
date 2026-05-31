@@ -10,11 +10,6 @@ in
   ${namespace} = {
     shells.bash = on;
 
-    suites = {
-      cli = on;
-      core = on;
-      dev = on;
-      "llm-agents" = on;
-    };
+    suites.common = on;
   };
 }
