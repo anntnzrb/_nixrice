@@ -17,8 +17,6 @@ let
     ;
 
   cfg = config.${namespace}.desktop.window-managers.xorg.xmonad;
-
-  parseAutoStartList = xs: lib.concatStringsSep "\n" (map (x: x + " &") xs);
 in
 {
   options.${namespace}.desktop.window-managers.xorg.xmonad = {
@@ -33,7 +31,7 @@ in
     };
 
     xsession = {
-      initExtra = parseAutoStartList cfg.autoStart;
+      initExtra = lib.${namespace}.xorg.mkAutostartScript cfg.autoStart;
       windowManager.xmonad = on // {
         enableContribAndExtras = true;
       };

@@ -17,8 +17,6 @@ let
     ;
 
   cfg = config.${namespace}.desktop.window-managers.xorg.awesomewm;
-
-  parseAutoStartList = xs: lib.concatStringsSep "\n" (map (x: x + " &") xs);
 in
 {
   options.${namespace}.desktop.window-managers.xorg.awesomewm = {
@@ -41,7 +39,7 @@ in
 
     xsession = {
       windowManager.awesome = on;
-      initExtra = parseAutoStartList cfg.autoStart;
+      initExtra = lib.${namespace}.xorg.mkAutostartScript cfg.autoStart;
     };
 
     xdg.configFile = {
