@@ -2,7 +2,8 @@
 let
   /**
     Create an option with specified type, default value, and description.
-
+    Use this for non-boolean options, or when a module needs a precise
+    default that is not captured by the enable-helper naming convention.
     # Example
 
     ```nix
@@ -53,6 +54,8 @@ let
 
   /**
     Create a boolean option defaulting to true, with description.
+    This helper is for default-enabled baseline behavior: modules that should
+    participate unless a host or home explicitly opts out.
 
     # Example
 
@@ -72,6 +75,8 @@ let
 
   /**
     Create a boolean option defaulting to true, no description.
+    This is the description-free form of `mkOptEnabled`; reserve it for
+    default-enabled baselines where generated option documentation is not needed.
 
     # Example
 
@@ -91,6 +96,8 @@ let
 
   /**
     Create a boolean option defaulting to false, with description.
+    This helper is for opt-in features: modules that should stay inactive unless
+    a host or home explicitly enables them.
 
     # Example
 
@@ -110,6 +117,8 @@ let
 
   /**
     Create a boolean option defaulting to false, no description.
+    This is the description-free form of `mkOptDisabled`; reserve it for opt-in
+    features where generated option documentation is not needed.
 
     # Example
 
@@ -140,6 +149,10 @@ in
 
     /**
       Attribute set for enabling an option.
+      Use with modules exposing the conventional `enable` flag. For
+      default-disabled helpers, this opts the feature in; for default-enabled
+      helpers, this is normally redundant but can make intent explicit at a
+      call site.
 
       # Example
 
@@ -153,6 +166,10 @@ in
 
     /**
       Attribute set for disabling an option.
+      Use with modules exposing the conventional `enable` flag. For
+      default-enabled helpers, this opts the baseline out; for default-disabled
+      helpers, this is normally redundant but can make intent explicit at a
+      call site.
 
       # Example
 

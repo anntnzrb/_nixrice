@@ -23,6 +23,7 @@ let
 
   /**
     Get all regular files in a directory.
+    Shallow: only direct children whose `readDir` kind is `regular`.
 
     # Example
 
@@ -70,6 +71,7 @@ let
 
   /**
     Get importable module files (*.nix except default.nix).
+    Shallow: considers only direct regular files from getFiles.
 
     # Example
 

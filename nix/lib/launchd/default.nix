@@ -1,5 +1,6 @@
 { lib, ... }:
 let
+  # nix-darwin agents use launchd.user.agents.<name>.serviceConfig.
   mkDarwinAgent =
     {
       name,
@@ -13,6 +14,7 @@ let
       // lib.optionalAttrs (managedBy != null) { inherit managedBy; };
     };
 
+  # Opens the app via /usr/bin/open; launchd supervises open, not the GUI process.
   mkDarwinGuiAppAgent =
     {
       name,
@@ -42,6 +44,7 @@ let
       // serviceConfig;
     };
 
+  # Home Manager agents use launchd.agents.<name>.config and carry enable separately.
   mkHomeAgent =
     {
       name,
