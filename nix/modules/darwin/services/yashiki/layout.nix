@@ -2,11 +2,11 @@
   lib,
   config,
   namespace,
+  yashikiLib,
   ...
 }:
 let
   cfg = config.${namespace}.desktop.window-managers.darwin.yashiki;
-  yashikiLib = import ./lib.nix { inherit lib; };
 in
 {
   config = lib.mkIf cfg.enable {

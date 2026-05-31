@@ -71,44 +71,49 @@ in
     };
   };
 
-  config = lib.mkIf cfg.enable (
+  config = lib.mkMerge [
     {
-      assertions = [
-        {
-          assertion = !aerospaceCfg.enable;
-          message = "${namespace}.desktop.window-managers.darwin.yashiki cannot be enabled together with ${namespace}.desktop.window-managers.darwin.aerospace.";
-        }
-      ];
-
-      ${namespace}.homebrew = on;
-
-      homebrew = {
-        taps = [ "typester/yashiki" ];
-        casks = [
+      _module.args.yashikiLib = import ./lib.nix { inherit lib; };
+    }
+    (lib.mkIf cfg.enable (
+      {
+        assertions = [
           {
-            name = "yashiki";
-            args = {
-              no_quarantine = true;
-            };
+            assertion = !aerospaceCfg.enable;
+            message = "${namespace}.desktop.window-managers.darwin.yashiki cannot be enabled together with ${namespace}.desktop.window-managers.darwin.aerospace.";
           }
         ];
-      };
-    }
-    // mkAgent {
-      name = "yashiki";
-      managedBy = "${namespace}.desktop.window-managers.darwin.yashiki.enable";
-      serviceConfig = {
-        ProgramArguments = [
-          runner
-        ];
-        RunAtLoad = true;
-        KeepAlive = true;
-        ProcessType = "Interactive";
-        LimitLoadToSessionType = [ "Aqua" ];
-        EnvironmentVariables = {
-          PATH = "/opt/homebrew/bin:${config.environment.systemPath}";
+
+        ${namespace}.homebrew = on;
+
+        homebrew = {
+          taps = [ "typester/yashiki" ];
+          casks = [
+            {
+              name = "yashiki";
+              args = {
+                no_quarantine = true;
+              };
+            }
+          ];
         };
-      };
-    }
-  );
+      }
+      // mkAgent {
+        name = "yashiki";
+        managedBy = "${namespace}.desktop.window-managers.darwin.yashiki.enable";
+        serviceConfig = {
+          ProgramArguments = [
+            runner
+          ];
+          RunAtLoad = true;
+          KeepAlive = true;
+          ProcessType = "Interactive";
+          LimitLoadToSessionType = [ "Aqua" ];
+          EnvironmentVariables = {
+            PATH = "/opt/homebrew/bin:${config.environment.systemPath}";
+          };
+        };
+      }
+    ))
+  ];
 }
