@@ -12,32 +12,15 @@ in
   time.hardwareClockInLocalTime = true; # dual-boot
 
   ${namespace} = {
-    user = on;
+    suites.desktop = on;
 
     # GRUB because of dual-boot
     boot.bootloader.grub = on;
-
-    hardware = {
-      audio.pipewire = on;
-      keyboard.keyd = on;
-    };
-
-    network = {
-      networkmanager = on;
-      ssh = on;
-      syncthing = on;
-      vpn.mullvad = on;
-    };
 
     virtualisation = {
       docker = on;
       virtualbox = off;
       virt-manager = on;
-    };
-
-    common = {
-      xorg = on;
-      desktop = on;
     };
   };
 
