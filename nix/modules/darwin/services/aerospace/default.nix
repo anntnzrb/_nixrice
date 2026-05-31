@@ -32,28 +32,33 @@ in
     workspaceRange = mkOpt' (listOf int) (range 0 9);
   };
 
-  config = lib.mkIf cfg.enable {
-    assertions = [
-      {
-        assertion = !yashikiCfg.enable;
-        message = "${namespace}.desktop.window-managers.darwin.aerospace cannot be enabled together with ${namespace}.desktop.window-managers.darwin.yashiki.";
-      }
-    ];
+  config = lib.mkMerge [
+    {
+      _module.args.aerospaceLib = import ./lib.nix { inherit lib; };
+    }
+    (lib.mkIf cfg.enable {
+      assertions = [
+        {
+          assertion = !yashikiCfg.enable;
+          message = "${namespace}.desktop.window-managers.darwin.aerospace cannot be enabled together with ${namespace}.desktop.window-managers.darwin.yashiki.";
+        }
+      ];
 
-    services.aerospace = {
-      enable = true;
-      package = pkgs.aerospace;
-      settings = {
-        start-at-login = false;
-        after-login-command = [ ];
+      services.aerospace = {
+        enable = true;
+        package = pkgs.aerospace;
+        settings = {
+          start-at-login = false;
+          after-login-command = [ ];
+        };
       };
-    };
 
-    # goodies
-    # cf. https://nikitabobko.github.io/AeroSpace/goodies
-    system.defaults.NSGlobalDomain = {
-      NSWindowShouldDragOnGesture = true;
-      NSAutomaticWindowAnimationsEnabled = true;
-    };
-  };
+      # goodies
+      # cf. https://nikitabobko.github.io/AeroSpace/goodies
+      system.defaults.NSGlobalDomain = {
+        NSWindowShouldDragOnGesture = true;
+        NSAutomaticWindowAnimationsEnabled = true;
+      };
+    })
+  ];
 }

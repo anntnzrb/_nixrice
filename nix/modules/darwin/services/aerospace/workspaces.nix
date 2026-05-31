@@ -1,12 +1,12 @@
 {
   lib,
+  aerospaceLib,
   config,
   namespace,
   ...
 }:
 let
   cfg = config.${namespace}.desktop.window-managers.darwin.aerospace;
-  aerospaceLib = import ./lib.nix { inherit lib; };
 in
 {
   config = lib.mkIf cfg.enable {
