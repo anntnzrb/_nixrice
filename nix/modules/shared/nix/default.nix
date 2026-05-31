@@ -61,6 +61,8 @@ let
 in
 {
   options.${namespace}.nix = {
+    # Shared baseline: Snowfall wires this module into every host so core Nix
+    # settings stay consistent; leaf feature modules should remain opt-in.
     enable = mkOptEnabled';
 
     caches = mkOpt' cachesType cachesDefault;

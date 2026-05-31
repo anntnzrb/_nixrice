@@ -12,6 +12,8 @@ let
 in
 {
   options.${namespace}.environment = {
+    # Shared baseline: Snowfall wires this module into every host for the small
+    # common toolset; leaf feature modules should remain opt-in.
     enable = mkOptEnabled';
   };
 
