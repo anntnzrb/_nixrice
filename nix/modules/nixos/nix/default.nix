@@ -25,6 +25,6 @@ in
       };
     };
 
-    documentation.man.generateCaches = true;
+    documentation.man.cache.enable = true;
   };
 }
