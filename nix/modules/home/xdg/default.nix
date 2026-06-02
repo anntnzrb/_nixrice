@@ -32,6 +32,7 @@ in
 
       userDirs = on // {
         createDirectories = true;
+        setSessionVariables = true;
 
         desktop = "${homeDir}/desktop";
         documents = libDir;
