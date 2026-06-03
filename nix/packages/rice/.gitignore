@@ -1,0 +1,18 @@
+# Nix
+result
+result-*
+
+# Go
+go.sum
+vendor/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

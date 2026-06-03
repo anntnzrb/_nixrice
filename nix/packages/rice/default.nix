@@ -4,110 +4,34 @@
   ...
 }:
 let
-  packageJson = builtins.fromJSON (builtins.readFile ./package.json);
-  inherit (packageJson) version;
-  pname = packageJson.name;
+  pname = "rice";
+  version = "0.1.0";
 
-  fullSrc = lib.fileset.toSource {
-    root = ./.;
-    fileset = lib.fileset.unions [
-      ./src
-      ./test
-      ./package.json
-      ./tsconfig.json
-      ./bun.lock
-    ];
-  };
-
-  runtimeSrc = lib.fileset.toSource {
-    root = ./.;
-    fileset = lib.fileset.unions [
-      ./src
-      ./package.json
-      ./tsconfig.json
-    ];
-  };
-
-  nodeModules = pkgs.stdenvNoCC.mkDerivation {
-    pname = "${pname}-node_modules";
-    inherit version;
-    src = fullSrc;
-
-    impureEnvVars = lib.fetchers.proxyImpureEnvVars ++ [
-      "GIT_PROXY_COMMAND"
-      "SOCKS_SERVER"
-    ];
-
-    nativeBuildInputs = [
-      pkgs.bun
-      pkgs.writableTmpDirAsHomeHook
-    ];
-
-    dontConfigure = true;
-
-    buildPhase = ''
-      runHook preBuild
-
-      export BUN_INSTALL_CACHE_DIR="$(mktemp -d)"
-      bun install --frozen-lockfile --no-progress
-
-      runHook postBuild
-    '';
-
-    installPhase = ''
-      runHook preInstall
-
-      mkdir -p "$out"
-      cp -R node_modules "$out/"
-
-      runHook postInstall
-    '';
-
-    dontFixup = true;
-    outputHashMode = "recursive";
-    outputHashAlgo = "sha256";
-    outputHash = "sha256-OTRJqZtXPr0hrUnSgn+SdK6gHF+UywrG4dlqPPqtwTo=";
-  };
+  src = ./.;
 in
-pkgs.stdenvNoCC.mkDerivation {
-  inherit pname version;
-  src = fullSrc;
+pkgs.buildGoModule {
+  inherit pname version src;
 
-  nativeBuildInputs = [
-    pkgs.bun
-    pkgs.makeWrapper
-    pkgs.writableTmpDirAsHomeHook
+  vendorHash = null;
+
+  ldflags = [
+    "-s"
+    "-w"
+    "-X main.version=${version}"
   ];
 
-  dontBuild = true;
-  doCheck = true;
-  doInstallCheck = true;
+  nativeCheckInputs = [
+    pkgs.golangci-lint
+  ];
 
   checkPhase = ''
     runHook preCheck
-
-    ln -s ${nodeModules}/node_modules node_modules
-
-    bun run typecheck
-    bun test
-    ${lib.getExe pkgs.bun} ./src/cli.ts --help >/dev/null
-
+    export GOLANGCI_LINT_CACHE="''${TMPDIR:-/tmp}/golangci-lint-cache"
+    mkdir -p "$GOLANGCI_LINT_CACHE"
+    golangci-lint run ./...
+    go vet ./...
+    go test -race -count=1 -shuffle=on ./...
     runHook postCheck
-  '';
-
-  installPhase = ''
-    runHook preInstall
-
-    runtime_dir="$out/libexec/${pname}"
-
-    mkdir -p "$out/bin" "$runtime_dir"
-    cp -R ${runtimeSrc}/. "$runtime_dir/"
-    ln -s ${nodeModules}/node_modules "$runtime_dir/node_modules"
-
-    makeWrapper ${lib.getExe pkgs.bun} "$out/bin/${pname}" \
-      --add-flags "$runtime_dir/src/cli.ts"
-
-    runHook postInstall
   '';
 
   installCheckPhase = ''
@@ -124,12 +48,8 @@ pkgs.stdenvNoCC.mkDerivation {
     runHook postInstallCheck
   '';
 
-  passthru = {
-    inherit nodeModules;
-  };
-
   meta = {
-    inherit (packageJson) description;
+    description = "NixOS/Darwin configuration management CLI";
     mainProgram = pname;
     platforms = lib.platforms.unix;
   };
