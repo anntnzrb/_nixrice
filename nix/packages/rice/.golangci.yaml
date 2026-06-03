@@ -57,7 +57,5 @@ linters:
           - unparam
 
 formatters:
-  enable:
-    - gofumpt
   exclusions:
     generated: lax

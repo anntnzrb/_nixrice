@@ -22,6 +22,7 @@ pkgs.buildGoModule {
 
   nativeCheckInputs = [
     pkgs.golangci-lint
+    pkgs.gofumpt
   ];
 
   checkPhase = ''
@@ -30,6 +31,7 @@ pkgs.buildGoModule {
     mkdir -p "$GOLANGCI_LINT_CACHE"
     golangci-lint run ./...
     go vet ./...
+    gofumpt -l . > /dev/null
     go test -race -count=1 -shuffle=on ./...
     runHook postCheck
   '';
