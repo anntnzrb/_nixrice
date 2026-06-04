@@ -202,10 +202,9 @@ func TestExecTaskFlakeCheck(t *testing.T) {
 func TestExecTaskSudoPrefix(t *testing.T) {
 	defer silenceOutput(t)()
 
-	// NixOptimise has Sudo=true; sudo is prepended to the command.
-	sudoBinDir, sudoCalls := fakeExec(t, "sudo")
+	// NixOptimise includes "sudo" directly in its Cmd slice.
+	_, sudoCalls := fakeExec(t, "sudo")
 	_, _ = fakeExec(t, "nix") // also available on PATH but not directly invoked
-	_ = sudoBinDir
 
 	err := ExecTask(NixOptimise, "", PlatformAny)
 	if err != nil {
@@ -239,7 +238,7 @@ func TestHomeBuild(t *testing.T) {
 	}
 
 	calls := readCalls(t, callsFile)
-	assertCall(t, calls, []string{"build", ".#homeConfigurations.alice@mbp.activationPackage"})
+	assertCall(t, calls, []string{"build", ".#homeConfigurations.\"alice@mbp\".activationPackage"})
 }
 
 func TestHomeBuildFailure(t *testing.T) {
@@ -252,6 +251,27 @@ func TestHomeBuildFailure(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected error, got nil")
 	}
+}
+
+func TestEscapeNixString(t *testing.T) {
+	got := escapeNixString(`a\b"c${d}`)
+	want := `a\\b\"c\${d}`
+	if got != want {
+		t.Fatalf("escapeNixString() = %q, want %q", got, want)
+	}
+}
+
+func TestHomeBuildEscapesNixAttr(t *testing.T) {
+	defer silenceOutput(t)()
+
+	_, callsFile := fakeExec(t, "nix")
+	err := HomeBuild(`user"x`, `host${y}`)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	calls := readCalls(t, callsFile)
+	assertCall(t, calls, []string{"build", `.#homeConfigurations."user\"x@host\${y}".activationPackage`})
 }
 
 func TestHomeSwitch(t *testing.T) {
@@ -300,7 +320,7 @@ exit 0
 
 	// Verify nix build call.
 	nixCallsData := readCalls(t, nixCalls)
-	assertCall(t, nixCallsData, []string{"build", ".#homeConfigurations.alice@mbp.activationPackage"})
+	assertCall(t, nixCallsData, []string{"build", ".#homeConfigurations.\"alice@mbp\".activationPackage"})
 
 	// Verify activate call.
 	actCallsData := readCalls(t, activateCallsFile)
@@ -346,6 +366,23 @@ func TestHomeSwitchActivateFailure(t *testing.T) {
 	}
 }
 
+func TestHomeSwitchBuildFailureShortCircuits(t *testing.T) {
+	defer silenceOutput(t)()
+	_, nixCallsFile := fakeExec(t, "nix")
+	t.Setenv("RICE_FAKE_FAIL_AT", "1") // fail nix build
+
+	err := HomeSwitch("alice", "mbp")
+	if err == nil {
+		t.Fatal("expected error, got nil")
+	}
+
+	calls := readCalls(t, nixCallsFile)
+	if len(calls) != 1 {
+		t.Fatalf("expected exactly 1 nix build call, got %d", len(calls))
+	}
+	assertCall(t, calls, []string{"build", `.#homeConfigurations."alice@mbp".activationPackage`})
+}
+
 func TestNixClean(t *testing.T) {
 	defer silenceOutput(t)()
 
@@ -382,13 +419,11 @@ func TestNixClean(t *testing.T) {
 	calls := readCalls(t, nhCalls)
 	assertCall(t, calls, []string{"clean", "all"})
 	assertCall(t, calls, []string{"clean", "user"})
-}
 
+}
 func TestNixCleanUnsetHome(t *testing.T) {
 	defer silenceOutput(t)()
-
-	os.Unsetenv("HOME")
-	defer os.Setenv("HOME", os.Getenv("HOME")) // best-effort restore
+	t.Setenv("HOME", "")
 
 	_, _ = fakeExec(t, "nh")
 
@@ -396,6 +431,43 @@ func TestNixCleanUnsetHome(t *testing.T) {
 	err := NixClean()
 	if err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestNixCleanRelativeHome(t *testing.T) {
+	defer silenceOutput(t)()
+
+	tmpDir := t.TempDir()
+	cacheDir := filepath.Join(tmpDir, "relative", "home", ".cache", "nix")
+	if err := os.MkdirAll(cacheDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	sentinel := filepath.Join(cacheDir, "keep")
+	if err := os.WriteFile(sentinel, []byte("keep"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	origWd, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Chdir(tmpDir); err != nil {
+		t.Fatal(err)
+	}
+	defer func() {
+		if err := os.Chdir(origWd); err != nil {
+			t.Errorf("failed to restore working directory: %v", err)
+		}
+	}()
+
+	t.Setenv("HOME", "relative/home")
+	_, _ = fakeExec(t, "nh")
+
+	if err := NixClean(); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := os.Stat(sentinel); err != nil {
+		t.Fatalf("relative HOME cache was removed or made inaccessible: %v", err)
 	}
 }
 
@@ -432,6 +504,34 @@ func TestNixCleanSecondNhFailure(t *testing.T) {
 	assertCall(t, calls, []string{"clean", "all"})
 	// Second nh should also have run (and failed).
 	assertCall(t, calls, []string{"clean", "user"})
+}
+
+func TestNixCleanSentinelSurvives(t *testing.T) {
+	defer silenceOutput(t)()
+
+	homeDir := filepath.Join(t.TempDir(), "home")
+	if err := os.MkdirAll(homeDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+
+	// Place a sentinel file directly in HOME (not inside .cache/nix).
+	sentinel := filepath.Join(homeDir, "keep-me.txt")
+	if err := os.WriteFile(sentinel, []byte("do not delete"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	t.Setenv("HOME", homeDir)
+	_, _ = fakeExec(t, "nh")
+
+	err := NixClean()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// Sentinel must survive.
+	if _, err := os.Stat(sentinel); os.IsNotExist(err) {
+		t.Error("sentinel file outside .cache/nix was deleted")
+	}
 }
 
 func TestFlakeUpdateAll(t *testing.T) {

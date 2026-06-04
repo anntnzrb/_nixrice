@@ -31,9 +31,6 @@ func ExecTask(task Task, host string, current Platform) error {
 	Info(Stdout, strings.ReplaceAll(task.Info, "{host}", host))
 
 	cmd := subHostCmd(task.Cmd, host)
-	if task.Sudo {
-		cmd = append([]string{"sudo"}, cmd...)
-	}
 
 	Preview(Stdout, cmd)
 
@@ -45,11 +42,20 @@ func ExecTask(task Task, host string, current Platform) error {
 	return nil
 }
 
+// escapeNixString escapes Nix string metacharacters for safe embedding
+// inside a quoted Nix attr path segment.
+func escapeNixString(s string) string {
+	s = strings.ReplaceAll(s, `\`, `\\`)
+	s = strings.ReplaceAll(s, `"`, `\"`)
+	s = strings.ReplaceAll(s, `${`, `\${`)
+	return s
+}
+
 // HomeBuild builds the home-manager activation package for user@host.
 func HomeBuild(user, host string) error {
 	Info(Stdout, fmt.Sprintf("Building home-manager for %s@%s...", user, host))
-
-	cmd := []string{"nix", "build", fmt.Sprintf(".#homeConfigurations.%s@%s.activationPackage", user, host)}
+	attr := escapeNixString(fmt.Sprintf("%s@%s", user, host))
+	cmd := []string{"nix", "build", fmt.Sprintf(".#homeConfigurations.\"%s\".activationPackage", attr)}
 	Preview(Stdout, cmd)
 
 	if err := RunCmd(cmd); err != nil {
@@ -82,16 +88,9 @@ func HomeSwitch(user, host string) error {
 // NixClean removes a cached nix directory (hardened) and runs nh clean.
 func NixClean() error {
 	home := os.Getenv("HOME")
-	if home != "" {
-		cachePath := filepath.Join(home, ".cache", "nix")
-		cleanedCache := filepath.Clean(cachePath)
-		cleanedHome := filepath.Clean(home)
-
-		if strings.HasPrefix(cleanedCache, cleanedHome+string(filepath.Separator)) &&
-			filepath.Base(filepath.Dir(cleanedCache)) == ".cache" &&
-			filepath.Base(cleanedCache) == "nix" {
-			_ = os.RemoveAll(cleanedCache)
-		}
+	cleanHome := filepath.Clean(home)
+	if home != "" && filepath.IsAbs(cleanHome) && cleanHome != string(filepath.Separator) {
+		_ = os.RemoveAll(filepath.Join(cleanHome, ".cache", "nix"))
 	}
 
 	Info(Stdout, "Cleaning nix cache...")
