@@ -17,28 +17,30 @@ const (
 )
 
 // Stdout and Stderr are the output writers used by all console helpers.
-// Tests may replace these with buffers.
+// Tests may replace these with bytes.Buffer.
 var (
+	// Stdout is the writer for success and informational output. Replaced by tests.
 	Stdout io.Writer = os.Stdout
+	// Stderr is the writer for error output. Replaced by tests.
 	Stderr io.Writer = os.Stderr
 )
 
-// OK prints a green success line to w.
+// OK prints a green checkmark and msg to w.
 func OK(w io.Writer, msg string) {
 	fmt.Fprintf(w, "%s✓%s %s\n", green, reset, msg)
 }
 
-// Err prints a red error line to w.
+// Err prints a red cross and msg to w.
 func Err(w io.Writer, msg string) {
 	fmt.Fprintf(w, "%s✗%s %s\n", red, reset, msg)
 }
 
-// Info prints a blue informational line to w.
+// Info prints a blue arrow and msg to w.
 func Info(w io.Writer, msg string) {
 	fmt.Fprintf(w, "%s→%s %s\n", blue, reset, msg)
 }
 
-// Preview prints the rendered command line to w (dimmed, prefixed with $).
+// Preview prints cmd as a dimmed $ shell command line to w.
 func Preview(w io.Writer, cmd []string) {
 	fmt.Fprintf(w, "%s$ %s%s\n", dim, strings.Join(cmd, " "), reset)
 }

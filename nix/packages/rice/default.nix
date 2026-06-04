@@ -31,10 +31,13 @@ pkgs.buildGoModule {
     mkdir -p "$GOLANGCI_LINT_CACHE"
     golangci-lint run ./...
     go vet ./...
-    gofumpt -l . > /dev/null
+    gofmt_files="$(gofumpt -l .)"
+    test -z "$gofmt_files"
     go test -race -count=1 -shuffle=on ./...
     runHook postCheck
   '';
+
+  doInstallCheck = true;
 
   installCheckPhase = ''
     runHook preInstallCheck
@@ -53,6 +56,6 @@ pkgs.buildGoModule {
   meta = {
     description = "NixOS/Darwin configuration management CLI";
     mainProgram = pname;
-    platforms = lib.platforms.unix;
+    platforms = lib.platforms.linux ++ lib.platforms.darwin;
   };
 }

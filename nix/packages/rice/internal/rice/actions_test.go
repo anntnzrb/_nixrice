@@ -419,8 +419,8 @@ func TestNixClean(t *testing.T) {
 	calls := readCalls(t, nhCalls)
 	assertCall(t, calls, []string{"clean", "all"})
 	assertCall(t, calls, []string{"clean", "user"})
-
 }
+
 func TestNixCleanUnsetHome(t *testing.T) {
 	defer silenceOutput(t)()
 	t.Setenv("HOME", "")
