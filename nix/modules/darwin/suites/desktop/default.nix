@@ -32,8 +32,6 @@ in
         orbstack = on;
         whatsapp = on;
       };
-
-      desktop.window-managers.darwin.aerospace = on;
       network.ssh = on;
 
       homebrew = on;

@@ -4,7 +4,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) on;
+  inherit (lib.${namespace}.module) on off;
 in
 {
   nix.settings = {
@@ -14,6 +14,8 @@ in
 
   ${namespace} = {
     suites.desktop = on;
+
+    desktop.window-managers.darwin.aerospace = off;
 
     system = {
       ui = on // {
