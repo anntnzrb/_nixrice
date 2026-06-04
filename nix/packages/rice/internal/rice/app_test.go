@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -98,11 +99,19 @@ func assertError(t *testing.T, err error, want string) {
 
 func TestCurrentPlatform(t *testing.T) {
 	p := CurrentPlatform()
-	if p == PlatformAny {
-		t.Errorf("CurrentPlatform() = %q, must not be PlatformAny", p)
-	}
-	if p != PlatformDarwin && p != PlatformLinux {
-		t.Errorf("CurrentPlatform() = %q, want PlatformDarwin or PlatformLinux", p)
+	switch runtime.GOOS {
+	case "darwin":
+		if p != PlatformDarwin {
+			t.Errorf("CurrentPlatform() = %q on darwin, want PlatformDarwin", p)
+		}
+	case "linux":
+		if p != PlatformLinux {
+			t.Errorf("CurrentPlatform() = %q on linux, want PlatformLinux", p)
+		}
+	default:
+		if p != PlatformAny {
+			t.Errorf("CurrentPlatform() = %q on %s, want PlatformAny", p, runtime.GOOS)
+		}
 	}
 }
 
@@ -243,6 +252,10 @@ func TestRunCLI_DarwinSwitch(t *testing.T) {
 	if err := os.MkdirAll(binDir, 0o755); err != nil {
 		t.Fatal(err)
 	}
+	// Recording nix fake for the DarwinBuild step that now precedes switch.
+	nixCalls := makeRecordingFake(t, binDir, "nix")
+	// Passthrough sudo execs its args, so the inner darwin-rebuild records
+	// normally. This proves the privileged execution path is exercised.
 	makePassthroughSudo(t, binDir)
 
 	rebuildDir := filepath.Join(td, "result", "sw", "bin")
@@ -264,6 +277,10 @@ func TestRunCLI_DarwinSwitch(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	nixStripped := stripPID(readCalls(t, nixCalls))
+	assertCallCount(t, nixStripped, 1)
+	assertCalls(t, nixStripped, [][]string{{"build", ".#darwinConfigurations.beirut.system"}})
 
 	rebuildStripped := stripPID(readCalls(t, rebuildCalls))
 	assertCallCount(t, rebuildStripped, 1)
@@ -319,23 +336,18 @@ func TestRunCLI_NixClean(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	calls := stripPID(readCalls(t, callsFile))
 	assertCallCount(t, calls, 2)
-	assertCalls(t, calls, [][]string{
-		{"clean", "all"},
-		{"clean", "user"},
-	})
+	assertCalls(t, calls, [][]string{{"clean", "all"}, {"clean", "user"}})
 }
 
 func TestRunCLI_FlakeCheck(t *testing.T) {
 	_, callsFile := fakeExec(t, "nix")
 	cmd := Command{Tag: "flake", Subcmd: "check"}
-	err := RunCLI(cmd, "ignored", PlatformLinux)
+	err := RunCLI(cmd, "ignored", PlatformAny)
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	calls := stripPID(readCalls(t, callsFile))
 	assertCallCount(t, calls, 1)
 	assertCalls(t, calls, [][]string{{"flake", "check", "."}})
@@ -344,11 +356,10 @@ func TestRunCLI_FlakeCheck(t *testing.T) {
 func TestRunCLI_FlakeFmt(t *testing.T) {
 	_, callsFile := fakeExec(t, "pre-commit")
 	cmd := Command{Tag: "flake", Subcmd: "fmt"}
-	err := RunCLI(cmd, "ignored", PlatformLinux)
+	err := RunCLI(cmd, "ignored", PlatformAny)
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	calls := stripPID(readCalls(t, callsFile))
 	assertCallCount(t, calls, 1)
 	assertCalls(t, calls, [][]string{{"run", "--all-files"}})
@@ -357,59 +368,34 @@ func TestRunCLI_FlakeFmt(t *testing.T) {
 func TestRunCLI_FlakeUpdateAll(t *testing.T) {
 	_, callsFile := fakeExec(t, "nix")
 	cmd := Command{Tag: "flake", Subcmd: "update", Name: "all"}
-	err := RunCLI(cmd, "ignored", PlatformLinux)
+	err := RunCLI(cmd, "ignored", PlatformAny)
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	calls := stripPID(readCalls(t, callsFile))
 	assertCallCount(t, calls, 1)
-
-	// The args must contain "--commit-lock-file".
-	found := false
-	for _, arg := range calls[0] {
-		if arg == "--commit-lock-file" {
-			found = true
-			break
-		}
-	}
-	if !found {
-		t.Errorf("args do not contain --commit-lock-file: %v", calls[0])
-	}
+	assertCalls(t, calls, [][]string{{"flake", "update", "--commit-lock-file", "--option", "commit-lockfile-summary", "chore(flake): update lockfile"}})
 }
 
 func TestRunCLI_FlakeUpdateNamed(t *testing.T) {
-	td := t.TempDir()
-	binDir := filepath.Join(td, "bin")
-	if err := os.MkdirAll(binDir, 0o755); err != nil {
-		t.Fatal(err)
-	}
-	nixCalls := makeRecordingFake(t, binDir, "nix")
-	gitCalls := makeRecordingFake(t, binDir, "git")
-	t.Setenv("PATH", binDir+":"+os.Getenv("PATH"))
-
-	cmd := Command{Tag: "flake", Subcmd: "update", Name: "fenix"}
-	err := RunCLI(cmd, "ignored", PlatformLinux)
+	nixCalls, gitCalls := fakeTwoExecs(t, "nix", "git")
+	cmd := Command{Tag: "flake", Subcmd: "update", Name: "nixpkgs"}
+	err := RunCLI(cmd, "ignored", PlatformAny)
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	nixStripped := stripPID(readCalls(t, nixCalls))
 	assertCallCount(t, nixStripped, 1)
-	assertCalls(t, nixStripped, [][]string{{"flake", "update", "fenix"}})
-
-	gitStripped := stripPID(readCalls(t, gitCalls))
-	assertCallCount(t, gitStripped, 2)
-	assertCalls(t, gitStripped, [][]string{
-		{"add", "flake.lock"},
-		{"commit", "-m", "chore(flake): update input (fenix)"},
-	})
+	assertCalls(t, nixStripped, [][]string{{"flake", "update", "nixpkgs"}})
+	gitCallsData := readCalls(t, gitCalls)
+	assertCallCount(t, gitCallsData, 2)
+	assertCallContains(t, gitCallsData, []string{"add", "flake.lock"})
+	assertCallContains(t, gitCallsData, []string{"commit", "-m", "chore(flake): update input (nixpkgs)"})
 }
 
 // --- platform rejection ---
 
 func TestRunCLI_DarwinBuildOnLinux(t *testing.T) {
-	// Create a fake nix — it should never be called.
 	_, callsFile := fakeExec(t, "nix")
 	cmd := Command{Tag: "darwin", Subcmd: "build"}
 	err := RunCLI(cmd, "zadar", PlatformLinux)
@@ -429,36 +415,40 @@ func TestRunCLI_NixOSBuildOnDarwin(t *testing.T) {
 	assertCallCount(t, calls, 0)
 }
 
+func TestRunCLI_NixOSBuildOnUnsupportedOS(t *testing.T) {
+	_, callsFile := fakeExec(t, "nixos-rebuild")
+	cmd := Command{Tag: "nixos", Subcmd: "build"}
+	err := RunCLI(cmd, "beirut", PlatformAny)
+	assertError(t, err, "Requires Linux")
+
+	calls := readCalls(t, callsFile)
+	assertCallCount(t, calls, 0)
+}
+
 // --- home host defaulting ---
 
 func TestRunCLI_HomeBuildDefaultHost(t *testing.T) {
 	_, callsFile := fakeExec(t, "nix")
-	cmd := Command{Tag: "home", Subcmd: "build", User: "alice", HasHost: false}
-	err := RunCLI(cmd, "beirut", PlatformDarwin)
+	cmd := Command{Tag: "home", Subcmd: "build", User: "annt"}
+	err := RunCLI(cmd, "myhost", PlatformAny)
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	calls := stripPID(readCalls(t, callsFile))
 	assertCallCount(t, calls, 1)
-	if len(calls[0]) < 2 || !strings.Contains(calls[0][1], "alice@beirut") {
-		t.Errorf("expected home build with host 'beirut', got %v", calls[0])
-	}
+	assertCalls(t, calls, [][]string{{"build", `.#homeConfigurations."annt@myhost".activationPackage`}})
 }
 
 func TestRunCLI_HomeBuildExplicitHost(t *testing.T) {
 	_, callsFile := fakeExec(t, "nix")
-	cmd := Command{Tag: "home", Subcmd: "build", User: "alice", Host: "mbp", HasHost: true}
-	err := RunCLI(cmd, "beirut", PlatformDarwin)
+	cmd := Command{Tag: "home", Subcmd: "build", User: "alice", Host: "otherhost", HasHost: true}
+	err := RunCLI(cmd, "myhost", PlatformAny)
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	calls := stripPID(readCalls(t, callsFile))
 	assertCallCount(t, calls, 1)
-	if len(calls[0]) < 2 || !strings.Contains(calls[0][1], "alice@mbp") {
-		t.Errorf("expected home build with host 'mbp', got %v", calls[0])
-	}
+	assertCalls(t, calls, [][]string{{"build", `.#homeConfigurations."alice@otherhost".activationPackage`}})
 }
 
 // --- system switch short-circuit on first-step failure ---
@@ -471,6 +461,20 @@ func TestRunCLI_SystemSwitch_Darwin_ShortCircuit(t *testing.T) {
 	}
 	nixCalls := makeRecordingFake(t, binDir, "nix")
 	makePassthroughSudo(t, binDir)
+
+	// darwin-rebuild recording verifies the switch step is never reached.
+	rebuildDir := filepath.Join(td, "result", "sw", "bin")
+	if err := os.MkdirAll(rebuildDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	rebuildCalls := makeRecordingFake(t, rebuildDir, "darwin-rebuild")
+
+	origDir, _ := os.Getwd()
+	if err := os.Chdir(td); err != nil {
+		t.Fatal(err)
+	}
+	defer os.Chdir(origDir) //nolint:errcheck
+
 	t.Setenv("PATH", binDir+":"+os.Getenv("PATH"))
 	t.Setenv("RICE_FAKE_FAIL_AT", "1")
 
@@ -481,6 +485,9 @@ func TestRunCLI_SystemSwitch_Darwin_ShortCircuit(t *testing.T) {
 	calls := stripPID(readCalls(t, nixCalls))
 	assertCallCount(t, calls, 1)
 	// Only the build step ran; no switch step.
+
+	rebuildStripped := stripPID(readCalls(t, rebuildCalls))
+	assertCallCount(t, rebuildStripped, 0)
 }
 
 func TestRunCLI_SystemSwitch_Linux_ShortCircuit(t *testing.T) {
