@@ -30,6 +30,7 @@ in
         btop = on;
         direnv = on;
         fastfetch = on;
+        janet = on;
         fzf = on;
         tldr = on;
         yazi = on;
