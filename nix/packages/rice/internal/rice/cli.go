@@ -14,13 +14,13 @@ type Command struct {
 	Name    string // for flake update
 }
 
-// ParseResult is the output of Parse. Kind is "success", "help", or "error".
+// ParseResult is the output of Parse.
+// Kind is "success", "help", or "error".
 type ParseResult struct {
-	Kind     string
-	CLI      Command
-	Text     string // help/usage text for help results, usage context for errors
-	Message  string // error message for error results
-	ExitCode int
+	Kind    string // result kind: "success", "help", or "error"
+	CLI     Command
+	Text    string // help/usage text for help and error results
+	Message string // error message for error results
 }
 
 // Help texts — verbatim from cli.ts.
@@ -117,11 +117,11 @@ func successResult(cli Command) ParseResult {
 }
 
 func helpResult(text string) ParseResult {
-	return ParseResult{Kind: "help", Text: text, ExitCode: 0}
+	return ParseResult{Kind: "help", Text: text}
 }
 
 func errorResult(message, text string) ParseResult {
-	return ParseResult{Kind: "error", Message: message, Text: text, ExitCode: 1}
+	return ParseResult{Kind: "error", Message: message, Text: text}
 }
 
 // parseNoArgs returns success if tail is empty, or an error listing unexpected arguments.
@@ -132,15 +132,9 @@ func parseNoArgs(tag, subcmd, usage string, tail []string) ParseResult {
 	return successResult(Command{Tag: tag, Subcmd: subcmd})
 }
 
-// Parse receives the argument slice AFTER the program name has been stripped
-// (i.e., os.Args[1:]). It handles argv with or without a synthetic "rice" prefix
-// for backward compat with TS tests.
+// Parse parses os.Args[1:] into a ParseResult.
+// It dispatches on the first argument to the appropriate sub-parser.
 func Parse(args []string) ParseResult {
-	// Strip synthetic "rice" prefix when present.
-	if len(args) > 0 && args[0] == "rice" {
-		args = args[1:]
-	}
-
 	if len(args) == 0 || isHelp(args[0]) {
 		return helpResult(topLevelHelp)
 	}
