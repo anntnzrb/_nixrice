@@ -16,6 +16,7 @@ let
 
   cfg = config.${namespace}.desktop.window-managers.darwin.yashiki;
   aerospaceCfg = config.${namespace}.desktop.window-managers.darwin.aerospace;
+  homeDir = "/Users/${config.system.primaryUser}";
 
   scriptSections = lib.filter (lines: lines != [ ]) [
     cfg._sections.layout
@@ -28,18 +29,6 @@ let
       builtins.map (lib.concatStringsSep "\n") scriptSections
     )
   );
-
-  runner = pkgs.writeShellScript "yashiki-start" ''
-    set -eu
-
-    config_dir="$HOME/.config/yashiki"
-    config_file="$config_dir/init"
-
-    mkdir -p "$config_dir"
-    ln -snf "${initScript}" "$config_file"
-
-    exec /Applications/Yashiki.app/Contents/MacOS/yashiki start
-  '';
 in
 {
   imports = getModuleFiles {
@@ -91,19 +80,27 @@ in
           casks = [
             {
               name = "yashiki";
-              args = {
-                no_quarantine = true;
-              };
             }
           ];
         };
+
+        system.activationScripts.postActivation.text = lib.mkAfter ''
+          config_dir="${homeDir}/.config/yashiki"
+          config_file="$config_dir/init"
+
+          mkdir -p "$config_dir"
+          ln -snf "${initScript}" "$config_file"
+          chown -h ${config.system.primaryUser}:staff "$config_file"
+          /usr/bin/xattr -dr com.apple.quarantine /Applications/Yashiki.app >/dev/null 2>&1 || :
+        '';
       }
       // mkAgent {
         name = "yashiki";
         managedBy = "${namespace}.desktop.window-managers.darwin.yashiki.enable";
         serviceConfig = {
           ProgramArguments = [
-            runner
+            "/Applications/Yashiki.app/Contents/MacOS/yashiki"
+            "start"
           ];
           RunAtLoad = true;
           KeepAlive = true;
