@@ -16,7 +16,6 @@ let
 
   cfg = config.${namespace}.desktop.window-managers.darwin.yashiki;
   aerospaceCfg = config.${namespace}.desktop.window-managers.darwin.aerospace;
-  homeDir = "/Users/${config.system.primaryUser}";
 
   scriptSections = lib.filter (lines: lines != [ ]) [
     cfg._sections.layout
@@ -84,13 +83,13 @@ in
           ];
         };
 
-        system.activationScripts.postActivation.text = lib.mkAfter ''
-          config_dir="${homeDir}/.config/yashiki"
-          config_file="$config_dir/init"
+        home-manager.users.${config.system.primaryUser}.xdg.configFile."yashiki/init" =
+          {
+            source = initScript;
+            executable = true;
+          };
 
-          mkdir -p "$config_dir"
-          ln -snf "${initScript}" "$config_file"
-          chown -h ${config.system.primaryUser}:staff "$config_file"
+        system.activationScripts.postActivation.text = lib.mkAfter ''
           /usr/bin/xattr -dr com.apple.quarantine /Applications/Yashiki.app >/dev/null 2>&1 || :
         '';
       }
