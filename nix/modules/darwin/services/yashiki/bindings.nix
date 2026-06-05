@@ -63,7 +63,7 @@ in
         }
         {
           key = "alt-shift-r";
-          action = ''exec "sh -c '(sleep 1; open -a /Applications/Yashiki.app) & yashiki quit'"'';
+          action = ''exec "yashiki quit"'';
         }
       ]);
   };

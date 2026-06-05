@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  inputs,
   config,
   namespace,
   ...
@@ -8,7 +9,6 @@
 let
   inherit (lib.${namespace}.module)
     mkOptDisabled'
-    on
     ;
   inherit (lib.${namespace}.launchd.darwin) mkAgent;
   inherit (lib.${namespace}.fs) getModuleFiles;
@@ -16,6 +16,7 @@ let
 
   cfg = config.${namespace}.desktop.window-managers.darwin.yashiki;
   aerospaceCfg = config.${namespace}.desktop.window-managers.darwin.aerospace;
+  yashikiPkg = inputs.nurpkgs.packages.${pkgs.stdenv.hostPlatform.system}.yashiki;
 
   scriptSections = lib.filter (lines: lines != [ ]) [
     cfg._sections.layout
@@ -72,16 +73,7 @@ in
           }
         ];
 
-        ${namespace}.homebrew = on;
-
-        homebrew = {
-          taps = [ "typester/yashiki" ];
-          casks = [
-            {
-              name = "yashiki";
-            }
-          ];
-        };
+        environment.systemPackages = [ yashikiPkg ];
 
         home-manager.users.${config.system.primaryUser}.xdg.configFile."yashiki/init" =
           {
@@ -89,16 +81,13 @@ in
             executable = true;
           };
 
-        system.activationScripts.postActivation.text = lib.mkAfter ''
-          /usr/bin/xattr -dr com.apple.quarantine /Applications/Yashiki.app >/dev/null 2>&1 || :
-        '';
       }
       // mkAgent {
         name = "yashiki";
         managedBy = "${namespace}.desktop.window-managers.darwin.yashiki.enable";
         serviceConfig = {
           ProgramArguments = [
-            "/Applications/Yashiki.app/Contents/MacOS/yashiki"
+            "/Applications/Nix Apps/Yashiki.app/Contents/MacOS/yashiki"
             "start"
           ];
           RunAtLoad = true;
@@ -106,7 +95,7 @@ in
           ProcessType = "Interactive";
           LimitLoadToSessionType = [ "Aqua" ];
           EnvironmentVariables = {
-            PATH = "/opt/homebrew/bin:${config.environment.systemPath}";
+            PATH = "${yashikiPkg}/bin:${config.environment.systemPath}";
           };
         };
       }
