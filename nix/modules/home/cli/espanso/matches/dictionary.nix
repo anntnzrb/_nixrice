@@ -38,28 +38,8 @@ in
       word = true;
     }
     {
-      trigger = "qtal?";
-      replace = "qué tal?";
-      word = true;
-    }
-    {
-      trigger = "qfue?";
-      replace = "qué fue?";
-      word = true;
-    }
-    {
-      trigger = "qpaso?";
-      replace = "qué pasó?";
-      word = true;
-    }
-    {
       trigger = "asi";
       replace = "así";
-      word = true;
-    }
-    {
-      trigger = "snmr";
-      replace = "si no mal recuerdo";
       word = true;
     }
     {
@@ -82,23 +62,8 @@ in
       word = true;
     }
     {
-      trigger = "itss";
-      replace = "its";
-      word = true;
-    }
-    {
       trigger = "pls";
       replace = "please";
-      word = true;
-    }
-    {
-      trigger = "sry";
-      replace = "sorry";
-      word = true;
-    }
-    {
-      trigger = "np";
-      replace = "noproblem";
       word = true;
     }
     {
@@ -117,16 +82,6 @@ in
       word = true;
     }
     {
-      trigger = "btw";
-      replace = "by the way,";
-      word = true;
-    }
-    {
-      trigger = "fyi";
-      replace = "for your information,";
-      word = true;
-    }
-    {
       trigger = "lmk";
       replace = "let me know";
       word = true;
@@ -142,23 +97,8 @@ in
       word = true;
     }
     {
-      trigger = "fr?";
-      replace = "for real?";
-      word = true;
-    }
-    {
       trigger = "idk";
       replace = "I don't know";
-      word = true;
-    }
-    {
-      trigger = "afaik";
-      replace = "as far as I know";
-      word = true;
-    }
-    {
-      trigger = "iirc";
-      replace = "If I recall correctly";
       word = true;
     }
     {
@@ -194,16 +134,6 @@ in
     {
       trigger = "lenght";
       replace = "length";
-      word = true;
-    }
-    {
-      trigger = "w/";
-      replace = "with";
-      word = true;
-    }
-    {
-      trigger = "w/o";
-      replace = "without";
       word = true;
     }
     {
