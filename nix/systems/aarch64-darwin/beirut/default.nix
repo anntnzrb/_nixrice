@@ -15,7 +15,7 @@ in
   ${namespace} = {
     suites.desktop = on;
 
-    desktop.window-managers.darwin.yashiki = on;
+    desktop.window-managers.darwin.aerospace = on;
 
     system = {
       ui = on // {
