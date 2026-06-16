@@ -1,4 +1,5 @@
 {
+  inputs,
   lib,
   pkgs,
   config,
@@ -19,6 +20,7 @@ let
 
   cfg = config.${namespace}.desktop.window-managers.darwin.aerospace;
   yashikiCfg = config.${namespace}.desktop.window-managers.darwin.yashiki;
+  yashikiPkg = inputs.nurpkgs.packages.${pkgs.stdenv.hostPlatform.system}.yashiki;
 in
 {
   imports = getModuleFiles {
@@ -52,6 +54,26 @@ in
           after-login-command = [ ];
         };
       };
+
+      launchd.user.agents.aerospace.serviceConfig = {
+        ProcessType = "Interactive";
+        LimitLoadToSessionType = [ "Aqua" ];
+      };
+
+      system.activationScripts.postActivation.text = lib.mkAfter ''
+        if [ -n "''${SUDO_USER:-}" ]; then
+          user="''${SUDO_USER}"
+        else
+          user="${config.system.primaryUser}"
+        fi
+
+        uid="$(id -u "$user" 2>/dev/null || true)"
+        if [ -n "$uid" ]; then
+          launchctl bootout "gui/$uid/org.nixos.yashiki" >/dev/null 2>&1 || :
+        fi
+
+        ${yashikiPkg}/bin/yashiki stop >/dev/null 2>&1 || :
+      '';
 
       # goodies
       # cf. https://nikitabobko.github.io/AeroSpace/goodies
