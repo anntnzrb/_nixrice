@@ -16,6 +16,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.shellAliases.repomix = "${lib.getExe pkgs.bun} x repomix@latest --";
+    home.shellAliases.repomix = "${lib.getExe' pkgs.bun "bun"} x repomix@latest --";
   };
 }

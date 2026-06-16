@@ -1,8 +1,12 @@
-{ channels, ... }:
-_final: _prev: {
-  inherit (channels.nixpkgs-unstable)
-    bun
+{
+  channels,
+  inputs,
+  ...
+}:
+_final: prev: {
+  bun = inputs.bun-overlay.packages.${prev.stdenv.hostPlatform.system}.bun;
 
+  inherit (channels.nixpkgs-unstable)
     aider-chat
     emacs-macport
     vscode
