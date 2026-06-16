@@ -32,7 +32,7 @@ in
         scan_timeout = 10;
         follow_symlinks = false;
 
-        format = "$username@$hostname $os $directory${lib.concatStrings promptModules}$time $shell$cmd_duration $character";
+        format = "$username@$hostname $os $directory${lib.concatStrings promptModules}\n$time $shell$cmd_duration $character";
 
         character = {
           success_symbol = "[➜ ](bold green)";
