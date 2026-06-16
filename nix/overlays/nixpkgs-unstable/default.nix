@@ -1,12 +1,8 @@
-{
-  channels,
-  inputs,
-  ...
-}:
-_final: prev: {
-  bun = inputs.llm-agents-nix.packages.${prev.stdenv.hostPlatform.system}.bun-bin;
-
+{ channels, ... }:
+_final: _prev: {
   inherit (channels.nixpkgs-unstable)
+    bun
+
     aider-chat
     emacs-macport
     vscode
