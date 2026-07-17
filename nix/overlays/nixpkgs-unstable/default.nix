@@ -8,6 +8,7 @@ _final: prev: {
 
   inherit (channels.nixpkgs-unstable)
     aider-chat
+    aerospace
     emacs-macport
     vscode
     zed-editor
