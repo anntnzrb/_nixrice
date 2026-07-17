@@ -12,6 +12,9 @@ in
   config = lib.mkIf cfg.enable {
     services.aerospace.settings = {
       accordion-padding = 0;
+      "focus-follows-mouse".enabled = true;
+      on-focused-monitor-changed = [ ];
+
       gaps = {
         inner = {
           horizontal = 8;
