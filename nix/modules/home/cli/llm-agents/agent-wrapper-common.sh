@@ -59,6 +59,7 @@ require_uint() {
         '' | *[!0-9]*)
             die "invalid ${label}: ${value}"
             ;;
+        *) : ;;
     esac
     return 0
 }
@@ -127,9 +128,15 @@ cleanup_sync() {
     }
 
     sync_signal TERM
-    if ! wait_for_sync_exit "${SYNC_TERM_GRACE_SECS}"; then
+    set +e
+    wait_for_sync_exit "${SYNC_TERM_GRACE_SECS}"
+    wait_status=$?
+    set -e
+    if [ "${wait_status}" -ne 0 ]; then
         sync_signal KILL
-        wait_for_sync_exit 1 || :
+        set +e
+        wait_for_sync_exit 1
+        set -e
     fi
 
     wait "${SYNC_PID}" 2>/dev/null || :
@@ -147,9 +154,8 @@ on_wrapper_signal() {
         HUP) exit 129 ;;
         INT) exit 130 ;;
         TERM) exit 143 ;;
+        *) exit 1 ;;
     esac
-
-    exit 1
 }
 
 start_sync_timer() {
@@ -231,7 +237,11 @@ run_sync() {
 # try_sync
 # Run sync; warn and continue on failure.
 try_sync() {
-    if ! run_sync; then
+    set +e
+    run_sync
+    sync_status=$?
+    set -e
+    if [ "${sync_status}" -ne 0 ]; then
         printf '%s\n' "llm-agent: warning: continuing launch without completed sync" >&2
     fi
     return 0

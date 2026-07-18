@@ -35,10 +35,11 @@ REFRESH_LOCK_DIR="${STAMP_DIR}/refresh.lock"
 store_resolved_command() {
     out_path="${1}"
     command_path="${2}"
+    refreshed_at="$(date +%s)"
 
     printf '%s\n' "${out_path}" >"${OUT_PATH_FILE}"
     printf '%s\n' "${command_path}" >"${COMMAND_PATH_FILE}"
-    printf '%s\n' "$(date +%s)" >"${STAMP_FILE}"
+    printf '%s\n' "${refreshed_at}" >"${STAMP_FILE}"
 }
 
 resolve_command_path() {
@@ -91,9 +92,36 @@ resolve_main_program() {
 
 refresh_cache() {
     refresh_flag="${1}"
-    out_path="$(build_out_path "${refresh_flag}")" || return 1
-    main_program="$(resolve_main_program)" || return 1
-    command_path="$(resolve_command_path "${out_path}" "${main_program}")" || return 1
+    errexit_enabled="0"
+    case "$-" in
+        *e*) errexit_enabled="1" ;;
+        *) : ;;
+    esac
+
+    set +e
+    out_path="$(build_out_path "${refresh_flag}")"
+    status=$?
+    if [ "${errexit_enabled}" -eq 1 ]; then
+        set -e
+    fi
+    [ "${status}" -eq 0 ] || return 1
+
+    set +e
+    main_program="$(resolve_main_program)"
+    status=$?
+    if [ "${errexit_enabled}" -eq 1 ]; then
+        set -e
+    fi
+    [ "${status}" -eq 0 ] || return 1
+
+    set +e
+    command_path="$(resolve_command_path "${out_path}" "${main_program}")"
+    status=$?
+    if [ "${errexit_enabled}" -eq 1 ]; then
+        set -e
+    fi
+    [ "${status}" -eq 0 ] || return 1
+
     store_resolved_command "${out_path}" "${command_path}"
     return 0
 }
@@ -117,21 +145,38 @@ refresh_cache_async() {
 
     (
         trap 'rm -rf "${REFRESH_LOCK_DIR}"' EXIT
-        refresh_cache "--refresh" >/dev/null 2>&1 || :
+        set +e
+        refresh_cache "--refresh" >/dev/null 2>&1
     ) &
     return 0
 }
 
-COMMAND_PATH="$(cached_command_path || :)"
+load_cached_command() {
+    set +e
+    COMMAND_PATH="$(cached_command_path)"
+    status=$?
+    set -e
+
+    if [ "${status}" -ne 0 ]; then
+        COMMAND_PATH=""
+    fi
+    return 0
+}
+
+load_cached_command
 
 if [ -z "${COMMAND_PATH}" ]; then
     refresh_cache "" >/dev/null
-    COMMAND_PATH="$(cached_command_path || :)"
+    load_cached_command
 fi
 
 [ -n "${COMMAND_PATH}" ] || die "failed to resolve command path for ${ATTR}"
 
-if cache_is_stale; then
+set +e
+cache_is_stale
+cache_status=$?
+set -e
+if [ "${cache_status}" -eq 0 ]; then
     refresh_cache_async
 fi
 
