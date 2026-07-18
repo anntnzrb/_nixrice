@@ -1,4 +1,5 @@
 name: Nix Flake Lock Input Update
+
 on:
   workflow_dispatch:
   schedule:
@@ -6,26 +7,10 @@ on:
 
 permissions:
   contents: write
-  id-token: write
   pull-requests: write
 
 jobs:
   update-lockfile:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-      - uses: DeterminateSystems/nix-installer-action@v22
-
-      - name: Update Flake Lockfile
-        id: update
-        uses: DeterminateSystems/update-flake-lock@v28
-        with:
-          inputs: nixpkgs-unstable nurpkgs
-          git-author-name: ${{ github.repository_owner }}
-          git-author-email: ${{ github.repository_owner }}@users.noreply.github.com
-
-      - name: Enable auto-merge
-        if: steps.update.outputs.pull-request-number
-        run: gh pr merge --auto --rebase ${{ steps.update.outputs.pull-request-number }}
-        env:
-          GH_TOKEN: ${{ github.token }}
+    uses: ./.github/workflows/update-flake-lock.yml
+    with:
+      update_inputs: nixpkgs-unstable nurpkgs

@@ -1,30 +1,303 @@
 name: Nix Flake Lock Update
+
 on:
+  workflow_call:
+    inputs:
+      update_inputs:
+        description: Space-separated root inputs; empty updates all inputs
+        required: false
+        type: string
+        default: ""
   workflow_dispatch:
+    inputs:
+      update_inputs:
+        description: Space-separated root inputs; empty updates all inputs
+        required: false
+        type: string
+        default: ""
   schedule:
     - cron: "0 6 2 * *"
 
+concurrency:
+  group: update-flake-lock
+  cancel-in-progress: false
+
 permissions:
-  contents: write
-  id-token: write
-  pull-requests: write
+  contents: read
 
 jobs:
-  update-lockfile:
+  select:
+    name: Select and validate on Linux
     runs-on: ubuntu-latest
+    timeout-minutes: 120
+    outputs:
+      base_sha: ${{ steps.base.outputs.base_sha }}
+      changed: ${{ steps.selection.outputs.changed }}
+      default_branch: ${{ steps.base.outputs.default_branch }}
+      lock_sha256: ${{ steps.candidate.outputs.lock_sha256 }}
     steps:
-      - uses: actions/checkout@v6
-      - uses: DeterminateSystems/nix-installer-action@v22
-
-      - name: Update Flake Lockfile
-        id: update
-        uses: DeterminateSystems/update-flake-lock@v28
-        with:
-          git-author-name: ${{ github.repository_owner }}
-          git-author-email: ${{ github.repository_owner }}@users.noreply.github.com
-
-      - name: Enable auto-merge
-        if: steps.update.outputs.pull-request-number
-        run: gh pr merge --auto --rebase ${{ steps.update.outputs.pull-request-number }}
+      - name: Capture default branch
+        id: base
         env:
           GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          default_branch="$(gh api "repos/${GITHUB_REPOSITORY}" --jq .default_branch)"
+          base_sha="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${default_branch}" --jq .sha)"
+          printf 'default_branch=%s\nbase_sha=%s\n' "$default_branch" "$base_sha" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          ref: ${{ steps.base.outputs.base_sha }}
+
+      - uses: DeterminateSystems/nix-installer-action@v22
+
+      - name: Select validated input updates
+        id: selection
+        env:
+          UPDATE_INPUTS: ${{ inputs.update_inputs }}
+        run: |
+          set -euo pipefail
+          read -r -a update_inputs <<< "$UPDATE_INPUTS"
+          scripts/ci/update-flake-inputs.sh "${update_inputs[@]}"
+
+      - name: Confirm no-op left the checkout clean
+        if: steps.selection.outputs.changed == 'false'
+        run: git diff --quiet --exit-code
+
+      - name: Package candidate and metadata
+        id: candidate
+        if: steps.selection.outputs.changed == 'true'
+        env:
+          ATTEMPTS: ${{ steps.selection.outputs.attempts }}
+          REJECTED: ${{ steps.selection.outputs.rejected }}
+          SELECTED: ${{ steps.selection.outputs.selected }}
+        run: |
+          set -euo pipefail
+          if git diff --exit-code --quiet -- flake.lock; then
+            echo 'Selector reported a change without changing flake.lock.' >&2
+            exit 1
+          fi
+          git diff --quiet --exit-code -- . ':(exclude)flake.lock'
+
+          candidate="$RUNNER_TEMP/flake-lock-candidate"
+          mkdir -p "$candidate"
+          cp flake.lock "$candidate/flake.lock"
+          printf '%s\n' "$SELECTED" > "$candidate/selected-inputs.txt"
+          printf '%s\n' "$REJECTED" > "$candidate/rejected-inputs.txt"
+          printf '%s\n' "$ATTEMPTS" > "$candidate/attempts.txt"
+          (
+            cd "$candidate"
+            sha256sum flake.lock > flake.lock.sha256
+          )
+          lock_sha256="$(cut -d ' ' -f 1 "$candidate/flake.lock.sha256")"
+          printf 'lock_sha256=%s\n' "$lock_sha256" >> "$GITHUB_OUTPUT"
+
+      - name: Upload exact candidate
+        if: steps.selection.outputs.changed == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: flake-lock-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/flake-lock-candidate
+          if-no-files-found: error
+          retention-days: 1
+
+  validate-macos:
+    name: Validate exact candidate on macOS
+    needs: select
+    if: needs.select.outputs.changed == 'true'
+    runs-on: macos-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          ref: ${{ needs.select.outputs.base_sha }}
+
+      - uses: DeterminateSystems/nix-installer-action@v22
+
+      - name: Download candidate
+        uses: actions/download-artifact@v8
+        with:
+          name: flake-lock-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/flake-lock-candidate
+
+      - name: Verify and check candidate
+        env:
+          EXPECTED_SHA256: ${{ needs.select.outputs.lock_sha256 }}
+        run: |
+          set -euo pipefail
+          candidate="$RUNNER_TEMP/flake-lock-candidate"
+          test "$(find "$candidate" -type f -name flake.lock | wc -l | tr -d ' ')" = 1
+          actual_sha256="$(shasum -a 256 "$candidate/flake.lock" | cut -d ' ' -f 1)"
+          test "$actual_sha256" = "$EXPECTED_SHA256"
+          cp "$candidate/flake.lock" flake.lock
+          scripts/ci/check-flake.sh
+          cmp "$candidate/flake.lock" flake.lock
+
+  publish:
+    name: Publish verified automation PR
+    needs: [select, validate-macos]
+    if: needs.select.outputs.changed == 'true' && needs.validate-macos.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          ref: ${{ needs.select.outputs.base_sha }}
+
+      - name: Download candidate
+        uses: actions/download-artifact@v8
+        with:
+          name: flake-lock-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/flake-lock-candidate
+
+      - name: Refuse a stale base and restore candidate
+        env:
+          BASE_SHA: ${{ needs.select.outputs.base_sha }}
+          DEFAULT_BRANCH: ${{ needs.select.outputs.default_branch }}
+          EXPECTED_SHA256: ${{ needs.select.outputs.lock_sha256 }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          remote_default="$(gh api "repos/${GITHUB_REPOSITORY}" --jq .default_branch)"
+          test "$remote_default" = "$DEFAULT_BRANCH"
+          remote_sha="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${DEFAULT_BRANCH}" --jq .sha)"
+          test "$remote_sha" = "$BASE_SHA"
+
+          candidate="$RUNNER_TEMP/flake-lock-candidate"
+          test "$(find "$candidate" -type f -name flake.lock | wc -l | tr -d ' ')" = 1
+          actual_sha256="$(sha256sum "$candidate/flake.lock" | cut -d ' ' -f 1)"
+          test "$actual_sha256" = "$EXPECTED_SHA256"
+          cp "$candidate/flake.lock" flake.lock
+          git diff --quiet --exit-code -- . ':(exclude)flake.lock'
+          if git diff --exit-code --quiet -- flake.lock; then
+            echo 'Validated candidate does not change flake.lock.' >&2
+            exit 1
+          fi
+
+      - name: Disable auto-merge before refreshing existing PR
+        env:
+          DEFAULT_BRANCH: ${{ needs.select.outputs.default_branch }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          pr="$(gh pr list \
+            --base "$DEFAULT_BRANCH" \
+            --head 'automation/update-flake-lock' \
+            --state open \
+            --json number \
+            --jq '.[0].number // empty')"
+          if test -n "$pr"; then
+            auto_merge="$(gh pr view "$pr" --json autoMergeRequest --jq '.autoMergeRequest != null')"
+            if test "$auto_merge" = true; then
+              gh pr merge --disable-auto "$pr"
+            fi
+          fi
+
+      - name: Prepare pull request body
+        env:
+          BASE_SHA: ${{ needs.select.outputs.base_sha }}
+          LOCK_SHA256: ${{ needs.select.outputs.lock_sha256 }}
+        run: |
+          {
+            echo 'Automated flake input update selected and validated on Linux and macOS.'
+            echo
+            printf -- '- Validated base: %s\n' "$BASE_SHA"
+            printf -- '- flake.lock SHA-256: %s\n' "$LOCK_SHA256"
+            printf -- '- Selected inputs: %s\n' "$(cat "$RUNNER_TEMP/flake-lock-candidate/selected-inputs.txt")"
+            printf -- '- Rejected inputs: %s\n' "$(cat "$RUNNER_TEMP/flake-lock-candidate/rejected-inputs.txt")"
+            printf -- '- Selection attempts: %s\n' "$(cat "$RUNNER_TEMP/flake-lock-candidate/attempts.txt")"
+            printf -- '- Validation run: %s/%s/actions/runs/%s\n' "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID"
+          } > "$RUNNER_TEMP/pull-request-body.md"
+
+      - name: Create or refresh pull request
+        id: pr
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ github.token }}
+          base: ${{ needs.select.outputs.default_branch }}
+          branch: automation/update-flake-lock
+          delete-branch: true
+          add-paths: flake.lock
+          commit-message: "chore(flake): update lock file"
+          title: "chore(flake): update lock file"
+          body-path: ${{ runner.temp }}/pull-request-body.md
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+
+      - name: Verify published PR
+        env:
+          BASE_SHA: ${{ needs.select.outputs.base_sha }}
+          DEFAULT_BRANCH: ${{ needs.select.outputs.default_branch }}
+          EXPECTED_HEAD_SHA: ${{ steps.pr.outputs.pull-request-head-sha }}
+          EXPECTED_SHA256: ${{ needs.select.outputs.lock_sha256 }}
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.pr.outputs.pull-request-number }}
+        run: |
+          set -euo pipefail
+          test -n "$PR_NUMBER"
+          test -n "$EXPECTED_HEAD_SHA"
+
+          remote_default="$(gh api "repos/${GITHUB_REPOSITORY}" --jq .default_branch)"
+          test "$remote_default" = "$DEFAULT_BRANCH"
+          remote_sha="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${DEFAULT_BRANCH}" --jq .sha)"
+          test "$remote_sha" = "$BASE_SHA"
+
+          read -r state base base_sha head < <(gh pr view "$PR_NUMBER" \
+            --json state,baseRefName,baseRefOid,headRefOid \
+            --jq '[.state, .baseRefName, .baseRefOid, .headRefOid] | @tsv')
+          test "$state" = OPEN
+          test "$base" = "$DEFAULT_BRANCH"
+          test "$base_sha" = "$BASE_SHA"
+          test "$head" = "$EXPECTED_HEAD_SHA"
+
+          parent="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${head}" \
+            --jq '.parents | if length == 1 then .[0].sha else empty end')"
+          test "$parent" = "$BASE_SHA"
+
+          test "$(gh pr diff "$PR_NUMBER" --name-only | sort -u)" = flake.lock
+          gh api "repos/${GITHUB_REPOSITORY}/contents/flake.lock?ref=${head}" \
+            --jq .content | tr -d '\n' | base64 --decode > "$RUNNER_TEMP/published-flake.lock"
+          published_sha256="$(sha256sum "$RUNNER_TEMP/published-flake.lock" | cut -d ' ' -f 1)"
+          test "$published_sha256" = "$EXPECTED_SHA256"
+
+      - name: Enable policy-controlled auto-merge
+        if: vars.FLAKE_UPDATE_AUTO_MERGE == 'true'
+        env:
+          BASE_SHA: ${{ needs.select.outputs.base_sha }}
+          DEFAULT_BRANCH: ${{ needs.select.outputs.default_branch }}
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ steps.pr.outputs.pull-request-head-sha }}
+          PR_NUMBER: ${{ steps.pr.outputs.pull-request-number }}
+        run: |
+          set -euo pipefail
+          remote_default="$(gh api "repos/${GITHUB_REPOSITORY}" --jq .default_branch)"
+          test "$remote_default" = "$DEFAULT_BRANCH"
+          remote_sha="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${DEFAULT_BRANCH}" --jq .sha)"
+          test "$remote_sha" = "$BASE_SHA"
+          pr_id="$(gh pr view "$PR_NUMBER" --json id --jq .id)"
+          # GraphQL variables are intentionally left for the API, not the shell.
+          # shellcheck disable=SC2016
+          enabled_head="$(gh api graphql \
+            -F pullRequestId="$pr_id" \
+            -F expectedHeadOid="$HEAD_SHA" \
+            -f query='mutation($pullRequestId: ID!, $expectedHeadOid: GitObjectID!) {
+              enablePullRequestAutoMerge(input: {
+                pullRequestId: $pullRequestId
+                mergeMethod: REBASE
+                expectedHeadOid: $expectedHeadOid
+              }) {
+                pullRequest { headRefOid }
+              }
+            }' \
+            --jq .data.enablePullRequestAutoMerge.pullRequest.headRefOid)"
+          test "$enabled_head" = "$HEAD_SHA"
