@@ -6,9 +6,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOptDisabled'
-    ;
+  inherit (lib.${namespace}.module) mkOptDisabled';
 
   cfg = config.${namespace}.programs.orbstack;
 in

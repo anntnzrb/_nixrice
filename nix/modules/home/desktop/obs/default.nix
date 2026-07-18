@@ -15,8 +15,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.obs-studio = {
-      inherit (cfg) enable;
-    };
+    programs.obs-studio = { inherit (cfg) enable; };
   };
 }

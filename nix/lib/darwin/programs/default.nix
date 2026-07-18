@@ -1,18 +1,13 @@
 { lib, ... }:
 let
-  inherit (lib.types)
-    ints
-    str
-    ;
+  inherit (lib.types) ints str;
 in
 {
   mkOneCaskProgram =
     { config, namespace }:
     name: cask:
     let
-      inherit (lib.${namespace}.module)
-        mkOptDisabled'
-        ;
+      inherit (lib.${namespace}.module) mkOptDisabled';
       cfg = config.${namespace}.programs.${name};
     in
     {
@@ -29,10 +24,7 @@ in
     { config, namespace }:
     name: appName: appId:
     let
-      inherit (lib.${namespace}.module)
-        mkOpt'
-        mkOptDisabled'
-        ;
+      inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
       cfg = config.${namespace}.programs.${name};
     in
     {

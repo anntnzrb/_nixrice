@@ -8,9 +8,7 @@ let
   inherit (lib.${namespace}.module) on;
 in
 {
-  imports = [
-    ./hardware
-  ];
+  imports = [ ./hardware ];
 
   ${namespace} = {
     user = on;

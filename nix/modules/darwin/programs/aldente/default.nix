@@ -5,9 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOptDisabled'
-    ;
+  inherit (lib.${namespace}.module) mkOptDisabled';
   inherit (lib.${namespace}.launchd.darwin) mkGuiAppAgent;
 
   cfg = config.${namespace}.programs.aldente;

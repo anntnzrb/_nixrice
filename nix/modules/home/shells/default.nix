@@ -6,16 +6,9 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptDisabled'
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
   inherit (lib.${namespace}.fs) getModuleFiles;
-  inherit (lib.types)
-    attrsOf
-    listOf
-    str
-    ;
+  inherit (lib.types) attrsOf listOf str;
 
   cfg = config.${namespace}.shells;
 in
@@ -45,9 +38,7 @@ in
   };
 
   config = {
-    ${namespace}.shells.starship = {
-      inherit (cfg.prompt.starship) enable;
-    };
+    ${namespace}.shells.starship = { inherit (cfg.prompt.starship) enable; };
 
     home = {
       sessionPath = [ "${config.home.homeDirectory}/.local/bin" ];

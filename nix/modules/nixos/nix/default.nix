@@ -8,9 +8,7 @@ let
   cfg = config.${namespace}.nix;
 in
 {
-  imports = [
-    (lib.${namespace}.fs.getFile "modules/shared/nix/default.nix")
-  ];
+  imports = [ (lib.${namespace}.fs.getFile "modules/shared/nix/default.nix") ];
 
   config = lib.mkIf cfg.enable {
     nix = {

@@ -5,10 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptDisabled'
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
 
   cfg = config.${namespace}.desktop.terminal-emulators.alacritty;
 in
@@ -29,9 +26,6 @@ in
 
         font =
           let
-            _fantasque = "Fantasque Sans Mono";
-            _mononoki = "mononoki";
-            _codeNewRoman = "CodeNewRoman Nerd Font";
             firaCode-mono = "FiraCode Nerd Font Mono";
           in
           {

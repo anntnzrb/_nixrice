@@ -6,22 +6,14 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptDisabled'
-    off
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled' off;
   inherit (lib)
     foldl'
     mkIf
     genList
     readFile
     ;
-  inherit (lib.types)
-    str
-    listOf
-    attrsOf
-    ;
+  inherit (lib.types) str listOf attrsOf;
 
   cfg = config.${namespace}.desktop.window-managers.wayland.sway;
 in

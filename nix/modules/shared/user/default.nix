@@ -1,13 +1,6 @@
-{
-  lib,
-  namespace,
-  ...
-}:
+{ lib, namespace, ... }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptDisabled'
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
   inherit (lib.types) str;
 in
 {

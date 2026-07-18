@@ -1,22 +1,10 @@
-{
-  lib,
-  pkgs,
-  ...
-}:
+{ lib, pkgs, ... }:
 let
-  inherit (lib)
-    getExe
-    getExe'
-    optionalAttrs
-    ;
+  inherit (lib) getExe getExe' optionalAttrs;
 
-  inherit (pkgs)
-    coreutils
-    ;
+  inherit (pkgs) coreutils;
 
-  inherit (pkgs.stdenvNoCC.hostPlatform)
-    isLinux
-    ;
+  inherit (pkgs.stdenvNoCC.hostPlatform) isLinux;
 
   /**
     Configuration for eza, a modern replacement for ls.

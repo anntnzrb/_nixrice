@@ -1,8 +1,4 @@
-{
-  lib,
-  namespace,
-  ...
-}:
+{ lib, namespace, ... }:
 let
   inherit (lib.${namespace}.module) on off;
 in

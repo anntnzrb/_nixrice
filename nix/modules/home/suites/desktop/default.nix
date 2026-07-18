@@ -14,7 +14,5 @@ in
     enable = mkOptDisabled';
   };
 
-  config = lib.mkIf cfg.enable {
-    ${namespace}.desktop.ui.themes = on;
-  };
+  config = lib.mkIf cfg.enable { ${namespace}.desktop.ui.themes = on; };
 }

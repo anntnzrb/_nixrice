@@ -5,15 +5,8 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptEnabled'
-    on
-    ;
-  inherit (lib.types)
-    str
-    ints
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptEnabled' on;
+  inherit (lib.types) str ints;
 
   cfg = config.${namespace}.home;
 in
@@ -30,16 +23,16 @@ in
 
   config = lib.mkIf cfg.enable {
     home = {
-      keyboard = {
-        inherit (cfg.keyboard) layout variant;
-      };
+      keyboard = { inherit (cfg.keyboard) layout variant; };
       stateVersion = "22.05";
     };
 
     # disable manual generation (workaround for home-manager#7935)
-    manual.manpages.enable = false;
-    manual.html.enable = false;
-    manual.json.enable = false;
+    manual = {
+      manpages.enable = false;
+      html.enable = false;
+      json.enable = false;
+    };
 
     systemd.user.startServices = "sd-switch";
     programs.home-manager = on;

@@ -5,10 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptDisabled'
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
   inherit (lib.types)
     attrsOf
     nullOr

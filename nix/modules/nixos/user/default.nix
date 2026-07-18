@@ -5,10 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptEnabled'
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptEnabled';
 
   inherit (lib.types)
     str
@@ -20,9 +17,7 @@ let
   cfg = config.${namespace}.user;
 in
 {
-  imports = [
-    (lib.${namespace}.fs.getFile "modules/shared/user/default.nix")
-  ];
+  imports = [ (lib.${namespace}.fs.getFile "modules/shared/user/default.nix") ];
 
   options.${namespace}.user = {
     isNormalUser = mkOptEnabled';

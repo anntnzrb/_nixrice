@@ -1,3 +1,4 @@
+# shellcheck shell=sh
 # Directory bootstrap for the WhatsApp idle guard.
 #
 # This is intentionally tiny because it runs during Home Manager activation,

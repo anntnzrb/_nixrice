@@ -1,3 +1,4 @@
+# shellcheck shell=sh
 # WhatsApp idle guard runtime.
 #
 # Intent:

@@ -5,19 +5,9 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptDisabled'
-    on
-    ;
-  inherit (lib)
-    genList
-    concatMap
-    ;
-  inherit (lib.types)
-    listOf
-    str
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled' on;
+  inherit (lib) genList concatMap;
+  inherit (lib.types) listOf str;
 
   cfg = config.${namespace}.desktop.window-managers.wayland.hyprland;
 in

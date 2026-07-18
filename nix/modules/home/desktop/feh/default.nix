@@ -16,9 +16,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.feh = {
-      inherit (cfg) enable;
-    };
+    programs.feh = { inherit (cfg) enable; };
 
     xdg.desktopEntries.feh = {
       name = "feh";

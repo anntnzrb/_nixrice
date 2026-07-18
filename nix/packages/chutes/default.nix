@@ -7,10 +7,7 @@
   package :: Derivation
   ```
 */
-{
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
 let
   exe = "chutes";
 in

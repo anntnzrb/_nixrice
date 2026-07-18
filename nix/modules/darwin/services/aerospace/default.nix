@@ -7,16 +7,10 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptDisabled'
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
   inherit (lib.${namespace}.fs) getModuleFiles;
   inherit (lib) range;
-  inherit (lib.types)
-    int
-    listOf
-    ;
+  inherit (lib.types) int listOf;
 
   cfg = config.${namespace}.desktop.window-managers.darwin.aerospace;
   yashikiCfg = config.${namespace}.desktop.window-managers.darwin.yashiki;
@@ -35,9 +29,7 @@ in
   };
 
   config = lib.mkMerge [
-    {
-      _module.args.aerospaceLib = import ./lib.nix { inherit lib; };
-    }
+    { _module.args.aerospaceLib = import ./lib.nix { inherit lib; }; }
     (lib.mkIf cfg.enable {
       assertions = [
         {

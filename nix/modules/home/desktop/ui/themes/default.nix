@@ -6,14 +6,8 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptDisabled'
-    ;
-  inherit (lib.types)
-    str
-    ints
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
+  inherit (lib.types) str ints;
 
   cfg = config.${namespace}.desktop.ui.themes;
 in

@@ -29,7 +29,6 @@ SYNC_TIMEOUT_SECS="60"
 SYNC_TERM_GRACE_SECS="2"
 
 SYNC_PID=""
-SYNC_PGID=""
 SYNC_TIMER_PID=""
 SYNC_TIMEOUT_FLAG=""
 
@@ -124,7 +123,6 @@ cleanup_sync() {
     [ -n "${SYNC_PID}" ] || return 0
     kill -0 "${SYNC_PID}" 2>/dev/null || {
         SYNC_PID=""
-        SYNC_PGID=""
         return 0
     }
 
@@ -136,7 +134,6 @@ cleanup_sync() {
 
     wait "${SYNC_PID}" 2>/dev/null || :
     SYNC_PID=""
-    SYNC_PGID=""
     return 0
 }
 
@@ -161,6 +158,7 @@ start_sync_timer() {
 
     (
         sleep_pid=""
+        # shellcheck disable=SC2329 # Invoked indirectly by the signal trap.
         stop_sleep() {
             [ -n "${sleep_pid}" ] || exit 0
             kill "${sleep_pid}" 2>/dev/null || :
@@ -212,13 +210,11 @@ run_sync() {
 
     "${SYNC_RUNNER}" "${SYNC_SCRIPT}" &
     SYNC_PID=$!
-    SYNC_PGID=""
     start_sync_timer
 
     status=0
     wait "${SYNC_PID}" || status=$?
     SYNC_PID=""
-    SYNC_PGID=""
     stop_sync_timer
 
     trap - EXIT HUP INT TERM

@@ -7,9 +7,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOptDisabled'
-    ;
+  inherit (lib.${namespace}.module) mkOptDisabled';
   inherit (lib.${namespace}.launchd.darwin) mkAgent;
   inherit (lib.${namespace}.fs) getModuleFiles;
   inherit (lib.types) listOf str;
@@ -61,9 +59,7 @@ in
   };
 
   config = lib.mkMerge [
-    {
-      _module.args.yashikiLib = import ./lib.nix { inherit lib; };
-    }
+    { _module.args.yashikiLib = import ./lib.nix { inherit lib; }; }
     (lib.mkIf cfg.enable (
       {
         assertions = [

@@ -7,15 +7,8 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptDisabled'
-    off
-    ;
-  inherit (lib.types)
-    listOf
-    package
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled' off;
+  inherit (lib.types) listOf package;
 
   cfg = config.${namespace}.editors.zed;
 in

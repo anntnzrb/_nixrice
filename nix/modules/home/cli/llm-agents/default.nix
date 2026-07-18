@@ -96,9 +96,7 @@ let
 
   mkShellWrapper =
     name: runtimeInputs: text:
-    pkgs.writeShellApplication {
-      inherit name runtimeInputs text;
-    };
+    pkgs.writeShellApplication { inherit name runtimeInputs text; };
 
   /**
     Create a wrapper derivation for an agent.
@@ -112,15 +110,10 @@ let
   mkWrapper =
     name: spec:
     if spec.type == "npm" then
-      mkShellWrapper name
-        [
-          bunPkg
-          pkgs.nodejs
-        ]
-        ''
-          exec ${shell} ${wrappers}/${wrapperDir}/npm-agent-wrapper.sh \
-            ${bunExe} ${syncScript} ${spec.package} "$@"
-        ''
+      mkShellWrapper name [ bunPkg pkgs.nodejs ] ''
+        exec ${shell} ${wrappers}/${wrapperDir}/npm-agent-wrapper.sh \
+          ${bunExe} ${syncScript} ${spec.package} "$@"
+      ''
     else if spec.type == "script" then
       mkShellWrapper name coreRuntimeInputs ''
         exec ${shell} ${wrappers}/${wrapperDir}/script-agent-wrapper.sh \
@@ -146,9 +139,7 @@ let
     let
       cfg = config.${namespace}.cli."llm-agents".${name};
     in
-    mkIf cfg.enable (mkMerge [
-      { home.packages = [ (mkWrapper name spec) ]; }
-    ]);
+    mkIf cfg.enable (mkMerge [ { home.packages = [ (mkWrapper name spec) ]; } ]);
 in
 {
   options.${namespace}.cli."llm-agents" = mapAttrs' (

@@ -1,9 +1,6 @@
 { lib }:
 let
-  inherit (lib)
-    concatMap
-    genList
-    ;
+  inherit (lib) concatMap genList;
 
   numTags = 10;
 

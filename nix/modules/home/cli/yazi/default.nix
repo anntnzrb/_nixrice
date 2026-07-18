@@ -5,10 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOptEnabled'
-    mkOptDisabled'
-    ;
+  inherit (lib.${namespace}.module) mkOptEnabled' mkOptDisabled';
   inherit (lib.${namespace}.fs) getModuleFiles;
 
   cfg = config.${namespace}.cli.yazi;

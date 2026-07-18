@@ -20,9 +20,7 @@ in
       onShutdown = "shutdown";
     };
 
-    programs.virt-manager = {
-      inherit (cfg) enable;
-    };
+    programs.virt-manager = { inherit (cfg) enable; };
 
     ${namespace}.user.extraGroups = [ "libvirtd" ];
   };

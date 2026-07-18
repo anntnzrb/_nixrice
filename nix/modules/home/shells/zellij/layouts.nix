@@ -43,9 +43,7 @@ let
     text
     : The KDL content of the layout
   */
-  mkLayout = name: text: {
-    "${layoutsDir}/${name}.kdl" = { inherit text; };
-  };
+  mkLayout = name: text: { "${layoutsDir}/${name}.kdl" = { inherit text; }; };
 
   /**
     Create multiple Zellij layout files from a list of names.

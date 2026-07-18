@@ -26,9 +26,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [
-      cfg.package
-    ];
+    home.packages = [ cfg.package ];
 
     home.shellAliases = {
       # NOTE: 'disown' is not POSIX

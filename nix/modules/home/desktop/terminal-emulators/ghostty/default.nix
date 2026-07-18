@@ -7,14 +7,8 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptDisabled'
-    ;
-  inherit (lib.types)
-    nullOr
-    str
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
+  inherit (lib.types) nullOr str;
 
   ghosttyDir = "ghostty";
   ghosttyConfigHome = "${config.xdg.configHome}/${ghosttyDir}";

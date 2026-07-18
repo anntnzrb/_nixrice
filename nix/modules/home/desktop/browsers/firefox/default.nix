@@ -30,9 +30,7 @@ in
   };
 
   config = lib.mkMerge [
-    {
-      _module.args.firefoxLib = firefoxLib;
-    }
+    { _module.args.firefoxLib = firefoxLib; }
     (lib.mkIf cfg.enable {
       assertions = [
         {

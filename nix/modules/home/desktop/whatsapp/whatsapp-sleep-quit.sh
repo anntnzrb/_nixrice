@@ -1,3 +1,4 @@
+# shellcheck shell=sh
 # WhatsApp sleep/display-sleep quit hook.
 #
 # Runs from sleepwatcher when macOS is about to sleep or when the display goes

@@ -6,16 +6,9 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptDisabled'
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
   inherit (lib.types) str ints;
-  inherit (config.home.sessionVariables)
-    TERMINAL
-    FILE
-    BROWSER
-    ;
+  inherit (config.home.sessionVariables) TERMINAL FILE BROWSER;
 
   cfg = config.${namespace}.desktop.sxhkd;
 in

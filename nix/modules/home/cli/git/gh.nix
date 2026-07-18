@@ -11,8 +11,6 @@ let
 in
 {
   config = mkIf cfg.enable {
-    programs.gh = mkIf cfg.gh.enable {
-      inherit (cfg.gh) enable;
-    };
+    programs.gh = mkIf cfg.gh.enable { inherit (cfg.gh) enable; };
   };
 }

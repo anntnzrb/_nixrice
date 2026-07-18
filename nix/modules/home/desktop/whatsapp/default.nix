@@ -6,10 +6,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptDisabled'
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
   inherit (lib.${namespace}.launchd.home) mkAgent;
   inherit (lib.types)
     bool

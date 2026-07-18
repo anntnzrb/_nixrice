@@ -19,11 +19,7 @@ in
 
   config = lib.mkIf cfg.enable {
     home.packages =
-      (lib.optionals cfg.desktop.enable [
-        pkgs.bitwarden-desktop
-      ])
-      ++ (lib.optionals cfg.cli.enable [
-        pkgs.bitwarden-cli
-      ]);
+      (lib.optionals cfg.desktop.enable [ pkgs.bitwarden-desktop ])
+      ++ (lib.optionals cfg.cli.enable [ pkgs.bitwarden-cli ]);
   };
 }

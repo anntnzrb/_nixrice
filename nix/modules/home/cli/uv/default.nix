@@ -14,9 +14,5 @@ in
     enable = mkOptDisabled';
   };
 
-  config = lib.mkIf cfg.enable {
-    programs.uv = {
-      inherit (cfg) enable;
-    };
-  };
+  config = lib.mkIf cfg.enable { programs.uv = { inherit (cfg) enable; }; };
 }

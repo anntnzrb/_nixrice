@@ -44,9 +44,7 @@ in
         appId = "com.openai.chat";
         run = [ (aerospaceLib.mvNodeToWorkspace 4) ];
       }
-      {
-        run = [ (aerospaceLib.mkLayout "floating") ];
-      }
+      { run = [ (aerospaceLib.mkLayout "floating") ]; }
     ];
   };
 }

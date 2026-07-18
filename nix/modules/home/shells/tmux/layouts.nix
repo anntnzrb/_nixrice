@@ -5,10 +5,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptEnabled'
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptEnabled';
 
   cfg = config.${namespace}.shells.tmux;
   cockpitCfg = cfg.layouts.cockpit;

@@ -26,11 +26,6 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.brave = {
-      inherit (cfg)
-        enable
-        commandLineArgs
-        ;
-    };
+    programs.brave = { inherit (cfg) enable commandLineArgs; };
   };
 }

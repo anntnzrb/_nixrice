@@ -15,7 +15,5 @@ in
     enable = mkOptDisabled';
   };
 
-  config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.janet ];
-  };
+  config = lib.mkIf cfg.enable { home.packages = [ pkgs.janet ]; };
 }

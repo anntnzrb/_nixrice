@@ -20,9 +20,7 @@ in
 
   config = lib.mkIf cfg.enable {
     home = {
-      packages = [
-        package
-      ];
+      packages = [ package ];
       shellAliases.v = lib.getExe package;
     };
   };

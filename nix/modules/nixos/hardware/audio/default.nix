@@ -6,10 +6,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOptDisabled'
-    on
-    ;
+  inherit (lib.${namespace}.module) mkOptDisabled' on;
 
   cfg = config.${namespace}.hardware.audio;
 in

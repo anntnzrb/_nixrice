@@ -18,9 +18,7 @@
           meta.title = namespace;
         };
 
-      overlays = [
-        inputs.nixpkgs-firefox-darwin.overlay
-      ];
+      overlays = [ inputs.nixpkgs-firefox-darwin.overlay ];
 
       channels-config.allowUnfree = true;
 
@@ -34,9 +32,13 @@
         {
           formatter = nixpkgs.writeShellApplication {
             name = "formatter";
-            runtimeInputs = pre-commit-hooks.enabledPackages;
+            runtimeInputs = [
+              pre-commit-hooks.config.gitPackage
+              pre-commit-hooks.config.package
+            ]
+            ++ pre-commit-hooks.enabledPackages;
             text = ''
-              pre-commit run --all-files -c ${pre-commit-hooks.config.configFile}
+              ${nixpkgs.lib.getExe pre-commit-hooks.config.package} run --all-files -c ${pre-commit-hooks.config.configFile}
             '';
           };
         };

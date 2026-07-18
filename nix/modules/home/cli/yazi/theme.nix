@@ -6,10 +6,7 @@
   ...
 }:
 let
-  inherit (inputs)
-    yazi-flavors
-    yazi-timu-macos
-    ;
+  inherit (inputs) yazi-flavors yazi-timu-macos;
 
   cfg = config.${namespace}.cli.yazi;
 

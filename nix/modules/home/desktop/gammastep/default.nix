@@ -5,14 +5,8 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptDisabled'
-    ;
-  inherit (lib.types)
-    nullOr
-    float
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
+  inherit (lib.types) nullOr float;
 
   cfg = config.${namespace}.desktop.gammastep;
 in

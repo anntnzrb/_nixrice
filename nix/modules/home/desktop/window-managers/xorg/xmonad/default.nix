@@ -6,15 +6,8 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptDisabled'
-    on
-    ;
-  inherit (lib.types)
-    listOf
-    str
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled' on;
+  inherit (lib.types) listOf str;
 
   cfg = config.${namespace}.desktop.window-managers.xorg.xmonad;
 in

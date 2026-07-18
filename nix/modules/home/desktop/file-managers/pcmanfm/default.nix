@@ -6,15 +6,8 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptDisabled'
-    on
-    ;
-  inherit (lib.types)
-    attrsOf
-    anything
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled' on;
+  inherit (lib.types) attrsOf anything;
 
   cfg = config.${namespace}.desktop.file-managers.pcmanfm;
 in

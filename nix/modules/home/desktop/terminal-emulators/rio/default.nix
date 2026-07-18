@@ -6,10 +6,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptDisabled'
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
   inherit (lib.${namespace}.fs) getModuleFiles;
 
   cfg = config.${namespace}.desktop.terminal-emulators.rio;

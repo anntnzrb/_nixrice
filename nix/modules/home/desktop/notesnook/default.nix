@@ -14,7 +14,5 @@ in
   options.${namespace}.desktop.notesnook = {
     enable = mkOptDisabled';
   };
-  config = lib.mkIf cfg.enable {
-    home.packages = [ pkgs.notesnook ];
-  };
+  config = lib.mkIf cfg.enable { home.packages = [ pkgs.notesnook ]; };
 }

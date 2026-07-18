@@ -178,12 +178,8 @@ let
   # Convert UI options to Firefox settings
   uiToSettings =
     cfg:
-    lib.optionalAttrs cfg.sidebar.enable {
-      "sidebar.revamp" = true;
-    }
-    // lib.optionalAttrs cfg.sidebar.verticalTabs {
-      "sidebar.verticalTabs" = true;
-    }
+    lib.optionalAttrs cfg.sidebar.enable { "sidebar.revamp" = true; }
+    // lib.optionalAttrs cfg.sidebar.verticalTabs { "sidebar.verticalTabs" = true; }
     // {
       "sidebar.expandOnHover" = cfg.sidebar.expandOnHover;
       "sidebar.visibility" = cfg.sidebar.visibility;

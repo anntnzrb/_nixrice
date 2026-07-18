@@ -1,7 +1,3 @@
-{
-  pkgs,
-  namespace,
-  ...
-}:
+{ pkgs, namespace, ... }:
 
 pkgs.${namespace}.rice
