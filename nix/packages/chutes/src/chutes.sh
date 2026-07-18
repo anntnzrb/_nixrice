@@ -28,11 +28,14 @@ Env: CHUTES_API_KEY (required), CHUTES_MODEL (optional)
 EOF
         exit 0
         ;;
+    *) ;;
 esac
+
+PAYLOAD=$(jq -n --arg m "${MODEL}" --arg p "${PROMPT}" \
+    '{model:$m,messages:[{role:"user",content:$p}]}')
 
 curl -s https://llm.chutes.ai/v1/chat/completions \
     -H "Authorization: Bearer ${CHUTES_API_KEY}" \
     -H "Content-Type: application/json" \
-    -d "$(jq -n --arg m "${MODEL}" --arg p "${PROMPT}" \
-        '{model:$m,messages:[{role:"user",content:$p}]}')" \
+    -d "${PAYLOAD}" \
     | jq -r '.choices[0].message.content // .error.message'
