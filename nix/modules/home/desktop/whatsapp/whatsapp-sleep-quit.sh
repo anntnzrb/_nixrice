@@ -33,15 +33,21 @@ timestamp() {
 }
 
 log() {
-    printf '%s %s\n' "$(timestamp)" "$*"
+    set +e
+    log_timestamp=$(timestamp)
+    set -e
+    printf '%s %s\n' "${log_timestamp}" "$*"
 }
 
 err() {
-    printf '%s ERROR: %s\n' "$(timestamp)" "$*" >&2
+    set +e
+    err_timestamp=$(timestamp)
+    set -e
+    printf '%s ERROR: %s\n' "${err_timestamp}" "$*" >&2
 }
 
 resolve_target_matches() {
-    /usr/bin/lsappinfo find "bundleID=$bundle_id" 2>/dev/null \
+    /usr/bin/lsappinfo find "bundleID=${bundle_id}" 2>/dev/null \
         | sed 's/ ASN:/\
 ASN:/g' \
         | grep '^ASN:' || true
@@ -49,7 +55,7 @@ ASN:/g' \
 
 read_target_info() {
     match=$1
-    /usr/bin/lsappinfo info "$match" 2>/dev/null || true
+    /usr/bin/lsappinfo info "${match}" 2>/dev/null || true
 }
 
 parse_asn() {
@@ -76,88 +82,90 @@ first_line() {
 }
 
 matches=$(resolve_target_matches)
-match_count=$(count_lines "$matches")
+match_count=$(count_lines "${matches}")
 
-[ "$match_count" -eq 0 ] && exit 0
+[ "${match_count}" -eq 0 ] && exit 0
 
-if [ "$match_count" -gt 1 ]; then
-    log "$app_name sleep hook found multiple matching app instances for bundle id $bundle_id; skipping"
+if [ "${match_count}" -gt 1 ]; then
+    log "${app_name} sleep hook found multiple matching app instances for bundle id ${bundle_id}; skipping"
     exit 0
 fi
 
-target_match=$(first_line "$matches")
-target_info=$(read_target_info "$target_match")
+target_match=$(first_line "${matches}")
+target_info=$(read_target_info "${target_match}")
 
-if [ -z "$target_info" ]; then
-    err "$app_name sleep hook could not read lsappinfo for bundle id $bundle_id"
+if [ -z "${target_info}" ]; then
+    err "${app_name} sleep hook could not read lsappinfo for bundle id ${bundle_id}"
     exit 0
 fi
 
-target_asn=$(parse_asn "$target_info")
-target_pid=$(parse_pid "$target_info")
-target_launch_time=$(parse_launch_time "$target_info")
+target_asn=$(parse_asn "${target_info}")
+target_pid=$(parse_pid "${target_info}")
+target_launch_time=$(parse_launch_time "${target_info}")
 
-if [ -z "$target_asn" ] || [ -z "$target_pid" ]; then
-    err "$app_name sleep hook failed to parse target instance details for bundle id $bundle_id"
+if [ -z "${target_asn}" ] || [ -z "${target_pid}" ]; then
+    err "${app_name} sleep hook failed to parse target instance details for bundle id ${bundle_id}"
     exit 0
 fi
 
-case "$mode" in
+case "${mode}" in
     term)
-        if kill -TERM "$target_pid" 2>/dev/null; then
-            log "$app_name sleep hook sent SIGTERM to pid=$target_pid asn=$target_asn"
+        if kill -TERM "${target_pid}" 2>/dev/null; then
+            log "${app_name} sleep hook sent SIGTERM to pid=${target_pid} asn=${target_asn}"
         else
-            err "$app_name sleep hook failed to send SIGTERM to pid=$target_pid asn=$target_asn"
+            err "${app_name} sleep hook failed to send SIGTERM to pid=${target_pid} asn=${target_asn}"
         fi
         ;;
 
     term-then-kill)
-        if ! kill -TERM "$target_pid" 2>/dev/null; then
-            err "$app_name sleep hook failed to send SIGTERM to pid=$target_pid asn=$target_asn"
+        if ! kill -TERM "${target_pid}" 2>/dev/null; then
+            err "${app_name} sleep hook failed to send SIGTERM to pid=${target_pid} asn=${target_asn}"
             exit 0
         fi
 
-        log "$app_name sleep hook sent SIGTERM to pid=$target_pid asn=$target_asn"
-        sleep "$kill_grace_seconds"
+        log "${app_name} sleep hook sent SIGTERM to pid=${target_pid} asn=${target_asn}"
+        sleep "${kill_grace_seconds}"
 
         matches_after=$(resolve_target_matches)
-        match_count_after=$(count_lines "$matches_after")
+        match_count_after=$(count_lines "${matches_after}")
 
-        if [ "$match_count_after" -eq 0 ]; then
-            log "$app_name sleep hook confirmed the app exited after SIGTERM"
+        if [ "${match_count_after}" -eq 0 ]; then
+            log "${app_name} sleep hook confirmed the app exited after SIGTERM"
             exit 0
         fi
 
-        if [ "$match_count_after" -gt 1 ]; then
-            log "$app_name sleep hook found multiple matching instances after SIGTERM; skipping SIGKILL"
+        if [ "${match_count_after}" -gt 1 ]; then
+            log "${app_name} sleep hook found multiple matching instances after SIGTERM; skipping SIGKILL"
             exit 0
         fi
 
-        target_match_after=$(first_line "$matches_after")
-        target_info_after=$(read_target_info "$target_match_after")
-        target_asn_after=$(parse_asn "$target_info_after")
-        target_pid_after=$(parse_pid "$target_info_after")
-        target_launch_time_after=$(parse_launch_time "$target_info_after")
+        target_match_after=$(first_line "${matches_after}")
+        target_info_after=$(read_target_info "${target_match_after}")
+        target_asn_after=$(parse_asn "${target_info_after}")
+        target_pid_after=$(parse_pid "${target_info_after}")
+        target_launch_time_after=$(parse_launch_time "${target_info_after}")
 
-        if [ -z "$target_asn_after" ] || [ -z "$target_pid_after" ]; then
-            err "$app_name sleep hook could not re-resolve the app after SIGTERM; skipping SIGKILL"
+        if [ -z "${target_asn_after}" ] || [ -z "${target_pid_after}" ]; then
+            err "${app_name} sleep hook could not re-resolve the app after SIGTERM; skipping SIGKILL"
             exit 0
         fi
 
-        if [ "$target_asn_after" != "$target_asn" ] || [ "$target_pid_after" != "$target_pid" ] || [ "$target_launch_time_after" != "$target_launch_time" ]; then
-            log "$app_name sleep hook detected a different app instance after SIGTERM; skipping SIGKILL"
+        if [ "${target_asn_after}" != "${target_asn}" ] || [ "${target_pid_after}" != "${target_pid}" ] || [ "${target_launch_time_after}" != "${target_launch_time}" ]; then
+            log "${app_name} sleep hook detected a different app instance after SIGTERM; skipping SIGKILL"
             exit 0
         fi
 
-        if ! kill -0 "$target_pid_after" 2>/dev/null; then
-            log "$app_name sleep hook confirmed the app exited after SIGTERM"
+        if ! kill -0 "${target_pid_after}" 2>/dev/null; then
+            log "${app_name} sleep hook confirmed the app exited after SIGTERM"
             exit 0
         fi
 
-        if kill -KILL "$target_pid_after" 2>/dev/null; then
-            log "$app_name sleep hook sent SIGKILL to pid=$target_pid_after asn=$target_asn_after after waiting ${kill_grace_seconds}s"
+        if kill -KILL "${target_pid_after}" 2>/dev/null; then
+            log "${app_name} sleep hook sent SIGKILL to pid=${target_pid_after} asn=${target_asn_after} after waiting ${kill_grace_seconds}s"
         else
-            err "$app_name sleep hook failed to send SIGKILL to pid=$target_pid_after asn=$target_asn_after"
+            err "${app_name} sleep hook failed to send SIGKILL to pid=${target_pid_after} asn=${target_asn_after}"
         fi
         ;;
+
+    *) ;;
 esac
