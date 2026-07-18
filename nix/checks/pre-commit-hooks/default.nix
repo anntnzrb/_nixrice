@@ -14,51 +14,45 @@ inputs.pre-commit-hooks.lib.${pkgs.stdenv.hostPlatform.system}.run {
   hooks = {
     # nix
     flake-checker = on // {
-      # Keep structural flake.lock checks, but don't fail CI on input age.
-      entry = "${pkgs.flake-checker}/bin/flake-checker --check-owner --check-supported";
-      files = "(^flake\\.nix$|^flake\\.lock$)";
-      pass_filenames = false;
+      args = [
+        "--check-outdated"
+        "--check-owner"
+        "--check-supported"
+      ];
     };
 
     nixfmt = on // {
+      args = [
+        "--strict"
+        "--verify"
+      ];
       settings.width = 80;
     };
 
     deadnix = on // {
+      args = [ "--warn-used-underscore" ];
+      settings.edit = true;
+    };
+
+    statix = on;
+
+    shfmt = on // {
       settings = {
-        edit = true;
-        noUnderscore = true;
+        language-dialect = "posix";
+        indent = 4;
+        binary-next-line = true;
+        case-indent = true;
       };
     };
 
-    statix =
-      let
-        cfg = (pkgs.formats.toml { }).generate "statix.toml" {
-          disabled = disabled-lints;
-        };
-        disabled-lints = [ "repeated_keys" ];
-      in
-      on
-      // {
-        package = pkgs.writeShellApplication {
-          name = "statix";
-          runtimeInputs = [ pkgs.statix ];
-          text = ''
-            shift
-            exec statix check --config ${cfg} "$@"
-          '';
-        };
-      };
-
-    shfmt = on // {
-      package = pkgs.writeShellApplication {
-        name = "shfmt";
-        runtimeInputs = [ pkgs.shfmt ];
-        text = ''
-          shift
-          exec shfmt --posix --write --simplify --indent 4 --binary-next-line --case-indent  "$@"
-        '';
-      };
+    shellcheck = on // {
+      args = [
+        "--enable=all"
+        "-a"
+        "-x"
+        "-P"
+        "SCRIPTDIR"
+      ];
     };
 
     # GH actions
