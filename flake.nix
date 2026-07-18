@@ -84,7 +84,6 @@
       # user for linting, formatting and more
       url = "github:cachix/git-hooks.nix/master";
       inputs.nixpkgs.follows = "nixpkgs-stable";
-      inputs.gitignore.follows = "";
     };
 
     fenix = {
