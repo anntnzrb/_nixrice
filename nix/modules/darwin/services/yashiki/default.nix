@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  inputs,
   config,
   namespace,
   ...
@@ -14,7 +13,7 @@ let
 
   cfg = config.${namespace}.desktop.window-managers.darwin.yashiki;
   aerospaceCfg = config.${namespace}.desktop.window-managers.darwin.aerospace;
-  yashikiPkg = inputs.nurpkgs.packages.${pkgs.stdenv.hostPlatform.system}.yashiki;
+  yashikiPkg = pkgs.yashiki;
 
   scriptSections = lib.filter (lines: lines != [ ]) [
     cfg._sections.layout

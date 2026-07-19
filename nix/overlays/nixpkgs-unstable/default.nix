@@ -12,6 +12,7 @@
     aerospace
     emacs-macport
     vscode
+    yashiki
     zed-editor
     ;
 }

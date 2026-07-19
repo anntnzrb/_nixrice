@@ -1,5 +1,4 @@
 {
-  inputs,
   lib,
   pkgs,
   config,
@@ -14,7 +13,7 @@ let
 
   cfg = config.${namespace}.desktop.window-managers.darwin.aerospace;
   yashikiCfg = config.${namespace}.desktop.window-managers.darwin.yashiki;
-  yashikiPkg = inputs.nurpkgs.packages.${pkgs.stdenv.hostPlatform.system}.yashiki;
+  yashikiPkg = pkgs.yashiki;
 in
 {
   imports = getModuleFiles {

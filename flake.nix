@@ -64,11 +64,6 @@
       url = "github:NixOS/nixpkgs/nixos-unstable";
     };
 
-    nurpkgs = {
-      # self hosted nix expressions
-      url = "github:anntnzrb/nurpkgs/main";
-    };
-
     # -------------------------------------------------------------------------
     # tools
     # -------------------------------------------------------------------------
