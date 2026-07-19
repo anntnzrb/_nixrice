@@ -50,9 +50,10 @@ in
   config.system.activationScripts.postActivation.text = lib.mkAfter ''
     brave_policy_dir="/Library/Managed Preferences"
     brave_policy_target="$brave_policy_dir/com.brave.Browser.plist"
-    brave_policy_source="${bravePolicyPlist}"
 
     ${lib.optionalString cfg.enable ''
+      brave_policy_source="${bravePolicyPlist}"
+
       mkdir -p "$brave_policy_dir"
 
       if [ ! -e "$brave_policy_target" ] || ! cmp -s "$brave_policy_source" "$brave_policy_target"; then
