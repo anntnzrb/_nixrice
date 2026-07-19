@@ -7,7 +7,6 @@ in
     suites.common = on;
 
     shells.zsh = on;
-    editors.emacs = on;
 
     desktop = {
       browsers.brave = on;
