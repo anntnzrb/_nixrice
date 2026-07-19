@@ -57,6 +57,39 @@ let
         config = serviceConfig;
       };
     };
+  mkStableExecutableAgent =
+    {
+      name,
+      source,
+      stablePath,
+      arguments ? [ ],
+      serviceConfig ? { },
+      dag,
+      enable ? true,
+    }:
+    lib.mkIf enable (
+      (mkHomeAgent {
+        inherit name enable;
+        serviceConfig = serviceConfig // {
+          ProgramArguments = [ stablePath ] ++ arguments;
+        };
+      })
+      // {
+        home.activation."${name}-stable-executable" =
+          dag.entryBetween [ "setupLaunchAgents" ] [ "writeBoundary" ]
+            ''
+              stable_path=${lib.escapeShellArg stablePath}
+              stable_dir="$(dirname "$stable_path")"
+              tmp_path="$stable_path.tmp.$$"
+              trap 'rm -f "$tmp_path"' EXIT
+
+              run mkdir -p "$stable_dir"
+              run cp ${lib.escapeShellArg source} "$tmp_path"
+              run chmod 0755 "$tmp_path"
+              run mv -f "$tmp_path" "$stable_path"
+            '';
+      }
+    );
 in
 {
   launchd = {
@@ -67,6 +100,7 @@ in
 
     home = {
       mkAgent = mkHomeAgent;
+      inherit mkStableExecutableAgent;
     };
   };
 }
