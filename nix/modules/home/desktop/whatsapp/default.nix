@@ -7,7 +7,7 @@
 }:
 let
   inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
-  inherit (lib.${namespace}.launchd.home) mkAgent;
+  inherit (lib.${namespace}.launchd.home) mkAgent mkStableExecutableAgent;
   inherit (lib.types)
     bool
     enum
@@ -23,6 +23,7 @@ let
   sleepEnabled = cfg.enable && sleepCfg.enable;
   anyEnabled = idleEnabled || sleepEnabled;
   homeDir = config.home.homeDirectory;
+  sleepwatcherPath = "${homeDir}/Library/Application Support/rice/bin/sleepwatcher";
 
   stateDirDefault = "${homeDir}/Library/Application Support/rice/whatsapp-idle-guard";
   logDirDefault = "${homeDir}/Library/Logs/rice";
@@ -152,6 +153,7 @@ in
               ${lib.escapeShellArg idleCfg.stateDir} \
               ${lib.escapeShellArg idleCfg.logDir}
           '';
+
     })
 
     (lib.mkIf idleEnabled (mkAgent {
@@ -167,13 +169,12 @@ in
       };
     }))
 
-    (lib.mkIf sleepEnabled (mkAgent {
+    (mkStableExecutableAgent {
       name = "whatsapp-sleepwatcher";
-      serviceConfig = {
-        ProgramArguments = [
-          "${pkgs.sleepwatcher}/bin/sleepwatcher"
-        ]
-        ++ lib.optionals sleepCfg.onSystemSleep [
+      source = "${pkgs.sleepwatcher}/bin/sleepwatcher";
+      stablePath = sleepwatcherPath;
+      arguments =
+        lib.optionals sleepCfg.onSystemSleep [
           "-s"
           sleepQuitCommand
         ]
@@ -181,6 +182,7 @@ in
           "-S"
           sleepQuitCommand
         ];
+      serviceConfig = {
         KeepAlive = true;
         RunAtLoad = true;
         ProcessType = "Background";
@@ -188,6 +190,8 @@ in
         StandardOutPath = "${idleCfg.logDir}/whatsapp-sleepwatcher.log";
         StandardErrorPath = "${idleCfg.logDir}/whatsapp-sleepwatcher.error.log";
       };
-    }))
+      dag = config.lib.dag;
+      enable = sleepEnabled;
+    })
   ];
 }
