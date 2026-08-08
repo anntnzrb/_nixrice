@@ -23,7 +23,7 @@ in
             };
             spinner.rate = 100;
             git = {
-              autoFetch = true;
+              autoFetch = false;
               autoRefresh = true;
               fetchAll = false;
             };
