@@ -11,6 +11,7 @@
     aider-chat
     aerospace
     emacs-macport
+    lazygit
     vscode
     yashiki
     zed-editor
