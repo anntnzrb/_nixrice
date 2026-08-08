@@ -19,6 +19,5 @@ in
       };
     };
 
-    services.tailscale = on;
   };
 }
