@@ -1,15 +1,15 @@
 ## AGENTS.md - System Overview
 
-This repo is a Nix Flake–driven dotfiles system built atop `snowfall-lib`. Think in layers: reusable modules → system definitions → user compositions.
+This repo is a Nix Flake-driven dotfiles system built on a repository-owned explicit composition layer in `nix/composition.nix`.
 
 ### Architecture
-- `flake.nix` delegates to `snowfall-lib.mkFlake` with `src = ./nix`
-- Modules implement features; systems/homes compose them via toggles
-- Cross-module integration via explicit namespace
+- `flake.nix` assembles native NixOS, nix-darwin, Home Manager, package, check, shell, and formatter outputs through the explicit composition layer.
+- Modules implement features; target-first systems/homes compose them via toggles.
+- Cross-module integration uses the `liberion` namespace and explicit module arguments.
 
 ### Core Principles
 1. **Separation of concerns**: Logic in modules, toggles in compositions
-2. **Conditional activation**: All config gated by `lib.mkIf cfg.enable` 
+2. **Conditional activation**: All config gated by `lib.mkIf cfg.enable`
 3. **Namespace isolation**: Use prefix exclusively
 4. **Fail-safe defaults**: Features disabled by default, explicit opt-in
 
