@@ -3,46 +3,33 @@
 
   outputs =
     inputs:
-    inputs.snowfall-lib.mkFlake {
-      inherit inputs;
-
-      src = ./nix;
-
-      snowfall =
-        let
-          namespace = "liberion";
-        in
-        {
-          inherit namespace;
-          meta.name = namespace;
-          meta.title = namespace;
-        };
-
-      overlays = [ inputs.nixpkgs-firefox-darwin.overlay ];
-
-      channels-config.allowUnfree = true;
-
-      outputs-builder =
-        channels:
-        let
-          inherit (channels) nixpkgs;
-          inherit (nixpkgs.stdenv.hostPlatform) system;
-          inherit (inputs.self.checks.${system}) pre-commit-hooks;
-        in
-        {
-          formatter = nixpkgs.writeShellApplication {
-            name = "formatter";
-            runtimeInputs = [
-              pre-commit-hooks.config.gitPackage
-              pre-commit-hooks.config.package
-            ]
-            ++ pre-commit-hooks.enabledPackages;
-            text = ''
-              ${nixpkgs.lib.getExe pre-commit-hooks.config.package} run --all-files -c ${pre-commit-hooks.config.configFile}
-            '';
-          };
-        };
-    };
+    let
+      outputs = {
+        inherit (composition.systemOutputs)
+          darwinConfigurations
+          nixosConfigurations
+          doConfigurations
+          isoConfigurations
+          ;
+        inherit (composition.homeOutputs) homeConfigurations;
+        inherit (composition.moduleOutputs) nixosModules darwinModules homeModules;
+        inherit (composition) pkgs snowfall templates;
+        lib = composition.exportedLib;
+        overlays = composition.exportedOverlays;
+        packages = composition.packageOutputs;
+        checks = composition.checkOutputs;
+        devShells = composition.shellOutputs;
+        formatter = composition.formatterOutputs;
+      };
+      selfInput = outputs // {
+        outPath = ./.;
+      };
+      composition = import ./nix/composition.nix {
+        inherit inputs;
+        self = selfInput;
+      };
+    in
+    outputs;
 
   inputs = {
     # -------------------------------------------------------------------------
@@ -67,14 +54,6 @@
     # -------------------------------------------------------------------------
     # tools
     # -------------------------------------------------------------------------
-
-    snowfall-lib = {
-      # snowfall-lib is an opinionated flake framework
-      # it forces a predefined schema
-      # url = "github:snowfallorg/lib/main";
-      url = "github:anntnzrb/snowfall-lib/main";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
-    };
 
     pre-commit-hooks = {
       # run hooks before committing
@@ -103,12 +82,6 @@
     # -------------------------------------------------------------------------
     # systems
     # -------------------------------------------------------------------------
-
-    nixos-generators = {
-      # is a collection of image builders (iso, sd, vm, ...)
-      url = "github:nix-community/nixos-generators/master";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
-    };
 
     nixos-hardware = {
       # is a collection of hardware modules for systems
