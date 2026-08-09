@@ -16,8 +16,6 @@ in
 
   config = lib.mkIf cfg.enable {
     ${namespace}.cli."llm-agents" = {
-      chutes = on;
-      claude = on;
       codex = on;
       crush = on;
       droid = on;

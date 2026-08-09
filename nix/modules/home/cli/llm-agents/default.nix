@@ -46,16 +46,6 @@ let
       type = "npm";
       package = "opencode-ai";
     };
-    claude = {
-      type = "script";
-      runner = bunExe;
-      script = "${config.home.homeDirectory}/.config/agents/tools/claude/bin/lib/claude.ts";
-    };
-    chutes = {
-      type = "script";
-      runner = "${pkgs.runtimeShell}";
-      script = "${config.home.homeDirectory}/.config/agents/tools/chutes/bin/chutes";
-    };
     pi = {
       type = "npm";
       package = "@earendil-works/pi-coding-agent";
