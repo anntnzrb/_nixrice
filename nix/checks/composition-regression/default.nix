@@ -136,7 +136,6 @@ let
 
   actualPkgs = outputs.pkgs;
   # R0a captured channel names, not leaf package-set values. Do not force leaf values:
-  # current nixpkgs-unstable does not evaluate x86_64-darwin, and R0a recorded no leaf types.
   pkgsChannelsPass =
     typeOf actualPkgs == expected.pkgs.type
     && builtins.attrNames actualPkgs == expected.realSystems

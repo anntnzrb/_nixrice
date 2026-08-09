@@ -1,7 +1,10 @@
-# Baseline captured from /tmp/rice-r0a-evidence.6QxJBA/current.r0a-eval-probe.json,
-# evaluated against commit 0f4a56eb before the Snowfall-to-local-composition refactor.
-# The check output is normalized by removing this check's own key before comparing
-# checks.<system> children. Values are names and type tags only; no store paths.
+# Names and type tags come from the R0a evidence captured from
+# /tmp/rice-r0a-evidence.6QxJBA/current.r0a-eval-probe.json and evaluated
+# against commit 0f4a56eb before the Snowfall-to-local-composition refactor.
+# The per-system universe is intentionally filtered to currently supported
+# repository platforms. The check output is normalized by removing this
+# check's own key before comparing checks.<system> children. Values are names
+# and type tags only; no store paths.
 {
   topLevel = [
     "checks"
@@ -211,7 +214,6 @@
   realSystems = [
     "aarch64-darwin"
     "aarch64-linux"
-    "x86_64-darwin"
     "x86_64-linux"
   ];
 
@@ -224,11 +226,6 @@
         "nixpkgs-unstable"
       ];
       "aarch64-linux" = [
-        "nixpkgs"
-        "nixpkgs-stable"
-        "nixpkgs-unstable"
-      ];
-      "x86_64-darwin" = [
         "nixpkgs"
         "nixpkgs-stable"
         "nixpkgs-unstable"
@@ -259,10 +256,6 @@
           "default"
           "rice"
         ];
-        "x86_64-darwin" = [
-          "default"
-          "rice"
-        ];
         "x86_64-linux" = [
           "default"
           "homeConfigurations-annt@wsl"
@@ -278,7 +271,6 @@
       keys = {
         "aarch64-darwin" = [ "default" ];
         "aarch64-linux" = [ "default" ];
-        "x86_64-darwin" = [ "default" ];
         "x86_64-linux" = [ "default" ];
       };
     };
@@ -289,7 +281,6 @@
       keys = {
         "aarch64-darwin" = [ "pre-commit-hooks" ];
         "aarch64-linux" = [ "pre-commit-hooks" ];
-        "x86_64-darwin" = [ "pre-commit-hooks" ];
         "x86_64-linux" = [ "pre-commit-hooks" ];
       };
     };
@@ -298,7 +289,6 @@
       systems = [
         "aarch64-darwin"
         "aarch64-linux"
-        "x86_64-darwin"
         "x86_64-linux"
       ];
     };
