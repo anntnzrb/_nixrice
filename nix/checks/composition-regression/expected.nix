@@ -1,21 +1,17 @@
-# Names and type tags come from the R0a evidence captured from
-# /tmp/rice-r0a-evidence.6QxJBA/current.r0a-eval-probe.json and evaluated
-# against commit 0f4a56eb before the Snowfall-to-local-composition refactor.
-# The per-system universe is intentionally filtered to currently supported
-# repository platforms. The check output is normalized by removing this
-# check's own key before comparing checks.<system> children. Values are names
-# and type tags only; no store paths.
+# This manifest records the current composition contract from historical R0a
+# output/type evidence (commit 0f4a56eb), with the intentional removals of the
+# retired DigitalOcean and ISO target families applied.
+# The per-system universe is intentionally limited to currently supported
+# repository platforms. Values are names and type tags only; no store paths.
 {
   topLevel = [
     "checks"
     "darwinConfigurations"
     "darwinModules"
     "devShells"
-    "doConfigurations"
     "formatter"
     "homeConfigurations"
     "homeModules"
-    "isoConfigurations"
     "lib"
     "nixosConfigurations"
     "nixosModules"
@@ -31,11 +27,9 @@
     darwinConfigurations = "set";
     darwinModules = "set";
     devShells = "set";
-    doConfigurations = "set";
     formatter = "set";
     homeConfigurations = "set";
     homeModules = "set";
-    isoConfigurations = "set";
     lib = "set";
     nixosConfigurations = "set";
     nixosModules = "set";
@@ -62,14 +56,6 @@
         "zadar"
       ];
       valueType = "set";
-    };
-    do = {
-      keys = [ "nista" ];
-      valueType = "derivation";
-    };
-    iso = {
-      keys = [ "nomad" ];
-      valueType = "derivation";
     };
     homes = {
       keys = [

@@ -86,8 +86,6 @@ let
   baseSystemMetadata = spec: {
     inherit (spec) target;
     inherit (spec) system;
-    inherit (spec) format;
-    inherit (spec) virtual;
     host = spec.name;
     systems = systemRecords;
     inputs = flakeInputs;

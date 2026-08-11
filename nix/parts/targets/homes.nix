@@ -35,8 +35,6 @@ let
       metadata = {
         inherit (home) system;
         inherit (home) target;
-        format = "home";
-        virtual = false;
         inherit (home) name;
         inherit (home) user;
         inherit (home) host;

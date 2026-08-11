@@ -158,12 +158,7 @@ in
       formatter = formatterForSystem system checks.pre-commit-hooks;
     };
   flake = {
-    inherit (systemOutputs)
-      darwinConfigurations
-      nixosConfigurations
-      doConfigurations
-      isoConfigurations
-      ;
+    inherit (systemOutputs) darwinConfigurations nixosConfigurations;
     inherit (homeOutputs) homeConfigurations;
     inherit (moduleOutputs) nixosModules darwinModules homeModules;
     lib = exportedLib;

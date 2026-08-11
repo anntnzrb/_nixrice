@@ -95,37 +95,15 @@ let
 
   targetInfo =
     target:
+    assert lib.assertMsg (builtins.elem target supportedSystems)
+      "Unsupported system target '${target}'. Supported targets: ${lib.concatStringsSep ", " supportedSystems}.";
     let
-      virtualMatch = builtins.match "^([^-]+)-(do|iso)$" target;
-      type = if virtualMatch == null then null else builtins.elemAt virtualMatch 1;
-      darwin = type == null && lib.hasSuffix "-darwin" target;
-      resolved =
-        if type == null then target else "${builtins.elemAt virtualMatch 0}-linux";
+      darwin = lib.hasSuffix "-darwin" target;
     in
     {
-      system = resolved;
-      format =
-        if type != null then
-          type
-        else if darwin then
-          "darwin"
-        else
-          "linux";
-      virtual = type != null;
-      kind =
-        if type != null then
-          "image"
-        else if darwin then
-          "darwin"
-        else
-          "nixos";
-      output =
-        if type != null then
-          "${type}Configurations"
-        else if darwin then
-          "darwinConfigurations"
-        else
-          "nixosConfigurations";
+      system = target;
+      kind = if darwin then "darwin" else "nixos";
+      output = if darwin then "darwinConfigurations" else "nixosConfigurations";
     };
 
   systemRecords =
@@ -138,20 +116,6 @@ let
     assert lib.assertMsg (
       builtins.length (lib.unique names) == builtins.length names
     ) "Duplicate normalized system names are not supported.";
-    assert lib.assertMsg
-      (builtins.all (
-        record:
-        let
-          hasVirtualSuffix =
-            lib.hasSuffix "-do" record.target || lib.hasSuffix "-iso" record.target;
-        in
-        !hasVirtualSuffix
-        || (record.virtual && builtins.elem record.system supportedSystems)
-      ) records)
-      "Virtual targets must match <architecture>-do|iso for a supported Linux system.";
-    assert lib.assertMsg (builtins.all (
-      record: builtins.elem record.system supportedSystems
-    ) records) "System targets must resolve to supported systems.";
     lib.listToAttrs (
       builtins.map (record: {
         inherit (record) name;

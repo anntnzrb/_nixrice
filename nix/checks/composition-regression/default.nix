@@ -37,11 +37,9 @@ let
     darwinConfigurations = expected.configurations.darwin.keys;
     darwinModules = expected.moduleMaps.darwin;
     devShells = expected.supportedSystems;
-    doConfigurations = expected.configurations.do.keys;
     formatter = expected.supportedSystems;
     homeConfigurations = expected.configurations.homes.keys;
     homeModules = expected.moduleMaps.home;
-    isoConfigurations = expected.configurations.iso.keys;
     lib = expected.lib.keys;
     nixosConfigurations = expected.configurations.nixos.keys;
     nixosModules = expected.moduleMaps.nixos;
@@ -135,7 +133,7 @@ let
     };
 
   actualPkgs = outputs.pkgs;
-  # R0a captured channel names, not leaf package-set values. Do not force leaf values:
+  # The manifest captures channel names, not leaf package-set values. Do not force leaf values:
   pkgsChannelsPass =
     typeOf actualPkgs == expected.pkgs.type
     && builtins.attrNames actualPkgs == expected.supportedSystems
@@ -244,14 +242,6 @@ let
       pass = configurationSurface "nixosConfigurations" expected.configurations.nixos;
     }
     {
-      label = "DigitalOcean virtual configuration name and derivation type";
-      pass = configurationSurface "doConfigurations" expected.configurations.do;
-    }
-    {
-      label = "ISO virtual configuration name and derivation type";
-      pass = configurationSurface "isoConfigurations" expected.configurations.iso;
-    }
-    {
       label = "Home Manager configuration names and types";
       pass = configurationSurface "homeConfigurations" expected.configurations.homes;
     }
@@ -323,18 +313,6 @@ let
         &&
           outputs.nixosConfigurations.zadar.pkgs.stdenv.hostPlatform.system
           == "x86_64-linux";
-    }
-    {
-      label = "virtual outputs retain Linux derivation shape without realization";
-      pass =
-        virtualShapePass outputs.doConfigurations.nista
-        && virtualShapePass outputs.isoConfigurations.nomad;
-    }
-    {
-      label = "virtual outputs are absent from nixosConfigurations";
-      pass =
-        !(outputs.nixosConfigurations ? nista)
-        && !(outputs.nixosConfigurations ? nomad);
     }
     {
       label = "hosted Home Manager users are associated with beirut/incheon/zadar";

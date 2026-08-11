@@ -47,7 +47,6 @@ let
                   inherit (home) name;
                   inherit (home) user;
                   inherit (home) host;
-                  format = "home";
                 }
               ))
             ];
@@ -90,43 +89,6 @@ let
       };
     };
 
-  buildVirtual =
-    spec:
-    let
-      metadata = baseSystemMetadata spec;
-      context = packageContexts.${spec.system};
-      virtualModules =
-        if spec.format == "iso" then
-          [
-            {
-              imports = [ "${nixpkgs}/nixos/modules/installer/cd-dvd/iso-image.nix" ];
-              isoImage.makeEfiBootable = true;
-              isoImage.makeUsbBootable = true;
-            }
-          ]
-        else
-          [ ];
-      config = nixpkgs.lib.nixosSystem {
-        inherit (spec) system;
-        inherit (context) pkgs;
-        lib = builderLib;
-        modules = [
-          (instantiateModule spec.path metadata)
-        ]
-        ++ platformModules "nixos" metadata
-        ++ virtualModules;
-        specialArgs = metadata;
-      };
-    in
-    if spec.format == "do" then
-      assert lib.assertMsg (config.config.system.build.images ? digital-ocean)
-        "Virtual system images require nixpkgs with system.build.images.digital-ocean.";
-      config.config.system.build.images.digital-ocean
-    else if spec.format == "iso" then
-      config.config.system.build.isoImage
-    else
-      throw "Unsupported virtual system format '${spec.format}'.";
-
   buildSystem =
     spec:
     let
@@ -140,9 +102,7 @@ let
         if spec.kind == "darwin" then "darwin" else "nixos"
       ) metadata;
     in
-    if spec.virtual then
-      buildVirtual spec
-    else if spec.kind == "darwin" then
+    if spec.kind == "darwin" then
       inputs.darwin.lib.darwinSystem {
         inherit (spec) system;
         inherit (context) pkgs;
@@ -174,8 +134,6 @@ let
     {
       darwinConfigurations = namesFor "darwinConfigurations";
       nixosConfigurations = namesFor "nixosConfigurations";
-      doConfigurations = namesFor "doConfigurations";
-      isoConfigurations = namesFor "isoConfigurations";
     };
 in
 {
