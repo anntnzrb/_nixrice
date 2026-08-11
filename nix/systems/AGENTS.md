@@ -23,10 +23,6 @@ nix/systems/
 - `x86_64-linux/<host>` - Full NixOS installations
 - `aarch64-darwin/<host>` - macOS systems
 
-**Special Purpose:**
-- `x86_64-do/<host>` - Digital Ocean deployments
-- `x86_64-iso/<host>` - Live ISO generations
-
 ### 3. Configuration Philosophy
 
 System configurations are **declarative host definitions** that focus on:
