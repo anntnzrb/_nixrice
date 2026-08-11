@@ -1,19 +1,19 @@
-{ config, inputs, ... }:
+{
+  repositoryInputs,
+  builderLib,
+  exportedLib,
+  flakeInputs,
+  homeOutputs,
+  homeRecords,
+  moduleOutputs,
+  namespace,
+  packageContexts,
+  sourceRoot,
+  supportedSystems,
+  systemOutputs,
+}:
 let
-  composition = config.liberion.composition;
-  inherit (inputs.nixpkgs) lib;
-  inherit (composition)
-    builderLib
-    contexts
-    exportedLib
-    flakeInputs
-    homeOutputs
-    moduleOutputs
-    namespace
-    realSystems
-    sourceRoot
-    systemOutputs
-    ;
+  inherit (repositoryInputs.nixpkgs) lib;
 
   checkEntrypoint = sourceRoot + "/checks/pre-commit-hooks/default.nix";
   compositionRegressionEntrypoint =
@@ -23,7 +23,7 @@ let
   checkForSystem =
     system:
     let
-      context = contexts.${system};
+      context = packageContexts.${system};
       preCommit = import checkEntrypoint;
       compositionRegression = import compositionRegressionEntrypoint;
       args = {
@@ -47,7 +47,7 @@ let
   shellForSystem =
     system:
     let
-      context = contexts.${system};
+      context = packageContexts.${system};
       value = import shellEntrypoint;
       args = {
         inherit (context) pkgs;
@@ -62,10 +62,9 @@ let
     };
 
   formatterForSystem =
-    system:
+    system: preCommit:
     let
-      context = contexts.${system};
-      preCommit = flakeInputs.self.checks.${system}.pre-commit-hooks;
+      context = packageContexts.${system};
     in
     context.pkgs.writeShellApplication {
       name = "formatter";
@@ -85,17 +84,15 @@ let
       builtins.map
         (home: {
           name = "homeConfigurations-${home.name}";
-          value = flakeInputs.self.homeConfigurations.${home.name}.activationPackage;
+          value = homeOutputs.homeConfigurations.${home.name}.activationPackage;
         })
         (
-          builtins.filter (home: home.system == system) (
-            builtins.attrValues composition.homeRecords
-          )
+          builtins.filter (home: home.system == system) (builtins.attrValues homeRecords)
         )
     );
 
   packageForSystem =
-    system: contexts.${system}.packageNamespace // activationAliases system;
+    system: packageContexts.${system}.packageNamespace // activationAliases system;
 
   exportedOverlays =
     let
@@ -103,7 +100,7 @@ let
         name: final: previous:
         let
           system = final.stdenv.hostPlatform.system;
-          packages = contexts.${system}.packageNamespace;
+          packages = packageContexts.${system}.packageNamespace;
         in
         {
           ${namespace} = (previous.${namespace} or { }) // {
@@ -114,10 +111,10 @@ let
         final: previous:
         let
           system = final.stdenv.hostPlatform.system;
-          context = contexts.${system};
+          context = packageContexts.${system};
           overlay = import (sourceRoot + "/overlays/nixpkgs-unstable/default.nix") {
             inherit (context) channels;
-            inputs = flakeInputs;
+            inputs = repositoryInputs;
             lib = builderLib;
             inherit namespace;
           };
@@ -148,41 +145,40 @@ let
     };
 in
 {
-  config = {
-    systems = realSystems;
-    perSystem = { system, ... }: {
-      packages = packageForSystem system;
+  systems = supportedSystems;
+  perSystem =
+    { system, ... }:
+    let
       checks = checkForSystem system;
+    in
+    {
+      packages = packageForSystem system;
+      inherit checks;
       devShells = shellForSystem system;
-      formatter = formatterForSystem system;
+      formatter = formatterForSystem system checks.pre-commit-hooks;
     };
-
-    flake = {
-      inherit (systemOutputs)
-        darwinConfigurations
-        nixosConfigurations
-        doConfigurations
-        isoConfigurations
-        ;
-      inherit (homeOutputs) homeConfigurations;
-      inherit (moduleOutputs) nixosModules darwinModules homeModules;
-      lib = exportedLib;
-      overlays = exportedOverlays;
-      pkgs = lib.genAttrs realSystems (system: contexts.${system}.channels);
-      snowfall = {
-        config = {
-          inherit namespace;
-          src = sourceRoot;
-        };
-        raw-config = { inherit namespace; };
-        user-lib = exportedLib;
+  flake = {
+    inherit (systemOutputs)
+      darwinConfigurations
+      nixosConfigurations
+      doConfigurations
+      isoConfigurations
+      ;
+    inherit (homeOutputs) homeConfigurations;
+    inherit (moduleOutputs) nixosModules darwinModules homeModules;
+    lib = exportedLib;
+    overlays = exportedOverlays;
+    pkgs = lib.genAttrs supportedSystems (
+      system: packageContexts.${system}.channels
+    );
+    snowfall = {
+      config = {
+        inherit namespace;
+        src = sourceRoot;
       };
-      templates = { };
+      raw-config = { inherit namespace; };
+      user-lib = exportedLib;
     };
-
-    processedFlake = builtins.removeAttrs config.flake [
-      "apps"
-      "legacyPackages"
-    ];
+    templates = { };
   };
 }

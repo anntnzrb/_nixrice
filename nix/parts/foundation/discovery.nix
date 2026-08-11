@@ -1,45 +1,46 @@
-{ config, inputs, ... }:
+{ inputs, processedFlake }:
 let
   namespace = "liberion";
-  realSystems = [
+  supportedSystems = [
     "aarch64-linux"
     "aarch64-darwin"
     "x86_64-linux"
   ];
   repositoryRoot = ../../..;
-  root = repositoryRoot + "/nix";
-  sourceRoot = root;
-  inherit (inputs) nixpkgs;
+  nixRoot = repositoryRoot + "/nix";
+  sourceRoot = nixRoot;
+  repositoryInputs = builtins.removeAttrs inputs [ "self" ];
+  inherit (repositoryInputs) nixpkgs;
   inherit (nixpkgs) lib;
-  flakeInputs = (builtins.removeAttrs inputs [ "self" ]) // {
-    self = config.processedFlake // {
+  flakeInputs = repositoryInputs // {
+    self = processedFlake // {
       outPath = repositoryRoot;
     };
   };
 
   directDirectories =
-    root:
+    directory:
     let
-      entries = builtins.readDir root;
+      entries = builtins.readDir directory;
     in
     builtins.filter (name: entries.${name} == "directory") (
       builtins.attrNames entries
     );
 
   recursiveDefaultFiles =
-    root:
+    directory:
     let
       walk =
-        directory:
+        currentDirectory:
         let
-          entries = builtins.readDir directory;
+          entries = builtins.readDir currentDirectory;
           names = builtins.attrNames entries;
         in
         builtins.concatLists (
           builtins.map (
             name:
             let
-              path = directory + "/${name}";
+              path = currentDirectory + "/${name}";
               kind = entries.${name};
             in
             if kind == "directory" then
@@ -51,18 +52,18 @@ let
           ) names
         );
     in
-    walk root;
+    walk directory;
 
   targetFirstRecords =
-    root:
+    targetsRoot:
     let
-      targetNames = directDirectories root;
+      targetNames = directDirectories targetsRoot;
     in
     builtins.concatLists (
       builtins.map (
         target:
         let
-          targetRoot = root + "/${target}";
+          targetRoot = targetsRoot + "/${target}";
           entries = builtins.readDir targetRoot;
           hosts = builtins.filter (name: entries.${name} == "directory") (
             builtins.attrNames entries
@@ -130,7 +131,7 @@ let
   systemRecords =
     let
       records = builtins.map (record: record // targetInfo record.target) (
-        targetFirstRecords (root + "/systems")
+        targetFirstRecords (nixRoot + "/systems")
       );
       names = builtins.map (record: record.name) records;
     in
@@ -144,12 +145,13 @@ let
           hasVirtualSuffix =
             lib.hasSuffix "-do" record.target || lib.hasSuffix "-iso" record.target;
         in
-        !hasVirtualSuffix || (record.virtual && builtins.elem record.system realSystems)
+        !hasVirtualSuffix
+        || (record.virtual && builtins.elem record.system supportedSystems)
       ) records)
       "Virtual targets must match <architecture>-do|iso for a supported Linux system.";
     assert lib.assertMsg (builtins.all (
-      record: builtins.elem record.system realSystems
-    ) records) "System targets must resolve to supported realSystems.";
+      record: builtins.elem record.system supportedSystems
+    ) records) "System targets must resolve to supported systems.";
     lib.listToAttrs (
       builtins.map (record: {
         inherit (record) name;
@@ -159,12 +161,12 @@ let
 
   homeRecords =
     let
-      targets = directDirectories (root + "/homes");
+      targets = directDirectories (nixRoot + "/homes");
       records = builtins.concatLists (
         builtins.map (
           target:
           let
-            targetRoot = root + "/homes/${target}";
+            targetRoot = nixRoot + "/homes/${target}";
             entries = builtins.readDir targetRoot;
             children = builtins.filter (name: entries.${name} == "directory") (
               builtins.attrNames entries
@@ -197,8 +199,8 @@ let
       );
     in
     assert lib.assertMsg (builtins.all (
-      target: builtins.elem target realSystems
-    ) targets) "Home targets must belong to supported realSystems.";
+      target: builtins.elem target supportedSystems
+    ) targets) "Home targets must belong to supported systems.";
     lib.listToAttrs (
       builtins.map (record: {
         inherit (record) name;
@@ -217,7 +219,7 @@ let
         if builtins.isFunction value then value { lib = builderLib; } else value;
     in
     lib.foldl' (acc: value: acc // value) { } (
-      builtins.map importHelper (recursiveDefaultFiles (root + "/lib"))
+      builtins.map importHelper (recursiveDefaultFiles (nixRoot + "/lib"))
     );
 
   exportedLib = {
@@ -234,11 +236,11 @@ let
   };
 
   homeLib = builderLib.extend (
-    _final: _previous: { hm = inputs.home-manager.lib.hm; }
+    _final: _previous: { hm = repositoryInputs.home-manager.lib.hm; }
   );
 
-  moduleWrapper =
-    path: metadata: args:
+  instantiateModule =
+    packageContexts: path: metadata: args:
     let
       imported = import path;
       moduleArgs =
@@ -251,7 +253,7 @@ let
           }
           // (
             if metadata ? system then
-              { pkgs = config.liberion.composition.contexts.${metadata.system}.pkgs; }
+              { pkgs = packageContexts.${metadata.system}.pkgs; }
             else
               { }
           )
@@ -264,15 +266,15 @@ let
     };
 
   modulePaths = {
-    nixos = recursiveDefaultFiles (root + "/modules/nixos");
-    darwin = recursiveDefaultFiles (root + "/modules/darwin");
-    home = recursiveDefaultFiles (root + "/modules/home");
+    nixos = recursiveDefaultFiles (nixRoot + "/modules/nixos");
+    darwin = recursiveDefaultFiles (nixRoot + "/modules/darwin");
+    home = recursiveDefaultFiles (nixRoot + "/modules/home");
   };
 
   moduleName =
-    root: path:
+    modulesRoot: path:
     let
-      rootText = toString root;
+      rootText = toString modulesRoot;
       pathText = toString path;
       relative = builtins.substring ((builtins.stringLength rootText) + 1) (
         (builtins.stringLength pathText) - (builtins.stringLength rootText) - 1
@@ -281,41 +283,47 @@ let
     in
     if relative == "default.nix" then "" else lib.removeSuffix suffix relative;
 
-  moduleMap = platform: {
-    "${platform}Modules" = lib.listToAttrs (
-      builtins.map (path: {
-        name = moduleName (root + "/modules/${platform}") path;
-        value = moduleWrapper path { };
-      }) modulePaths.${platform}
-    );
-  };
+  moduleOutputs =
+    instantiateModule:
+    let
+      moduleMap = platform: {
+        "${platform}Modules" = lib.listToAttrs (
+          builtins.map (path: {
+            name = moduleName (nixRoot + "/modules/${platform}") path;
+            value = instantiateModule path { };
+          }) modulePaths.${platform}
+        );
+      };
+    in
+    moduleMap "nixos" // moduleMap "darwin" // moduleMap "home";
 
-  moduleOutputs = moduleMap "nixos" // moduleMap "darwin" // moduleMap "home";
   platformModules =
-    platform: metadata:
-    builtins.map (path: moduleWrapper path metadata) modulePaths.${platform};
-  homeModuleValues = metadata: platformModules "home" metadata;
+    instantiateModule: platform: metadata:
+    builtins.map (path: instantiateModule path metadata) modulePaths.${platform};
+
+  homeModuleValues =
+    instantiateModule: metadata: platformModules instantiateModule "home" metadata;
 in
 {
-  config.liberion.composition = {
-    inherit
-      builderLib
-      exportedLib
-      flakeInputs
-      homeLib
-      homeModuleValues
-      homeRecords
-      moduleOutputs
-      modulePaths
-      moduleWrapper
-      nixpkgs
-      namespace
-      realSystems
-      repositoryLib
-      root
-      sourceRoot
-      systemRecords
-      platformModules
-      ;
-  };
+  inherit
+    builderLib
+    exportedLib
+    flakeInputs
+    homeLib
+    homeRecords
+    homeModuleValues
+    moduleOutputs
+    modulePaths
+    namespace
+    nixRoot
+    nixpkgs
+    platformModules
+    repositoryInputs
+    repositoryLib
+    repositoryRoot
+    sourceRoot
+    supportedSystems
+    systemRecords
+    instantiateModule
+    ;
 }

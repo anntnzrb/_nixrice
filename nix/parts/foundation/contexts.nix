@@ -1,14 +1,13 @@
-{ config, inputs, ... }:
+{
+  inputs,
+  flakeInputs,
+  builderLib,
+  namespace,
+  nixRoot,
+  supportedSystems,
+  systemRecords,
+}:
 let
-  composition = config.liberion.composition;
-  inherit (composition)
-    builderLib
-    flakeInputs
-    namespace
-    realSystems
-    root
-    systemRecords
-    ;
   inherit (inputs) nixpkgs;
   inherit (nixpkgs) lib;
 
@@ -34,9 +33,9 @@ let
         nixpkgs-stable = stableChannel;
         nixpkgs-unstable = unstableChannel;
       };
-      localOverlay = import (root + "/overlays/nixpkgs-unstable/default.nix") {
+      localOverlay = import (nixRoot + "/overlays/nixpkgs-unstable/default.nix") {
         channels = baseChannels;
-        inputs = flakeInputs;
+        inherit inputs;
         lib = builderLib;
         inherit namespace;
       };
@@ -54,15 +53,15 @@ let
                 pkgs = packagePkgs;
                 channels = baseChannels;
                 lib = builderLib;
-                inputs = flakeInputs;
+                inherit inputs;
                 inherit namespace;
               };
             in
             if builtins.isFunction value then value args else value;
         in
         {
-          default = callPackage (root + "/packages/default/default.nix");
-          rice = callPackage (root + "/packages/rice/default.nix");
+          default = callPackage (nixRoot + "/packages/default/default.nix");
+          rice = callPackage (nixRoot + "/packages/rice/default.nix");
         }
       );
       pkgs = stableBase.extend (
@@ -83,7 +82,7 @@ let
         ;
     };
 
-  contexts = lib.genAttrs realSystems mkSystemContext;
+  packageContexts = lib.genAttrs supportedSystems mkSystemContext;
   baseSystemMetadata = spec: {
     inherit (spec) target;
     inherit (spec) system;
@@ -96,5 +95,5 @@ let
   };
 in
 {
-  config.liberion.composition = { inherit baseSystemMetadata contexts; };
+  inherit baseSystemMetadata packageContexts;
 }

@@ -1,17 +1,16 @@
-{ config, inputs, ... }:
+{
+  inputs,
+  flakeInputs,
+  homeLib,
+  homeModuleValues,
+  homeRecords,
+  instantiateModule,
+  namespace,
+  packageContexts,
+  systemOutputs,
+  systemRecords,
+}:
 let
-  composition = config.liberion.composition;
-  inherit (composition)
-    contexts
-    flakeInputs
-    homeLib
-    homeModuleValues
-    homeRecords
-    moduleWrapper
-    namespace
-    systemOutputs
-    systemRecords
-    ;
   inherit (inputs) home-manager;
   inherit (inputs.nixpkgs) lib;
 
@@ -27,7 +26,7 @@ let
   buildHome =
     home: parent:
     let
-      context = contexts.${home.system};
+      context = packageContexts.${home.system};
       parentArgs =
         if parent == null then
           { }
@@ -54,7 +53,7 @@ let
       lib = homeLib;
       modules = homeModuleValues metadata ++ [
         (homeBaseModule home)
-        (moduleWrapper home.path metadata)
+        (instantiateModule home.path metadata)
       ];
       extraSpecialArgs = metadata;
     };
@@ -85,5 +84,5 @@ let
   };
 in
 {
-  config.liberion.composition = { inherit homeOutputs; };
+  inherit homeOutputs;
 }

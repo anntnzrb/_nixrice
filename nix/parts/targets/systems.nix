@@ -1,17 +1,16 @@
-{ config, inputs, ... }:
+{
+  inputs,
+  nixpkgs,
+  builderLib,
+  packageContexts,
+  homeModuleValues,
+  homeRecords,
+  instantiateModule,
+  platformModules,
+  baseSystemMetadata,
+  systemRecords,
+}:
 let
-  composition = config.liberion.composition;
-  inherit (composition)
-    baseSystemMetadata
-    builderLib
-    contexts
-    homeModuleValues
-    homeRecords
-    moduleWrapper
-    nixpkgs
-    platformModules
-    systemRecords
-    ;
   inherit (inputs) home-manager;
   inherit (inputs.nixpkgs) lib;
 
@@ -42,7 +41,7 @@ let
           value = {
             imports = [
               (homeBaseModule home)
-              (moduleWrapper home.path (
+              (instantiateModule home.path (
                 metadata
                 // {
                   inherit (home) name;
@@ -95,7 +94,7 @@ let
     spec:
     let
       metadata = baseSystemMetadata spec;
-      context = contexts.${spec.system};
+      context = packageContexts.${spec.system};
       virtualModules =
         if spec.format == "iso" then
           [
@@ -112,7 +111,7 @@ let
         inherit (context) pkgs;
         lib = builderLib;
         modules = [
-          (moduleWrapper spec.path metadata)
+          (instantiateModule spec.path metadata)
         ]
         ++ platformModules "nixos" metadata
         ++ virtualModules;
@@ -132,9 +131,9 @@ let
     spec:
     let
       metadata = baseSystemMetadata spec;
-      context = contexts.${spec.system};
+      context = packageContexts.${spec.system};
       modules = [
-        (moduleWrapper spec.path metadata)
+        (instantiateModule spec.path metadata)
         { networking.hostName = spec.name; }
       ]
       ++ platformModules (
@@ -180,5 +179,5 @@ let
     };
 in
 {
-  config.liberion.composition = { inherit systemOutputs; };
+  inherit systemOutputs;
 }
