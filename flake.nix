@@ -2,43 +2,21 @@
   description = "Liberion's Core";
 
   outputs =
-    inputs:
-    let
-      outputs = {
-        inherit (composition.systemOutputs)
-          darwinConfigurations
-          nixosConfigurations
-          doConfigurations
-          isoConfigurations
-          ;
-        inherit (composition.homeOutputs) homeConfigurations;
-        inherit (composition.moduleOutputs) nixosModules darwinModules homeModules;
-        inherit (composition) pkgs snowfall templates;
-        lib = composition.exportedLib;
-        overlays = composition.exportedOverlays;
-        packages = composition.packageOutputs;
-        checks = composition.checkOutputs;
-        devShells = composition.shellOutputs;
-        formatter = composition.formatterOutputs;
-      };
-      selfInput = outputs // {
-        outPath = ./.;
-      };
-      composition = import ./nix/composition.nix {
-        inherit inputs;
-        self = selfInput;
-      };
-    in
-    outputs;
+    inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [ ./nix/parts/default.nix ];
+    };
 
   inputs = {
     # -------------------------------------------------------------------------
     # nix & nixpkgs
     # -------------------------------------------------------------------------
 
+    flake-parts.url = "github:hercules-ci/flake-parts/main";
+
     nixpkgs = {
-      # main nixpkgs reference, most likely pointing to stable
-      url = "github:NixOS/nixpkgs/nixos-26.05";
+      # Main nixpkgs is intentionally owned by the stable channel.
+      follows = "nixpkgs-stable";
     };
 
     nixpkgs-stable = {
@@ -138,6 +116,7 @@
     neovim-annt = {
       # annt's neovim
       url = "github:anntnzrb/nixvim/main";
+      inputs.flake-parts.follows = "flake-parts";
     };
 
     ghostty-protesilaos = {
@@ -195,6 +174,7 @@
       # Betterfox integration
       url = "github:heitoraugustoln/betterfox-nix/main";
       inputs.nixpkgs.follows = "nixpkgs-stable";
+      inputs.flake-parts.follows = "flake-parts";
     };
 
     nixpkgs-firefox-darwin = {
