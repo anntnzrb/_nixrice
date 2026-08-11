@@ -1,6 +1,6 @@
 ## AGENTS.md - System Overview
 
-This repo is a Nix Flake-driven dotfiles system built on a repository-owned explicit composition layer in `nix/composition.nix`.
+This repo is a Nix Flake-driven dotfiles system built on repository-owned flake-parts modules under `nix/parts/`, aggregated by `nix/parts/default.nix`.
 
 ### Architecture
 - `flake.nix` assembles native NixOS, nix-darwin, Home Manager, package, check, shell, and formatter outputs through the explicit composition layer.
