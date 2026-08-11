@@ -5,7 +5,7 @@ This module owns Home Manager-installed LLM agent launch wrappers.
 ## Sync contract
 
 - Do not call `~/.config/agents/bin/sync`; that shell trampoline is intentionally gone.
-- Nix-generated wrappers pass two sync arguments before agent-specific args:
+- Nix-generated npm wrappers pass two sync arguments before agent-specific args:
   1. pinned Bun runner (`bunExe`)
   2. sync script path (`~/.config/agents/sync/src/cli.ts`)
 - `agent-wrapper-common.sh` owns launch-time sync behavior:
@@ -16,11 +16,13 @@ This module owns Home Manager-installed LLM agent launch wrappers.
 
 ## Wrapper argument shapes
 
-- `npm-agent-wrapper.sh <bun> <sync-script> <package> [agent args...]`
-- `script-agent-wrapper.sh <sync-runner> <sync-script> <runner> <script> [agent args...]`
-- `nix-agent-wrapper.sh <sync-runner> <sync-script> <flake-attr> <binary-name> [agent args...]`
+- `npm-agent-wrapper.sh <bun> <sync-script> <tool> <package> <bin> [agent args...]`
+- `run_npm_package` in `agent-wrapper-common.sh` accepts:
+  `<tool> <package> <bin> <dist-tag> -- [agent args...]`
+- The npm wrapper invokes the common resolver with dist-tag `latest`.
 
 ## Validation
 
-- `sh -n agent-wrapper-common.sh npm-agent-wrapper.sh script-agent-wrapper.sh nix-agent-wrapper.sh`
+- `sh -n agent-wrapper-common.sh npm-agent-wrapper.sh`
 - `nix-instantiate --parse default.nix`
+
