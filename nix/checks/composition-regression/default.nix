@@ -156,6 +156,11 @@ let
     &&
       attrTypes outputs.overlays overlayNames
       == constantTypes overlayNames expected.overlays.valueType;
+  actualPackageKeys =
+    systemName: builtins.attrNames (builtins.getAttr systemName outputs.packages);
+  actualPackages = standardSurface outputs.packages actualPackageKeys;
+  expectedPackageKeys =
+    systemName: builtins.getAttr systemName expected.perSystem.packages.keys;
 
   packageMap = builtins.getAttr system outputs.packages;
   homeAliases = builtins.filter (name: lib.hasPrefix "homeConfigurations-" name) (
@@ -209,28 +214,26 @@ let
     in
     home.pkgs.stdenv.hostPlatform.system;
 
-  virtualShapePass =
-    value:
-    isDerivation value
-    && value.system == "x86_64-linux"
-    && builtins.hasAttr "name" value
-    && builtins.isString value.name
-    && builtins.hasAttr "builder" value
-    && builtins.hasAttr "args" value
-    && builtins.hasAttr "outputs" value;
-
   assertions = [
     {
-      label = "R0a top-level output families";
+      label = "current top-level output families";
       pass = builtins.attrNames outputs == expected.topLevel;
     }
     {
-      label = "R0a top-level output family types";
+      label = "current top-level output family types";
       pass = actualFamilyTypes == expected.topLevelTypes;
     }
     {
-      label = "R0a selected family key manifest";
+      label = "current composition output family manifest";
       pass = actualFamilyKeys == expectedFamilyKeys;
+    }
+    {
+      label = "packages per-system exact key/type surface including activation aliases";
+      pass =
+        standardSurfacePass actualPackages expected.perSystem.packages
+        &&
+          valueTypesPass outputs.packages expectedPackageKeys
+            expected.perSystem.packages.valueType;
     }
     {
       label = "ordinary Darwin configuration names and types";
