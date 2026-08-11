@@ -33,12 +33,12 @@ let
     builtins.listToAttrs (builtins.map (name: { inherit name value; }) names);
 
   expectedFamilyKeys = {
-    checks = expected.realSystems;
+    checks = expected.supportedSystems;
     darwinConfigurations = expected.configurations.darwin.keys;
     darwinModules = expected.moduleMaps.darwin;
-    devShells = expected.realSystems;
+    devShells = expected.supportedSystems;
     doConfigurations = expected.configurations.do.keys;
-    formatter = expected.realSystems;
+    formatter = expected.supportedSystems;
     homeConfigurations = expected.configurations.homes.keys;
     homeModules = expected.moduleMaps.home;
     isoConfigurations = expected.configurations.iso.keys;
@@ -46,8 +46,8 @@ let
     nixosConfigurations = expected.configurations.nixos.keys;
     nixosModules = expected.moduleMaps.nixos;
     overlays = expected.overlays.keys;
-    packages = expected.realSystems;
-    pkgs = expected.realSystems;
+    packages = expected.supportedSystems;
+    pkgs = expected.supportedSystems;
     snowfall = expected.snowfall.keys;
     templates = expected.templates.keys;
   };
@@ -102,8 +102,8 @@ let
   standardSurfacePass =
     actual: spec:
     actual.type == spec.type
-    && actual.systems == expected.realSystems
-    && actual.systemTypes == constantTypes expected.realSystems spec.systemType
+    && actual.systems == expected.supportedSystems
+    && actual.systemTypes == constantTypes expected.supportedSystems spec.systemType
     && actual.keys == spec.keys;
 
   valueTypesPass =
@@ -116,7 +116,7 @@ let
       builtins.all (name: typeOf (builtins.getAttr name values) == expectedType) (
         keyFunction systemName
       )
-    ) expected.realSystems;
+    ) expected.supportedSystems;
 
   actualDevShells = standardSurface outputs.devShells (
     systemName: builtins.attrNames (builtins.getAttr systemName outputs.devShells)
@@ -138,7 +138,7 @@ let
   # R0a captured channel names, not leaf package-set values. Do not force leaf values:
   pkgsChannelsPass =
     typeOf actualPkgs == expected.pkgs.type
-    && builtins.attrNames actualPkgs == expected.realSystems
+    && builtins.attrNames actualPkgs == expected.supportedSystems
     && builtins.all (
       systemName:
       let
@@ -147,7 +147,7 @@ let
       in
       typeOf channels == expected.pkgs.systemType
       && channelNames == builtins.getAttr systemName expected.pkgs.systems
-    ) expected.realSystems;
+    ) expected.supportedSystems;
 
   overlayNames = expected.overlays.keys;
   overlaysPass =
