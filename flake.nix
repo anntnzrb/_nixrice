@@ -68,11 +68,6 @@
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
 
-    llm-agents-nix = {
-      # bleeding-edge Bun binary package
-      url = "github:numtide/llm-agents.nix/main";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
     bun-overlay = {
       # latest Bun binary package from official upstream releases
       url = "github:0xbigboss/bun-overlay";
