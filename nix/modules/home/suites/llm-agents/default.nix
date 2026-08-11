@@ -17,15 +17,9 @@ in
   config = lib.mkIf cfg.enable {
     ${namespace}.cli."llm-agents" = {
       codex = on;
-      crush = on;
-      droid = on;
-      gemini = on;
-      goose = on;
-      kilo = on;
       opencode = on;
       omp = on;
       pi = on;
-      qwen = on;
     };
   };
 }
