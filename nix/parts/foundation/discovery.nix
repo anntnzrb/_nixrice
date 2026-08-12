@@ -192,6 +192,7 @@ let
       fs
       launchd
       module
+      npm
       xorg
       ;
     inherit (lib) overrideDerivation;
