@@ -7,6 +7,7 @@
 }:
 let
   inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.${namespace}.npm) launchScripts runtimeInputs;
   inherit (lib)
     mapAttrs'
     mapAttrsToList
@@ -20,20 +21,13 @@ let
   bunExe = "${bunPkg}/bin/bun";
   shell = pkgs.runtimeShell;
   syncScript = "${config.home.homeDirectory}/.config/agents/sync/src/cli.ts";
-  npmRuntimeInputs = [
-    bunPkg
-    pkgs.nodejs
-    pkgs.coreutils
-    pkgs.gnugrep
-    pkgs.flock
-  ];
+  npmLaunch = "${launchScripts pkgs}/lib/npm/launch.sh";
+  wrapperRuntimeInputs = runtimeInputs pkgs ++ [ bunPkg ];
 
   wrappers = pkgs.runCommand "llm-agent-wrappers" { } ''
     mkdir -p "$out/${wrapperDir}"
-    cp ${./agent-wrapper-common.sh} "$out/${wrapperDir}/agent-wrapper-common.sh"
-    cp ${./npm-agent-wrapper.sh} "$out/${wrapperDir}/npm-agent-wrapper.sh"
-    chmod 755 "$out/${wrapperDir}/agent-wrapper-common.sh"
-    chmod 755 "$out/${wrapperDir}/npm-agent-wrapper.sh"
+    cp ${./agent-wrapper.sh} "$out/${wrapperDir}/agent-wrapper.sh"
+    chmod 755 "$out/${wrapperDir}/agent-wrapper.sh"
   '';
 
   # agents: name -> { package, bin }
@@ -72,11 +66,12 @@ let
   */
   mkWrapper =
     name: agent:
-    mkShellWrapper name npmRuntimeInputs ''
+    mkShellWrapper name wrapperRuntimeInputs ''
       exec ${lib.escapeShellArg shell} \
-        ${lib.escapeShellArg "${wrappers}/${wrapperDir}/npm-agent-wrapper.sh"} \
+        ${lib.escapeShellArg "${wrappers}/${wrapperDir}/agent-wrapper.sh"} \
         ${lib.escapeShellArg bunExe} \
         ${lib.escapeShellArg syncScript} \
+        ${lib.escapeShellArg npmLaunch} \
         ${lib.escapeShellArg name} \
         ${lib.escapeShellArg agent.package} \
         ${lib.escapeShellArg agent.bin} \

@@ -8,7 +8,7 @@ This module owns Home Manager-installed LLM agent launch wrappers.
 - Nix-generated npm wrappers pass two sync arguments before agent-specific args:
   1. pinned Bun runner (`bunExe`)
   2. sync script path (`~/.config/agents/sync/src/cli.ts`)
-- `agent-wrapper-common.sh` owns launch-time sync behavior:
+- `agent-wrapper.sh` owns launch-time sync behavior:
   - static 60s timeout
   - static 2s termination grace
   - soft-fail warning, then continue launching the agent
@@ -16,13 +16,18 @@ This module owns Home Manager-installed LLM agent launch wrappers.
 
 ## Wrapper argument shapes
 
-- `npm-agent-wrapper.sh <bun> <sync-script> <tool> <package> <bin> [agent args...]`
-- `run_npm_package` in `agent-wrapper-common.sh` accepts:
-  `<tool> <package> <bin> <dist-tag> -- [agent args...]`
-- The npm wrapper invokes the common resolver with dist-tag `latest`.
+- `agent-wrapper.sh <bun> <sync-script> <npm-launch> <tool> <package> <bin> [agent args...]`
+- The wrapper invokes the lib-owned launch script with dist-tag `latest` and a `--version` install-time smoke check:
+  `<npm-launch> <tool> <package> <bin> latest --version -- [agent args...]`
+
+## npm launcher library
+
+- `run_npm_package` no longer lives in this module; the npm resolve/install/execute machinery is owned by the lib (`nix/lib/npm`).
+- The module consumes only `launchScripts` and `runtimeInputs` from `lib.${namespace}.npm`.
+- Cache layout: `~/.cache/npm-tools/<tool>/` with per-version installs under `versions/<version>/` and `current`/`previous` symlinks.
+- Pruning keeps `current` and `previous`. A long-running daemon launched from a pruned version dir crashes and is relaunched by KeepAlive onto the newest nightly; that is the intended update path.
 
 ## Validation
 
-- `sh -n agent-wrapper-common.sh npm-agent-wrapper.sh`
-- `nix-instantiate --parse default.nix`
-
+- `sh -n nix/lib/npm/launch.sh nix/modules/home/cli/llm-agents/agent-wrapper.sh`
+- `nix-instantiate --parse nix/modules/home/cli/llm-agents/default.nix nix/lib/npm/default.nix`
