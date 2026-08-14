@@ -72,7 +72,11 @@ in
 
   config = lib.mkIf cfg.enable {
     nix = {
-      settings = {
+      # nix-darwin's nix module is disabled on darwin
+      # (Determinate Nix owns nix.conf there)
+      # settings would be dead config, so keep them honest and only apply on
+      # NixOS hosts.
+      settings = lib.mkIf (!pkgs.stdenvNoCC.hostPlatform.isDarwin) {
         experimental-features = [
           "nix-command"
           "flakes"
