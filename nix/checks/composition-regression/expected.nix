@@ -191,7 +191,6 @@
       "suites/core"
       "suites/desktop"
       "suites/dev"
-      "suites/llm-agents"
       "xdg"
     ];
   };
