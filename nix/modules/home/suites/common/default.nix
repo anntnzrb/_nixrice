@@ -19,7 +19,6 @@ in
       cli = on;
       core = on;
       dev = on;
-      "llm-agents" = on;
     };
   };
 }

@@ -133,8 +133,8 @@
       "cli/git"
       "cli/husky"
       "cli/janet"
-      "cli/llm-agents"
       "cli/neofetch"
+      "cli/node"
       "cli/omnix"
       "cli/repomix"
       "cli/rust"
@@ -176,7 +176,6 @@
       "editors/neovim"
       "editors/vscode"
       "editors/zed"
-      "services/t3"
       "shared/darwin"
       "shared/xorg"
       "shared/xorg/picom"
@@ -192,7 +191,6 @@
       "suites/core"
       "suites/desktop"
       "suites/dev"
-      "suites/llm-agents"
       "xdg"
     ];
   };
@@ -300,7 +298,6 @@
       "mkOneCaskProgram"
       "mkOneMasAppProgram"
       "module"
-      "npm"
       "override"
       "overrideDerivation"
       "xorg"
