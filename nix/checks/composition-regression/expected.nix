@@ -298,7 +298,6 @@
       "mkOneCaskProgram"
       "mkOneMasAppProgram"
       "module"
-      "npm"
       "override"
       "overrideDerivation"
       "xorg"
