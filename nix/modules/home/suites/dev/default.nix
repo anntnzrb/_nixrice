@@ -18,6 +18,7 @@ in
     ${namespace}.cli = {
       omnix = on;
       husky = on;
+      node = on;
       repomix = on;
       bun = on;
       uv = on;
