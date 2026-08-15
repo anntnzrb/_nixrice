@@ -8,8 +8,6 @@ in
 
     shells.zsh = on;
 
-    services.t3 = on;
-
     desktop = {
       browsers.brave = on;
       terminal-emulators.ghostty = on;

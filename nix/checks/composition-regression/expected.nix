@@ -176,7 +176,6 @@
       "editors/neovim"
       "editors/vscode"
       "editors/zed"
-      "services/t3"
       "shared/darwin"
       "shared/xorg"
       "shared/xorg/picom"
