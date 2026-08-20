@@ -33,7 +33,7 @@ let
         nixpkgs-stable = stableChannel;
         nixpkgs-unstable = unstableChannel;
       };
-      localOverlay = import (nixRoot + "/overlays/nixpkgs-unstable/default.nix") {
+      localOverlay = import (nixRoot + "/overlays/unstable/default.nix") {
         channels = baseChannels;
         inherit inputs;
         lib = builderLib;

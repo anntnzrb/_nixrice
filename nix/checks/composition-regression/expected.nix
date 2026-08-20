@@ -282,9 +282,9 @@
     type = "set";
     keys = [
       "default"
-      "nixpkgs-unstable"
       "package/default"
       "package/rice"
+      "unstable"
     ];
     valueType = "lambda";
   };

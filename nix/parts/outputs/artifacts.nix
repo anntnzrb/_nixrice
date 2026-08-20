@@ -112,7 +112,7 @@ let
         let
           system = final.stdenv.hostPlatform.system;
           context = packageContexts.${system};
-          overlay = import (sourceRoot + "/overlays/nixpkgs-unstable/default.nix") {
+          overlay = import (sourceRoot + "/overlays/unstable/default.nix") {
             inherit (context) channels;
             inputs = repositoryInputs;
             lib = builderLib;
@@ -140,7 +140,7 @@ let
     {
       "package/default" = packageOverlay "default";
       "package/rice" = packageOverlay "rice";
-      nixpkgs-unstable = localOverlay;
+      unstable = localOverlay;
       default = defaultOverlay;
     };
 in
