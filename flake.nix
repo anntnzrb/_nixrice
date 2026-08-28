@@ -48,7 +48,7 @@
 
     bun-overlay = {
       # latest Bun binary package from official upstream releases
-      url = "github:0xbigboss/bun-overlay";
+      url = "github:alleneubank/bun-overlay";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
