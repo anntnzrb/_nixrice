@@ -14,6 +14,8 @@ in
   ${namespace} = {
     suites.desktop = on;
 
+    network.tailscale = on;
+
     desktop.window-managers.darwin.aerospace = on;
 
     system = {
