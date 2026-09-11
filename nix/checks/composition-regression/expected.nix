@@ -98,6 +98,7 @@
       "environment"
       "homebrew"
       "network/ssh"
+      "network/tailscale"
       "nix"
       "programs/aldente"
       "programs/bitwarden"
