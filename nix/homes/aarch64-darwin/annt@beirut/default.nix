@@ -9,7 +9,6 @@ in
     shells.zsh = on;
 
     desktop = {
-      browsers.brave = on;
       terminal-emulators.ghostty = on;
       whatsapp = on;
     };
