@@ -39,7 +39,6 @@ selected=
 rejected=
 
 cleanup() {
-    git worktree prune >/dev/null 2>&1 || true
     rm -rf "${scratch}"
 }
 trap cleanup EXIT HUP INT TERM
@@ -63,7 +62,7 @@ try_group() {
         return 1
     fi
     attempts=$((attempts + 1))
-    git worktree add --quiet --detach "${worktree}" HEAD
+    git clone --shared --quiet . "${worktree}"
     cp "${selected_lock}" "${worktree}/flake.lock"
 
     if ! (
@@ -73,7 +72,7 @@ try_group() {
             && git diff --quiet --exit-code -- . ':(exclude)flake.lock'
     ); then
         attempt_result=failed
-        git worktree remove --force "${worktree}"
+        rm -rf "${worktree}"
         return 1
     fi
 
@@ -84,7 +83,7 @@ try_group() {
         cp "${worktree}/flake.lock" "${candidate_lock}"
         attempt_result=changed
     fi
-    git worktree remove --force "${worktree}"
+    rm -rf "${worktree}"
 }
 
 if test "${input_count}" -eq 0; then
