@@ -13,4 +13,4 @@ jobs:
   update-lockfile:
     uses: ./.github/workflows/update-flake-lock.yml
     with:
-      update_inputs: nixpkgs-unstable nurpkgs
+      update_inputs: nixpkgs-unstable
