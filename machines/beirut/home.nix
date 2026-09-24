@@ -10,6 +10,11 @@ in
 
     shells.zsh = on;
 
+    cli.ssh = on // {
+      identityFile = "~/.ssh/beirut";
+      includes = [ "~/.orbstack/ssh/config" ];
+    };
+
     desktop = {
       terminal-emulators.ghostty = on;
       whatsapp = on;
