@@ -8,4 +8,4 @@ result*
 tmp/
 CLAUDE.md
 target/
-/nix/packages/rice/node_modules/
+/packages/rice/node_modules/

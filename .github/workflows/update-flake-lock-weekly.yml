@@ -13,4 +13,6 @@ jobs:
   update-lockfile:
     uses: ./.github/workflows/update-flake-lock.yml
     with:
-      update_inputs: nixpkgs-unstable
+      # clan-core carries the stable nixpkgs (nixpkgs follows clan-core/nixpkgs);
+      # flake-checker fails once it is older than 30 days
+      update_inputs: nixpkgs-unstable clan-core
