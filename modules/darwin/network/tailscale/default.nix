@@ -51,6 +51,17 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # open-source tailscaled (no GUI); state lives in /Library/Tailscale
+    services.tailscale = {
+      enable = true;
+      # track upstream; the stable channel lags the daemon beirut already ran
+      package = pkgs.unstable.tailscale;
+    };
+    launchd.daemons.tailscaled.serviceConfig.KeepAlive = true;
+    # tailscaled writes /etc/resolver/ts.net itself (MagicDNS, IPv4 + IPv6)
+    # and cannot write through nix-darwin's /etc/static symlink
+    environment.etc."resolver/ts.net".enable = lib.mkForce false;
+
     launchd.daemons."tailscale-route-guard" = {
       # The `command` option wraps ProgramArguments in
       # `/bin/wait4path /nix/store`, without which launchd fails to exec a
