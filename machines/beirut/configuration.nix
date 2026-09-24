@@ -26,6 +26,7 @@ in
     suites.desktop = on;
 
     network.tailscale = on;
+    programs.raycast = on;
     # add munich once it runs NixOS with clan sshd (see clan.nix)
     nix.builders.oulu = 12;
 
