@@ -244,7 +244,7 @@ func TestHomeBuild(t *testing.T) {
 func TestHomeBuildFailure(t *testing.T) {
 	defer silenceOutput(t)()
 
-	t.Setenv("RICE_FAKE_FAIL_AT", "1")
+	t.Setenv("RICE_FAKE_FAIL_AT", "3") // darwin eval, nixos eval, build
 	_, _ = fakeExec(t, "nix")
 
 	err := HomeBuild("alice", "mbp")
@@ -369,7 +369,7 @@ func TestHomeSwitchActivateFailure(t *testing.T) {
 func TestHomeSwitchBuildFailureShortCircuits(t *testing.T) {
 	defer silenceOutput(t)()
 	_, nixCallsFile := fakeExec(t, "nix")
-	t.Setenv("RICE_FAKE_FAIL_AT", "1") // fail nix build
+	t.Setenv("RICE_FAKE_FAIL_AT", "3") // fail nix build (after 2 evals)
 
 	err := HomeSwitch("alice", "mbp")
 	if err == nil {
@@ -377,8 +377,8 @@ func TestHomeSwitchBuildFailureShortCircuits(t *testing.T) {
 	}
 
 	calls := readCalls(t, nixCallsFile)
-	if len(calls) != 1 {
-		t.Fatalf("expected exactly 1 nix build call, got %d", len(calls))
+	if len(calls) != 3 {
+		t.Fatalf("expected 2 nix evals and 1 nix build call, got %d", len(calls))
 	}
 	assertCall(t, calls, []string{"build", `.#homeConfigurations."alice@mbp".activationPackage`})
 }
@@ -622,4 +622,68 @@ func TestFlakeUpdateNamedFailureGitCommit(t *testing.T) {
 	gitCallsData := readCalls(t, gitCalls)
 	assertCall(t, gitCallsData, []string{"add", "flake.lock"})
 	assertCall(t, gitCallsData, []string{"commit", "-m", "chore(flake): update input (fenix)"})
+}
+
+// homeEvalCall is the recorded argv of the host-class probe HomeBuild runs.
+func homeEvalCall(output, host string) []string {
+	return []string{"eval", ".#" + output, "--apply", fmt.Sprintf(`c: builtins.hasAttr "%s" c`, host)}
+}
+
+func TestHomeBuildDarwinHost(t *testing.T) {
+	defer silenceOutput(t)()
+
+	t.Setenv("RICE_FAKE_CLASS", "darwin")
+	_, callsFile := fakeExec(t, "nix")
+	if err := HomeBuild("annt", "beirut"); err != nil {
+		t.Fatal(err)
+	}
+
+	assertCalls(t, stripPIDs(readCalls(t, callsFile)), [][]string{
+		homeEvalCall("darwinConfigurations", "beirut"),
+		{"build", `.#darwinConfigurations."beirut".config.home-manager.users."annt".home.activationPackage`},
+	})
+}
+
+func TestHomeBuildNixOSHost(t *testing.T) {
+	defer silenceOutput(t)()
+
+	t.Setenv("RICE_FAKE_CLASS", "nixos")
+	_, callsFile := fakeExec(t, "nix")
+	if err := HomeBuild("annt", "oulu"); err != nil {
+		t.Fatal(err)
+	}
+
+	assertCalls(t, stripPIDs(readCalls(t, callsFile)), [][]string{
+		homeEvalCall("darwinConfigurations", "oulu"),
+		homeEvalCall("nixosConfigurations", "oulu"),
+		{"build", `.#nixosConfigurations."oulu".config.home-manager.users."annt".home.activationPackage`},
+	})
+}
+
+func TestHomeBuildStandaloneHost(t *testing.T) {
+	defer silenceOutput(t)()
+
+	_, callsFile := fakeExec(t, "nix")
+	if err := HomeBuild("annt", "wsl"); err != nil {
+		t.Fatal(err)
+	}
+
+	assertCalls(t, stripPIDs(readCalls(t, callsFile)), [][]string{
+		homeEvalCall("darwinConfigurations", "wsl"),
+		homeEvalCall("nixosConfigurations", "wsl"),
+		{"build", `.#homeConfigurations."annt@wsl".activationPackage`},
+	})
+}
+
+func TestHomeBuildEvalFailureFallsBack(t *testing.T) {
+	defer silenceOutput(t)()
+
+	t.Setenv("RICE_FAKE_CLASS", "darwin")
+	t.Setenv("RICE_FAKE_FAIL_AT", "1") // darwin probe fails
+	_, callsFile := fakeExec(t, "nix")
+	if err := HomeBuild("annt", "beirut"); err != nil {
+		t.Fatal(err)
+	}
+
+	assertCall(t, readCalls(t, callsFile), []string{"build", `.#homeConfigurations."annt@beirut".activationPackage`})
 }

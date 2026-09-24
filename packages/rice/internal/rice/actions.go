@@ -51,11 +51,33 @@ func escapeNixString(s string) string {
 	return s
 }
 
+// hasConfiguration reports whether the flake output (e.g. "darwinConfigurations")
+// defines host. Evaluation failures count as absent.
+func hasConfiguration(output, host string) bool {
+	out, err := OutputCmd([]string{
+		"nix", "eval", ".#" + output,
+		"--apply", fmt.Sprintf("c: builtins.hasAttr \"%s\" c", escapeNixString(host)),
+	})
+	return err == nil && strings.TrimSpace(out) == "true"
+}
+
+// homeAttr returns the flake attr of the home-manager activation package for
+// user@host: embedded in the host's darwin/NixOS system when one exists,
+// otherwise a standalone homeConfigurations entry.
+func homeAttr(user, host string) string {
+	u, h := escapeNixString(user), escapeNixString(host)
+	for _, output := range []string{"darwinConfigurations", "nixosConfigurations"} {
+		if hasConfiguration(output, host) {
+			return fmt.Sprintf(".#%s.\"%s\".config.home-manager.users.\"%s\".home.activationPackage", output, h, u)
+		}
+	}
+	return fmt.Sprintf(".#homeConfigurations.\"%s@%s\".activationPackage", u, h)
+}
+
 // HomeBuild builds the home-manager activation package for user@host.
 func HomeBuild(user, host string) error {
 	Info(Stdout, fmt.Sprintf("Building home-manager for %s@%s...", user, host))
-	attr := escapeNixString(fmt.Sprintf("%s@%s", user, host))
-	cmd := []string{"nix", "build", fmt.Sprintf(".#homeConfigurations.\"%s\".activationPackage", attr)}
+	cmd := []string{"nix", "build", homeAttr(user, host)}
 	Preview(Stdout, cmd)
 
 	if err := RunCmd(cmd); err != nil {

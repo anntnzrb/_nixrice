@@ -31,6 +31,22 @@ func RunCmd(cmd []string) error {
 	return nil
 }
 
+// OutputCmd executes cmd and returns its stdout; stderr is inherited.
+func OutputCmd(cmd []string) (string, error) {
+	if len(cmd) == 0 {
+		return "", errors.New("command failed: (empty command)")
+	}
+	//nolint:gosec // subprocess execution with user-provided argv is the intended behavior
+	c := exec.CommandContext(context.Background(), cmd[0], cmd[1:]...)
+	c.Stderr = os.Stderr
+
+	out, err := c.Output()
+	if err != nil {
+		return "", fmt.Errorf("command failed: %s: %w", joinCmd(cmd), err)
+	}
+	return string(out), nil
+}
+
 func joinCmd(cmd []string) string {
 	return strings.Join(cmd, " ")
 }

@@ -13,7 +13,8 @@ import (
 // The script logs every invocation to callsFile with one line per arg,
 // separated by blank-line records. If RICE_FAKE_FAIL_AT is set to N, the
 // Nth invocation exits non-zero. RICE_FAKE_STATUS overrides the exit code
-// (default 1).
+// (default 1). If RICE_FAKE_CLASS is set (e.g. "darwin"), invocations naming
+// ".#<class>Configurations" print "true" to stdout.
 //
 // Returns the directory prepended to PATH and the calls log path.
 func fakeExec(t *testing.T, name string) (binDir, callsFile string) {
@@ -33,6 +34,14 @@ for arg in "$@"; do
   echo "$arg" >> "%s"
 done
 echo "" >> "%s"
+
+if [ -n "${RICE_FAKE_CLASS:-}" ]; then
+  for arg in "$@"; do
+    if [ "$arg" = ".#${RICE_FAKE_CLASS}Configurations" ]; then
+      echo true
+    fi
+  done
+fi
 
 if [ -n "${RICE_FAKE_FAIL_AT:-}" ]; then
   n=$(cat "$count_file" 2>/dev/null || echo 0)

@@ -435,8 +435,11 @@ func TestRunCLI_HomeBuildDefaultHost(t *testing.T) {
 		t.Fatal(err)
 	}
 	calls := stripPID(readCalls(t, callsFile))
-	assertCallCount(t, calls, 1)
-	assertCalls(t, calls, [][]string{{"build", `.#homeConfigurations."annt@myhost".activationPackage`}})
+	assertCalls(t, calls, [][]string{
+		homeEvalCall("darwinConfigurations", "myhost"),
+		homeEvalCall("nixosConfigurations", "myhost"),
+		{"build", `.#homeConfigurations."annt@myhost".activationPackage`},
+	})
 }
 
 func TestRunCLI_HomeBuildExplicitHost(t *testing.T) {
@@ -447,8 +450,11 @@ func TestRunCLI_HomeBuildExplicitHost(t *testing.T) {
 		t.Fatal(err)
 	}
 	calls := stripPID(readCalls(t, callsFile))
-	assertCallCount(t, calls, 1)
-	assertCalls(t, calls, [][]string{{"build", `.#homeConfigurations."alice@otherhost".activationPackage`}})
+	assertCalls(t, calls, [][]string{
+		homeEvalCall("darwinConfigurations", "otherhost"),
+		homeEvalCall("nixosConfigurations", "otherhost"),
+		{"build", `.#homeConfigurations."alice@otherhost".activationPackage`},
+	})
 }
 
 // --- system switch short-circuit on first-step failure ---
