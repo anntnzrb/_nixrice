@@ -10,7 +10,7 @@ let
 
   cfg = config.${namespace}.profiles.server;
   userName = config.${namespace}.user.name;
-  liberionKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB45J5N5vAcQlF4kUHN8y12FMOzXhuav7bczaztcZHTq annt@liberion";
+  inherit (config.${namespace}.network.ssh) authorizedKeys;
 in
 {
   options.${namespace}.profiles.server = {
@@ -105,9 +105,9 @@ in
       ${userName} = {
         isNormalUser = true;
         extraGroups = [ "wheel" ];
-        openssh.authorizedKeys.keys = [ liberionKey ];
+        openssh.authorizedKeys.keys = authorizedKeys;
       };
-      root.openssh.authorizedKeys.keys = [ liberionKey ];
+      root.openssh.authorizedKeys.keys = authorizedKeys;
     };
   };
 }

@@ -10,6 +10,15 @@ let
   inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
 
   cfg = config.${namespace}.network.ssh;
+  userName = config.${namespace}.user.name;
+
+  # one key per device, plus the fleet-wide admin key
+  fleetKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB45J5N5vAcQlF4kUHN8y12FMOzXhuav7bczaztcZHTq annt@liberion"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBEpmEC2zcNWEgNAdHDzFZnK7dfOeDVh+r0sasP5PclS annt@beirut"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHzBDSIjkAYW57NffyZkkKeFoA2YGqEKR7mzL5pgYYxV anntnzrb@munich"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJi5TwdwALl2Sw0/MuE+r0u4s35Xw8TftkUQZE2lW3Gr annt@oulu"
+  ];
 
   nixosCfg = inputs.self.nixosConfigurations or { };
   darwinCfg = inputs.self.darwinConfigurations or { };
@@ -30,7 +39,7 @@ let
     in
     ''
       Host ${remoteHostName}
-        Hostname ${remoteHostName}.local
+        Hostname ${remoteHostName}.${config.clan.core.settings.domain}
         User ${remoteUserName}
         ForwardAgent yes
         ${portEntry}
@@ -42,9 +51,12 @@ in
     enable = mkOptDisabled';
     extraConfig = mkOpt' str "";
     port = mkOpt' port 2222;
+    authorizedKeys = mkOpt' (listOf singleLineStr) fleetKeys;
   };
 
   config = lib.mkIf cfg.enable {
+    users.users.${userName}.openssh.authorizedKeys.keys = cfg.authorizedKeys;
+
     programs.ssh = {
       extraConfig = ''
         ${remoteHostsCfg}
