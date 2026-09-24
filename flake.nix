@@ -83,11 +83,6 @@
 
       overlays.default = import ./overlays/default.nix { inherit inputs; };
 
-      packages = forAllSystems (system: {
-        inherit (pkgsFor.${system}) rice;
-        default = pkgsFor.${system}.rice;
-      });
-
       formatter = forAllSystems (
         system:
         let
@@ -172,7 +167,7 @@
             ++ (with pkgs; [
               actionlint
               deadnix
-              go
+              just
               nixd
               nixfmt
               shellcheck

@@ -10,8 +10,6 @@ in
     config.allowUnfree = true;
   };
 
-  rice = final.callPackage ../packages/rice { };
-
   bun = inputs.bun-overlay.packages.${system}.bun.overrideAttrs (old: {
     meta = (old.meta or { }) // {
       mainProgram = "bun";

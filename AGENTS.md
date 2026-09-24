@@ -11,7 +11,8 @@ fleet inventory (machines, tags, service instances).
   entrypoints (`default.nix`, `darwin.nix`, `home.nix`, `home-manager.nix`).
 - `homes/` - standalone Home Manager configurations (hosts without a managed system).
 - `lib/` - repository helpers exposed as `lib.liberion.*`.
-- `overlays/`, `packages/` - package overlay and local packages (`rice` CLI).
+- `overlays/` - package overlay.
+- `justfile` - day-to-day tasks (build, switch, deploy, update, check); run `just` to list them.
 - `sops/`, `vars/` - Clan secrets and generated vars. Never print secret values.
 
 ### Architecture
@@ -29,3 +30,9 @@ fleet inventory (machines, tags, service instances).
 
 ### Build / Test
 - Full gate: ensure all files tracked (`git add -N .`), then run `scripts/ci/check-flake.sh`
+
+### Deploy
+- NixOS machines: `just deploy <machine>` (clan, as `annt@<machine>:2222`), then verify on the target.
+- This machine: `just switch` (darwin-rebuild or nixos-rebuild, host from `hostname -s`).
+- Before deploying, evaluate: `nix eval .#<nixos|darwin>Configurations.<machine>.config.system.build.toplevel.drvPath`.
+- Secrets: never craft encrypted blobs by hand; use `clan vars generate <machine>` and let Clan own the age/sops lifecycle.
