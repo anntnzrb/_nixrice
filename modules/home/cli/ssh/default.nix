@@ -25,18 +25,16 @@ in
       enable = true;
       enableDefaultConfig = false;
       inherit (cfg) includes;
-      matchBlocks."*" = {
-        inherit (cfg) identityFile;
-        identitiesOnly = true;
-        addKeysToAgent = "yes";
-        serverAliveInterval = 30;
-        serverAliveCountMax = 3;
-        extraOptions = {
-          ConnectTimeout = "10";
-          StrictHostKeyChecking = "accept-new";
-        }
-        // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin { UseKeychain = "yes"; };
-      };
+      settings."*" = {
+        IdentityFile = cfg.identityFile;
+        IdentitiesOnly = true;
+        AddKeysToAgent = "yes";
+        ServerAliveInterval = 30;
+        ServerAliveCountMax = 3;
+        ConnectTimeout = 10;
+        StrictHostKeyChecking = "accept-new";
+      }
+      // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin { UseKeychain = "yes"; };
     };
   };
 }
