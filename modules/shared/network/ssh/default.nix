@@ -2,7 +2,6 @@
   lib,
   config,
   inputs,
-  host,
   namespace,
   ...
 }:
@@ -25,7 +24,8 @@ let
 
   remoteHosts = lib.filterAttrs (
     hostName: hostCfg:
-    hostName != host && (hostCfg.config.${namespace}.user.name or null) != null
+    hostName != config.clan.core.settings.machine.name
+    && (hostCfg.config.${namespace}.user.name or null) != null
   ) (nixosCfg // darwinCfg);
 
   remoteHostsCfg = lib.concatMapStringsSep "\n" (

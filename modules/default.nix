@@ -1,7 +1,6 @@
 # NixOS entrypoint: every `default.nix` under ./nixos plus the Home Manager bridge.
 {
   lib,
-  config,
   inputs,
   namespace,
   ...
@@ -19,6 +18,4 @@
   # the channel tarball behind clan-core/nixpkgs ships programs.sqlite, which
   # would switch command-not-found on; keep it off as before
   programs.command-not-found.enable = lib.mkDefault false;
-
-  _module.args.host = config.clan.core.settings.machine.name;
 }
