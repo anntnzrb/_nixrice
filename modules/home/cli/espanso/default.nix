@@ -6,23 +6,28 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt mkOptDisabled';
+  inherit (lib.${namespace}.module) mkOptDisabled';
   inherit (lib.${namespace}.fs) getModuleFiles;
 
   cfg = config.${namespace}.cli.espanso;
 in
 {
-  imports = getModuleFiles { path = ./matches; };
+  imports = getModuleFiles {
+    path = ./matches;
+    ignore = [ "dictionary.nix" ];
+  };
 
   options.${namespace}.cli.espanso = {
     enable = mkOptDisabled';
 
-    extraMatchDir =
-      mkOpt lib.types.str "${config.xdg.configHome}/espanso/match/local"
-        ''
-          Directory containing non-reproducible Espanso match files.
-          Files in this directory are loaded alongside the Nix-managed matches.
-        '';
+    extraMatchDir = lib.mkOption {
+      type = lib.types.str;
+      default = "${config.xdg.configHome}/espanso/match/local";
+      description = ''
+        Directory containing non-reproducible Espanso match files.
+        Files in this directory are loaded alongside the Nix-managed matches.
+      '';
+    };
   };
 
   config = lib.mkMerge [
@@ -34,6 +39,9 @@ in
           "${cfg.extraMatchDir}/**/*.yml"
           "${cfg.extraMatchDir}/**/*.yaml"
         ];
+
+        # pure data merged here, inside the existing enable guard
+        matches.default.matches = import ./matches/dictionary.nix;
       };
     })
 
