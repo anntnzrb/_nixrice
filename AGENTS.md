@@ -22,17 +22,42 @@ Its class base + the profile of each of its tags (`clan.nix`) + the features its
 `configuration.nix` and `home.nix` import. That is all plain text: grep for a
 feature name to see who uses it.
 
-### Build / Test
-- A refactor must not change what machines build:
-  - `just drvdiff [ref]` - every machine/home drvPath and every probe (each
-    feature imported into a real host, `scripts/ci/probes.nix`) against a git ref;
-    no output = pure refactor. A few minutes.
-  - `just snap` - machine/home drvPaths only (~30s), for quick iteration.
-  - Explain an intended diff with `nix run nixpkgs#nix-diff -- <old.drv> <new.drv>`.
-- Full gate: `git add -N .`, then `scripts/ci/check-flake.sh`. Flake evals use
-  `path:.` so untracked files count; `.#` needs them tracked.
+### Tools (run from the repo root; `just` lists them)
+Evaluation reads the working tree through `path:.`, so new files count without
+`git add`. None of these touch a machine; only `just fmt` edits files.
 
-### Deploy
-- NixOS machines: `just deploy <machine>` (clan), then verify on the target.
-- This machine: `just switch`.
-- Secrets: never craft encrypted blobs by hand; use `clan vars generate <machine>`.
+| Command | Use it to | Time |
+|---|---|---|
+| `just test` | run `tests/` (lib discovery + every machine keeps fleet SSH access) | seconds |
+| `just report [ref]` | see what your change does to each machine and home (packages, files, services, users, env, PATH order) versus `ref`; empty = no behaviour change | ~1 min |
+| `just snap` | print every machine/home drvPath; quick "does it still evaluate" | ~30 s |
+| `just probes` | import every feature into a real host; fails if the set that does not evaluate differs from `tests/probe-errors.txt` | ~5 min |
+| `just drvdiff [ref]` | prove a pure refactor: machine, home **and** per-feature drvPaths identical to `ref` (the only check covering features no machine uses) | ~8 min |
+| `just check` | the CI gate: flake-checker, evaluate everything, formatting, lint hooks, flake checks incl. tests | ~3 min |
+| `just fmt` | format tracked Nix files (nixfmt) | seconds |
+| `just build-all` | build every machine and home this platform can build (what `build.yml` does; nothing is activated) | long, needs disk |
+
+- Before handing off any change: `just report` (state the result), then `just check`.
+- A refactor that should not change behaviour: `just report` must be empty; for
+  changes to features no machine imports, also `just drvdiff`. Explain any drvPath
+  diff with `nix run nixpkgs#nix-diff -- <old.drv> <new.drv>`.
+- Adding a feature that cannot evaluate on a probe host (a Linux-only home
+  feature probed on beirut, say): add its line to `tests/probe-errors.txt`.
+- Lint hooks (nixfmt, deadnix, statix, shellcheck, shfmt, actionlint) run on
+  `git commit` in the dev shell (`nix develop`) and in `just check`.
+
+### Not for agents
+- `just switch`, `just build`, `just home`, `just deploy`: the owner deploys.
+- `just update`: lock updates come from CI (`.github/workflows/update-flake-lock*.yml`).
+- `just clean`, `just optimise`, `just repair`, `bin/nix-install.sh`: host maintenance.
+- Do not commit or push unless asked. Never print values from `sops/` or `vars/`;
+  generate secrets with `clan vars generate <machine>`, never by hand.
+
+### CI (`.github/workflows/`)
+- `ci.yml` (PRs, pushes to dev): `just check` on Linux and macOS, `just probes`,
+  and on PRs the `just report` summary against the base branch (job summary).
+- `build.yml` (pushes to dev, weekly, manual): builds every machine and home on
+  its platform and pushes to the `anntnzrb` Cachix cache (`CACHIX_AUTH_TOKEN`).
+- `update-flake-lock*.yml`: selects input updates that pass `just check` on both
+  platforms and opens a PR whose body carries the `just report` summary.
+

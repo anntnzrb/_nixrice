@@ -43,6 +43,18 @@ deploy +machines:
 check:
     scripts/ci/check-flake.sh
 
+# Run the eval-time tests (tests/): lib discovery and fleet SSH access
+test:
+    nix build --no-link "path:.#checks.$(nix eval --raw --impure --expr builtins.currentSystem).tests"
+
+# What the working tree changes on each machine and home versus a git ref
+report ref="HEAD":
+    scripts/ci/report.sh {{ ref }}
+
+# Import every feature into its probe host; fail on unexpected eval errors
+probes:
+    scripts/ci/check-probes.sh
+
 # Print the drvPath of every machine and standalone home
 snap:
     scripts/ci/snapshot.sh
@@ -50,6 +62,10 @@ snap:
 # Diff machine, home and probe drvPaths against a git ref; no output = pure refactor
 drvdiff ref="HEAD":
     scripts/ci/drvdiff.sh {{ ref }}
+
+# Build every machine and home this platform can build
+build-all:
+    scripts/ci/build.sh
 
 # Format tracked nix files
 fmt:

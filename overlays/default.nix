@@ -19,7 +19,6 @@ in
   inherit (final.unstable)
     aerospace
     aider-chat
-    emacs-macport
     lazygit
     vscode
     yashiki

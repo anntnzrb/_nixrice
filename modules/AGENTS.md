@@ -52,11 +52,12 @@ Helpers: `lib.liberion.module.{mkOpt', mkOptEnabled', mkOptDisabled'}`,
 `lib.liberion.identity`. Prefer precise types (`enum`, `package`, `port`) over `str`.
 
 ### Gotchas
-- Import order is merge order: moving an import reorders `home.packages` /
-  `environment.systemPackages` and changes drvPaths without changing behaviour.
-  `just drvdiff`, then explain the diff with `nix-diff`.
-- A probe reading `eval-error` is expected where the module cannot apply to the
+- Import order is merge order for list options. For package lists that only
+  changes drvPaths, but PATH (`home.sessionPath`) and script snippets are
+  order-sensitive: pin those with `lib.mkBefore`/`lib.mkAfter` instead of relying
+  on import order. `just report` shows PATH and script changes.
+- `tests/probe-errors.txt` lists the modules expected not to evaluate on their
   probe host: Linux-only home features on beirut, exclusive features (grub vs
-  systemd-boot, dhcp vs networkmanager, headless vs desktop). A refactor must keep
-  every probe unchanged unless it changes the module on purpose.
+  systemd-boot, dhcp vs networkmanager, headless vs desktop). `just probes` fails
+  when that set changes; update the list only for such genuine cases.
 - oulu opts out of two base modules with `disabledModules`.
