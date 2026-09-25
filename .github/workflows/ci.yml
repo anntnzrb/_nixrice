@@ -30,6 +30,13 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@v22
 
+      # read-only: locked flake inputs and builds come from our cache, not from
+      # (sometimes flaky) upstream hosts
+      - uses: cachix/cachix-action@v17
+        with:
+          name: anntnzrb
+          skipPush: true
+
       - name: Check flake
         run: scripts/ci/check-flake.sh
 
@@ -43,6 +50,13 @@ jobs:
           persist-credentials: false
 
       - uses: DeterminateSystems/nix-installer-action@v22
+
+      # read-only: locked flake inputs and builds come from our cache, not from
+      # (sometimes flaky) upstream hosts
+      - uses: cachix/cachix-action@v17
+        with:
+          name: anntnzrb
+          skipPush: true
 
       - name: Check probes
         run: scripts/ci/check-probes.sh
@@ -59,6 +73,13 @@ jobs:
           persist-credentials: false
 
       - uses: DeterminateSystems/nix-installer-action@v22
+
+      # read-only: locked flake inputs and builds come from our cache, not from
+      # (sometimes flaky) upstream hosts
+      - uses: cachix/cachix-action@v17
+        with:
+          name: anntnzrb
+          skipPush: true
 
       - name: Report behaviour changes
         env:
