@@ -18,35 +18,14 @@ in
     (modulesPath + "/installer/scan/not-detected.nix")
     common-pc-laptop
     common-pc-laptop-ssd
+    ../../hardware-common.nix
   ]
   ++ getModuleFiles { path = ./.; };
 
-  fileSystems =
-    let
-      bootLabel = "NIX-BOOT";
-      rootLabel = "NIX-ROOT";
-    in
-    {
-      "/" = {
-        device = "/dev/disk/by-label/${rootLabel}";
-        label = "${rootLabel}";
-        fsType = "btrfs";
-        options = [
-          "commit=120"
-          "noatime"
-        ];
-      };
-
-      "/boot" = {
-        device = "/dev/disk/by-label/${bootLabel}";
-        label = "${bootLabel}";
-        fsType = "vfat";
-        options = [
-          "fmask=0022"
-          "dmask=0022"
-        ];
-      };
-    };
+  fileSystems."/".options = [
+    "commit=120"
+    "noatime"
+  ];
 
   zramSwap = on // {
     algorithm = "zstd";
