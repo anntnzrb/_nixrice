@@ -12,7 +12,10 @@ let
   cfg = config.${namespace}.shells.zellij;
 in
 {
-  imports = getModuleFiles { path = ./.; };
+  imports = getModuleFiles {
+    path = ./.;
+    ignore = [ "keybinds.nix" ];
+  };
 
   options.${namespace}.shells.zellij = {
     enable = mkOptDisabled';
@@ -22,6 +25,9 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # pure data merged here, inside the existing enable guard
+    xdg.configFile."zellij/config.kdl".text = import ./keybinds.nix;
+
     programs.zellij = {
       inherit (cfg)
         enable
