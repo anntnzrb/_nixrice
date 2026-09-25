@@ -14,11 +14,15 @@ let
   cfg = config.${namespace}.desktop.window-managers.darwin.aerospace;
   yashikiCfg = config.${namespace}.desktop.window-managers.darwin.yashiki;
   yashikiPkg = pkgs.yashiki;
+  aerospaceLib = import ./lib.nix { inherit lib; };
 in
 {
   imports = getModuleFiles {
     path = ./.;
-    ignore = [ "lib.nix" ];
+    ignore = [
+      "lib.nix"
+      "rules.nix"
+    ];
   };
 
   options.${namespace}.desktop.window-managers.darwin.aerospace = {
@@ -28,7 +32,7 @@ in
   };
 
   config = lib.mkMerge [
-    { _module.args.aerospaceLib = import ./lib.nix { inherit lib; }; }
+    { _module.args.aerospaceLib = aerospaceLib; }
     (lib.mkIf cfg.enable {
       assertions = [
         {
@@ -43,6 +47,7 @@ in
         settings = {
           start-at-login = false;
           after-login-command = [ ];
+          on-window-detected = aerospaceLib.mkRules (import ./rules.nix aerospaceLib);
         };
       };
 
