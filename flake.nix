@@ -212,7 +212,10 @@
       # run hooks before committing
       # user for linting, formatting and more
       url = "github:cachix/git-hooks.nix/master";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-compat.follows = "";
+      };
     };
 
     fenix = {
@@ -224,7 +227,10 @@
     bun-overlay = {
       # latest Bun binary package from official upstream releases
       url = "github:alleneubank/bun-overlay";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs = {
+        nixpkgs.follows = "nixpkgs-unstable";
+        flake-compat.follows = "";
+      };
     };
 
     # -------------------------------------------------------------------------
@@ -234,11 +240,17 @@
     nixos-hardware = {
       # is a collection of hardware modules for systems
       url = "github:NixOS/nixos-hardware/master";
+      # modules only; its nixpkgs is for its own tests
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nixos-wsl = {
       # NixOS support on WSL
       url = "github:nix-community/NixOS-WSL/main";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-compat.follows = "";
+      };
     };
 
     determinate = {
@@ -277,6 +289,12 @@
     neovim-annt = {
       # annt's neovim
       url = "github:anntnzrb/nixvim/main";
+      # keeps its own nixpkgs: its pinned nixvim breaks on ours (typescript-go rename)
+      inputs = {
+        flake-parts.follows = "clan-core/flake-parts";
+        treefmt-nix.follows = "clan-core/treefmt-nix";
+        git-hooks-nix.follows = "git-hooks";
+      };
     };
 
     ghostty-protesilaos = {
@@ -333,7 +351,10 @@
     betterfox-nix = {
       # Betterfox integration
       url = "github:heitoraugustoln/betterfox-nix/main";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "clan-core/flake-parts";
+      };
     };
 
     nixpkgs-firefox-darwin = {
