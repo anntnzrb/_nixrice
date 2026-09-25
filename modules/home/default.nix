@@ -17,7 +17,7 @@ in
   config = {
     home = {
       keyboard = { inherit (cfg.keyboard) layout variant; };
-      stateVersion = "22.05";
+      stateVersion = lib.mkDefault "22.05";
     };
 
     # disable manual generation (workaround for home-manager#7935)
