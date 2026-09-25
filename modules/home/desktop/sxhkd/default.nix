@@ -20,6 +20,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # apps the bindings launch; a host overrides them via home.sessionVariables
+    home.sessionVariables = lib.mapAttrs (_: lib.mkDefault) {
+      TERMINAL = "alacritty";
+      FILE = "pcmanfm";
+      BROWSER = "firefox";
+    };
+
     services.sxhkd = {
       inherit (cfg) enable;
 

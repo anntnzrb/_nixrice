@@ -22,6 +22,9 @@ in
       inherit (cfg.compositor) picom;
     };
 
+    # spawned by the M-<Return> binding in xmonad.hs
+    home.sessionVariables.TERMINAL = lib.mkDefault "alacritty";
+
     xsession = {
       initExtra = lib.liberion.xorg.mkAutostartScript cfg.autoStart;
       windowManager.xmonad = on // {

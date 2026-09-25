@@ -30,6 +30,9 @@ in
 
   config = mkIf cfg.enable {
     home = {
+      # launched by $mod+Return
+      sessionVariables.TERMINAL = lib.mkDefault "alacritty";
+
       shellAliases = {
         sway = "printf 'Do not use this command. To launch sway use the 'wm-exec-sway' wrapper.\n' >&2";
         wm-exec-sway = "command sway";

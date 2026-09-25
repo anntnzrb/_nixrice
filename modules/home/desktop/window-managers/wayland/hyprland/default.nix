@@ -1,7 +1,6 @@
 { config, lib, ... }:
 let
   inherit (lib.liberion.module) mkOpt' mkOptDisabled' on;
-  inherit (lib) genList concatMap;
   inherit (lib.types) listOf str;
 
   cfg = config.liberion.desktop.window-managers.wayland.hyprland;
@@ -12,11 +11,14 @@ in
 
     monitor = mkOpt' (listOf str) [ ",preferred,auto,1" ];
     autoStartApps = mkOpt' (listOf str) [ ];
-    waybar = mkOptDisabled';
+    waybar.enable = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {
     home = {
+      # launched by $mod+Return (hyprland.conf reads it as $TERMINAL)
+      sessionVariables.TERMINAL = lib.mkDefault "alacritty";
+
       shellAliases = {
         Hyprland = "printf 'Do not use this command. To launch Hyprland use the 'wm-exec-hypr' wrapper.\n' >&2";
         wm-exec-hypr = "\\Hyprland";
@@ -31,26 +33,16 @@ in
 
       settings = {
         "$mod" = "SUPER";
+        "$TERMINAL" = config.home.sessionVariables.TERMINAL;
 
         inherit (cfg) monitor;
 
         exec-once = cfg.autoStartApps ++ (lib.optional cfg.waybar.enable "waybar");
 
-        bind =
-          let
-            numWorkspaces = 9;
-          in
-          concatMap (
-            i:
-            let
-              ws = toString i;
-              workspaceNumber = toString i;
-            in
-            [
-              "$mod, ${ws}, workspace, ${workspaceNumber}"
-              "$mod SHIFT, ${ws}, movetoworkspace, ${workspaceNumber}"
-            ]
-          ) (genList (x: x + 1) numWorkspaces);
+        bind = lib.concatMap (ws: [
+          "$mod, ${ws}, workspace, ${ws}"
+          "$mod SHIFT, ${ws}, movetoworkspace, ${ws}"
+        ]) (map toString (lib.range 1 9));
       };
     };
 

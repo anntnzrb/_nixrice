@@ -64,6 +64,7 @@ Baselines (`nixos/default.nix`, `darwin/default.nix`, `home/default.nix`,
 - Reordering list definitions changes drvPaths even when behaviour does not:
   `home.packages`, `environment.systemPackages` and Homebrew casks merge in module
   order. Check with `just drvdiff` and explain any diff.
-- Some unused modules do not evaluate when enabled (their probe reads
-  `eval-error`, e.g. sway/sxhkd need `home.sessionVariables.TERMINAL`). A refactor
-  must keep the probe unchanged unless it fixes the module on purpose.
+- A probe reading `eval-error` is expected where the toggle cannot apply to the
+  probe host: Linux-only home modules on beirut, mutually exclusive toggles
+  (grub vs systemd-boot, dhcp vs networkmanager, headless vs desktop). A refactor
+  must keep every probe unchanged unless it changes the module on purpose.
