@@ -14,13 +14,10 @@ let
   # clan machines reached over tailscale magicdns on their openssh port (22 is
   # taken by tailscale ssh, whose host key is not the clan-managed one)
   builderHost = name: "${name}.${config.clan.core.settings.domain}";
-  builderPort = 2222;
+  builderPort = config.liberion.network.ssh.port;
 in
 {
-  imports = [
-    (lib.liberion.fs.getFile "modules/shared/nix/default.nix")
-    inputs.determinate.darwinModules.default
-  ];
+  imports = [ inputs.determinate.darwinModules.default ];
 
   options.liberion.nix.builders =
     mkOpt' (lib.types.attrsOf lib.types.ints.positive) { }
@@ -35,9 +32,9 @@ in
     determinateNix = {
       # Custom settings written to /etc/nix/nix.custom.conf
       customSettings = {
-        extra-substituters = cfg.substituters;
-        trusted-substituters = cfg.substituters;
-        extra-trusted-public-keys = cfg.trustedPublicKeys;
+        extra-substituters = lib.attrNames cfg.caches;
+        trusted-substituters = lib.attrNames cfg.caches;
+        extra-trusted-public-keys = lib.attrValues cfg.caches;
         trusted-users = [
           "root"
           "@admin"

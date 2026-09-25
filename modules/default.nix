@@ -1,10 +1,13 @@
 # NixOS entrypoint: every `default.nix` under ./nixos plus the Home Manager bridge.
 { lib, inputs, ... }: {
-  imports = lib.liberion.fs.getDefaultFiles ./nixos ++ [
-    inputs.home-manager.nixosModules.home-manager
-    ./home-manager.nix
-    ./nixpkgs.nix
-  ];
+  imports =
+    lib.liberion.fs.getDefaultFiles ./nixos
+    ++ lib.liberion.fs.getDefaultFiles ./shared
+    ++ [
+      inputs.home-manager.nixosModules.home-manager
+      ./home-manager.nix
+      ./nixpkgs.nix
+    ];
 
   # liberion hosts own their defaults; clan-installed machines opt in
   clan.core.enableRecommendedDefaults = lib.mkDefault false;

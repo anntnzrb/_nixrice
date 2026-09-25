@@ -27,7 +27,7 @@ in
     environment = off;
   };
 
-  system.stateVersion = lib.mkForce "26.05";
+  system.stateVersion = "26.05";
 
   # NetworkManager defaults already rank ethernet (enp3s0, metric 100) over
   # wifi (wlp2s0, metric 600)

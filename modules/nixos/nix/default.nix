@@ -3,16 +3,23 @@ let
   cfg = config.liberion.nix;
 in
 {
-  imports = [ (lib.liberion.fs.getFile "modules/shared/nix/default.nix") ];
-
   config = lib.mkIf cfg.enable {
     nix = {
-      settings.trusted-users = [
-        "root"
-        "@wheel"
-      ];
+      settings = {
+        experimental-features = [
+          "nix-command"
+          "flakes"
+        ];
+        substituters = lib.attrNames cfg.caches;
+        trusted-public-keys = lib.attrValues cfg.caches;
+        trusted-users = [
+          "root"
+          "@wheel"
+        ];
+      };
 
       gc = {
+        automatic = true;
         dates = "weekly";
         randomizedDelaySec = "45min";
       };

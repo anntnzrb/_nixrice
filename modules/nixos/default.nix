@@ -1,36 +1,25 @@
-{ lib, config, ... }:
+# NixOS baseline for every liberion host.
+{ lib, ... }:
 let
-  inherit (lib.liberion.module) mkOptEnabled';
-
-  cfg = config.liberion.nixos;
+  defaultLocale = "en_US.UTF-8";
 in
 {
-  options.liberion.nixos = {
-    enable = mkOptEnabled';
+  time.timeZone = "America/Guayaquil";
+
+  i18n = {
+    inherit defaultLocale;
+    extraLocaleSettings = lib.genAttrs [
+      "LC_ADDRESS"
+      "LC_IDENTIFICATION"
+      "LC_MEASUREMENT"
+      "LC_MONETARY"
+      "LC_NAME"
+      "LC_NUMERIC"
+      "LC_PAPER"
+      "LC_TELEPHONE"
+      "LC_TIME"
+    ] (_: defaultLocale);
   };
 
-  config = lib.mkIf cfg.enable {
-    time.timeZone = "America/Guayaquil";
-
-    i18n =
-      let
-        defaultLocale = "en_US.UTF-8";
-      in
-      {
-        inherit defaultLocale;
-        extraLocaleSettings = {
-          LC_ADDRESS = defaultLocale;
-          LC_IDENTIFICATION = defaultLocale;
-          LC_MEASUREMENT = defaultLocale;
-          LC_MONETARY = defaultLocale;
-          LC_NAME = defaultLocale;
-          LC_NUMERIC = defaultLocale;
-          LC_PAPER = defaultLocale;
-          LC_TELEPHONE = defaultLocale;
-          LC_TIME = defaultLocale;
-        };
-      };
-
-    system.stateVersion = "22.05";
-  };
+  system.stateVersion = lib.mkDefault "22.05";
 }

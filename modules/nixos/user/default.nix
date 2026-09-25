@@ -12,8 +12,6 @@ let
   cfg = config.liberion.user;
 in
 {
-  imports = [ (lib.liberion.fs.getFile "modules/shared/user/default.nix") ];
-
   options.liberion.user = {
     isNormalUser = mkOptEnabled';
     initialPassword = mkOpt' (nullOr str) "pass";
