@@ -9,6 +9,7 @@ in
 
   liberion = {
     user = on;
+    profiles.headless = on;
 
     # no dual-boot. systemd-boot suffices
     boot.bootloader.systemd-boot = on;
@@ -22,10 +23,4 @@ in
   home-manager.users.annt.imports = [ ./home.nix ];
 
   console.font = "${pkgs.terminus_font}/share/fonts/consolefonts/ter-v8n.psf.gz";
-
-  services.logind.settings.Login = {
-    HandleLidSwitch = "ignore";
-    HandleLidSwitchDocked = "ignore";
-    HandleLidSwitchExternalPower = "ignore";
-  };
 }
