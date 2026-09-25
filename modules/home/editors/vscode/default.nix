@@ -1,24 +1,12 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-  inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
+import ../../../toggle.nix "editors.vscode" (
+  { pkgs, ... }:
+  let
+    inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
 
-  cfg = config.liberion.editors.vscode;
-
-in
-{
-  options.liberion.editors.vscode = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+  in
+  {
     programs.vscode = {
-      inherit (cfg) enable;
+      enable = true;
 
       package = if isDarwin then null else pkgs.vscode;
 
@@ -27,5 +15,5 @@ in
     };
 
     home.packages = [ pkgs.victor-mono ];
-  };
-}
+  }
+)

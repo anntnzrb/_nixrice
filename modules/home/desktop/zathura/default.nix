@@ -1,36 +1,24 @@
-{ config, lib, ... }:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
+import ../../../toggle.nix "desktop.zathura" (_: {
+  programs.zathura = {
+    enable = true;
 
-  cfg = config.liberion.desktop.zathura;
-in
-{
-  options.liberion.desktop.zathura = {
-    enable = mkOptDisabled';
-  };
+    options = {
+      sandbox = "none";
+      selection-clipboard = "clipboard";
+    };
 
-  config = lib.mkIf cfg.enable {
-    programs.zathura = {
-      inherit (cfg) enable;
+    mappings = {
+      "J" = "zoom out";
+      "K" = "zoom in";
 
-      options = {
-        sandbox = "none";
-        selection-clipboard = "clipboard";
-      };
+      "D" = "toggle_page_mode";
+      "d" = "scroll half-down";
+      "u" = "scroll half-up";
 
-      mappings = {
-        "J" = "zoom out";
-        "K" = "zoom in";
-
-        "D" = "toggle_page_mode";
-        "d" = "scroll half-down";
-        "u" = "scroll half-up";
-
-        "i" = "recolor";
-        "r" = "reload";
-        "p" = "print";
-        "R" = "rotate";
-      };
+      "i" = "recolor";
+      "r" = "reload";
+      "p" = "print";
+      "R" = "rotate";
     };
   };
-}
+})

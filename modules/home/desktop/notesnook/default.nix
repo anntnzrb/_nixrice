@@ -1,1 +1,1 @@
-import ../../package-toggle.nix "desktop.notesnook" "notesnook"
+import ../../../toggle.nix "desktop.notesnook" "notesnook"

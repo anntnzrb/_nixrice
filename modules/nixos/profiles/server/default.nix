@@ -1,22 +1,10 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-
-  cfg = config.liberion.profiles.server;
-  userName = config.liberion.user.name;
-  inherit (config.liberion.network.ssh) authorizedKeys;
-in
-{
-  options.liberion.profiles.server = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+import ../../../toggle.nix "profiles.server" (
+  { pkgs, config, ... }:
+  let
+    userName = config.liberion.user.name;
+    inherit (config.liberion.network.ssh) authorizedKeys;
+  in
+  {
     # network: bbr congestion control with cake qdisc against bufferbloat
     boot = {
       kernelModules = [
@@ -106,5 +94,5 @@ in
       };
       root.openssh.authorizedKeys.keys = authorizedKeys;
     };
-  };
-}
+  }
+)

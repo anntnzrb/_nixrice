@@ -1,21 +1,9 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-
-  cfg = config.liberion.virtualisation.podman;
-  userName = config.liberion.user.name;
-in
-{
-  options.liberion.virtualisation.podman = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+import ../../../toggle.nix "virtualisation.podman" (
+  { pkgs, config, ... }:
+  let
+    userName = config.liberion.user.name;
+  in
+  {
     virtualisation = {
       containers.enable = true;
       podman = {
@@ -47,5 +35,5 @@ in
       ];
       sessionVariables.DOCKER_HOST = "unix:///var/run/docker.sock";
     };
-  };
-}
+  }
+)

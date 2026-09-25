@@ -1,14 +1,16 @@
-# Homebrew apps whose module is a bare on/off switch:
-# `liberion.programs.<name>.enable`.
+# `liberion.programs.<name>.enable` for every Homebrew app; apps needing more
+# than the install (aldente, raycast) add it in their own module.
 { lib, config, ... }:
 let
   inherit (lib.liberion.module) mkOptDisabled';
 
   casks = {
+    aldente = "aldente";
     obs = "obs";
     # OrbStack updates itself and installs a privileged helper, so it lives in
     # /Applications as a cask rather than in the read-only Nix store.
     orbstack = "orbstack";
+    raycast = "raycast";
     rustdesk = "rustdesk";
     vlc = "vlc";
     vscode = "visual-studio-code";

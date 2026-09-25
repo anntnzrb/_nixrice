@@ -1,23 +1,8 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-
-  cfg = config.liberion.network.networkmanager;
-in
-{
-  options.liberion.network.networkmanager = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+import ../../../toggle.nix "network.networkmanager" (
+  { pkgs, ... }: {
     networking.useDHCP = false;
 
-    networking.networkmanager = { inherit (cfg) enable; };
+    networking.networkmanager.enable = true;
     environment.systemPackages = [ pkgs.networkmanagerapplet ];
-  };
-}
+  }
+)

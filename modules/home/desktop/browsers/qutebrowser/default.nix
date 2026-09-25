@@ -1,22 +1,11 @@
-{
-  pkgs,
-  lib,
-  config,
-  ...
-}:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-  inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
-
-  cfg = config.liberion.desktop.browsers.qutebrowser;
-in
-{
-  options.liberion.desktop.browsers.qutebrowser = {
-    enable = mkOptDisabled';
-  };
-  config = lib.mkIf cfg.enable {
+import ../../../../toggle.nix "desktop.browsers.qutebrowser" (
+  { pkgs, config, ... }:
+  let
+    inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
+  in
+  {
     programs.qutebrowser = {
-      inherit (cfg) enable;
+      enable = true;
       package = if isDarwin then pkgs.emptyDirectory else pkgs.qutebrowser;
 
       loadAutoconfig = false;
@@ -165,5 +154,5 @@ in
         };
       };
     };
-  };
-}
+  }
+)

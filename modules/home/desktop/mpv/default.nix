@@ -1,21 +1,7 @@
-{
-  pkgs,
-  lib,
-  config,
-  ...
-}:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-
-  cfg = config.liberion.desktop.mpv;
-in
-{
-  options.liberion.desktop.mpv = {
-    enable = mkOptDisabled';
-  };
-  config = lib.mkIf cfg.enable {
+import ../../../toggle.nix "desktop.mpv" (
+  { pkgs, ... }: {
     programs.mpv = {
-      inherit (cfg) enable;
+      enable = true;
       scripts = with pkgs.mpvScripts; [
         uosc
         thumbfast
@@ -63,5 +49,5 @@ in
           "q" = "quit-watch-later";
         };
     };
-  };
-}
+  }
+)

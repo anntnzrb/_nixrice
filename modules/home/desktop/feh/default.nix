@@ -1,21 +1,6 @@
-{
-  pkgs,
-  lib,
-  config,
-  ...
-}:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-
-  cfg = config.liberion.desktop.feh;
-in
-{
-  options.liberion.desktop.feh = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
-    programs.feh = { inherit (cfg) enable; };
+import ../../../toggle.nix "desktop.feh" (
+  { pkgs, lib, ... }: {
+    programs.feh.enable = true;
 
     xdg.desktopEntries.feh = {
       name = "feh";
@@ -28,5 +13,5 @@ in
         "image/svg+xml"
       ];
     };
-  };
-}
+  }
+)

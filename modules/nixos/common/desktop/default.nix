@@ -1,17 +1,11 @@
-{ lib, config, ... }:
-let
-  inherit (lib.liberion.module) mkOptDisabled' on;
-
-  cfg = config.liberion.common.desktop;
-in
-{
-  options.liberion.common.desktop = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+import ../../../toggle.nix "common.desktop" (
+  { lib, ... }:
+  let
+    inherit (lib.liberion.module) on;
+  in
+  {
     services.gnome.gnome-keyring = on;
     programs.dconf = on;
     security.polkit = on;
-  };
-}
+  }
+)

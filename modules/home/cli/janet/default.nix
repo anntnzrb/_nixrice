@@ -1,1 +1,1 @@
-import ../../package-toggle.nix "cli.janet" "janet"
+import ../../../toggle.nix "cli.janet" "janet"

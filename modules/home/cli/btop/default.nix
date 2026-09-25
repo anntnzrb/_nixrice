@@ -1,17 +1,7 @@
-{ config, lib, ... }:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-
-  cfg = config.liberion.cli.btop;
-in
-{
-  options.liberion.cli.btop = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+import ../../../toggle.nix "cli.btop" (
+  { config, lib, ... }: {
     programs.btop = {
-      inherit (cfg) enable;
+      enable = true;
 
       settings = {
         vim_keys = true;
@@ -37,5 +27,5 @@ in
         "super + Return ; i" = "${config.home.sessionVariables.TERMINAL} -e btop";
       };
     };
-  };
-}
+  }
+)

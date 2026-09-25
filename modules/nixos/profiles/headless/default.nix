@@ -1,20 +1,5 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-
-  cfg = config.liberion.profiles.headless;
-in
-{
-  options.liberion.profiles.headless = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+import ../../../toggle.nix "profiles.headless" (
+  { pkgs, ... }: {
     services.xserver.enable = false;
     powerManagement.cpuFreqGovernor = "performance";
 
@@ -45,5 +30,5 @@ in
       enable = false;
       nixos.enable = false;
     };
-  };
-}
+  }
+)

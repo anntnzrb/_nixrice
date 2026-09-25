@@ -1,18 +1,10 @@
+# Raycast setup beyond its cask (programs/default.nix owns the toggle).
 { lib, config, ... }:
 let
-  inherit (lib.liberion.module) mkOptDisabled';
-
-  cfg = config.liberion.programs.raycast;
   user = config.system.primaryUser;
 in
 {
-  options.liberion.programs.raycast = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
-    liberion.homebrew.packages.casks = [ "raycast" ];
-
+  config = lib.mkIf config.liberion.programs.raycast.enable {
     # Raycast owns Cmd+Space (49 = space key)
     system.defaults.CustomUserPreferences."com.raycast.macos".raycastGlobalHotkey =
       "Command-49";

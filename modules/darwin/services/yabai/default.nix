@@ -1,28 +1,22 @@
-{ config, lib, ... }:
-let
-  inherit (lib.liberion.module) mkOptDisabled' on;
-  inherit (lib) concatStringsSep getAttr attrNames;
+import ../../../toggle.nix "services.yabai" (
+  { lib, ... }:
+  let
+    inherit (lib.liberion.module) on;
+    inherit (lib) concatStringsSep getAttr attrNames;
 
-  cfg = config.liberion.services.yabai;
+    # helpers
+    formatAttrs =
 
-  # helpers
-  formatAttrs =
+      attrs:
+      concatStringsSep " " (map (k: "${k}=${getAttr k attrs}") (attrNames attrs));
+    mkRule =
+      rule:
+      "yabai -m rule --add ${formatAttrs rule.pattern} ${formatAttrs rule.ruleset}";
 
-    attrs:
-    concatStringsSep " " (map (k: "${k}=${getAttr k attrs}") (attrNames attrs));
-  mkRule =
-    rule:
-    "yabai -m rule --add ${formatAttrs rule.pattern} ${formatAttrs rule.ruleset}";
-
-in
-{
-  options.liberion.services.yabai = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+  in
+  {
     services.yabai = {
-      inherit (cfg) enable;
+      enable = true;
 
       config = {
         layout = "bsp";
@@ -194,5 +188,5 @@ in
         "alt - h" = "yabai -m window --focus west";
       };
     };
-  };
-}
+  }
+)

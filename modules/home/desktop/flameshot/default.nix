@@ -1,17 +1,7 @@
-{ lib, config, ... }:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-
-  cfg = config.liberion.desktop.flameshot;
-in
-{
-  options.liberion.desktop.flameshot = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+import ../../../toggle.nix "desktop.flameshot" (
+  { config, ... }: {
     services.flameshot = {
-      inherit (cfg) enable;
+      enable = true;
       settings = {
         General = {
           autoCloseIdleDaemon = true;
@@ -30,5 +20,5 @@ in
         "Print" = "flameshot gui";
       };
     };
-  };
-}
+  }
+)

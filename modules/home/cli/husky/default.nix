@@ -1,1 +1,1 @@
-import ../../package-toggle.nix "cli.husky" "husky"
+import ../../../toggle.nix "cli.husky" "husky"

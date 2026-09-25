@@ -1,25 +1,18 @@
-{ config, lib, ... }:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
+import ../../../toggle.nix "shells.starship" (
+  { lib, ... }:
+  let
 
-  cfg = config.liberion.shells.starship;
-
-  # avoid `$all`
-  promptModules = [
-    "$git_branch"
-    "$git_status"
-    "$nix_shell"
-    "$direnv"
-  ];
-in
-{
-  options.liberion.shells.starship = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+    # avoid `$all`
+    promptModules = [
+      "$git_branch"
+      "$git_status"
+      "$nix_shell"
+      "$direnv"
+    ];
+  in
+  {
     programs.starship = {
-      inherit (cfg) enable;
+      enable = true;
 
       settings = {
         add_newline = false;
@@ -109,5 +102,5 @@ in
         singularity.disabled = true;
       };
     };
-  };
-}
+  }
+)

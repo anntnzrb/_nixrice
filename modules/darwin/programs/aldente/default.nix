@@ -1,17 +1,6 @@
-{ lib, config, ... }:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-
-  cfg = config.liberion.programs.aldente;
-in
-{
-  options.liberion.programs.aldente = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
-    liberion.homebrew.packages.casks = [ "aldente" ];
-
+# AlDente setup beyond its cask (programs/default.nix owns the toggle).
+{ lib, config, ... }: {
+  config = lib.mkIf config.liberion.programs.aldente.enable {
     system.defaults.CustomUserPreferences."com.apphousekitchen.aldente-pro" = {
       launchAtLogin = false;
     };

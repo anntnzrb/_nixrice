@@ -1,17 +1,7 @@
-{ config, lib, ... }:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-
-  cfg = config.liberion.cli.tldr;
-in
-{
-  options.liberion.cli.tldr = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+import ../../../toggle.nix "cli.tldr" (
+  { config, ... }: {
     programs.tealdeer = {
-      inherit (cfg) enable;
+      enable = true;
 
       settings = {
         directories = {
@@ -25,5 +15,5 @@ in
         };
       };
     };
-  };
-}
+  }
+)

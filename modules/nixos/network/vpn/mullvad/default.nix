@@ -1,24 +1,9 @@
-{
-  pkgs,
-  lib,
-  config,
-  ...
-}:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-
-  cfg = config.liberion.network.vpn.mullvad;
-in
-{
-  options.liberion.network.vpn.mullvad = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+import ../../../../toggle.nix "network.vpn.mullvad" (
+  { pkgs, ... }: {
     services.mullvad-vpn = {
-      inherit (cfg) enable;
+      enable = true;
       package = pkgs.mullvad-vpn;
       enableExcludeWrapper = false;
     };
-  };
-}
+  }
+)

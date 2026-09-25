@@ -1,20 +1,8 @@
-{ config, lib, ... }:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-
-  cfg = config.liberion.shells.fish;
-in
-{
-  options.liberion.shells.fish = {
-    enable = mkOptDisabled';
+import ../../../toggle.nix "shells.fish" (_: {
+  programs.fish = {
+    enable = true;
+    interactiveShellInit = ''
+      set -g fish_greeting # disable greeting
+    '';
   };
-
-  config = lib.mkIf cfg.enable {
-    programs.fish = {
-      inherit (cfg) enable;
-      interactiveShellInit = ''
-        set -g fish_greeting # disable greeting
-      '';
-    };
-  };
-}
+})

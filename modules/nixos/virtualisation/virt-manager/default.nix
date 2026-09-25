@@ -1,22 +1,10 @@
-{ lib, config, ... }:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-
-  cfg = config.liberion.virtualisation.virt-manager;
-in
-{
-  options.liberion.virtualisation.virt-manager = {
-    enable = mkOptDisabled';
+import ../../../toggle.nix "virtualisation.virt-manager" (_: {
+  virtualisation.libvirtd = {
+    enable = true;
+    onShutdown = "shutdown";
   };
 
-  config = lib.mkIf cfg.enable {
-    virtualisation.libvirtd = {
-      inherit (cfg) enable;
-      onShutdown = "shutdown";
-    };
+  programs.virt-manager.enable = true;
 
-    programs.virt-manager = { inherit (cfg) enable; };
-
-    liberion.user.extraGroups = [ "libvirtd" ];
-  };
-}
+  liberion.user.extraGroups = [ "libvirtd" ];
+})

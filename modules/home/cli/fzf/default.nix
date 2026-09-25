@@ -1,21 +1,9 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-  inherit (lib) getExe;
-
-  cfg = config.liberion.cli.fzf;
-in
-{
-  options.liberion.cli.fzf = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+import ../../../toggle.nix "cli.fzf" (
+  { lib, pkgs, ... }:
+  let
+    inherit (lib) getExe;
+  in
+  {
     programs.fzf =
       let
         catCmd = "${getExe pkgs.bat} --color=auto -P";
@@ -23,7 +11,7 @@ in
         defaultCommand = "${getExe pkgs.fd} --type f";
       in
       {
-        inherit (cfg) enable;
+        enable = true;
         inherit defaultCommand;
 
         # CTL-R
@@ -44,5 +32,5 @@ in
     home.sessionVariables = {
       FZF_COMPLETION_TRIGGER = "~~";
     };
-  };
-}
+  }
+)

@@ -1,18 +1,11 @@
-{ config, lib, ... }:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-
-  cfg = config.liberion.shells.bash;
-  shellsCfg = config.liberion.shells;
-in
-{
-  options.liberion.shells.bash = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+import ../../../toggle.nix "shells.bash" (
+  { config, ... }:
+  let
+    shellsCfg = config.liberion.shells;
+  in
+  {
     programs.bash = {
-      inherit (cfg) enable;
+      enable = true;
 
       enableCompletion = true;
       shellOptions = [
@@ -31,5 +24,5 @@ in
       historySize = 100 * 100;
       inherit (shellsCfg) historyIgnore;
     };
-  };
-}
+  }
+)

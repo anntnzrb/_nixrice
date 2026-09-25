@@ -1,21 +1,7 @@
-{
-  pkgs,
-  lib,
-  config,
-  ...
-}:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-
-  cfg = config.liberion.desktop.browsers.chromium;
-in
-{
-  options.liberion.desktop.browsers.chromium = {
-    enable = mkOptDisabled';
-  };
-  config = lib.mkIf cfg.enable {
+import ../../../../toggle.nix "desktop.browsers.chromium" (
+  { pkgs, ... }: {
     programs.chromium = {
-      inherit (cfg) enable;
+      enable = true;
 
       dictionaries = [ pkgs.hunspellDictsChromium.en_US ];
       extensions = [
@@ -28,5 +14,5 @@ in
         { id = "ajopnjidmegmdimjlfnijceegpefgped"; } # BetterTTV
       ];
     };
-  };
-}
+  }
+)

@@ -1,26 +1,18 @@
-{
-  lib,
-  pkgs,
-  config,
-  inputs,
-  ...
-}:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
+import ../../../toggle.nix "editors.neovim" (
+  {
+    lib,
+    pkgs,
+    inputs,
+    ...
+  }:
+  let
 
-  cfg = config.liberion.editors.neovim;
-
-  package = inputs.neovim-annt.packages.${pkgs.stdenv.hostPlatform.system}.nixvim;
-in
-{
-  options.liberion.editors.neovim = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+    package = inputs.neovim-annt.packages.${pkgs.stdenv.hostPlatform.system}.nixvim;
+  in
+  {
     home = {
       packages = [ package ];
       shellAliases.v = lib.getExe package;
     };
-  };
-}
+  }
+)

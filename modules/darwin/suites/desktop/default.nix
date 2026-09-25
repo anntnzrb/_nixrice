@@ -1,15 +1,9 @@
-{ lib, config, ... }:
-let
-  inherit (lib.liberion.module) mkOptDisabled' on;
-
-  cfg = config.liberion.suites.desktop;
-in
-{
-  options.liberion.suites.desktop = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+import ../../../toggle.nix "suites.desktop" (
+  { lib, ... }:
+  let
+    inherit (lib.liberion.module) on;
+  in
+  {
     # zsh as an interactive shell; this is a forced default
     # customization is done via hm
     programs.zsh = on;
@@ -31,5 +25,5 @@ in
 
       homebrew = on;
     };
-  };
-}
+  }
+)

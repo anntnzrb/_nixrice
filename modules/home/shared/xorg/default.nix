@@ -1,22 +1,13 @@
-{
-  lib,
-  pkgs,
-  config,
-  ...
-}:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-
-  cfg = config.liberion.shared.xorg;
-in
-{
-  options.liberion.shared.xorg = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+import ../../../toggle.nix "shared.xorg" (
+  {
+    lib,
+    pkgs,
+    config,
+    ...
+  }:
+  {
     xsession = {
-      inherit (cfg) enable;
+      enable = true;
       profilePath = ".config/xorg/xprofile-hm";
       scriptPath = ".config/xorg/xsession-hm";
 
@@ -40,5 +31,5 @@ in
         xprop
       ];
     };
-  };
-}
+  }
+)

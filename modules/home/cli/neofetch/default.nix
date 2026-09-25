@@ -1,20 +1,9 @@
-{
-  pkgs,
-  lib,
-  config,
-  ...
-}:
-let
-  inherit (lib.liberion.module) mkOptDisabled' on;
-
-  cfg = config.liberion.cli.neofetch;
-in
-{
-  options.liberion.cli.neofetch = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+import ../../../toggle.nix "cli.neofetch" (
+  { pkgs, lib, ... }:
+  let
+    inherit (lib.liberion.module) on;
+  in
+  {
     home.packages = [ pkgs.neofetch ];
 
     xdg.configFile = {
@@ -24,5 +13,5 @@ in
         recursive = true;
       };
     };
-  };
-}
+  }
+)

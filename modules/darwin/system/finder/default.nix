@@ -1,26 +1,19 @@
-{ lib, config, ... }:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
+import ../../../toggle.nix "system.finder" (
+  _:
+  let
 
-  cfg = config.liberion.system.finder;
+    searchScope = {
+      thisMac = null;
+      currentFolder = "SCcf";
+    };
 
-  searchScope = {
-    thisMac = null;
-    currentFolder = "SCcf";
-  };
-
-  viewStyle = {
-    icon = "icnv";
-    list = "clmv";
-    galery = "Flwv";
-  };
-in
-{
-  options.liberion.system.finder = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+    viewStyle = {
+      icon = "icnv";
+      list = "clmv";
+      galery = "Flwv";
+    };
+  in
+  {
     system.defaults = {
       finder = {
         AppleShowAllExtensions = true;
@@ -45,5 +38,5 @@ in
         FinderSpawnTab = true;
       };
     };
-  };
-}
+  }
+)

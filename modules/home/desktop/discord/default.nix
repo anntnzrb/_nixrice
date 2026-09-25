@@ -1,1 +1,1 @@
-import ../../package-toggle.nix "desktop.discord" "discord"
+import ../../../toggle.nix "desktop.discord" "discord"

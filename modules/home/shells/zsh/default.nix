@@ -1,18 +1,12 @@
-{ config, lib, ... }:
-let
-  inherit (lib.liberion.module) mkOptDisabled' on;
-
-  cfg = config.liberion.shells.zsh;
-  shellsCfg = config.liberion.shells;
-in
-{
-  options.liberion.shells.zsh = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+import ../../../toggle.nix "shells.zsh" (
+  { config, lib, ... }:
+  let
+    inherit (lib.liberion.module) on;
+    shellsCfg = config.liberion.shells;
+  in
+  {
     programs.zsh = {
-      inherit (cfg) enable;
+      enable = true;
       dotDir = "${config.xdg.configHome}/zsh";
 
       autosuggestion = on;
@@ -25,5 +19,5 @@ in
         ignorePatterns = shellsCfg.historyIgnore;
       };
     };
-  };
-}
+  }
+)

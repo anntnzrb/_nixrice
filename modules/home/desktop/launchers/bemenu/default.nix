@@ -1,20 +1,5 @@
-{
-  pkgs,
-  lib,
-  config,
-  ...
-}:
-let
-  inherit (lib.liberion.module) mkOptDisabled';
-
-  cfg = config.liberion.desktop.launchers.bemenu;
-in
-{
-  options.liberion.desktop.launchers.bemenu = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+import ../../../../toggle.nix "desktop.launchers.bemenu" (
+  { pkgs, ... }: {
     home = {
       packages = [ pkgs.bemenu ];
 
@@ -28,5 +13,5 @@ in
         "super + d ; {d}" = "{bemenu-run}";
       };
     };
-  };
-}
+  }
+)

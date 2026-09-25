@@ -1,22 +1,11 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
-let
-  inherit (lib.liberion.module) mkOptDisabled' on;
-
-  cfg = config.liberion.common.xorg;
-in
-{
-  options.liberion.common.xorg = {
-    enable = mkOptDisabled';
-  };
-
-  config = lib.mkIf cfg.enable {
+import ../../../toggle.nix "common.xorg" (
+  { lib, pkgs, ... }:
+  let
+    inherit (lib.liberion.module) on;
+  in
+  {
     services.xserver = {
-      inherit (cfg) enable;
+      enable = true;
       autorun = false;
       excludePackages = with pkgs; [
         iceauth
@@ -29,5 +18,5 @@ in
 
       displayManager.startx = on;
     };
-  };
-}
+  }
+)
