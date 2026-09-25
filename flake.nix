@@ -103,6 +103,16 @@
       );
 
       checks = forAllSystems (system: {
+        # tests/default.nix: lib discovery + fleet access invariants (eval-time)
+        tests =
+          let
+            failures = import ./tests { inherit lib self; };
+          in
+          if failures == [ ] then
+            pkgsFor.${system}.runCommand "liberion-tests" { } "touch $out"
+          else
+            throw "tests failed:\n${lib.concatStringsSep "\n" failures}";
+
         pre-commit-check = git-hooks.lib.${system}.run {
           src = ./.;
           hooks = {
