@@ -64,7 +64,7 @@ jobs:
           persist-credentials: false
 
       - if: env.BUILD == 'true'
-        uses: DeterminateSystems/nix-installer-action@v22
+        uses: DeterminateSystems/nix-installer-action@v23
 
       - if: env.BUILD == 'true'
         uses: cachix/cachix-action@v17
