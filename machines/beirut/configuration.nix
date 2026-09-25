@@ -1,11 +1,12 @@
-{ lib, ... }:
-let
-  inherit (lib.liberion.module) on;
-in
-{
-  nixpkgs.hostPlatform = "aarch64-darwin";
+{ inputs, ... }: {
+  imports = with inputs.self.darwinModules; [
+    aerospace
+    raycast
+    tailscale
+    ui
+  ];
 
-  home-manager.users.annt.imports = [ ./home.nix ];
+  nixpkgs.hostPlatform = "aarch64-darwin";
 
   determinateNix.customSettings = {
     # nix-darwin's nix module is disabled on darwin
@@ -16,20 +17,8 @@ in
   };
 
   liberion = {
-    suites.desktop = on;
-
-    network.tailscale = on;
-    programs.raycast = on;
     # add munich once it runs NixOS with clan sshd (see clan.nix)
     nix.builders.oulu = 12;
-
-    services.aerospace = on;
-
-    system = {
-      ui = on // {
-        menuBar.hide = false;
-      };
-    };
-
+    system.ui.menuBar.hide = false;
   };
 }

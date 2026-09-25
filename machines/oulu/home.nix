@@ -1,16 +1,7 @@
-{ lib, ... }:
-let
-  inherit (lib.liberion.module) on;
-in
-{
-  imports = [ ../../modules/home.nix ];
+{ inputs, ... }: {
+  imports = [ inputs.self.homeModules.fish ];
 
   home.stateVersion = "26.05";
-
-  liberion = {
-    suites.common = on;
-    shells.fish = on;
-  };
 
   programs = {
     fish.interactiveShellInit = ''

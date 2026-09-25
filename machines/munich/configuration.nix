@@ -1,26 +1,15 @@
-{ lib, ... }:
-let
-  inherit (lib.liberion.module) on off;
-in
-{
-  imports = [ ./hardware ];
+{ inputs, ... }: {
+  imports = with inputs.self.nixosModules; [
+    ./hardware
+    # GRUB because of dual-boot
+    grub
+    docker
+    virt-manager
+  ];
 
   nixpkgs.hostPlatform = "x86_64-linux";
 
   time.hardwareClockInLocalTime = true; # dual-boot
-
-  liberion = {
-    suites.desktop = on;
-
-    # GRUB because of dual-boot
-    boot.bootloader.grub = on;
-
-    virtualisation = {
-      docker = on;
-      virtualbox = off;
-      virt-manager = on;
-    };
-  };
 
   networking = {
     defaultGateway = "192.168.100.1";

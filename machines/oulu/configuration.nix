@@ -1,41 +1,32 @@
-{ lib, pkgs, ... }:
-let
-  inherit (lib.liberion.module) on off;
-in
-{
+{ pkgs, inputs, ... }: {
+  imports = [ inputs.self.nixosModules.podman ];
+
+  # oulu predates these liberion baselines; it owns its boot and packages
+  disabledModules = [
+    ../../modules/base/boot/nixos.nix
+    ../../modules/base/environment/system.nix
+  ];
+
   nixpkgs.hostPlatform = "x86_64-linux";
 
   clan.core.enableRecommendedDefaults = true;
-
-  liberion = {
-    profiles = {
-      server = on;
-      headless = on;
-    };
-    virtualisation.podman = on;
-    # oulu predates these liberion baselines; it owns its boot and packages
-    boot = off // {
-      bootloader = off;
-    };
-    environment = off;
-  };
 
   system.stateVersion = "26.05";
 
   # NetworkManager defaults already rank ethernet (enp3s0, metric 100) over
   # wifi (wlp2s0, metric 600)
-  networking.networkmanager = on;
+  networking.networkmanager.enable = true;
 
   environment = {
     localBinInPath = true;
     systemPackages = [ pkgs.ripgrep ];
   };
-  programs.nix-ld = on;
+  programs.nix-ld.enable = true;
 
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
     loader = {
-      systemd-boot = on;
+      systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
     initrd.availableKernelModules = [
@@ -59,7 +50,8 @@ in
     enableRedistributableFirmware = true;
   };
 
-  services.tailscale = on // {
+  services.tailscale = {
+    enable = true;
     openFirewall = true;
     useRoutingFeatures = "client";
     extraUpFlags = [
@@ -73,10 +65,7 @@ in
     extraGroups = [ "networkmanager" ];
     shell = pkgs.fish;
   };
-  programs.fish = on;
+  programs.fish.enable = true;
 
-  home-manager = {
-    useUserPackages = true;
-    users.annt.imports = [ ./home.nix ];
-  };
+  home-manager.useUserPackages = true;
 }

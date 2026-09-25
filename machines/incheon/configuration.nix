@@ -1,11 +1,7 @@
-{ lib, ... }:
-let
-  inherit (lib.liberion.module) on;
-in
-{
-  nixpkgs.hostPlatform = "aarch64-darwin";
+{ inputs, ... }: {
+  imports = [ inputs.self.darwinModules.ui ];
 
-  home-manager.users.annt.imports = [ ./home.nix ];
+  nixpkgs.hostPlatform = "aarch64-darwin";
 
   nix.settings = {
     max-jobs = 8;
@@ -13,19 +9,12 @@ in
   };
 
   liberion = {
-    suites.desktop = on;
-
-    system = {
-      ui = on // {
-        menuBar.hide = true;
-      };
-    };
-
-    programs = {
-      obs = on;
-      rustdesk = on;
-      vlc = on;
-      vscode = on;
-    };
+    system.ui.menuBar.hide = true;
+    homebrew.apps = [
+      "obs"
+      "rustdesk"
+      "vlc"
+      "vscode"
+    ];
   };
 }

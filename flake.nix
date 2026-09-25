@@ -77,8 +77,10 @@
             ];
           };
 
-      nixosModules.default = ./modules;
-      darwinModules.default = ./modules/darwin.nix;
+      # modules/{base,features,profiles}, discovered by lib.liberion (lib/default.nix)
+      nixosModules = lib.liberion.modules.nixos;
+      darwinModules = lib.liberion.modules.darwin;
+      homeModules = lib.liberion.modules.home;
 
       overlays.default = import ./overlays/default.nix { inherit inputs; };
 

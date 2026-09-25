@@ -1,22 +1,28 @@
 # Fleet inventory: machines, tags and service instances.
 { config, lib, ... }:
 let
-  identity = import ./identity.nix;
+  liberion = import ./lib { inherit lib; };
+  inherit (liberion) identity;
 in
 {
   meta.name = "liberion";
   # tailscale magicdns domain used for inter-machine clan communication
   meta.domain = "trex-gamut.ts.net";
 
-  # every machine gets the liberion module set of its class
-  # (keys from machines/, since clan derives inventory.machines from these)
+  # every machine gets its class's base plus the profile of each of its tags
+  # (modules/profiles/<tag>); keys come from machines/, since clan derives
+  # inventory.machines from these
   machines =
     lib.mapAttrs
-      (name: _: {
-        imports = [
-          config.self."${config.inventory.machines.${name}.machineClass}Modules".default
-        ];
-      })
+      (
+        name: _:
+        let
+          machine = config.inventory.machines.${name};
+        in
+        liberion.machineModule machine.machineClass machine.tags (
+          ./machines + "/${name}/home.nix"
+        )
+      )
       (lib.filterAttrs (_: kind: kind == "directory") (builtins.readDir ./machines));
 
   inventory.machines = {
@@ -26,12 +32,14 @@ in
         "physical"
         "workstation"
         "headless"
+        "server"
         "nixos"
       ];
     };
     munich = {
       description = "ASUS PRIME B660-PLUS D4 - Intel i5-12400 & NVIDIA GTX 1080 Pascal";
       tags = [
+        "desktop"
         "physical"
         "workstation"
         "nvidia"
@@ -41,6 +49,7 @@ in
     solna = {
       description = "Laptop Workstation (SSD)";
       tags = [
+        "desktop"
         "physical"
         "laptop"
         "workstation"
@@ -67,6 +76,7 @@ in
       description = "Apple M4 MacBook (Primary Mac)";
       machineClass = "darwin";
       tags = [
+        "desktop"
         "physical"
         "darwin"
         "laptop"
@@ -77,6 +87,7 @@ in
       description = "Apple M1 MacBook (Secondary Mac)";
       machineClass = "darwin";
       tags = [
+        "desktop"
         "physical"
         "darwin"
         "laptop"
@@ -103,12 +114,12 @@ in
       };
     };
 
-    # every machine is reachable over tailscale magicdns as annt@<name>:2222
+    # every machine is reachable over tailscale magicdns as <user>@<name>:<sshPort>
     internet.roles.default = {
       settings = {
         inherit (identity) user;
         # openssh; 22 on the tailnet is tailscale ssh (no clan host keys)
-        port = 2222;
+        port = identity.sshPort;
       };
       machines = lib.mapAttrs (host: _: {
         settings = { inherit host; };

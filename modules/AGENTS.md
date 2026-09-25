@@ -1,70 +1,62 @@
-# AGENTS.md - Module System
-
-One module = one feature, at `<platform>/<category>/<feature>/default.nix`, declaring
-`liberion.<category>.<feature>.enable` (option path mirrors the directory path).
+# AGENTS.md - Modules
 
 ```
 modules/
-├── darwin/  nixos/   # system modules (nix-darwin / NixOS)
-├── shared/           # system modules valid on both; imported by both entrypoints
-├── home/             # Home Manager modules
-├── toggle.nix        # factory for enable-only modules (not auto-imported)
-└── default.nix, darwin.nix, home.nix   # entrypoints
+├── base/<name>/       # always imported (every machine of the class / every home)
+├── features/<category>/<name>/   # imported by machines, profiles or other features
+└── profiles/<tag>/    # imported into machines tagged <tag> in clan.nix
 ```
 
-### Discovery
-- Every `default.nix` below an entrypoint's tree is imported automatically
-  (`lib.liberion.fs.getDefaultFiles`); adding a feature needs no import list edit.
-- Sibling `*.nix` files are only imported when the module asks with
-  `getModuleFiles { path = ./.; ignore = [ "data.nix" ]; }` - list plain data files
-  in `ignore`, or they get imported as modules.
+Each directory holds class files: `nixos.nix`, `darwin.nix`, `home.nix`, and
+`system.nix` (NixOS and nix-darwin alike). `lib/default.nix` discovers them and
+exports every feature by directory name as `self.nixosModules.<name>`,
+`self.darwinModules.<name>` and `self.homeModules.<name>`. Other files in a
+directory are helpers, imported explicitly; paths containing `/_` are ignored.
+Directory names are unique across features and profiles.
 
-### Writing a module
-Enable-only feature (most modules):
+### Adding a feature
+Drop a directory in `modules/features/<category>/<name>/` with the class file(s).
+**Importing it is enabling it** - there are no `enable` toggles:
 
 ```nix
-import ../../../toggle.nix "cli.btop" (
-  { config, ... }:
-  {
-    programs.btop.enable = true;
-  }
-)
+# modules/features/cli/btop/home.nix
+{
+  programs.btop = {
+    enable = true;
+    settings.vim_keys = true;
+  };
+}
 ```
 
-Install one package: `import ../../../toggle.nix "cli.husky" "husky"`.
+Then import it where it is wanted:
+`imports = with inputs.self.homeModules; [ btop ];` in a machine's `home.nix`,
+`modules/base/common/home.nix` (every home) or another feature.
 
-Feature with more options: declare them explicitly and gate on `cfg.enable`:
+A feature with both a system file and `home.nix` also hands the home part to the
+owner's Home Manager configuration when a machine imports it.
+
+Knobs a machine may tune are ordinary options under `liberion.<category>.<name>`:
 
 ```nix
 { lib, config, ... }:
 let
-  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
   cfg = config.liberion.cli.ssh;
 in
 {
-  options.liberion.cli.ssh = {
-    enable = mkOptDisabled';
-    identityFile = mkOpt' lib.types.str "~/.ssh/id_ed25519";
-  };
-
-  config = lib.mkIf cfg.enable { programs.ssh.enable = true; };
+  options.liberion.cli.ssh.identityFile = lib.liberion.module.mkOpt' lib.types.str "~/.ssh/id_ed25519";
+  config.programs.ssh.settings."*".IdentityFile = cfg.identityFile;
 }
 ```
 
-Helpers (`lib/default.nix`): `mkOpt' type default` (description-free option),
-`mkOptDisabled'` / `mkOptEnabled'` (bool, false / true), `on` / `off`
-(`{ enable = true/false; }`, e.g. `liberion.cli.git = on;`).
-
-Baselines (`nixos/default.nix`, `darwin/default.nix`, `home/default.nix`,
-`home/xdg`, `shared/{nix,environment}`) apply to every host; keep new features opt-in.
+Helpers: `lib.liberion.module.{mkOpt', mkOptEnabled', mkOptDisabled'}`,
+`lib.liberion.identity`. Prefer precise types (`enum`, `package`, `port`) over `str`.
 
 ### Gotchas
-- `liberion.suites.desktop` exists in both the system and the Home Manager option
-  trees; they are different options. Use `just enabled <machine>` to see what is on.
-- Reordering list definitions changes drvPaths even when behaviour does not:
-  `home.packages`, `environment.systemPackages` and Homebrew casks merge in module
-  order. Check with `just drvdiff` and explain any diff.
-- A probe reading `eval-error` is expected where the toggle cannot apply to the
-  probe host: Linux-only home modules on beirut, mutually exclusive toggles
-  (grub vs systemd-boot, dhcp vs networkmanager, headless vs desktop). A refactor
-  must keep every probe unchanged unless it changes the module on purpose.
+- Import order is merge order: moving an import reorders `home.packages` /
+  `environment.systemPackages` and changes drvPaths without changing behaviour.
+  `just drvdiff`, then explain the diff with `nix-diff`.
+- A probe reading `eval-error` is expected where the module cannot apply to the
+  probe host: Linux-only home features on beirut, exclusive features (grub vs
+  systemd-boot, dhcp vs networkmanager, headless vs desktop). A refactor must keep
+  every probe unchanged unless it changes the module on purpose.
+- oulu opts out of two base modules with `disabledModules`.

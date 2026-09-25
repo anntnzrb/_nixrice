@@ -1,7 +1,7 @@
 # Hardware facts identical on solna, zadar and munich: the NIX-BOOT/NIX-ROOT
 # label scheme and filesystem types. Per-host mount options and zram sizing
 # stay in machines/<host>/hardware/default.nix.
-_: {
+{
   fileSystems =
     let
       bootLabel = "NIX-BOOT";

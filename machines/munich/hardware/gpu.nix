@@ -1,22 +1,18 @@
-{ lib, ... }:
-let
-  inherit (lib.liberion.module) on;
-in
 {
   services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware = {
-    graphics = on;
+    graphics.enable = true;
 
     nvidia = {
       open = false;
       nvidiaSettings = true;
-      modesetting = on;
+      modesetting.enable = true;
 
       # this enables having an external nvidia-card-connected display on the
       # nvidia card; also enables the mobo-connected display
       prime = {
-        sync = on;
+        sync.enable = true;
         intelBusId = "PCI:0:2:0";
         nvidiaBusId = "PCI:1:0:0";
       };

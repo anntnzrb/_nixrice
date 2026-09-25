@@ -1,53 +1,38 @@
 ## AGENTS.md - System Overview
 
-This repo is a Nix Flake-driven dotfiles system built on [Clan](https://clan.lol)
-(`clan-core.lib.clan`): `flake.nix` wires inputs and outputs, `clan.nix` holds the
-fleet inventory (machines, tags, service instances).
+Nix flake on [Clan](https://clan.lol) (`clan-core.lib.clan`) for a small fleet of
+NixOS and nix-darwin machines with Home Manager. `flake.nix` wires inputs and
+outputs; `clan.nix` holds the inventory (machines, tags, service instances).
 
 ### Layout
-- `machines/<name>/` - one directory per machine, auto-discovered by Clan
-  (`configuration.nix`, optional `disko.nix`, `hardware/`, `home.nix`, readme).
-- `modules/` - feature modules (`nixos/`, `darwin/`, `home/`, `shared/`), their
-  entrypoints (`default.nix`, `darwin.nix`, `home.nix`, `home-manager.nix`) and the
-  toggle factory `toggle.nix`. How to write one: `modules/AGENTS.md`.
+- `identity.nix` - the owner: user name, git identity, fleet SSH keys and port.
+- `modules/base/` - imported into every machine of its class (and every home).
+- `modules/features/<category>/<name>/` - one feature per directory; importing it
+  enables it. How to write one: `modules/AGENTS.md`.
+- `modules/profiles/<tag>/` - imported into every machine carrying Clan tag `<tag>`.
+- `machines/<name>/` - `configuration.nix` (imports features), optional `home.nix`
+  (the owner's Home Manager config there), `hardware/`, `disko.nix`.
 - `homes/` - standalone Home Manager configurations (hosts without a managed system).
-- `lib/default.nix` - repository helpers exposed as `lib.liberion.*`.
-- `overlays/` - package overlay.
-- `scripts/ci/` - CI gate plus the regression tools below.
-- `justfile` - day-to-day tasks; run `just` to list them.
+- `lib/default.nix` - `lib.liberion`: discovery, module helpers, identity.
+- `scripts/ci/`, `justfile` - gates and tasks (`just` lists them).
 - `sops/`, `vars/` - Clan secrets and generated vars. Never print secret values.
 
-### Architecture
-- Modules implement features behind `liberion.<path>.enable`; machines and homes
-  compose them via toggles. Option paths are written literally (`liberion.cli.git`),
-  so `git grep 'cli.git'` finds declaration and setters alike.
-- `clan.nix` gives every machine the module set of its class
-  (`self.{nixos,darwin}Modules.default`); machine files hold only machine specifics.
-- Liberion homes import `modules/home.nix` (`machines/*/home.nix`, `homes/*.nix`).
-- Machines: `nixosConfigurations.<name>` / `darwinConfigurations.<name>`; hosted homes
-  live under `…config.home-manager.users.<user>`.
-
-### Core Principles
-1. **Separation of concerns**: Logic in modules, toggles in compositions
-2. **Conditional activation**: Feature config gated by its `enable`
-3. **Namespace isolation**: Every option lives under `liberion.`
-4. **Fail-safe defaults**: Features disabled by default, explicit opt-in
+### What a machine runs
+Its class base + the profile of each of its tags (`clan.nix`) + the features its
+`configuration.nix` and `home.nix` import. That is all plain text: grep for a
+feature name to see who uses it.
 
 ### Build / Test
-- A refactor must not change what machines build. Prove it:
-  - `just drvdiff [ref]` - diffs every machine/home drvPath *and* every probe
-    against a git ref (default `HEAD`); no output means a pure refactor.
-    Probes switch on each toggle no host enables, over a real host, so unused
-    modules are checked too (`scripts/ci/probes.nix`). Takes a few minutes.
+- A refactor must not change what machines build:
+  - `just drvdiff [ref]` - every machine/home drvPath and every probe (each
+    feature imported into a real host, `scripts/ci/probes.nix`) against a git ref;
+    no output = pure refactor. A few minutes.
   - `just snap` - machine/home drvPaths only (~30s), for quick iteration.
   - Explain an intended diff with `nix run nixpkgs#nix-diff -- <old.drv> <new.drv>`.
-- `just enabled <machine>` - the liberion toggles a machine turns on (grep cannot
-  tell you this: suites enable toggles indirectly).
-- Full gate: ensure all files tracked (`git add -N .`), then run `scripts/ci/check-flake.sh`.
-  Flake evals use `path:.` so untracked files are seen; `.#` needs them tracked.
+- Full gate: `git add -N .`, then `scripts/ci/check-flake.sh`. Flake evals use
+  `path:.` so untracked files count; `.#` needs them tracked.
 
 ### Deploy
-- NixOS machines: `just deploy <machine>` (clan, as `annt@<machine>:2222`), then verify on the target.
-- This machine: `just switch` (darwin-rebuild or nixos-rebuild, host from `hostname -s`).
-- Before deploying, evaluate: `nix eval .#<nixos|darwin>Configurations.<machine>.config.system.build.toplevel.drvPath`.
-- Secrets: never craft encrypted blobs by hand; use `clan vars generate <machine>` and let Clan own the age/sops lifecycle.
+- NixOS machines: `just deploy <machine>` (clan), then verify on the target.
+- This machine: `just switch`.
+- Secrets: never craft encrypted blobs by hand; use `clan vars generate <machine>`.

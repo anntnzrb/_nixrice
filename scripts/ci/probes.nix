@@ -1,77 +1,44 @@
-# Lists toggles no host enables ("<target> <path>") or, given `target` and
-# `path`, evaluates that host with the toggle (and all toggles below it) on.
+# Lists every feature/profile per probe host ("<target> <name>") or, given
+# `target` and `name`, evaluates that host with the module imported, so
+# modules no machine uses are checked like live ones.
 {
   flake,
   target ? null,
-  path ? null,
+  name ? null,
 }:
 let
   f = builtins.getFlake flake;
   inherit (f.inputs.nixpkgs) lib;
-  targets = {
-    # solna: a desktop NixOS host, so X/desktop modules probe without the
-    # conflicts a headless host would add
-    nixos-solna = {
-      sys = f.nixosConfigurations.solna;
-      get = c: c.liberion;
-      set = m: m;
-    };
-    home-zadar = {
-      sys = f.nixosConfigurations.zadar;
-      get = c: c.home-manager.users.annt.liberion;
-      set = m: { home-manager.users.annt = m; };
-    };
-    darwin-beirut = {
-      sys = f.darwinConfigurations.beirut;
-      get = c: c.liberion;
-      set = m: m;
-    };
-    home-beirut = {
-      sys = f.darwinConfigurations.beirut;
-      get = c: c.home-manager.users.annt.liberion;
-      set = m: { home-manager.users.annt = m; };
-    };
+  inherit (import "${f}/identity.nix") user;
+
+  home = sys: {
+    inherit sys;
+    modules = f.homeModules;
+    wrap = m: { home-manager.users.${user}.imports = [ m ]; };
   };
-  disabled =
-    prefix: v:
-    if builtins.isAttrs v && !(lib.isDerivation v) then
-      lib.concatLists (
-        lib.mapAttrsToList (
-          n: x:
-          let
-            r = builtins.tryEval x;
-          in
-          if !r.success || n == "enable" then
-            lib.optional (n == "enable" && r.success && r.value == false) (
-              lib.concatStringsSep "." prefix
-            )
-          else
-            disabled (prefix ++ [ n ]) r.value
-        ) v
-      )
-    else
-      [ ];
-  paths = t: disabled [ ] (t.get t.sys.config);
-  below = p: q: lib.hasPrefix "${p}." q;
-  top =
-    t:
-    let
-      ps = paths t;
-    in
-    builtins.filter (p: !(builtins.any (q: below q p) ps)) ps;
+  system = sys: modules: {
+    inherit sys modules;
+    wrap = m: m;
+  };
+
+  targets = {
+    # solna runs a desktop, so X/desktop modules probe without headless conflicts
+    nixos-solna = system f.nixosConfigurations.solna f.nixosModules;
+    darwin-beirut = system f.darwinConfigurations.beirut f.darwinModules;
+    home-zadar = home f.nixosConfigurations.zadar;
+    home-beirut = home f.darwinConfigurations.beirut;
+  };
+  names = t: lib.attrNames (removeAttrs t.modules [ "default" ]);
 in
 if target == null then
   lib.concatStrings (
     lib.concatLists (
-      lib.mapAttrsToList (n: t: map (p: "${n} ${p}\n") (top t)) targets
+      lib.mapAttrsToList (n: t: map (m: "${n} ${m}\n") (names t)) targets
     )
   )
 else
   let
     t = targets.${target};
-    on = map (q: lib.setAttrByPath (lib.splitString "." q ++ [ "enable" ]) true) (
-      [ path ] ++ builtins.filter (below path) (paths t)
-    );
   in
-  (t.sys.extendModules { modules = map (m: t.set { liberion = m; }) on; })
+  (t.sys.extendModules { modules = [ (t.wrap t.modules.${name}) ]; })
   .config.system.build.toplevel.drvPath

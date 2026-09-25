@@ -1,9 +1,5 @@
-{ inputs, lib, ... }:
-let
-  inherit (lib.liberion.module) on;
-in
-{
+{ inputs, ... }: {
   imports = [ inputs.nixos-hardware.nixosModules.common-gpu-intel ];
 
-  hardware.graphics = on;
+  hardware.graphics.enable = true;
 }

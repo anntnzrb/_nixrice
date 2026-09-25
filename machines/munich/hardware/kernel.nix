@@ -13,5 +13,5 @@
   };
 
   # support for tablets
-  #hardware.opentabletdriver = on;
+  #hardware.opentabletdriver.enable = true;
 }

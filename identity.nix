@@ -3,6 +3,9 @@
 {
   user = "annt";
 
+  # fleet openssh port; 22 on the tailnet is tailscale ssh (no clan host keys)
+  sshPort = 2222;
+
   git = {
     name = "anntnzrb";
     email = "anntnzrb@proton.me";

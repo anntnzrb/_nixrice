@@ -1,17 +1,13 @@
-{ lib, ... }:
-let
-  inherit (lib.liberion.module) on;
-in
 {
   services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware = {
-    graphics = on;
+    graphics.enable = true;
 
     nvidia = {
       open = false;
       nvidiaSettings = true;
-      modesetting = on;
+      modesetting.enable = true;
     };
   };
 }

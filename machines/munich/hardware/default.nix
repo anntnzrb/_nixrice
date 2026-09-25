@@ -1,20 +1,14 @@
-{
-  lib,
-  inputs,
-  modulesPath,
-  ...
-}:
-let
-  inherit (lib.liberion.module) on;
-  inherit (lib.liberion.fs) getModuleFiles;
-in
-{
+{ inputs, modulesPath, ... }: {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     inputs.nixos-hardware.nixosModules.common-pc-ssd
     ../../hardware-common.nix
   ]
-  ++ getModuleFiles { path = ./.; };
+  ++ [
+    ./cpu.nix
+    ./gpu.nix
+    ./kernel.nix
+  ];
 
   fileSystems."/".options = [
     "commit=120"
@@ -24,7 +18,8 @@ in
     "ssd"
   ];
 
-  zramSwap = on // {
+  zramSwap = {
+    enable = true;
     algorithm = "zstd";
     memoryPercent = 40; # ~12GB
   };

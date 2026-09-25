@@ -1,12 +1,5 @@
-{
-  lib,
-  inputs,
-  modulesPath,
-  ...
-}:
+{ inputs, modulesPath, ... }:
 let
-  inherit (lib.liberion.module) on;
-  inherit (lib.liberion.fs) getModuleFiles;
   inherit (inputs.nixos-hardware.nixosModules)
     common-pc-laptop
     common-pc-laptop-hdd
@@ -19,19 +12,25 @@ in
     common-pc-laptop-hdd
     ../../hardware-common.nix
   ]
-  ++ getModuleFiles { path = ./.; };
+  ++ [
+    ./cpu.nix
+    ./gpu.nix
+    ./kernel.nix
+  ];
 
   fileSystems."/".options = [
     "commit=120"
     "noatime"
   ];
 
-  zramSwap = on // {
+  zramSwap = {
+    enable = true;
     algorithm = "zstd";
     memoryPercent = 50; # ~6GB
   };
 
-  powerManagement = on // {
+  powerManagement = {
+    enable = true;
     cpuFreqGovernor = "performance";
   };
 }

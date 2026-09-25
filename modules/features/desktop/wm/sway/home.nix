@@ -1,0 +1,323 @@
+{
+  pkgs,
+  lib,
+  config,
+  inputs,
+  ...
+}:
+let
+  inherit (lib.liberion.module) mkOpt';
+  inherit (lib) readFile;
+  inherit (lib.types)
+    str
+    listOf
+    attrsOf
+    enum
+    ;
+  inherit (config.liberion.home) keyboard;
+
+  cfg = config.liberion.desktop.window-managers.wayland.sway;
+in
+
+{
+  imports = [ inputs.self.homeModules.session ];
+
+  options.liberion.desktop.window-managers.wayland.sway = {
+    autoStart = mkOpt' (listOf str) [ ];
+
+    modifier = mkOpt' (enum [
+      "Mod1"
+      "Mod4"
+    ]) "Mod4";
+
+    output = mkOpt' (attrsOf (attrsOf str)) { };
+  };
+
+  config = {
+    home = {
+      shellAliases = {
+        sway = "printf 'Do not use this command. To launch sway use the 'wm-exec-sway' wrapper.\n' >&2";
+        wm-exec-sway = "command sway";
+      };
+
+      packages = [
+        # fonts
+        pkgs.iosevka-comfy.comfy
+      ];
+    };
+
+    wayland.windowManager.sway = {
+      enable = true;
+      xwayland = true;
+
+      wrapperFeatures = {
+        gtk = true;
+      };
+
+      config =
+        let
+          fonts = {
+            names = [ "Iosevka Comfy Motion" ];
+            style = "SemiLight Italic";
+            size = 11.0;
+          };
+        in
+        {
+          inherit (cfg) output modifier;
+          inherit fonts;
+
+          up = "k";
+          down = "j";
+          right = "l";
+          left = "h";
+
+          startup = map (cmd: { command = cmd; }) cfg.autoStart;
+
+          colors = {
+            background = "#1C1B19";
+
+            focused = {
+              background = "#3A3A3A";
+              border = "#918175";
+              childBorder = "#918175";
+              indicator = "#FBB829";
+              text = "#FBB829";
+            };
+
+            unfocused = {
+              background = "#262626";
+              border = "#262626";
+              childBorder = "#262626";
+              indicator = "#262626";
+              text = "#918175";
+            };
+
+            focusedInactive = {
+              background = "#3A3A3A";
+              border = "#3A3A3A";
+              childBorder = "#3A3A3A";
+              indicator = "#3A3A3A";
+              text = "#918175";
+            };
+
+            placeholder = {
+              background = "#121212";
+              border = "#3A3A3A";
+              childBorder = "#3A3A3A";
+              indicator = "#3A3A3A";
+              text = "#918175";
+            };
+
+            urgent = {
+              background = "#262626";
+              border = "#EF2F27";
+              childBorder = "#EF2F27";
+              indicator = "#EF2F27";
+              text = "#EF2F27";
+            };
+          };
+
+          window = {
+            titlebar = true;
+            border = 3;
+          };
+
+          bars = [
+            {
+              inherit fonts;
+
+              # TODO: check if this was solved. i3status-rs should generate the proper file.
+              # statusCommand = "i3status-rs ${config.xdg.configHome}/i3status-rust/config-default.toml";
+              command = "waybar";
+              position = "top";
+              trayOutput = "*";
+
+              colors =
+                let
+                  background = "#1C1B19";
+                in
+                {
+                  inherit background;
+                  focusedBackground = background;
+
+                  activeWorkspace = {
+                    background = "#3A3A3A";
+                    border = "#3A3A3A";
+                    text = "#918175";
+                  };
+
+                  focusedWorkspace = {
+                    background = "#3A3A3A";
+                    border = "#918175";
+                    text = "#FBB829";
+                  };
+
+                  inactiveWorkspace = {
+                    background = "#262626";
+                    border = "#3A3A3A";
+                    text = "#918175";
+                  };
+
+                  urgentWorkspace = {
+                    background = "#E02C6D";
+                    border = "#E02C6D";
+                    text = "#FCE8C3";
+                  };
+                };
+            }
+          ];
+
+          keybindings =
+            let
+              mod = cfg.modifier;
+              modShift = "${mod}+Shift";
+              modAlt = "${mod}+Alt";
+            in
+            {
+              # TODO: mv
+              "${mod}+Return" =
+                "exec ${lib.getExe config.liberion.desktop.session.apps.terminal}";
+              "${mod}+d" = "exec bemenu-run";
+
+              "${modShift}+q" = "kill";
+              "${modAlt}+r" = "reload";
+              "${modAlt}+q" = "exit";
+
+              "${modShift}+space" = "floating toggle";
+              "${modShift}+f" = "fullscreen toggle";
+            }
+            //
+              lib.concatMapAttrs
+                (key: dir: {
+                  "${mod}+${key}" = "focus ${dir}";
+                  "${modShift}+${key}" = "move ${dir}";
+                })
+                {
+                  h = "left";
+                  j = "down";
+                  k = "up";
+                  l = "right";
+                  Left = "left";
+                  Down = "down";
+                  Up = "up";
+                  Right = "right";
+                }
+            // lib.concatMapAttrs (ws: _: {
+              "${mod}+${ws}" = "workspace number ${ws}";
+              "${modShift}+${ws}" = "move container to workspace number ${ws}";
+            }) (lib.genAttrs (map toString (lib.range 1 9)) (_: null));
+
+          gaps = {
+            inner = 10;
+          };
+
+          input = {
+            "*" = {
+              # keyboard
+              xkb_layout = keyboard.layout;
+              xkb_variant = keyboard.variant;
+              repeat_delay = toString keyboard.autoRepeatDelay;
+              repeat_rate = toString keyboard.autoRepeatInterval;
+
+              # mouse/touchpad
+              accel_profile = "flat";
+              drag = "true";
+              dwt = "true";
+              natural_scroll = "false";
+              scroll_method = "two_finger";
+              tap = "true";
+            };
+          };
+
+          seat = {
+            "*" = {
+              hide_cursor = "2000";
+            };
+          };
+
+          menu = "";
+          terminal = "";
+          modes = { };
+          workspaceLayout = "default";
+          workspaceAutoBackAndForth = false;
+        };
+    };
+
+    programs.waybar = {
+      enable = true;
+
+      style = readFile ./style.css;
+
+      settings = {
+        default = {
+          position = "top";
+
+          modules-left = [ "sway/workspaces" ];
+          modules-center = [ ];
+          modules-right = [
+            "cpu"
+            "memory"
+            "tray"
+            "clock"
+          ];
+
+          clock = {
+            format = "  {:%a, %d/%m %R}";
+            tooltip-format = "{:%Y-%m-%d}";
+          };
+
+          cpu = {
+            interval = 10;
+            format = "  {usage}%";
+          };
+
+          memory = {
+            interval = 10;
+            format = "  {percentage}%";
+          };
+
+          tray = {
+            spacing = 5;
+          };
+        };
+      };
+    };
+
+    programs.i3status-rust = {
+      enable = false;
+
+      bars = {
+        default = {
+          icons = "material-nf";
+          theme = "srcery";
+
+          blocks = [
+            {
+              block = "battery";
+              missing_format = "";
+            }
+            {
+              block = "backlight";
+              missing_format = "";
+            }
+            {
+              block = "cpu";
+              interval = 10;
+              format = " $icon $utilization ";
+            }
+            {
+              block = "memory";
+              format = " $icon $mem_used_percents ";
+              interval = 10;
+            }
+            {
+              block = "time";
+              format = " $timestamp.datetime(f:'%a, %d/%m @ %R') ";
+              interval = 60;
+            }
+          ];
+        };
+      };
+    };
+  };
+}

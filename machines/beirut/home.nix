@@ -1,23 +1,13 @@
-{ lib, ... }:
-let
-  inherit (lib.liberion.module) on;
-in
-{
-  imports = [ ../../modules/home.nix ];
+{ inputs, ... }: {
+  imports = with inputs.self.homeModules; [
+    ghostty
+    ssh
+    whatsapp
+    zsh
+  ];
 
-  liberion = {
-    suites.common = on;
-
-    shells.zsh = on;
-
-    cli.ssh = on // {
-      identityFile = "~/.ssh/beirut";
-      includes = [ "~/.orbstack/ssh/config" ];
-    };
-
-    desktop = {
-      terminal-emulators.ghostty = on;
-      whatsapp = on;
-    };
+  liberion.cli.ssh = {
+    identityFile = "~/.ssh/beirut";
+    includes = [ "~/.orbstack/ssh/config" ];
   };
 }
