@@ -6,12 +6,7 @@
   ...
 }:
 let
-  inherit (lib.${namespace}.module)
-    mkOpt'
-    mkOptEnabled'
-    off
-    on
-    ;
+  inherit (lib.${namespace}.module) mkOpt' mkOptEnabled' off;
   inherit (lib) attrNames attrValues;
   inherit (lib.types) attrsOf listOf str;
 
@@ -92,7 +87,6 @@ in
     documentation = {
       doc = off;
       info = off;
-      man = on;
     };
   };
 }
