@@ -17,7 +17,10 @@ in
 {
   imports = getModuleFiles {
     path = ./.;
-    ignore = [ "lib.nix" ];
+    ignore = [
+      "engines.nix"
+      "lib.nix"
+    ];
   };
 
   options.${namespace}.desktop.browsers.firefox = {
@@ -56,6 +59,14 @@ in
         profiles.default = {
           id = 0;
           name = "default";
+
+          search = {
+            inherit (cfg.search) default;
+            force = true;
+
+            # pure data merged here, inside the existing enable guard
+            engines = import ./engines.nix;
+          };
         };
       };
     })
