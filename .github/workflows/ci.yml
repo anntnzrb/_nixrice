@@ -15,14 +15,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # lint, evaluate every machine and home, flake checks (incl. tests/)
+  # lint, evaluate every machine and home (darwin too: --all-systems), flake
+  # checks incl. tests/. Linux only: a macOS copy re-checked the same things,
+  # and build.yml builds the Macs for real.
   check:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     timeout-minutes: 60
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@v7
         with:
@@ -48,7 +46,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [0, 1, 2, 3]
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
     steps:
       - uses: actions/checkout@v7
         with:
@@ -66,7 +64,7 @@ jobs:
       - name: Check probes
         env:
           PROBE_SHARD: ${{ matrix.shard }}
-          PROBE_SHARDS: 4
+          PROBE_SHARDS: 8
         run: scripts/ci/check-probes.sh
 
   # the required check: passes only if every probe shard did

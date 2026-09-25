@@ -1,14 +1,16 @@
 name: Nix build
 
-# Builds every machine and home on its platform and pushes the results to the
-# binary cache, so deploys substitute instead of building. Dependabot PRs are
-# built before they merge (a rebase merge keeps the same flake.lock, so the
-# merged commit is already cached) and the build is a required check, so an
-# update only lands if every machine builds. Pushing needs CACHIX_AUTH_TOKEN as
-# an Actions secret and, for Dependabot PRs, as a Dependabot secret.
+# Builds every machine and home that is not in the binary cache yet, each on
+# its own runner of the right platform, and pushes the results, so deploys
+# substitute instead of building. An unchanged fleet builds nothing.
+# Dependabot flake PRs are built before they merge (a rebase merge keeps the
+# same flake.lock, so the merged commit is already cached) and `builds` is a
+# required check, so an update only lands if every machine builds. Pushing
+# needs CACHIX_AUTH_TOKEN as an Actions secret and, for Dependabot PRs, as a
+# Dependabot secret.
 on:
   workflow_dispatch:
-  # every PR reports the check; only Dependabot flake updates build (see BUILD)
+  # every PR reports `builds`; only Dependabot flake updates build anything
   pull_request:
   push:
     branches: ["dev"]
@@ -23,9 +25,8 @@ on:
       - "machines/**"
       - "homes/**"
       - "overlays/**"
-      - scripts/ci/build.sh
   schedule:
-    # weekly safety net
+    # weekly safety net; a no-op when everything is cached
     - cron: "30 8 * * 1"
 
 permissions:
@@ -38,40 +39,81 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  # which machines and homes are missing from the cache, and on which runner
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      targets: ${{ steps.plan.outputs.targets }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: DeterminateSystems/nix-installer-action@v23
+
+      - uses: cachix/cachix-action@v17
+        with:
+          name: anntnzrb
+          skipPush: true
+
+      - id: plan
+        env:
+          # PRs build only for flake-input updates (an Actions bump changes
+          # no derivation)
+          BUILD: ${{ github.event_name != 'pull_request' || startsWith(github.head_ref, 'dependabot/nix/') }}
+        run: |
+          if test "$BUILD" = true; then
+            targets="$(scripts/ci/build-plan.sh)"
+          else
+            targets='[]'
+          fi
+          echo "targets=$targets" >> "$GITHUB_OUTPUT"
+          echo "To build: $targets" >> "$GITHUB_STEP_SUMMARY"
+
   build:
+    needs: plan
+    if: needs.plan.outputs.targets != '[]'
+    name: build ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 240
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
-    env:
-      # PRs build only for flake-input updates (an Actions bump changes no
-      # derivation). The steps are skipped, not the job: a skipped matrix job
-      # reports as plain "build" and the required checks would never arrive.
-      BUILD: ${{ github.event_name != 'pull_request' || startsWith(github.head_ref, 'dependabot/nix/') }}
+        include: ${{ fromJSON(needs.plan.outputs.targets) }}
     steps:
       - name: Free disk space
-        if: env.BUILD == 'true' && runner.os == 'Linux'
+        if: runner.os == 'Linux'
         run: |
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
             /opt/hostedtoolcache/CodeQL /usr/local/share/boost
           df -h /
 
-      - if: env.BUILD == 'true'
-        uses: actions/checkout@v7
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
 
-      - if: env.BUILD == 'true'
-        uses: DeterminateSystems/nix-installer-action@v23
+      - uses: DeterminateSystems/nix-installer-action@v23
 
-      - if: env.BUILD == 'true'
-        uses: cachix/cachix-action@v17
+      - uses: cachix/cachix-action@v17
         with:
           name: anntnzrb
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
 
-      - name: Build machines and homes
-        if: env.BUILD == 'true'
-        run: scripts/ci/build.sh
+      - name: Build ${{ matrix.name }}
+        env:
+          ATTR: ${{ matrix.attr }}
+        run: scripts/ci/build.sh "$ATTR"
+
+  # the required check: the plan ran and every scheduled build passed
+  builds:
+    needs: [plan, build]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: All builds passed
+        env:
+          PLAN: ${{ needs.plan.result }}
+          BUILD: ${{ needs.build.result }}
+        run: test "$PLAN" = success && { test "$BUILD" = success || test "$BUILD" = skipped; }

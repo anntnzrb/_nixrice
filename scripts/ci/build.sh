@@ -1,37 +1,26 @@
 #!/usr/bin/env sh
-# Builds every machine and standalone home this platform can build (Linux:
-# NixOS systems and homes; macOS: nix-darwin systems), so a package that
-# evaluates but fails to build shows up before a deploy.
+# Builds every machine and standalone home this platform can build, or only
+# the flake attributes given as arguments, so a package that evaluates but
+# fails to build shows up before a deploy.
 
 set -eu
 
-flake="path:$(pwd)"
+here="$(cd "$(dirname "$0")" && pwd)"
+flake="path:${PWD}"
 
-# "<output>.<name>.<attr>" installables for every entry of a flake output
-installables() {
-    nix eval --raw "${flake}#$1" \
-        --apply "cs: builtins.concatStringsSep \" \" (map (n: \"$1.\\\"\${n}\\\".$2\") (builtins.attrNames cs))"
-}
+if test "$#" -eq 0; then
+    system="$(nix eval --impure --raw --expr builtins.currentSystem)"
+    attrs="$(nix eval --impure --raw --expr "builtins.concatStringsSep \" \" (map (t: t.attr) (builtins.filter (t: t.system == \"${system}\") (import ${here}/targets.nix { flake = \"${flake}\"; })))")"
+    # shellcheck disable=SC2086 # attribute paths contain no whitespace
+    set -- ${attrs}
+fi
 
-platform="$(uname -s)"
-case "${platform}" in
-    Linux)
-        systems="$(installables nixosConfigurations config.system.build.toplevel)"
-        homes="$(installables homeConfigurations activationPackage)"
-        targets="${systems} ${homes}"
-        ;;
-    Darwin)
-        targets="$(installables darwinConfigurations system)"
-        ;;
-    *)
-        echo "unsupported platform: ${platform}" >&2
-        exit 1
-        ;;
-esac
-
-set --
-for target in ${targets}; do
-    set -- "$@" "${flake}#${target}"
+# prefix every attribute with the flake reference
+n=$#
+while test "${n}" -gt 0; do
+    set -- "$@" "${flake}#$1"
+    shift
+    n=$((n - 1))
 done
 
 nix build --keep-going --no-link --print-build-logs "$@"
