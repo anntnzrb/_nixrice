@@ -2,18 +2,17 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
   inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
 
-  cfg = config.${namespace}.editors.vscode;
+  cfg = config.liberion.editors.vscode;
 
 in
 {
-  options.${namespace}.editors.vscode = {
+  options.liberion.editors.vscode = {
     enable = mkOptDisabled';
   };
 

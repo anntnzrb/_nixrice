@@ -2,16 +2,15 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.desktop.bitwarden;
+  cfg = config.liberion.desktop.bitwarden;
 in
 {
-  options.${namespace}.desktop.bitwarden = {
+  options.liberion.desktop.bitwarden = {
     enable = mkOptDisabled';
     desktop.enable = mkOptDisabled';
     cli.enable = mkOptDisabled';

@@ -1,17 +1,12 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
   inherit (lib.types) listOf str;
 
-  cfg = config.${namespace}.desktop.browsers.brave;
+  cfg = config.liberion.desktop.browsers.brave;
 in
 {
-  options.${namespace}.desktop.browsers.brave = {
+  options.liberion.desktop.browsers.brave = {
     enable = mkOptDisabled';
     commandLineArgs = mkOpt' (listOf str) [
       "--no-default-browser-check"

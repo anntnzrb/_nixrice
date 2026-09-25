@@ -2,13 +2,12 @@
   lib,
   config,
   inputs,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) on;
+  inherit (lib.liberion.module) on;
 
-  cfg = config.${namespace}.desktop.browsers.firefox;
+  cfg = config.liberion.desktop.browsers.firefox;
 in
 {
   imports = [ inputs.betterfox-nix.homeModules.betterfox ];

@@ -2,19 +2,18 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
-  inherit (lib.${namespace}.fs) getModuleFiles;
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.fs) getModuleFiles;
 
-  cfg = config.${namespace}.desktop.terminal-emulators.rio;
+  cfg = config.liberion.desktop.terminal-emulators.rio;
 in
 {
   imports = getModuleFiles { path = ./.; };
 
-  options.${namespace}.desktop.terminal-emulators.rio = {
+  options.liberion.desktop.terminal-emulators.rio = {
     enable = mkOptDisabled';
     font.size = mkOpt' lib.types.int 15;
   };

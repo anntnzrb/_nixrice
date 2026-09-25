@@ -2,18 +2,17 @@
   pkgs,
   lib,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
   inherit (lib.types) str ints;
   inherit (config.home.sessionVariables) TERMINAL FILE BROWSER;
 
-  cfg = config.${namespace}.desktop.sxhkd;
+  cfg = config.liberion.desktop.sxhkd;
 in
 {
-  options.${namespace}.desktop.sxhkd = {
+  options.liberion.desktop.sxhkd = {
     enable = mkOptDisabled';
 
     timeout = mkOpt' ints.unsigned 3;

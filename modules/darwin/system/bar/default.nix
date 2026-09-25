@@ -1,16 +1,11 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.system.bar;
+  cfg = config.liberion.system.bar;
 in
 {
-  options.${namespace}.system.bar = {
+  options.liberion.system.bar = {
     sketchybar.enable = mkOptDisabled';
   };
 

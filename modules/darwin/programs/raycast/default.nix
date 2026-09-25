@@ -1,22 +1,17 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.programs.raycast;
+  cfg = config.liberion.programs.raycast;
   user = config.system.primaryUser;
 in
 {
-  options.${namespace}.programs.raycast = {
+  options.liberion.programs.raycast = {
     enable = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {
-    ${namespace}.homebrew.packages.casks = [ "raycast" ];
+    liberion.homebrew.packages.casks = [ "raycast" ];
 
     # Raycast owns Cmd+Space (49 = space key)
     system.defaults.CustomUserPreferences."com.raycast.macos".raycastGlobalHotkey =

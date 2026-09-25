@@ -1,18 +1,13 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
+{ config, lib, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled' on;
+  inherit (lib.liberion.module) mkOptDisabled' on;
 
   exe = lib.getExe config.programs.direnv.package;
 
-  cfg = config.${namespace}.cli.direnv;
+  cfg = config.liberion.cli.direnv;
 in
 {
-  options.${namespace}.cli.direnv = {
+  options.liberion.cli.direnv = {
     enable = mkOptDisabled';
   };
 

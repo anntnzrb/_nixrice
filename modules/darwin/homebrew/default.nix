@@ -2,11 +2,10 @@
   lib,
   config,
   inputs,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
   inherit (lib.types)
     listOf
     str
@@ -14,12 +13,12 @@ let
     ints
     ;
 
-  cfg = config.${namespace}.homebrew;
+  cfg = config.liberion.homebrew;
 in
 {
   imports = [ inputs.nix-homebrew.darwinModules.nix-homebrew ];
 
-  options.${namespace}.homebrew = {
+  options.liberion.homebrew = {
     enable = mkOptDisabled';
 
     packages = {
@@ -31,7 +30,7 @@ in
   config = lib.mkIf cfg.enable {
     nix-homebrew = {
       inherit (cfg) enable;
-      user = config.${namespace}.user.name;
+      user = config.liberion.user.name;
       autoMigrate = true;
     };
 

@@ -1,16 +1,11 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.virtualisation.virtualbox;
+  cfg = config.liberion.virtualisation.virtualbox;
 in
 {
-  options.${namespace}.virtualisation.virtualbox = {
+  options.liberion.virtualisation.virtualbox = {
     enable = mkOptDisabled';
     enableExtensionPack = mkOptDisabled';
   };
@@ -24,6 +19,6 @@ in
       };
     };
 
-    ${namespace}.user.extraGroups = [ "vboxusers" ];
+    liberion.user.extraGroups = [ "vboxusers" ];
   };
 }

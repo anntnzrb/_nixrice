@@ -2,11 +2,10 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
   inherit (lib.types)
     bool
     enum
@@ -14,7 +13,7 @@ let
     str
     ;
 
-  cfg = config.${namespace}.desktop.whatsapp;
+  cfg = config.liberion.desktop.whatsapp;
   idleCfg = cfg.idleQuit;
   sleepCfg = cfg.sleepQuit;
 
@@ -91,7 +90,7 @@ let
   };
 in
 {
-  options.${namespace}.desktop.whatsapp = {
+  options.liberion.desktop.whatsapp = {
     enable = mkOptDisabled';
 
     idleQuit = {
@@ -134,7 +133,7 @@ in
       assertions = [
         {
           assertion = pkgs.stdenv.hostPlatform.isDarwin;
-          message = "${namespace}.desktop.whatsapp is only supported on Darwin.";
+          message = "liberion.desktop.whatsapp is only supported on Darwin.";
         }
       ];
     })
@@ -143,16 +142,16 @@ in
       assertions = [
         {
           assertion = idleCfg.bundleId != "";
-          message = "${namespace}.desktop.whatsapp.idleQuit.bundleId must be set when the WhatsApp guard is enabled.";
+          message = "liberion.desktop.whatsapp.idleQuit.bundleId must be set when the WhatsApp guard is enabled.";
         }
         {
           assertion =
             (!sleepEnabled) || sleepCfg.onDisplaySleep || sleepCfg.onSystemSleep;
-          message = "${namespace}.desktop.whatsapp.sleepQuit must enable at least one trigger.";
+          message = "liberion.desktop.whatsapp.sleepQuit must enable at least one trigger.";
         }
         {
           assertion = (!sleepEnabled) || (sleepCfg.killGraceSeconds < 15);
-          message = "${namespace}.desktop.whatsapp.sleepQuit.killGraceSeconds must stay below 15 seconds for sleepwatcher hooks.";
+          message = "liberion.desktop.whatsapp.sleepQuit.killGraceSeconds must stay below 15 seconds for sleepwatcher hooks.";
         }
       ];
 

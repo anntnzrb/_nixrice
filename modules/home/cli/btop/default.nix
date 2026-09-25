@@ -1,16 +1,11 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
+{ config, lib, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.cli.btop;
+  cfg = config.liberion.cli.btop;
 in
 {
-  options.${namespace}.cli.btop = {
+  options.liberion.cli.btop = {
     enable = mkOptDisabled';
   };
 

@@ -1,16 +1,11 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.virtualisation.virt-manager;
+  cfg = config.liberion.virtualisation.virt-manager;
 in
 {
-  options.${namespace}.virtualisation.virt-manager = {
+  options.liberion.virtualisation.virt-manager = {
     enable = mkOptDisabled';
   };
 
@@ -22,6 +17,6 @@ in
 
     programs.virt-manager = { inherit (cfg) enable; };
 
-    ${namespace}.user.extraGroups = [ "libvirtd" ];
+    liberion.user.extraGroups = [ "libvirtd" ];
   };
 }

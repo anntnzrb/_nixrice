@@ -1,16 +1,11 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.system.dock;
+  cfg = config.liberion.system.dock;
 in
 {
-  options.${namespace}.system.dock = {
+  options.liberion.system.dock = {
     enable = mkOptDisabled';
   };
 

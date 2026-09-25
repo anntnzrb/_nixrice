@@ -1,16 +1,11 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.hardware.keyboard.keyd;
+  cfg = config.liberion.hardware.keyboard.keyd;
 in
 {
-  options.${namespace}.hardware.keyboard.keyd = {
+  options.liberion.hardware.keyboard.keyd = {
     enable = mkOptDisabled';
   };
 

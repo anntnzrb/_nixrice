@@ -1,14 +1,13 @@
 {
   lib,
   config,
-  namespace,
   inputs,
   ...
 }:
 let
   inherit (inputs) yazi-flavors yazi-timu-macos;
 
-  cfg = config.${namespace}.cli.yazi;
+  cfg = config.liberion.cli.yazi;
 
   themeDir = "yazi/flavors";
 

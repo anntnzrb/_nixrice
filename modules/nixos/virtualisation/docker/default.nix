@@ -1,16 +1,11 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled' on;
+  inherit (lib.liberion.module) mkOptDisabled' on;
 
-  cfg = config.${namespace}.virtualisation.docker;
+  cfg = config.liberion.virtualisation.docker;
 in
 {
-  options.${namespace}.virtualisation.docker = {
+  options.liberion.virtualisation.docker = {
     enable = mkOptDisabled';
     enableOnBoot = mkOptDisabled';
   };
@@ -26,6 +21,6 @@ in
       };
     };
 
-    ${namespace}.user.extraGroups = [ "docker" ];
+    liberion.user.extraGroups = [ "docker" ];
   };
 }

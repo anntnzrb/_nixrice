@@ -2,16 +2,15 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.cli.repomix;
+  cfg = config.liberion.cli.repomix;
 in
 {
-  options.${namespace}.cli.repomix = {
+  options.liberion.cli.repomix = {
     enable = mkOptDisabled';
   };
 

@@ -1,11 +1,6 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptEnabled';
+  inherit (lib.liberion.module) mkOpt' mkOptEnabled';
 
   inherit (lib.types)
     str
@@ -14,12 +9,12 @@ let
     singleLineStr
     ;
 
-  cfg = config.${namespace}.user;
+  cfg = config.liberion.user;
 in
 {
-  imports = [ (lib.${namespace}.fs.getFile "modules/shared/user/default.nix") ];
+  imports = [ (lib.liberion.fs.getFile "modules/shared/user/default.nix") ];
 
-  options.${namespace}.user = {
+  options.liberion.user = {
     isNormalUser = mkOptEnabled';
     initialPassword = mkOpt' (nullOr str) "pass";
     extraGroups = mkOpt' (listOf str) [ ];

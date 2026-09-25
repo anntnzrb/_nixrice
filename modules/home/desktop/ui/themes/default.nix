@@ -2,17 +2,16 @@
   pkgs,
   lib,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
   inherit (lib.types) str ints;
 
-  cfg = config.${namespace}.desktop.ui.themes;
+  cfg = config.liberion.desktop.ui.themes;
 in
 {
-  options.${namespace}.desktop.ui.themes = {
+  options.liberion.desktop.ui.themes = {
     enable = mkOptDisabled';
 
     cursor = {

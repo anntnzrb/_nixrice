@@ -2,16 +2,15 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
-  inherit (lib.${namespace}.fs) getModuleFiles;
+  inherit (lib.liberion.module) mkOptDisabled';
+  inherit (lib.liberion.fs) getModuleFiles;
   inherit (lib.types) listOf str;
 
-  cfg = config.${namespace}.desktop.window-managers.darwin.yashiki;
-  aerospaceCfg = config.${namespace}.desktop.window-managers.darwin.aerospace;
+  cfg = config.liberion.desktop.window-managers.darwin.yashiki;
+  aerospaceCfg = config.liberion.desktop.window-managers.darwin.aerospace;
   yashikiPkg = pkgs.yashiki;
   yashikiLib = import ./lib.nix { inherit lib; };
 
@@ -36,7 +35,7 @@ in
     ];
   };
 
-  options.${namespace}.desktop.window-managers.darwin.yashiki = {
+  options.liberion.desktop.window-managers.darwin.yashiki = {
     enable = mkOptDisabled';
 
     _sections = {
@@ -66,11 +65,11 @@ in
       assertions = [
         {
           assertion = !aerospaceCfg.enable;
-          message = "${namespace}.desktop.window-managers.darwin.yashiki cannot be enabled together with ${namespace}.desktop.window-managers.darwin.aerospace.";
+          message = "liberion.desktop.window-managers.darwin.yashiki cannot be enabled together with liberion.desktop.window-managers.darwin.aerospace.";
         }
       ];
 
-      ${namespace}.desktop.window-managers.darwin.yashiki._sections.rules =
+      liberion.desktop.window-managers.darwin.yashiki._sections.rules =
         yashikiLib.mkRules (import ./rules.nix);
 
       environment.systemPackages = [ yashikiPkg ];
@@ -82,7 +81,7 @@ in
         };
 
       launchd.user.agents.yashiki = {
-        managedBy = "${namespace}.desktop.window-managers.darwin.yashiki.enable";
+        managedBy = "liberion.desktop.window-managers.darwin.yashiki.enable";
         serviceConfig = {
           ProgramArguments = [
             "/Applications/Nix Apps/Yashiki.app/Contents/MacOS/yashiki"

@@ -1,13 +1,8 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
+{ config, lib, ... }:
 let
   inherit (lib) mkIf;
 
-  cfg = config.${namespace}.cli.git;
+  cfg = config.liberion.cli.git;
 in
 {
   config = mkIf cfg.enable {

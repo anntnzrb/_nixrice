@@ -2,19 +2,18 @@
   config,
   lib,
   pkgs,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptEnabled' on;
+  inherit (lib.liberion.module) mkOptEnabled' on;
 
-  cfg = config.${namespace}.xdg;
+  cfg = config.liberion.xdg;
   homeDir = "${config.home.homeDirectory}";
   libDir = "${homeDir}/lib";
   localDir = "${homeDir}/.local";
 in
 {
-  options.${namespace}.xdg = {
+  options.liberion.xdg = {
     enable = mkOptEnabled';
   };
 

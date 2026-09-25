@@ -1,16 +1,11 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
+{ config, lib, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.cli.yt-dlp;
+  cfg = config.liberion.cli.yt-dlp;
 in
 {
-  options.${namespace}.cli.yt-dlp = {
+  options.liberion.cli.yt-dlp = {
     enable = mkOptDisabled';
   };
 

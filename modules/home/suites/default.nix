@@ -1,16 +1,11 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled' on;
+  inherit (lib.liberion.module) mkOptDisabled' on;
 
-  cfg = config.${namespace}.suites;
+  cfg = config.liberion.suites;
 in
 {
-  options.${namespace}.suites = {
+  options.liberion.suites = {
     cli.enable = mkOptDisabled';
     common.enable = mkOptDisabled';
     core.enable = mkOptDisabled';
@@ -20,7 +15,7 @@ in
 
   config = lib.mkMerge [
     (lib.mkIf cfg.cli.enable {
-      ${namespace} = {
+      liberion = {
         shells = {
           sessionVariables.EDITOR = "nvim";
           tmux = on;
@@ -48,7 +43,7 @@ in
     })
 
     (lib.mkIf cfg.common.enable {
-      ${namespace}.suites = {
+      liberion.suites = {
         cli = on;
         core = on;
         dev = on;
@@ -56,16 +51,16 @@ in
     })
 
     (lib.mkIf cfg.core.enable {
-      ${namespace}.shells = {
+      liberion.shells = {
         prompt.starship = on;
         preliminaryMessage.disable = true;
       };
     })
 
-    (lib.mkIf cfg.desktop.enable { ${namespace}.desktop.ui.themes = on; })
+    (lib.mkIf cfg.desktop.enable { liberion.desktop.ui.themes = on; })
 
     (lib.mkIf cfg.dev.enable {
-      ${namespace}.cli = {
+      liberion.cli = {
         omnix = on;
         husky = on;
         node = on;

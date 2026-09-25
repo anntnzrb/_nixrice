@@ -1,14 +1,9 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
+{ config, lib, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled' on;
+  inherit (lib.liberion.module) mkOptDisabled' on;
   inherit (lib) concatStringsSep getAttr attrNames;
 
-  cfg = config.${namespace}.services.yabai;
+  cfg = config.liberion.services.yabai;
 
   # helpers
   formatAttrs =
@@ -21,7 +16,7 @@ let
 
 in
 {
-  options.${namespace}.services.yabai = {
+  options.liberion.services.yabai = {
     enable = mkOptDisabled';
   };
 
@@ -190,7 +185,7 @@ in
         '';
     };
 
-    ${namespace}.services.skhd = on // {
+    liberion.services.skhd = on // {
 
       keybindings = {
         "alt - k" = "yabai -m window --focus north";

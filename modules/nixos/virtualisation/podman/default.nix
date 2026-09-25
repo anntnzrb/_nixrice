@@ -2,17 +2,16 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.virtualisation.podman;
-  userName = config.${namespace}.user.name;
+  cfg = config.liberion.virtualisation.podman;
+  userName = config.liberion.user.name;
 in
 {
-  options.${namespace}.virtualisation.podman = {
+  options.liberion.virtualisation.podman = {
     enable = mkOptDisabled';
   };
 

@@ -2,17 +2,16 @@
   pkgs,
   lib,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
   inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
 
-  cfg = config.${namespace}.desktop.browsers.qutebrowser;
+  cfg = config.liberion.desktop.browsers.qutebrowser;
 in
 {
-  options.${namespace}.desktop.browsers.qutebrowser = {
+  options.liberion.desktop.browsers.qutebrowser = {
     enable = mkOptDisabled';
   };
   config = lib.mkIf cfg.enable {

@@ -1,9 +1,2 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
-lib.${namespace}.darwin.programs.mkOneCaskProgram {
-  inherit config namespace;
-} "obs" "obs"
+{ lib, config, ... }:
+lib.liberion.darwin.programs.mkOneCaskProgram { inherit config; } "obs" "obs"

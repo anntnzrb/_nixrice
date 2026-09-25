@@ -2,11 +2,10 @@
   lib,
   pkgs,
   self,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) on;
+  inherit (lib.liberion.module) on;
 in
 {
   imports = [
@@ -16,7 +15,7 @@ in
 
   nixpkgs.hostPlatform = "x86_64-linux";
 
-  ${namespace} = {
+  liberion = {
     user = on;
 
     # no dual-boot. systemd-boot suffices

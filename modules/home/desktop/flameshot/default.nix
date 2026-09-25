@@ -1,16 +1,11 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.desktop.flameshot;
+  cfg = config.liberion.desktop.flameshot;
 in
 {
-  options.${namespace}.desktop.flameshot = {
+  options.liberion.desktop.flameshot = {
     enable = mkOptDisabled';
   };
 

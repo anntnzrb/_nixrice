@@ -1,16 +1,11 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
+{ config, lib, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.shells.fish;
+  cfg = config.liberion.shells.fish;
 in
 {
-  options.${namespace}.shells.fish = {
+  options.liberion.shells.fish = {
     enable = mkOptDisabled';
   };
 

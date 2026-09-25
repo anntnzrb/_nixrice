@@ -2,11 +2,10 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled' on;
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled' on;
   inherit (lib.types) attrsOf str;
   inherit (lib)
     mkMerge
@@ -17,10 +16,10 @@ let
     range
     ;
 
-  cfg = config.${namespace}.desktop.window-managers.xorg.herbstluftwm;
+  cfg = config.liberion.desktop.window-managers.xorg.herbstluftwm;
 in
 {
-  options.${namespace}.desktop.window-managers.xorg.herbstluftwm = {
+  options.liberion.desktop.window-managers.xorg.herbstluftwm = {
     enable = mkOptDisabled';
 
     compositor.picom.enable = mkOptDisabled';
@@ -30,7 +29,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    ${namespace}.shared.xorg = on // {
+    liberion.shared.xorg = on // {
       inherit (cfg.compositor) picom;
     };
 

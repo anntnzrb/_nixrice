@@ -1,13 +1,8 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
+{ config, lib, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.shells.starship;
+  cfg = config.liberion.shells.starship;
 
   # avoid `$all`
   promptModules = [
@@ -18,7 +13,7 @@ let
   ];
 in
 {
-  options.${namespace}.shells.starship = {
+  options.liberion.shells.starship = {
     enable = mkOptDisabled';
   };
 

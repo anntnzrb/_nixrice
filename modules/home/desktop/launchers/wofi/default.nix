@@ -1,16 +1,11 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
+{ config, lib, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.desktop.launchers.wofi;
+  cfg = config.liberion.desktop.launchers.wofi;
 in
 {
-  options.${namespace}.desktop.launchers.wofi = {
+  options.liberion.desktop.launchers.wofi = {
     enable = mkOptDisabled';
   };
 

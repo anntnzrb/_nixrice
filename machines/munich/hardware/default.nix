@@ -2,12 +2,11 @@
   lib,
   inputs,
   modulesPath,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) on;
-  inherit (lib.${namespace}.fs) getModuleFiles;
+  inherit (lib.liberion.module) on;
+  inherit (lib.liberion.fs) getModuleFiles;
 in
 {
   imports = [

@@ -3,18 +3,17 @@
   pkgs,
   config,
   inputs,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.editors.neovim;
+  cfg = config.liberion.editors.neovim;
 
   package = inputs.neovim-annt.packages.${pkgs.stdenv.hostPlatform.system}.nixvim;
 in
 {
-  options.${namespace}.editors.neovim = {
+  options.liberion.editors.neovim = {
     enable = mkOptDisabled';
   };
 

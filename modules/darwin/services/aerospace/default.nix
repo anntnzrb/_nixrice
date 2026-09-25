@@ -2,17 +2,16 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
-  inherit (lib.${namespace}.fs) getModuleFiles;
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.fs) getModuleFiles;
   inherit (lib) range;
   inherit (lib.types) int listOf;
 
-  cfg = config.${namespace}.desktop.window-managers.darwin.aerospace;
-  yashikiCfg = config.${namespace}.desktop.window-managers.darwin.yashiki;
+  cfg = config.liberion.desktop.window-managers.darwin.aerospace;
+  yashikiCfg = config.liberion.desktop.window-managers.darwin.yashiki;
   yashikiPkg = pkgs.yashiki;
   aerospaceLib = import ./lib.nix { inherit lib; };
 in
@@ -25,7 +24,7 @@ in
     ];
   };
 
-  options.${namespace}.desktop.window-managers.darwin.aerospace = {
+  options.liberion.desktop.window-managers.darwin.aerospace = {
     enable = mkOptDisabled';
     modifier = mkOpt' lib.types.str "alt";
     workspaceRange = mkOpt' (listOf int) (range 0 9);
@@ -37,7 +36,7 @@ in
       assertions = [
         {
           assertion = !yashikiCfg.enable;
-          message = "${namespace}.desktop.window-managers.darwin.aerospace cannot be enabled together with ${namespace}.desktop.window-managers.darwin.yashiki.";
+          message = "liberion.desktop.window-managers.darwin.aerospace cannot be enabled together with liberion.desktop.window-managers.darwin.yashiki.";
         }
       ];
 

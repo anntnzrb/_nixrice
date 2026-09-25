@@ -1,17 +1,12 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
   inherit (lib.types) nullOr float;
 
-  cfg = config.${namespace}.desktop.gammastep;
+  cfg = config.liberion.desktop.gammastep;
 in
 {
-  options.${namespace}.desktop.gammastep = {
+  options.liberion.desktop.gammastep = {
     enable = mkOptDisabled';
 
     latitude = mkOpt' (nullOr float) (-2.0);

@@ -1,19 +1,14 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptEnabled' mkOptDisabled';
-  inherit (lib.${namespace}.fs) getModuleFiles;
+  inherit (lib.liberion.module) mkOptEnabled' mkOptDisabled';
+  inherit (lib.liberion.fs) getModuleFiles;
 
-  cfg = config.${namespace}.cli.yazi;
+  cfg = config.liberion.cli.yazi;
 in
 {
   imports = getModuleFiles { path = ./.; };
 
-  options.${namespace}.cli.yazi = {
+  options.liberion.cli.yazi = {
     enable = mkOptDisabled';
     plugin.githead.enable = mkOptEnabled';
   };

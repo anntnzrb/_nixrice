@@ -2,16 +2,15 @@
   pkgs,
   lib,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.desktop.browsers.chromium;
+  cfg = config.liberion.desktop.browsers.chromium;
 in
 {
-  options.${namespace}.desktop.browsers.chromium = {
+  options.liberion.desktop.browsers.chromium = {
     enable = mkOptDisabled';
   };
   config = lib.mkIf cfg.enable {

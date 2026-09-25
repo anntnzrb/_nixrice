@@ -1,17 +1,12 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptEnabled' on;
+  inherit (lib.liberion.module) mkOpt' mkOptEnabled' on;
   inherit (lib.types) str ints;
 
-  cfg = config.${namespace}.home;
+  cfg = config.liberion.home;
 in
 {
-  options.${namespace}.home = {
+  options.liberion.home = {
     enable = mkOptEnabled';
     keyboard = {
       layout = mkOpt' str "us";

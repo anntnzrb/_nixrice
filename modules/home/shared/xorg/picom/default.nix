@@ -1,16 +1,11 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
+{ config, lib, ... }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
 
-  cfg = config.${namespace}.shared.xorg.picom;
+  cfg = config.liberion.shared.xorg.picom;
 in
 {
-  options.${namespace}.shared.xorg.picom = {
+  options.liberion.shared.xorg.picom = {
     enable = mkOptDisabled';
     backend = mkOpt' lib.types.str "glx";
     vSync = mkOptDisabled';

@@ -1,16 +1,11 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled' on;
+  inherit (lib.liberion.module) mkOptDisabled' on;
 
-  cfg = config.${namespace}.suites.desktop;
+  cfg = config.liberion.suites.desktop;
 in
 {
-  options.${namespace}.suites.desktop = {
+  options.liberion.suites.desktop = {
     enable = mkOptDisabled';
   };
 
@@ -19,7 +14,7 @@ in
     # customization is done via hm
     programs.zsh = on;
 
-    ${namespace} = {
+    liberion = {
       system = {
         keyboard = on;
         dock = on;

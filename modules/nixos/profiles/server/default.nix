@@ -2,18 +2,17 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.profiles.server;
-  userName = config.${namespace}.user.name;
-  inherit (config.${namespace}.network.ssh) authorizedKeys;
+  cfg = config.liberion.profiles.server;
+  userName = config.liberion.user.name;
+  inherit (config.liberion.network.ssh) authorizedKeys;
 in
 {
-  options.${namespace}.profiles.server = {
+  options.liberion.profiles.server = {
     enable = mkOptDisabled';
   };
 

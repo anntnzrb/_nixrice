@@ -2,16 +2,15 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptEnabled';
+  inherit (lib.liberion.module) mkOptEnabled';
 
-  cfg = config.${namespace}.environment;
+  cfg = config.liberion.environment;
 in
 {
-  options.${namespace}.environment = {
+  options.liberion.environment = {
     # Shared baseline: the entrypoints wire this module into every host for the small
     # common toolset; leaf feature modules should remain opt-in.
     enable = mkOptEnabled';

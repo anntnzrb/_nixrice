@@ -2,11 +2,10 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  cfg = config.${namespace}.desktop.terminal-emulators.rio;
+  cfg = config.liberion.desktop.terminal-emulators.rio;
 
   fonts = {
     iosevka-comfy-motion = {

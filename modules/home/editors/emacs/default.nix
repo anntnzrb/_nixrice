@@ -2,12 +2,11 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
-  cfg = config.${namespace}.editors.emacs;
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
+  cfg = config.liberion.editors.emacs;
 
   mkEmacsPackage =
     pkg:
@@ -19,7 +18,7 @@ let
     );
 in
 {
-  options.${namespace}.editors.emacs = {
+  options.liberion.editors.emacs = {
     enable = mkOptDisabled';
 
     package = mkOpt' lib.types.package (mkEmacsPackage pkgs.emacs30);

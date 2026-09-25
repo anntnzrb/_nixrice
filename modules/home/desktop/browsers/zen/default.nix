@@ -3,18 +3,17 @@
   pkgs,
   config,
   inputs,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.desktop.browsers.zen;
+  cfg = config.liberion.desktop.browsers.zen;
 in
 {
   imports = [ inputs.zen-browser.homeModules.twilight ];
 
-  options.${namespace}.desktop.browsers.zen = {
+  options.liberion.desktop.browsers.zen = {
     enable = mkOptDisabled';
   };
 

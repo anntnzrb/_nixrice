@@ -1,11 +1,6 @@
-{
-  lib,
-  self,
-  namespace,
-  ...
-}:
+{ lib, self, ... }:
 let
-  inherit (lib.${namespace}.module) on;
+  inherit (lib.liberion.module) on;
 in
 {
   imports = [ self.darwinModules.default ];
@@ -22,7 +17,7 @@ in
     cores = 8;
   };
 
-  ${namespace} = {
+  liberion = {
     suites.desktop = on;
 
     network.tailscale = on;

@@ -1,13 +1,8 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptEnabled';
+  inherit (lib.liberion.module) mkOpt' mkOptEnabled';
 
-  cfg = config.${namespace}.shells.tmux;
+  cfg = config.liberion.shells.tmux;
   cockpitCfg = cfg.layouts.cockpit;
 
   scriptDir = "tmux/scripts";
@@ -19,7 +14,7 @@ let
   promptLabel = "Project name";
 in
 {
-  options.${namespace}.shells.tmux.layouts.cockpit = {
+  options.liberion.shells.tmux.layouts.cockpit = {
     enable = mkOptEnabled';
     bind = mkOpt' lib.types.str "M";
   };

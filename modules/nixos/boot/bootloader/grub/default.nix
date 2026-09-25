@@ -1,16 +1,11 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
+{ config, lib, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled' off;
+  inherit (lib.liberion.module) mkOptDisabled' off;
 
-  cfg = config.${namespace}.boot.bootloader.grub;
+  cfg = config.liberion.boot.bootloader.grub;
 in
 {
-  options.${namespace}.boot.bootloader.grub = {
+  options.liberion.boot.bootloader.grub = {
     enable = mkOptDisabled';
   };
 

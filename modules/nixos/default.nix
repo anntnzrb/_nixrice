@@ -1,16 +1,11 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptEnabled';
+  inherit (lib.liberion.module) mkOptEnabled';
 
-  cfg = config.${namespace}.nixos;
+  cfg = config.liberion.nixos;
 in
 {
-  options.${namespace}.nixos = {
+  options.liberion.nixos = {
     enable = mkOptEnabled';
   };
 

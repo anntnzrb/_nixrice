@@ -2,16 +2,15 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.shared.xorg;
+  cfg = config.liberion.shared.xorg;
 in
 {
-  options.${namespace}.shared.xorg = {
+  options.liberion.shared.xorg = {
     enable = mkOptDisabled';
   };
 
@@ -21,7 +20,7 @@ in
       profilePath = ".config/xorg/xprofile-hm";
       scriptPath = ".config/xorg/xsession-hm";
 
-      initExtra = with config.${namespace}.home.keyboard; ''
+      initExtra = with config.liberion.home.keyboard; ''
         ${lib.getExe pkgs.xset} r rate ${toString autoRepeatDelay} ${toString autoRepeatInterval}
       '';
     };

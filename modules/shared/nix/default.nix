@@ -2,15 +2,14 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptEnabled' off;
+  inherit (lib.liberion.module) mkOpt' mkOptEnabled' off;
   inherit (lib) attrNames attrValues;
   inherit (lib.types) attrsOf listOf str;
 
-  cfg = config.${namespace}.nix;
+  cfg = config.liberion.nix;
 
   /**
     Attribute set type for Nix cache substituters.
@@ -55,7 +54,7 @@ let
   };
 in
 {
-  options.${namespace}.nix = {
+  options.liberion.nix = {
     # Shared baseline: the entrypoints wire this module into every host so core Nix
     # settings stay consistent; leaf feature modules should remain opt-in.
     enable = mkOptEnabled';

@@ -2,17 +2,16 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
   inherit (lib) getExe;
 
-  cfg = config.${namespace}.cli.fzf;
+  cfg = config.liberion.cli.fzf;
 in
 {
-  options.${namespace}.cli.fzf = {
+  options.liberion.cli.fzf = {
     enable = mkOptDisabled';
   };
 

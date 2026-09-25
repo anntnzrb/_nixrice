@@ -1,16 +1,11 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
+{ config, lib, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.system.ui;
+  cfg = config.liberion.system.ui;
 in
 {
-  options.${namespace}.system.ui = {
+  options.liberion.system.ui = {
     enable = mkOptDisabled';
 
     menuBar = {

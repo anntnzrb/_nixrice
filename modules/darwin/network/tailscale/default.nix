@@ -2,13 +2,12 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.network.tailscale;
+  cfg = config.liberion.network.tailscale;
 
   # tailscaled's Darwin userspace router (wgengine/router/osrouter) installs
   # the tailnet routes with route(8) and only tracks them in process memory.
@@ -46,7 +45,7 @@ let
   '';
 in
 {
-  options.${namespace}.network.tailscale = {
+  options.liberion.network.tailscale = {
     enable = mkOptDisabled';
   };
 

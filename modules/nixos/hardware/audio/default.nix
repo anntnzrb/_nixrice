@@ -2,16 +2,15 @@
   lib,
   config,
   pkgs,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled' on;
+  inherit (lib.liberion.module) mkOptDisabled' on;
 
-  cfg = config.${namespace}.hardware.audio;
+  cfg = config.liberion.hardware.audio;
 in
 {
-  options.${namespace}.hardware.audio = {
+  options.liberion.hardware.audio = {
     pipewire.enable = mkOptDisabled';
   };
 

@@ -1,18 +1,13 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
+{ config, lib, ... }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled' on;
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled' on;
   inherit (lib) genList concatMap;
   inherit (lib.types) listOf str;
 
-  cfg = config.${namespace}.desktop.window-managers.wayland.hyprland;
+  cfg = config.liberion.desktop.window-managers.wayland.hyprland;
 in
 {
-  options.${namespace}.desktop.window-managers.wayland.hyprland = {
+  options.liberion.desktop.window-managers.wayland.hyprland = {
     enable = mkOptDisabled';
 
     monitor = mkOpt' (listOf str) [ ",preferred,auto,1" ];

@@ -3,18 +3,17 @@
   lib,
   config,
   inputs,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
   inherit (lib.types) nullOr str;
 
   ghosttyDir = "ghostty";
   ghosttyConfigHome = "${config.xdg.configHome}/${ghosttyDir}";
   themesDir = "${ghosttyDir}/themes";
 
-  cfg = config.${namespace}.desktop.terminal-emulators.ghostty;
+  cfg = config.liberion.desktop.terminal-emulators.ghostty;
   inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
   ghosttyPackage =
     if isDarwin then
@@ -46,7 +45,7 @@ let
   localConfigFile = normalizeLocalConfigFile cfg.localConfigFile;
 in
 {
-  options.${namespace}.desktop.terminal-emulators.ghostty = {
+  options.liberion.desktop.terminal-emulators.ghostty = {
     enable = mkOptDisabled';
     localConfigFile = mkOpt' (nullOr str) "?local.conf";
   };

@@ -3,17 +3,16 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled' off;
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled' off;
   inherit (lib.types) listOf package;
 
-  cfg = config.${namespace}.editors.zed;
+  cfg = config.liberion.editors.zed;
 in
 {
-  options.${namespace}.editors.zed = {
+  options.liberion.editors.zed = {
     enable = mkOptDisabled';
 
     package = mkOpt' lib.types.package pkgs.zed-editor;

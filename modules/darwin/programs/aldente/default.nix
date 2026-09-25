@@ -1,21 +1,16 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.programs.aldente;
+  cfg = config.liberion.programs.aldente;
 in
 {
-  options.${namespace}.programs.aldente = {
+  options.liberion.programs.aldente = {
     enable = mkOptDisabled';
   };
 
   config = lib.mkIf cfg.enable {
-    ${namespace}.homebrew.packages.casks = [ "aldente" ];
+    liberion.homebrew.packages.casks = [ "aldente" ];
 
     system.defaults.CustomUserPreferences."com.apphousekitchen.aldente-pro" = {
       launchAtLogin = false;
@@ -35,7 +30,7 @@ in
         ProcessType = "Interactive";
         LimitLoadToSessionType = [ "Aqua" ];
       };
-      managedBy = "${namespace}.programs.aldente.enable";
+      managedBy = "liberion.programs.aldente.enable";
     };
   };
 }

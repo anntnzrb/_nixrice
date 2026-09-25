@@ -2,16 +2,15 @@
   pkgs,
   lib,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.desktop.launchers.bemenu;
+  cfg = config.liberion.desktop.launchers.bemenu;
 in
 {
-  options.${namespace}.desktop.launchers.bemenu = {
+  options.liberion.desktop.launchers.bemenu = {
     enable = mkOptDisabled';
   };
 

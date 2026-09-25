@@ -2,11 +2,10 @@
   inputs,
   lib,
   config,
-  namespace,
   ...
 }:
 let
-  cfg = config.${namespace}.desktop.terminal-emulators.rio;
+  cfg = config.liberion.desktop.terminal-emulators.rio;
   themeDir = "rio/themes";
 
   themes = with inputs; {

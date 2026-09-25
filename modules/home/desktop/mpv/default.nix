@@ -2,16 +2,15 @@
   pkgs,
   lib,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.desktop.mpv;
+  cfg = config.liberion.desktop.mpv;
 in
 {
-  options.${namespace}.desktop.mpv = {
+  options.liberion.desktop.mpv = {
     enable = mkOptDisabled';
   };
   config = lib.mkIf cfg.enable {

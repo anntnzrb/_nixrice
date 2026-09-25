@@ -2,16 +2,15 @@
   pkgs,
   lib,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled' on;
+  inherit (lib.liberion.module) mkOptDisabled' on;
 
-  cfg = config.${namespace}.cli.neofetch;
+  cfg = config.liberion.cli.neofetch;
 in
 {
-  options.${namespace}.cli.neofetch = {
+  options.liberion.cli.neofetch = {
     enable = mkOptDisabled';
   };
 

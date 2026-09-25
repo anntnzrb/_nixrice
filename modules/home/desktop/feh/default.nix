@@ -2,16 +2,15 @@
   pkgs,
   lib,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.desktop.feh;
+  cfg = config.liberion.desktop.feh;
 in
 {
-  options.${namespace}.desktop.feh = {
+  options.liberion.desktop.feh = {
     enable = mkOptDisabled';
   };
 

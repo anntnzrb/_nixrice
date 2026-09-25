@@ -2,16 +2,15 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.cli.omnix;
+  cfg = config.liberion.cli.omnix;
 in
 {
-  options.${namespace}.cli.omnix = {
+  options.liberion.cli.omnix = {
     enable = mkOptDisabled';
   };
 

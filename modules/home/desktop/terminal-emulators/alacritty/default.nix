@@ -1,16 +1,11 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
 
-  cfg = config.${namespace}.desktop.terminal-emulators.alacritty;
+  cfg = config.liberion.desktop.terminal-emulators.alacritty;
 in
 {
-  options.${namespace}.desktop.terminal-emulators.alacritty = {
+  options.liberion.desktop.terminal-emulators.alacritty = {
     enable = mkOptDisabled';
     font.size = mkOpt' lib.types.float 10.0;
   };

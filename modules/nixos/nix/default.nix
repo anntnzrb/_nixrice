@@ -1,14 +1,9 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  cfg = config.${namespace}.nix;
+  cfg = config.liberion.nix;
 in
 {
-  imports = [ (lib.${namespace}.fs.getFile "modules/shared/nix/default.nix") ];
+  imports = [ (lib.liberion.fs.getFile "modules/shared/nix/default.nix") ];
 
   config = lib.mkIf cfg.enable {
     nix = {

@@ -4,38 +4,36 @@ let
 in
 {
   mkOneCaskProgram =
-    { config, namespace }:
+    { config }:
     name: cask:
     let
-      inherit (lib.${namespace}.module) mkOptDisabled';
-      cfg = config.${namespace}.programs.${name};
+      inherit (lib.liberion.module) mkOptDisabled';
+      cfg = config.liberion.programs.${name};
     in
     {
-      options = lib.setAttrByPath [ namespace "programs" name ] {
+      options = lib.setAttrByPath [ "liberion" "programs" name ] {
         enable = mkOptDisabled';
       };
 
-      config = lib.mkIf cfg.enable {
-        ${namespace}.homebrew.packages.casks = [ cask ];
-      };
+      config = lib.mkIf cfg.enable { liberion.homebrew.packages.casks = [ cask ]; };
     };
 
   mkOneMasAppProgram =
-    { config, namespace }:
+    { config }:
     name: appName: appId:
     let
-      inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
-      cfg = config.${namespace}.programs.${name};
+      inherit (lib.liberion.module) mkOpt' mkOptDisabled';
+      cfg = config.liberion.programs.${name};
     in
     {
-      options = lib.setAttrByPath [ namespace "programs" name ] {
+      options = lib.setAttrByPath [ "liberion" "programs" name ] {
         enable = mkOptDisabled';
         masAppName = mkOpt' str appName;
         masAppId = mkOpt' ints.positive appId;
       };
 
       config = lib.mkIf cfg.enable {
-        ${namespace}.homebrew.packages.masApps = {
+        liberion.homebrew.packages.masApps = {
           "${cfg.masAppName}" = cfg.masAppId;
         };
       };

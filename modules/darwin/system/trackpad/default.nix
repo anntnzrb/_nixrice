@@ -1,16 +1,11 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
+{ config, lib, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.system.trackpad;
+  cfg = config.liberion.system.trackpad;
 in
 {
-  options.${namespace}.system.trackpad = {
+  options.liberion.system.trackpad = {
     enable = mkOptDisabled';
   };
 

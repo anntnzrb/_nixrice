@@ -1,11 +1,6 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  cfg = config.${namespace}.shells.zellij;
+  cfg = config.liberion.shells.zellij;
 in
 {
   config = lib.mkIf cfg.enable {

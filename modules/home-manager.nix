@@ -5,13 +5,12 @@
   pkgs,
   config,
   inputs,
-  namespace,
   ...
 }:
 {
   home-manager = {
     useGlobalPkgs = true;
-    extraSpecialArgs = { inherit inputs namespace; };
+    extraSpecialArgs = { inherit inputs; };
   };
 
   # nix-darwin leaves `home` null, which home-manager needs

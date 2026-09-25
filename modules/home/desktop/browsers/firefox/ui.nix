@@ -1,12 +1,11 @@
 {
   lib,
   config,
-  namespace,
   firefoxLib,
   ...
 }:
 let
-  cfg = config.${namespace}.desktop.browsers.firefox;
+  cfg = config.liberion.desktop.browsers.firefox;
 in
 {
   config = lib.mkIf cfg.enable {

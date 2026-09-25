@@ -1,5 +1,5 @@
-{ lib, namespace, ... }: {
+{ lib, ... }: {
   imports = [
-    (lib.${namespace}.fs.getFile "modules/shared/environment/default.nix")
+    (lib.liberion.fs.getFile "modules/shared/environment/default.nix")
   ];
 }

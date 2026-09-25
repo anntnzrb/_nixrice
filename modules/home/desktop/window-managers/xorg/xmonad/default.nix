@@ -2,29 +2,28 @@
   pkgs,
   lib,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled' on;
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled' on;
   inherit (lib.types) listOf str;
 
-  cfg = config.${namespace}.desktop.window-managers.xorg.xmonad;
+  cfg = config.liberion.desktop.window-managers.xorg.xmonad;
 in
 {
-  options.${namespace}.desktop.window-managers.xorg.xmonad = {
+  options.liberion.desktop.window-managers.xorg.xmonad = {
     enable = mkOptDisabled';
     compositor.picom.enable = mkOptDisabled';
     autoStart = mkOpt' (listOf str) [ ];
   };
 
   config = lib.mkIf cfg.enable {
-    ${namespace}.shared.xorg = on // {
+    liberion.shared.xorg = on // {
       inherit (cfg.compositor) picom;
     };
 
     xsession = {
-      initExtra = lib.${namespace}.xorg.mkAutostartScript cfg.autoStart;
+      initExtra = lib.liberion.xorg.mkAutostartScript cfg.autoStart;
       windowManager.xmonad = on // {
         enableContribAndExtras = true;
       };

@@ -1,9 +1,4 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
-lib.${namespace}.darwin.programs.mkOneCaskProgram {
-  inherit config namespace;
+{ lib, config, ... }:
+lib.liberion.darwin.programs.mkOneCaskProgram {
+  inherit config;
 } "rustdesk" "rustdesk"

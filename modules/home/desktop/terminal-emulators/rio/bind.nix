@@ -1,11 +1,6 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  cfg = config.${namespace}.desktop.terminal-emulators.rio;
+  cfg = config.liberion.desktop.terminal-emulators.rio;
 in
 lib.mkIf cfg.enable {
   programs.rio.settings.bindings.keys = [

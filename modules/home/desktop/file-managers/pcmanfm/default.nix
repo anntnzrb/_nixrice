@@ -2,17 +2,16 @@
   pkgs,
   lib,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled' on;
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled' on;
   inherit (lib.types) attrsOf anything;
 
-  cfg = config.${namespace}.desktop.file-managers.pcmanfm;
+  cfg = config.liberion.desktop.file-managers.pcmanfm;
 in
 {
-  options.${namespace}.desktop.file-managers.pcmanfm = {
+  options.liberion.desktop.file-managers.pcmanfm = {
     enable = mkOptDisabled';
 
     settings = mkOpt' (attrsOf anything) {

@@ -1,15 +1,14 @@
 {
   lib,
   config,
-  namespace,
   pkgs,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
-  inherit (lib.${namespace}.fs) getModuleFiles;
+  inherit (lib.liberion.module) mkOptDisabled';
+  inherit (lib.liberion.fs) getModuleFiles;
 
-  cfg = config.${namespace}.cli.espanso;
+  cfg = config.liberion.cli.espanso;
 in
 {
   imports = getModuleFiles {
@@ -17,7 +16,7 @@ in
     ignore = [ "dictionary.nix" ];
   };
 
-  options.${namespace}.cli.espanso = {
+  options.liberion.cli.espanso = {
     enable = mkOptDisabled';
 
     extraMatchDir = lib.mkOption {

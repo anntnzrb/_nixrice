@@ -1,11 +1,6 @@
-{
-  lib,
-  self,
-  namespace,
-  ...
-}:
+{ lib, self, ... }:
 let
-  inherit (lib.${namespace}.module) on off;
+  inherit (lib.liberion.module) on off;
 in
 {
   imports = [
@@ -17,7 +12,7 @@ in
 
   time.hardwareClockInLocalTime = true; # dual-boot
 
-  ${namespace} = {
+  liberion = {
     suites.desktop = on;
 
     # GRUB because of dual-boot

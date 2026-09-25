@@ -1,11 +1,6 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
+{ config, lib, ... }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
   inherit (lib.types)
     attrsOf
     nullOr
@@ -15,7 +10,7 @@ let
     ;
   inherit (lib) concatStringsSep;
 
-  cfg = config.${namespace}.services.skhd;
+  cfg = config.liberion.services.skhd;
 
   # helpers
   keybindingsStr = concatStringsSep "\n" (
@@ -30,7 +25,7 @@ let
   skhdConfig = concatStringsSep "\n" [ keybindingsStr ];
 in
 {
-  options.${namespace}.services.skhd = {
+  options.liberion.services.skhd = {
     enable = mkOptDisabled';
 
     keybindings = mkOpt' (attrsOf (

@@ -1,16 +1,15 @@
 {
   lib,
   config,
-  namespace,
   yashikiLib,
   ...
 }:
 let
-  cfg = config.${namespace}.desktop.window-managers.darwin.yashiki;
+  cfg = config.liberion.desktop.window-managers.darwin.yashiki;
 in
 {
   config = lib.mkIf cfg.enable {
-    ${namespace}.desktop.window-managers.darwin.yashiki._sections.bindings =
+    liberion.desktop.window-managers.darwin.yashiki._sections.bindings =
       (yashikiLib.mkTagBindings yashikiLib.tagSpecs)
       ++ (yashikiLib.mkBindings [
         {

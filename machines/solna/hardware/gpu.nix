@@ -1,11 +1,6 @@
-{
-  inputs,
-  lib,
-  namespace,
-  ...
-}:
+{ inputs, lib, ... }:
 let
-  inherit (lib.${namespace}.module) on;
+  inherit (lib.liberion.module) on;
 in
 {
   imports = [ inputs.nixos-hardware.nixosModules.common-gpu-intel ];

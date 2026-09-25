@@ -2,16 +2,15 @@
   config,
   lib,
   pkgs,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled' on;
+  inherit (lib.liberion.module) mkOptDisabled' on;
 
-  cfg = config.${namespace}.common.xorg;
+  cfg = config.liberion.common.xorg;
 in
 {
-  options.${namespace}.common.xorg = {
+  options.liberion.common.xorg = {
     enable = mkOptDisabled';
   };
 

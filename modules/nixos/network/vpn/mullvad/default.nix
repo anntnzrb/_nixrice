@@ -2,16 +2,15 @@
   pkgs,
   lib,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.network.vpn.mullvad;
+  cfg = config.liberion.network.vpn.mullvad;
 in
 {
-  options.${namespace}.network.vpn.mullvad = {
+  options.liberion.network.vpn.mullvad = {
     enable = mkOptDisabled';
   };
 

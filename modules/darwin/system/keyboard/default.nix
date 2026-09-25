@@ -2,13 +2,12 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.system.keyboard;
+  cfg = config.liberion.system.keyboard;
 
   # Apple HID usage IDs. These are the numeric values expected by
   # `hidutil property --set`; nix-darwin forwards them unchanged.
@@ -36,7 +35,7 @@ let
   '';
 in
 {
-  options.${namespace}.system.keyboard = {
+  options.liberion.system.keyboard = {
     enable = mkOptDisabled';
   };
 
@@ -63,7 +62,7 @@ in
       # are different failure modes.
       {
         launchd.user.agents.keyboard-user-key-mapping = {
-          managedBy = "${namespace}.system.keyboard.enable";
+          managedBy = "liberion.system.keyboard.enable";
           serviceConfig = {
             ProgramArguments = [ "${applyKeyMapping}" ];
             RunAtLoad = true;

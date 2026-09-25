@@ -1,22 +1,17 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
+{ config, lib, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled' on;
+  inherit (lib.liberion.module) mkOptDisabled' on;
 
-  cfg = config.${namespace}.network.syncthing;
+  cfg = config.liberion.network.syncthing;
 in
 {
-  options.${namespace}.network.syncthing = {
+  options.liberion.network.syncthing = {
     enable = mkOptDisabled';
   };
 
   config =
     let
-      user = config.${namespace}.user.name;
+      user = config.liberion.user.name;
       syncPath = "/home/${user}/lib/sync";
     in
     lib.mkIf cfg.enable {

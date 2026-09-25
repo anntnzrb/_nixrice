@@ -1,11 +1,11 @@
-{ lib, namespace, ... }:
+{ lib, ... }:
 let
-  inherit (lib.${namespace}.module) on;
+  inherit (lib.liberion.module) on;
 in
 {
-  imports = [ (lib.${namespace}.fs.getFile "modules/home.nix") ];
+  imports = [ (lib.liberion.fs.getFile "modules/home.nix") ];
 
-  ${namespace} = {
+  liberion = {
     suites.common = on;
 
     shells.zsh = on;

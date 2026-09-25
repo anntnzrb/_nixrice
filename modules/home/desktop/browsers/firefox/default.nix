@@ -2,16 +2,15 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
-  inherit (lib.${namespace}.fs) getModuleFiles;
+  inherit (lib.liberion.module) mkOptDisabled';
+  inherit (lib.liberion.fs) getModuleFiles;
   inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
 
   firefoxLib = import ./lib.nix { inherit lib; };
-  cfg = config.${namespace}.desktop.browsers.firefox;
+  cfg = config.liberion.desktop.browsers.firefox;
   hasFirefoxBin = pkgs ? firefox-bin;
 in
 {
@@ -23,7 +22,7 @@ in
     ];
   };
 
-  options.${namespace}.desktop.browsers.firefox = {
+  options.liberion.desktop.browsers.firefox = {
     enable = mkOptDisabled';
 
     ui = firefoxLib.mkUiOptions;

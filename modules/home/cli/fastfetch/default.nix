@@ -2,11 +2,10 @@
   config,
   pkgs,
   lib,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled' on;
+  inherit (lib.liberion.module) mkOptDisabled' on;
 
   fastfetch =
     if pkgs.stdenv.hostPlatform.isDarwin then
@@ -19,10 +18,10 @@ let
     else
       pkgs.fastfetch;
 
-  cfg = config.${namespace}.cli.fastfetch;
+  cfg = config.liberion.cli.fastfetch;
 in
 {
-  options.${namespace}.cli.fastfetch = {
+  options.liberion.cli.fastfetch = {
     enable = mkOptDisabled';
   };
 

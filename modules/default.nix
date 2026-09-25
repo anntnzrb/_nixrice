@@ -1,12 +1,6 @@
 # NixOS entrypoint: every `default.nix` under ./nixos plus the Home Manager bridge.
-{
-  lib,
-  inputs,
-  namespace,
-  ...
-}:
-{
-  imports = lib.${namespace}.fs.getDefaultFiles ./nixos ++ [
+{ lib, inputs, ... }: {
+  imports = lib.liberion.fs.getDefaultFiles ./nixos ++ [
     inputs.home-manager.nixosModules.home-manager
     ./home-manager.nix
     ./nixpkgs.nix

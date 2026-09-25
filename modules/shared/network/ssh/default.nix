@@ -2,14 +2,13 @@
   lib,
   config,
   inputs,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
 
-  cfg = config.${namespace}.network.ssh;
-  userName = config.${namespace}.user.name;
+  cfg = config.liberion.network.ssh;
+  userName = config.liberion.user.name;
 
   # one key per device, plus the fleet-wide admin key
   fleetKeys = [
@@ -25,14 +24,14 @@ let
   remoteHosts = lib.filterAttrs (
     hostName: hostCfg:
     hostName != config.clan.core.settings.machine.name
-    && (hostCfg.config.${namespace}.user.name or null) != null
+    && (hostCfg.config.liberion.user.name or null) != null
   ) (nixosCfg // darwinCfg);
 
   remoteHostsCfg = lib.concatMapStringsSep "\n" (
     remoteHostName:
     let
       remote = remoteHosts.${remoteHostName};
-      remoteUserName = remote.config.${namespace}.user.name;
+      remoteUserName = remote.config.liberion.user.name;
       portEntry = lib.optionalString (builtins.hasAttr remoteHostName nixosCfg) ''
         Port ${builtins.toString cfg.port}
       '';
@@ -47,7 +46,7 @@ let
   ) (builtins.attrNames remoteHosts);
 in
 {
-  options.${namespace}.network.ssh = with lib.types; {
+  options.liberion.network.ssh = with lib.types; {
     enable = mkOptDisabled';
     extraConfig = mkOpt' str "";
     port = mkOpt' port 2222;

@@ -2,17 +2,16 @@
   pkgs,
   lib,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled' on;
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled' on;
   inherit (lib.types) listOf str;
 
-  cfg = config.${namespace}.desktop.window-managers.xorg.awesomewm;
+  cfg = config.liberion.desktop.window-managers.xorg.awesomewm;
 in
 {
-  options.${namespace}.desktop.window-managers.xorg.awesomewm = {
+  options.liberion.desktop.window-managers.xorg.awesomewm = {
     enable = mkOptDisabled';
 
     compositor = {
@@ -26,13 +25,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    ${namespace}.shared.xorg = on // {
+    liberion.shared.xorg = on // {
       inherit (cfg.compositor) picom;
     };
 
     xsession = {
       windowManager.awesome = on;
-      initExtra = lib.${namespace}.xorg.mkAutostartScript cfg.autoStart;
+      initExtra = lib.liberion.xorg.mkAutostartScript cfg.autoStart;
     };
 
     xdg.configFile = {

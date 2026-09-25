@@ -3,16 +3,15 @@
   lib,
   pkgs,
   inputs,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.cli.rust;
+  cfg = config.liberion.cli.rust;
 in
 {
-  options.${namespace}.cli.rust = {
+  options.liberion.cli.rust = {
     enable = mkOptDisabled';
   };
 

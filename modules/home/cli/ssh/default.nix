@@ -2,19 +2,18 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
   inherit (lib.types) listOf str;
 
-  cfg = config.${namespace}.cli.ssh;
+  cfg = config.liberion.cli.ssh;
 in
 {
   # Personal client defaults. Fleet hosts come from the system ssh_config
   # (`liberion.network.ssh`), which ssh reads after this file.
-  options.${namespace}.cli.ssh = {
+  options.liberion.cli.ssh = {
     enable = mkOptDisabled';
     identityFile = mkOpt' str "~/.ssh/id_ed25519";
     includes = mkOpt' (listOf str) [ ];

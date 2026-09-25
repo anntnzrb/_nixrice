@@ -1,6 +1,6 @@
-{ lib, namespace, ... }:
+{ lib, ... }:
 let
-  inherit (lib.${namespace}.module) on;
+  inherit (lib.liberion.module) on;
 in
 {
   services.xserver.videoDrivers = [ "nvidia" ];

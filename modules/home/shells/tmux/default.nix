@@ -1,19 +1,14 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
-  inherit (lib.${namespace}.fs) getModuleFiles;
+  inherit (lib.liberion.module) mkOptDisabled';
+  inherit (lib.liberion.fs) getModuleFiles;
 
-  cfg = config.${namespace}.shells.tmux;
+  cfg = config.liberion.shells.tmux;
 in
 {
   imports = getModuleFiles { path = ./.; };
 
-  options.${namespace}.shells.tmux = {
+  options.liberion.shells.tmux = {
     enable = mkOptDisabled';
   };
 

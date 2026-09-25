@@ -2,7 +2,6 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
@@ -11,8 +10,8 @@ let
       [
         "home-manager"
         "users"
-        config.${namespace}.user.name
-        namespace
+        config.liberion.user.name
+        "liberion"
         "desktop"
         "browsers"
         "brave"

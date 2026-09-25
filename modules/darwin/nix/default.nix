@@ -3,14 +3,13 @@
   self,
   inputs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' off;
+  inherit (lib.liberion.module) mkOpt' off;
 
-  cfg = config.${namespace}.nix;
-  userName = config.${namespace}.user.name;
+  cfg = config.liberion.nix;
+  userName = config.liberion.user.name;
 
   # clan machines reached over tailscale magicdns on their openssh port (22 is
   # taken by tailscale ssh, whose host key is not the clan-managed one)
@@ -19,11 +18,11 @@ let
 in
 {
   imports = [
-    (lib.${namespace}.fs.getFile "modules/shared/nix/default.nix")
+    (lib.liberion.fs.getFile "modules/shared/nix/default.nix")
     inputs.determinate.darwinModules.default
   ];
 
-  options.${namespace}.nix.builders =
+  options.liberion.nix.builders =
     mkOpt' (lib.types.attrsOf lib.types.ints.positive) { }
     // {
       description = "x86_64-linux remote builders: clan machine name -> max jobs.";

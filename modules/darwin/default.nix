@@ -1,16 +1,11 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptEnabled';
+  inherit (lib.liberion.module) mkOptEnabled';
 
-  cfg = config.${namespace}.darwin;
+  cfg = config.liberion.darwin;
 in
 {
-  options.${namespace}.darwin = {
+  options.liberion.darwin = {
     enable = mkOptEnabled';
   };
 
@@ -21,7 +16,7 @@ in
     };
 
     system = {
-      primaryUser = config.${namespace}.user.name;
+      primaryUser = config.liberion.user.name;
       # booting beep/sound
       startup.chime = false;
 

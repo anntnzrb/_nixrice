@@ -1,16 +1,11 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
+{ config, lib, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.desktop.zathura;
+  cfg = config.liberion.desktop.zathura;
 in
 {
-  options.${namespace}.desktop.zathura = {
+  options.liberion.desktop.zathura = {
     enable = mkOptDisabled';
   };
 

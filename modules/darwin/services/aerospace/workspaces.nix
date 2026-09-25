@@ -2,11 +2,10 @@
   lib,
   aerospaceLib,
   config,
-  namespace,
   ...
 }:
 let
-  cfg = config.${namespace}.desktop.window-managers.darwin.aerospace;
+  cfg = config.liberion.desktop.window-managers.darwin.aerospace;
 in
 {
   config = lib.mkIf cfg.enable {

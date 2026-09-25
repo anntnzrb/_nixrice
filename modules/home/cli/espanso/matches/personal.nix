@@ -1,11 +1,6 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  cfg = config.${namespace}.cli.espanso;
+  cfg = config.liberion.cli.espanso;
 in
 {
   config.services.espanso.matches.default.matches = lib.mkIf cfg.enable [

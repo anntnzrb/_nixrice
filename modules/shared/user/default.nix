@@ -1,10 +1,10 @@
-{ lib, namespace, ... }:
+{ lib, ... }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
   inherit (lib.types) str;
 in
 {
-  options.${namespace}.user = {
+  options.liberion.user = {
     enable = mkOptDisabled';
     name = mkOpt' str "annt";
   };

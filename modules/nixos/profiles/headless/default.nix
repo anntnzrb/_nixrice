@@ -2,16 +2,15 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.profiles.headless;
+  cfg = config.liberion.profiles.headless;
 in
 {
-  options.${namespace}.profiles.headless = {
+  options.liberion.profiles.headless = {
     enable = mkOptDisabled';
   };
 

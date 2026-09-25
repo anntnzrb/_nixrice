@@ -2,16 +2,15 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.network.networkmanager;
+  cfg = config.liberion.network.networkmanager;
 in
 {
-  options.${namespace}.network.networkmanager = {
+  options.liberion.network.networkmanager = {
     enable = mkOptDisabled';
   };
 

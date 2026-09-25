@@ -2,16 +2,15 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.cli.aider-chat;
+  cfg = config.liberion.cli.aider-chat;
 in
 {
-  options.${namespace}.cli.aider-chat = {
+  options.liberion.cli.aider-chat = {
     enable = mkOptDisabled';
   };
 

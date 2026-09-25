@@ -1,19 +1,14 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
+{ config, lib, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
-  inherit (lib.${namespace}.fs) getModuleFiles;
+  inherit (lib.liberion.module) mkOptDisabled';
+  inherit (lib.liberion.fs) getModuleFiles;
 
-  cfg = config.${namespace}.cli.git;
+  cfg = config.liberion.cli.git;
 in
 {
   imports = getModuleFiles { path = ./.; };
 
-  options.${namespace}.cli.git = {
+  options.liberion.cli.git = {
     enable = mkOptDisabled';
 
     diff = {

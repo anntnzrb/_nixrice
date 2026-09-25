@@ -11,8 +11,6 @@
       ...
     }@inputs:
     let
-      namespace = "liberion";
-
       supportedSystems = [
         "x86_64-linux"
         "aarch64-linux"
@@ -23,7 +21,7 @@
 
       # nixpkgs lib extended with the repository helpers (`lib.liberion.*`)
       lib = nixpkgs.lib.extend (
-        final: _: { ${namespace} = import ./lib { lib = final; }; }
+        final: _: { liberion = import ./lib { lib = final; }; }
       );
 
       # nixpkgs arguments shared by every package set: flake outputs, clan and
@@ -45,7 +43,6 @@
           inputs
           self
           lib
-          namespace
           nixpkgsArgs
           ;
       };
@@ -66,7 +63,7 @@
       homeConfigurations."annt@wsl" = home-manager.lib.homeManagerConfiguration {
         pkgs = pkgsFor.x86_64-linux;
         inherit lib;
-        extraSpecialArgs = { inherit inputs namespace; };
+        extraSpecialArgs = { inherit inputs; };
         modules = [
           ./homes/wsl.nix
           {
@@ -159,7 +156,7 @@
         in
         {
           default = pkgs.mkShell {
-            name = "${namespace}-shell";
+            name = "liberion-shell";
             inherit (self.checks.${system}.pre-commit-check) shellHook;
             nativeBuildInputs = [
               clan-core.packages.${system}.clan-cli

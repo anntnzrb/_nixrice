@@ -2,14 +2,13 @@
   lib,
   pkgs,
   config,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
-  inherit (lib.${namespace}.fs) getModuleFiles;
+  inherit (lib.liberion.module) mkOptDisabled';
+  inherit (lib.liberion.fs) getModuleFiles;
 
-  cfg = config.${namespace}.shells.zellij;
+  cfg = config.liberion.shells.zellij;
 in
 {
   imports = getModuleFiles {
@@ -17,7 +16,7 @@ in
     ignore = [ "keybinds.nix" ];
   };
 
-  options.${namespace}.shells.zellij = {
+  options.liberion.shells.zellij = {
     enable = mkOptDisabled';
     enableBashIntegration = mkOptDisabled';
     enableZshIntegration = mkOptDisabled';

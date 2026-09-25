@@ -1,13 +1,8 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.system.finder;
+  cfg = config.liberion.system.finder;
 
   searchScope = {
     thisMac = null;
@@ -21,7 +16,7 @@ let
   };
 in
 {
-  options.${namespace}.system.finder = {
+  options.liberion.system.finder = {
     enable = mkOptDisabled';
   };
 

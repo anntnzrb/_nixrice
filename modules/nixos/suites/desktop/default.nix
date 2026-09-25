@@ -1,19 +1,14 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled' on;
+  inherit (lib.liberion.module) mkOptDisabled' on;
 
-  cfg = config.${namespace}.suites.desktop;
+  cfg = config.liberion.suites.desktop;
 in
 {
-  options.${namespace}.suites.desktop.enable = mkOptDisabled';
+  options.liberion.suites.desktop.enable = mkOptDisabled';
 
   config = lib.mkIf cfg.enable {
-    ${namespace} = {
+    liberion = {
       user = on;
 
       hardware = {

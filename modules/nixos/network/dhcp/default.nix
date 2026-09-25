@@ -1,16 +1,11 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
+{ config, lib, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.network.dhcp;
+  cfg = config.liberion.network.dhcp;
 in
 {
-  options.${namespace}.network.dhcp = {
+  options.liberion.network.dhcp = {
     enable = mkOptDisabled';
   };
 

@@ -2,11 +2,10 @@
   lib,
   pkgs,
   self,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) on off;
+  inherit (lib.liberion.module) on off;
 in
 {
   imports = [ self.nixosModules.default ];
@@ -15,7 +14,7 @@ in
 
   clan.core.enableRecommendedDefaults = true;
 
-  ${namespace} = {
+  liberion = {
     profiles = {
       server = on;
       headless = on;

@@ -1,16 +1,11 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.cli.zoxide;
+  cfg = config.liberion.cli.zoxide;
 in
 {
-  options.${namespace}.cli.zoxide = {
+  options.liberion.cli.zoxide = {
     enable = mkOptDisabled';
   };
 

@@ -1,17 +1,12 @@
-{
-  config,
-  lib,
-  namespace,
-  ...
-}:
+{ config, lib, ... }:
 let
-  inherit (lib.${namespace}.module) mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
 
-  cfg = config.${namespace}.shells.bash;
-  shellsCfg = config.${namespace}.shells;
+  cfg = config.liberion.shells.bash;
+  shellsCfg = config.liberion.shells;
 in
 {
-  options.${namespace}.shells.bash = {
+  options.liberion.shells.bash = {
     enable = mkOptDisabled';
   };
 

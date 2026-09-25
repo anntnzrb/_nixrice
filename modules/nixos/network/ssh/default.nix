@@ -1,15 +1,10 @@
-{
-  lib,
-  config,
-  namespace,
-  ...
-}:
+{ lib, config, ... }:
 let
-  cfg = config.${namespace}.network.ssh;
+  cfg = config.liberion.network.ssh;
 in
 {
   imports = [
-    (lib.${namespace}.fs.getFile "modules/shared/network/ssh/default.nix")
+    (lib.liberion.fs.getFile "modules/shared/network/ssh/default.nix")
   ];
 
   config = lib.mkIf cfg.enable {

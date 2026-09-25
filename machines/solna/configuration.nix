@@ -1,11 +1,6 @@
-{
-  lib,
-  self,
-  namespace,
-  ...
-}:
+{ lib, self, ... }:
 let
-  inherit (lib.${namespace}.module) on;
+  inherit (lib.liberion.module) on;
 in
 {
   imports = [
@@ -15,7 +10,7 @@ in
 
   nixpkgs.hostPlatform = "x86_64-linux";
 
-  ${namespace} = {
+  liberion = {
     suites.desktop = on;
 
     # no dual-boot. systemd-boot suffices

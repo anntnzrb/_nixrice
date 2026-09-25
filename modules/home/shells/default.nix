@@ -2,20 +2,19 @@
   config,
   pkgs,
   lib,
-  namespace,
   ...
 }:
 let
-  inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
-  inherit (lib.${namespace}.fs) getModuleFiles;
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.fs) getModuleFiles;
   inherit (lib.types) attrsOf listOf str;
 
-  cfg = config.${namespace}.shells;
+  cfg = config.liberion.shells;
 in
 {
   imports = getModuleFiles { path = ./.; };
 
-  options.${namespace}.shells = {
+  options.liberion.shells = {
     sessionVariables = mkOpt' (attrsOf str) { };
     preliminaryMessage.disable = mkOptDisabled';
 
@@ -38,7 +37,7 @@ in
   };
 
   config = {
-    ${namespace}.shells.starship = { inherit (cfg.prompt.starship) enable; };
+    liberion.shells.starship = { inherit (cfg.prompt.starship) enable; };
 
     home = {
       sessionPath = [ "${config.home.homeDirectory}/.local/bin" ];
