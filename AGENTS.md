@@ -31,7 +31,7 @@ Evaluation reads the working tree through `path:.`, so new files count without
 | `just test` | run `tests/` (lib discovery + every machine keeps fleet SSH access) | seconds |
 | `just report [ref]` | see what your change does to each machine and home (packages, files, services, users, env, PATH order) versus `ref`; empty = no behaviour change | ~1 min |
 | `just snap` | print every machine/home drvPath; quick "does it still evaluate" | ~30 s |
-| `just probes` | import every feature into a real host; fails if the set that does not evaluate differs from `tests/probe-errors.txt` | ~5 min |
+| `just probes` | import every feature into a real host; fails if the set that does not evaluate differs from `tests/probe-errors.txt` (CI splits it over 4 runners: `PROBE_SHARD`/`PROBE_SHARDS`) | ~5 min |
 | `just drvdiff [ref]` | prove a pure refactor: machine, home **and** per-feature drvPaths identical to `ref` (the only check covering features no machine uses) | ~8 min |
 | `just check` | the CI gate: flake-checker, evaluate everything, formatting, lint hooks, flake checks incl. tests | ~3 min |
 | `just fmt` | format tracked Nix files (nixfmt) | seconds |

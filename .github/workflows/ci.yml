@@ -40,10 +40,15 @@ jobs:
       - name: Check flake
         run: scripts/ci/check-flake.sh
 
-  # every feature and profile imported into a real host
-  probes:
+  # every feature and profile imported into a real host, split across runners
+  # (evaluation-bound: one runner took ~13 min)
+  probe:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
     steps:
       - uses: actions/checkout@v7
         with:
@@ -59,7 +64,22 @@ jobs:
           skipPush: true
 
       - name: Check probes
+        env:
+          PROBE_SHARD: ${{ matrix.shard }}
+          PROBE_SHARDS: 4
         run: scripts/ci/check-probes.sh
+
+  # the required check: passes only if every probe shard did
+  probes:
+    needs: probe
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: All probe shards passed
+        env:
+          RESULT: ${{ needs.probe.result }}
+        run: test "$RESULT" = success
 
   # what the pull request changes on each machine and home
   report:
