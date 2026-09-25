@@ -95,6 +95,10 @@ jobs:
           lock_sha256="$(cut -d ' ' -f 1 "$candidate/flake.lock.sha256")"
           printf 'lock_sha256=%s\n' "$lock_sha256" >> "$GITHUB_OUTPUT"
 
+      - name: Report behaviour changes
+        if: steps.selection.outputs.changed == 'true'
+        run: scripts/ci/report.sh HEAD > "$RUNNER_TEMP/flake-lock-candidate/report.md"
+
       - name: Upload exact candidate
         if: steps.selection.outputs.changed == 'true'
         uses: actions/upload-artifact@v7
@@ -217,6 +221,14 @@ jobs:
             printf -- '- Rejected inputs: %s\n' "$(cat "$RUNNER_TEMP/flake-lock-candidate/rejected-inputs.txt")"
             printf -- '- Selection attempts: %s\n' "$(cat "$RUNNER_TEMP/flake-lock-candidate/attempts.txt")"
             printf -- '- Validation run: %s/%s/actions/runs/%s\n' "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID"
+            echo
+            echo '## What this changes on each machine'
+            if test -s "$RUNNER_TEMP/flake-lock-candidate/report.md"; then
+              cat "$RUNNER_TEMP/flake-lock-candidate/report.md"
+            else
+              echo
+              echo 'No machine or home changes behaviour.'
+            fi
           } > "$RUNNER_TEMP/pull-request-body.md"
 
       - name: Create or refresh pull request

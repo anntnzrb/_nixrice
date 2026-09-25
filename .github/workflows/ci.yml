@@ -10,7 +10,8 @@ permissions:
   contents: read
 
 jobs:
-  ci:
+  # lint, evaluate every machine and home, flake checks (incl. tests/)
+  check:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     strategy:
@@ -30,3 +31,45 @@ jobs:
 
       - name: Check flake
         run: scripts/ci/check-flake.sh
+
+  # every feature and profile imported into a real host
+  probes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: DeterminateSystems/nix-installer-action@v22
+
+      - name: Check probes
+        run: scripts/ci/check-probes.sh
+
+  # what the pull request changes on each machine and home
+  report:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: DeterminateSystems/nix-installer-action@v22
+
+      - name: Report behaviour changes
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          report="$(scripts/ci/report.sh "origin/${BASE_REF}")"
+          {
+            echo '## What this changes on each machine'
+            echo
+            if test -n "$report"; then
+              echo "$report"
+            else
+              echo 'No machine or home changes behaviour.'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

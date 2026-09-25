@@ -7,10 +7,9 @@ nix run --option eval-cache false --no-write-lock-file --inputs-from path:. nixp
     --check-outdated --check-owner --check-supported --fail-mode --no-telemetry \
     --nixpkgs-keys nixpkgs,nixpkgs-unstable
 
-# every machine and standalone home must evaluate on every CI platform
+# every machine and standalone home must evaluate on every CI platform;
+# formatting, lint and tests/ run as flake checks below
 "$(dirname "$0")/snapshot.sh"
-
-nix fmt --option eval-cache false --no-write-lock-file -- --check
 
 if test "$(uname -s)" = Linux; then
     nix flake check --option eval-cache false --no-write-lock-file path:. \
