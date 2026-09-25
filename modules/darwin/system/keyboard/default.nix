@@ -7,7 +7,6 @@
 }:
 let
   inherit (lib.${namespace}.module) mkOptDisabled';
-  inherit (lib.${namespace}.launchd.darwin) mkAgent;
 
   cfg = config.${namespace}.system.keyboard;
 
@@ -62,16 +61,17 @@ in
       # Reapply the volatile hidutil mapping after reboot/login. Keep this in
       # addition to nix-darwin's activation script: switch-time and login-time
       # are different failure modes.
-      (mkAgent {
-        name = "keyboard-user-key-mapping";
-        managedBy = "${namespace}.system.keyboard.enable";
-        serviceConfig = {
-          ProgramArguments = [ "${applyKeyMapping}" ];
-          RunAtLoad = true;
-          ProcessType = "Interactive";
-          LimitLoadToSessionType = [ "Aqua" ];
+      {
+        launchd.user.agents.keyboard-user-key-mapping = {
+          managedBy = "${namespace}.system.keyboard.enable";
+          serviceConfig = {
+            ProgramArguments = [ "${applyKeyMapping}" ];
+            RunAtLoad = true;
+            ProcessType = "Interactive";
+            LimitLoadToSessionType = [ "Aqua" ];
+          };
         };
-      })
+      }
     ]
   );
 }

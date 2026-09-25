@@ -7,7 +7,6 @@
 }:
 let
   inherit (lib.${namespace}.module) mkOptDisabled';
-  inherit (lib.${namespace}.launchd.darwin) mkAgent;
   inherit (lib.${namespace}.fs) getModuleFiles;
   inherit (lib.types) listOf str;
 
@@ -63,29 +62,26 @@ in
 
   config = lib.mkMerge [
     { _module.args.yashikiLib = yashikiLib; }
-    (lib.mkIf cfg.enable (
-      {
-        assertions = [
-          {
-            assertion = !aerospaceCfg.enable;
-            message = "${namespace}.desktop.window-managers.darwin.yashiki cannot be enabled together with ${namespace}.desktop.window-managers.darwin.aerospace.";
-          }
-        ];
+    (lib.mkIf cfg.enable {
+      assertions = [
+        {
+          assertion = !aerospaceCfg.enable;
+          message = "${namespace}.desktop.window-managers.darwin.yashiki cannot be enabled together with ${namespace}.desktop.window-managers.darwin.aerospace.";
+        }
+      ];
 
-        ${namespace}.desktop.window-managers.darwin.yashiki._sections.rules =
-          yashikiLib.mkRules (import ./rules.nix);
+      ${namespace}.desktop.window-managers.darwin.yashiki._sections.rules =
+        yashikiLib.mkRules (import ./rules.nix);
 
-        environment.systemPackages = [ yashikiPkg ];
+      environment.systemPackages = [ yashikiPkg ];
 
-        home-manager.users.${config.system.primaryUser}.xdg.configFile."yashiki/init" =
-          {
-            source = initScript;
-            executable = true;
-          };
+      home-manager.users.${config.system.primaryUser}.xdg.configFile."yashiki/init" =
+        {
+          source = initScript;
+          executable = true;
+        };
 
-      }
-      // mkAgent {
-        name = "yashiki";
+      launchd.user.agents.yashiki = {
         managedBy = "${namespace}.desktop.window-managers.darwin.yashiki.enable";
         serviceConfig = {
           ProgramArguments = [
@@ -100,7 +96,7 @@ in
             PATH = "${yashikiPkg}/bin:${config.environment.systemPath}";
           };
         };
-      }
-    ))
+      };
+    })
   ];
 }

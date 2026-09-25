@@ -4,29 +4,22 @@ let
 
   getFile = relPath: repoRoot + "/${relPath}";
 
-  # Shallow: only direct children whose readDir kind is regular.
-  getFiles =
-    path:
-    lib.pipe (builtins.readDir path) [
-      (lib.filterAttrs (_: kind: kind == "regular"))
-      (lib.mapAttrsToList (name: _: path + "/${name}"))
-    ];
-
-  isNixFile = path: lib.hasSuffix ".nix" (baseNameOf path);
-
-  # Shallow: *.nix files from getFiles minus default.nix and `ignore` names.
+  # Shallow: regular *.nix children minus default.nix and `ignore` names.
   getModuleFiles =
     {
       path,
       ignore ? [ ],
     }:
-    builtins.filter (
-      f:
-      let
-        name = baseNameOf f;
-      in
-      isNixFile f && name != "default.nix" && !(builtins.elem name ignore)
-    ) (getFiles path);
+    lib.pipe (builtins.readDir path) [
+      (lib.filterAttrs (
+        name: kind:
+        kind == "regular"
+        && lib.hasSuffix ".nix" name
+        && name != "default.nix"
+        && !(builtins.elem name ignore)
+      ))
+      (lib.mapAttrsToList (name: _: path + "/${name}"))
+    ];
 
   # Recursive: every default.nix below `path` (module roots).
   getDefaultFiles =
