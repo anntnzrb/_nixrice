@@ -99,6 +99,9 @@ jobs:
         with:
           name: anntnzrb
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          # push once at the end instead of through the background daemon, whose
+          # drain timeout failed a build after everything had been pushed
+          useDaemon: false
 
       - name: Build ${{ matrix.name }}
         env:
