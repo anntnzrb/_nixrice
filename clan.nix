@@ -1,7 +1,7 @@
 # Fleet inventory: machines, tags and service instances.
 { config, lib, ... }:
 let
-  keys = import ./modules/shared/network/ssh/keys.nix;
+  identity = import ./identity.nix;
 in
 {
   meta.name = "liberion";
@@ -91,14 +91,14 @@ in
     # already have them).
     sshd = {
       roles.server.machines.oulu = { };
-      roles.server.settings.authorizedKeys.annt-liberion = keys.admin;
+      roles.server.settings.authorizedKeys.annt-liberion = identity.keys.admin;
     };
 
     user-annt = {
       module.name = "users";
       roles.default.machines.oulu = { };
       roles.default.settings = {
-        user = "annt";
+        inherit (identity) user;
         prompt = false;
       };
     };
@@ -106,7 +106,7 @@ in
     # every machine is reachable over tailscale magicdns as annt@<name>:2222
     internet.roles.default = {
       settings = {
-        user = "annt";
+        inherit (identity) user;
         # openssh; 22 on the tailnet is tailscale ssh (no clan host keys)
         port = 2222;
       };

@@ -25,10 +25,7 @@ in
         enable = true;
 
         settings = {
-          user = {
-            name = "anntnzrb";
-            email = "anntnzrb@proton.me";
-          };
+          user = { inherit (lib.liberion.identity.git) name email; };
 
           core = {
             autocrlf = "input";

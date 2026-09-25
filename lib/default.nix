@@ -10,6 +10,8 @@ let
     };
 in
 {
+  identity = import ../identity.nix;
+
   fs = {
     # Shallow: regular *.nix children minus default.nix and `ignore` names.
     getModuleFiles =

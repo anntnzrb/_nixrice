@@ -6,7 +6,7 @@ in
   config.services.espanso.matches.default.matches = lib.mkIf cfg.enable [
     {
       trigger = ">!mail";
-      replace = "anntnzrb@proton.me";
+      replace = lib.liberion.identity.git.email;
     }
     {
       trigger = ">!mail";

@@ -10,7 +10,7 @@ let
   cfg = config.liberion.network.ssh;
   userName = config.liberion.user.name;
 
-  keys = import ./keys.nix;
+  inherit (lib.liberion.identity) keys;
 
   # every other fleet machine, as annt@<name>.<tailnet domain>; the clan
   # inventory knows each class, so no peer config is evaluated

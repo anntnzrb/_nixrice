@@ -60,20 +60,22 @@
       darwinConfigurations = clan.config.darwinConfigurations or { };
 
       # standalone homes for hosts without a managed system (NixOS-WSL on tampa)
-      homeConfigurations."annt@wsl" = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgsFor.x86_64-linux;
-        inherit lib;
-        extraSpecialArgs = { inherit inputs; };
-        modules = [
-          ./homes/wsl.nix
+      homeConfigurations."${lib.liberion.identity.user}@wsl" =
+        home-manager.lib.homeManagerConfiguration
           {
-            home = {
-              username = "annt";
-              homeDirectory = "/home/annt";
-            };
-          }
-        ];
-      };
+            pkgs = pkgsFor.x86_64-linux;
+            inherit lib;
+            extraSpecialArgs = { inherit inputs; };
+            modules = [
+              ./homes/wsl.nix
+              {
+                home = {
+                  username = lib.liberion.identity.user;
+                  homeDirectory = "/home/${lib.liberion.identity.user}";
+                };
+              }
+            ];
+          };
 
       nixosModules.default = ./modules;
       darwinModules.default = ./modules/darwin.nix;

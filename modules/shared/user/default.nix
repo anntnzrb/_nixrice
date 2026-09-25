@@ -6,6 +6,6 @@ in
 {
   options.liberion.user = {
     enable = mkOptDisabled';
-    name = mkOpt' str "annt";
+    name = mkOpt' str lib.liberion.identity.user;
   };
 }
