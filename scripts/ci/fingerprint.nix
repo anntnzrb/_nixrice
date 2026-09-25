@@ -112,6 +112,15 @@ let
         (c.environment.loginShellInit or "")
       ]
     );
+    # generated (derivation) files such as nix.conf only show by name above
+    nixSettings = try (
+      lib.mapAttrs (_: v: norm (builtins.toJSON v)) c.nix.settings
+    );
+    determinateSettings = try (
+      lib.mapAttrs (_: v: norm (builtins.toJSON v)) (
+        c.determinateNix.customSettings or { }
+      )
+    );
     inherit (c.system) stateVersion;
   };
 
