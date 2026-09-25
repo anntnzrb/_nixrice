@@ -24,10 +24,6 @@
     linuxPackages.cpupower
   ];
 
-  # shared/nix already pins doc/info off; nixos docs are the only nested
-  # write that is not duplicated elsewhere
-  documentation = {
-    enable = false;
-    nixos.enable = false;
-  };
+  # no man pages either (base already drops doc/info and the NixOS manual)
+  documentation.enable = false;
 }
