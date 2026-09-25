@@ -14,6 +14,7 @@ let
   cfg = config.${namespace}.desktop.window-managers.darwin.yashiki;
   aerospaceCfg = config.${namespace}.desktop.window-managers.darwin.aerospace;
   yashikiPkg = pkgs.yashiki;
+  yashikiLib = import ./lib.nix { inherit lib; };
 
   scriptSections = lib.filter (lines: lines != [ ]) [
     cfg._sections.layout
@@ -30,7 +31,10 @@ in
 {
   imports = getModuleFiles {
     path = ./.;
-    ignore = [ "lib.nix" ];
+    ignore = [
+      "lib.nix"
+      "rules.nix"
+    ];
   };
 
   options.${namespace}.desktop.window-managers.darwin.yashiki = {
@@ -58,7 +62,7 @@ in
   };
 
   config = lib.mkMerge [
-    { _module.args.yashikiLib = import ./lib.nix { inherit lib; }; }
+    { _module.args.yashikiLib = yashikiLib; }
     (lib.mkIf cfg.enable (
       {
         assertions = [
@@ -67,6 +71,9 @@ in
             message = "${namespace}.desktop.window-managers.darwin.yashiki cannot be enabled together with ${namespace}.desktop.window-managers.darwin.aerospace.";
           }
         ];
+
+        ${namespace}.desktop.window-managers.darwin.yashiki._sections.rules =
+          yashikiLib.mkRules (import ./rules.nix);
 
         environment.systemPackages = [ yashikiPkg ];
 
