@@ -10,6 +10,7 @@ let
   inherit (lib.types) listOf str;
 
   cfg = config.liberion.shells;
+  ripgrep = pkgs.ripgrep.override { withPCRE2 = true; };
 in
 {
   imports = getModuleFiles { path = ./.; };
@@ -42,10 +43,13 @@ in
       # disable "Last Login..." preliminary message
       file.".hushlogin" = lib.mkIf cfg.preliminaryMessage.disable { text = ""; };
 
+      # grep => rg, the same PCRE2 build that lands on PATH
+      shellAliases.grep = "${lib.getExe ripgrep} --color=auto --column --hidden --ignore-case --line-number --with-filename";
+
       packages = with pkgs; [
         dust
         fd
-        (ripgrep.override { withPCRE2 = true; })
+        ripgrep
       ];
     };
   };

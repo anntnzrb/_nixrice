@@ -66,9 +66,6 @@ in
     treea = "${eza.bin} --all --group --header --tree";
     treed = "${eza.bin} --group --header --tree --only-dirs";
 
-    # grep => rg (ripgrep)
-    grep = "${getExe pkgs.ripgrep} --color=auto --column --hidden --ignore-case --line-number --with-filename";
-
     # cat/less => bat
     cat = "${bat.bin} --paging=never";
     less = "${bat.bin}";
