@@ -20,7 +20,6 @@ in
       inherit (cfg) enable;
       dotDir = "${config.xdg.configHome}/zsh";
 
-      enableCompletion = true;
       autosuggestion = on;
       syntaxHighlighting = on;
 
