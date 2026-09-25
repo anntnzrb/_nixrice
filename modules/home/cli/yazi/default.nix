@@ -1,6 +1,6 @@
 { lib, config, ... }:
 let
-  inherit (lib.liberion.module) mkOptEnabled' mkOptDisabled';
+  inherit (lib.liberion.module) mkOptDisabled';
   inherit (lib.liberion.fs) getModuleFiles;
 
   cfg = config.liberion.cli.yazi;
@@ -8,13 +8,10 @@ in
 {
   imports = getModuleFiles { path = ./.; };
 
-  options.liberion.cli.yazi = {
-    enable = mkOptDisabled';
-    plugin.githead.enable = mkOptEnabled';
-  };
+  options.liberion.cli.yazi.enable = mkOptDisabled';
 
   config.programs.yazi = lib.mkIf cfg.enable {
-    inherit (cfg) enable;
+    enable = true;
     shellWrapperName = "yy";
 
     settings = {

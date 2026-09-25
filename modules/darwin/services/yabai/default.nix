@@ -2,17 +2,11 @@ import ../../../toggle.nix "services.yabai" (
   { lib, ... }:
   let
     inherit (lib.liberion.module) on;
-    inherit (lib) concatStringsSep getAttr attrNames;
-
-    # helpers
-    formatAttrs =
-
-      attrs:
-      concatStringsSep " " (map (k: "${k}=${getAttr k attrs}") (attrNames attrs));
     mkRule =
-      rule:
-      "yabai -m rule --add ${formatAttrs rule.pattern} ${formatAttrs rule.ruleset}";
-
+      pattern:
+      "yabai -m rule --add ${
+        lib.concatStringsSep " " (lib.mapAttrsToList (k: v: "${k}=${v}") pattern)
+      } manage=off";
   in
   {
     services.yabai = {
@@ -39,143 +33,29 @@ import ../../../toggle.nix "services.yabai" (
 
       extraConfig =
         let
-          rules = [
-            # sys/builtin
-            {
-              pattern = {
-                app = "^System Settings$";
-              };
-              ruleset = {
-                manage = "off";
-              };
-            }
-            {
-              pattern = {
-                app = "^System Information$";
-              };
-              ruleset = {
-                manage = "off";
-              };
-            }
-            {
-              pattern = {
-                app = "^System Preferences$";
-              };
-              ruleset = {
-                manage = "off";
-              };
-            }
-            {
-              pattern = {
-                title = "Preferences$";
-              };
-              ruleset = {
-                manage = "off";
-              };
-            }
-            {
-              pattern = {
-                title = "Settings$";
-              };
-              ruleset = {
-                manage = "off";
-              };
-            }
-            {
-              pattern = {
-                app = "^Finder$";
-              };
-              ruleset = {
-                manage = "off";
-              };
-            }
-            {
-              pattern = {
-                app = "^Terminal$";
-              };
-              ruleset = {
-                manage = "off";
-              };
-            }
-            {
-              pattern = {
-                app = "^Calculator$";
-              };
-              ruleset = {
-                manage = "off";
-              };
-            }
-            {
-              pattern = {
-                app = "^Notes$";
-              };
-              ruleset = {
-                manage = "off";
-              };
-            }
-            {
-              pattern = {
-                app = "^Weather$";
-              };
-              ruleset = {
-                manage = "off";
-              };
-            }
-            {
-              pattern = {
-                app = "^Calendar$";
-              };
-              ruleset = {
-                manage = "off";
-              };
-            }
-            {
-              pattern = {
-                app = "^Clock$";
-              };
-              ruleset = {
-                manage = "off";
-              };
-            }
-
-            # user
-            {
-              pattern = {
-                app = "^Alacritty$";
-              };
-              ruleset = {
-                manage = "off";
-              };
-            }
-            {
-              pattern = {
-                app = "^Bitwarden$";
-              };
-              ruleset = {
-                manage = "off";
-              };
-            }
-            {
-              pattern = {
-                app = "^ChatGPT$";
-              };
-              ruleset = {
-                manage = "off";
-              };
-            }
-            {
-              pattern = {
-                app = "^WhatsApp$";
-              };
-              ruleset = {
-                manage = "off";
-              };
-            }
+          # windows yabai leaves floating
+          unmanaged = [
+            { app = "^System Settings$"; }
+            { app = "^System Information$"; }
+            { app = "^System Preferences$"; }
+            { title = "Preferences$"; }
+            { title = "Settings$"; }
+            { app = "^Finder$"; }
+            { app = "^Terminal$"; }
+            { app = "^Calculator$"; }
+            { app = "^Notes$"; }
+            { app = "^Weather$"; }
+            { app = "^Calendar$"; }
+            { app = "^Clock$"; }
+            { app = "^Alacritty$"; }
+            { app = "^Bitwarden$"; }
+            { app = "^ChatGPT$"; }
+            { app = "^WhatsApp$"; }
           ];
         in
         ''
           # rules
-          ${lib.concatStringsSep "\n" (map mkRule rules)}
+          ${lib.concatMapStringsSep "\n" mkRule unmanaged}
         '';
     };
 

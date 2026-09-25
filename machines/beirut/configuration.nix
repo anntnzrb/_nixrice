@@ -25,7 +25,7 @@ in
     # add munich once it runs NixOS with clan sshd (see clan.nix)
     nix.builders.oulu = 12;
 
-    desktop.window-managers.darwin.aerospace = on;
+    services.aerospace = on;
 
     system = {
       ui = on // {

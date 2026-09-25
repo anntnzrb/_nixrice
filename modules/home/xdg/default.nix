@@ -1,3 +1,4 @@
+# XDG base and user dirs baseline (Linux homes).
 {
   config,
   lib,
@@ -5,43 +6,29 @@
   ...
 }:
 let
-  inherit (lib.liberion.module) mkOptEnabled' on;
+  inherit (lib.liberion.module) on;
 
-  cfg = config.liberion.xdg;
-  homeDir = "${config.home.homeDirectory}";
+  homeDir = config.home.homeDirectory;
   libDir = "${homeDir}/lib";
-  localDir = "${homeDir}/.local";
 in
 {
-  options.liberion.xdg = {
-    enable = mkOptEnabled';
-  };
+  xdg = lib.mkIf pkgs.stdenvNoCC.hostPlatform.isLinux {
+    enable = true;
+    mime = on;
+    mimeApps = on;
 
-  config = lib.mkIf cfg.enable {
-    xdg = lib.mkIf pkgs.stdenvNoCC.hostPlatform.isLinux {
-      inherit (cfg) enable;
+    userDirs = on // {
+      createDirectories = true;
+      setSessionVariables = true;
 
-      cacheHome = "${homeDir}/.cache";
-      configHome = "${homeDir}/.config";
-      dataHome = "${localDir}/share";
-      stateHome = "${localDir}/state";
-
-      mime = on;
-      mimeApps = on;
-
-      userDirs = on // {
-        createDirectories = true;
-        setSessionVariables = true;
-
-        desktop = "${homeDir}/desktop";
-        documents = libDir;
-        download = "${homeDir}/downloads";
-        music = "${libDir}/music";
-        pictures = "${libDir}/pics";
-        publicShare = "${libDir}/public";
-        templates = "${libDir}/templates";
-        videos = "${libDir}/vids";
-      };
+      desktop = "${homeDir}/desktop";
+      documents = libDir;
+      download = "${homeDir}/downloads";
+      music = "${libDir}/music";
+      pictures = "${libDir}/pics";
+      publicShare = "${libDir}/public";
+      templates = "${libDir}/templates";
+      videos = "${libDir}/vids";
     };
   };
 }

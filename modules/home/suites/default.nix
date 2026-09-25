@@ -15,11 +15,10 @@ in
 
   config = lib.mkMerge [
     (lib.mkIf cfg.cli.enable {
+      home.sessionVariables.EDITOR = "nvim";
+
       liberion = {
-        shells = {
-          sessionVariables.EDITOR = "nvim";
-          tmux = on;
-        };
+        shells.tmux = on;
 
         cli = {
           git = on // {
@@ -52,7 +51,7 @@ in
 
     (lib.mkIf cfg.core.enable {
       liberion.shells = {
-        prompt.starship = on;
+        starship = on;
         preliminaryMessage.disable = true;
       };
     })

@@ -1,22 +1,20 @@
+# Home Manager baseline for every liberion home.
 { lib, config, ... }:
 let
-  inherit (lib.liberion.module) mkOpt' mkOptEnabled' on;
+  inherit (lib.liberion.module) mkOpt' on;
   inherit (lib.types) str ints;
 
   cfg = config.liberion.home;
 in
 {
-  options.liberion.home = {
-    enable = mkOptEnabled';
-    keyboard = {
-      layout = mkOpt' str "us";
-      variant = mkOpt' str "altgr-intl";
-      autoRepeatDelay = mkOpt' ints.unsigned 220;
-      autoRepeatInterval = mkOpt' ints.unsigned 50;
-    };
+  options.liberion.home.keyboard = {
+    layout = mkOpt' str "us";
+    variant = mkOpt' str "altgr-intl";
+    autoRepeatDelay = mkOpt' ints.unsigned 220;
+    autoRepeatInterval = mkOpt' ints.unsigned 50;
   };
 
-  config = lib.mkIf cfg.enable {
+  config = {
     home = {
       keyboard = { inherit (cfg.keyboard) layout variant; };
       stateVersion = "22.05";
