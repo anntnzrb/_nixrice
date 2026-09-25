@@ -12,6 +12,11 @@ let
     ints
     str
     ;
+  # an absolute path outside the store
+  dir = lib.types.pathWith {
+    absolute = true;
+    inStore = false;
+  };
 
   cfg = config.liberion.desktop.whatsapp;
   idleCfg = cfg.idleQuit;
@@ -107,8 +112,8 @@ in
       ]) "term-then-kill";
       killGraceSeconds = mkOpt' ints.positive 10;
 
-      stateDir = mkOpt' str stateDirDefault;
-      logDir = mkOpt' str logDirDefault;
+      stateDir = mkOpt' dir stateDirDefault;
+      logDir = mkOpt' dir logDirDefault;
 
       resetOnFrontmost = mkOpt' bool true;
       initializeOnFirstSeen = mkOpt' bool true;
