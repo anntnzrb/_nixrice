@@ -869,11 +869,11 @@
     "yazi-timu-macos": {
       "flake": false,
       "locked": {
-        "lastModified": 1737507649,
-        "narHash": "sha256-0iwr+yzFyAMYNhFD1iFYkhIjdDrRdGGNT0jbCMX4TzA=",
+        "lastModified": 1788032985,
+        "narHash": "sha256-1vPea2tX4DAZ3E5fY0cLZa7upejXEWSrqT1vbMbe6j0=",
         "owner": "aimebertrand",
         "repo": "timu-macos-yazi",
-        "rev": "8b8e24a288d2b9b443f9218fa6b038a40e84fd5a",
+        "rev": "9cddd7ee3f52cc5390025dde527f0e1fe951d43d",
         "type": "gitlab"
       },
       "original": {
