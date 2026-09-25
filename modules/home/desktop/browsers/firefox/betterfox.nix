@@ -9,15 +9,6 @@ let
   inherit (lib.${namespace}.module) on;
 
   cfg = config.${namespace}.desktop.browsers.firefox;
-
-  smoothfoxSettingName =
-    {
-      "sharpen-scrolling" = "sharpen-scrolling";
-      "smooth-scrolling" = "smooth-scrolling";
-      "instant-scrolling" = "instant-scrolling";
-      "natural-smooth-scrolling-v3" = "natural-smooth-scrolling-v3";
-    }
-    .${cfg.betterfox.smoothfox};
 in
 {
   imports = [ inputs.betterfox-nix.homeModules.betterfox ];
@@ -28,7 +19,7 @@ in
         enableAllSections = true;
 
         settings = lib.optionalAttrs (cfg.betterfox.smoothfox != null) {
-          smoothfox.${smoothfoxSettingName}.enable = true;
+          smoothfox.${cfg.betterfox.smoothfox}.enable = true;
         };
       };
     };
