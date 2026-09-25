@@ -8,8 +8,7 @@
 
     # archiving
     atool
-    rar
-    unrar-wrapper
+    rar # also provides unrar
     unzip
     zip
 

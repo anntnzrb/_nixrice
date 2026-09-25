@@ -6,7 +6,7 @@
 
     nvidia = {
       open = false;
-      nvidiaSettings = true;
+      nvidiaSettings = false; # GUI tool; zadar is headless
       modesetting.enable = true;
     };
   };
