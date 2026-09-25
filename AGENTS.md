@@ -18,7 +18,7 @@ fleet inventory (machines, tags, service instances).
 ### Architecture
 - Modules implement features; machines and homes compose them via toggles.
 - Cross-module integration uses the `liberion` namespace and explicit module arguments
-  (`lib`, `inputs`, `self`, `namespace`, `host`).
+  (`lib`, `inputs`, `self`, `namespace`).
 - Machines: `nixosConfigurations.<name>` / `darwinConfigurations.<name>`; hosted homes
   live under `…config.home-manager.users.<user>`.
 

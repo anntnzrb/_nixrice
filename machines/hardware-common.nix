@@ -10,13 +10,13 @@ _: {
     {
       "/" = {
         device = "/dev/disk/by-label/${rootLabel}";
-        label = "${rootLabel}";
+        label = rootLabel;
         fsType = "btrfs";
       };
 
       "/boot" = {
         device = "/dev/disk/by-label/${bootLabel}";
-        label = "${bootLabel}";
+        label = bootLabel;
         fsType = "vfat";
         options = [
           "fmask=0022"

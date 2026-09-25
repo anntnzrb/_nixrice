@@ -183,7 +183,7 @@ in
 
     (lib.mkIf sleepEnabled {
       launchd.agents.whatsapp-sleepwatcher = {
-        enable = sleepEnabled;
+        enable = true;
         config = {
           ProgramArguments = [ sleepwatcherPath ] ++ sleepwatcherArgs;
           KeepAlive = true;
