@@ -8,7 +8,7 @@ name: Nix build
 # an Actions secret and, for Dependabot PRs, as a Dependabot secret.
 on:
   workflow_dispatch:
-  # every PR reports the check; only Dependabot flake updates build (job `if`)
+  # every PR reports the check; only Dependabot flake updates build (see BUILD)
   pull_request:
   push:
     branches: ["dev"]
@@ -39,32 +39,39 @@ concurrency:
 
 jobs:
   build:
-    # flake-input PRs only; an Actions bump changes no derivation
-    if: github.event_name != 'pull_request' || startsWith(github.head_ref, 'dependabot/nix/')
     runs-on: ${{ matrix.os }}
     timeout-minutes: 240
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
+    env:
+      # PRs build only for flake-input updates (an Actions bump changes no
+      # derivation). The steps are skipped, not the job: a skipped matrix job
+      # reports as plain "build" and the required checks would never arrive.
+      BUILD: ${{ github.event_name != 'pull_request' || startsWith(github.head_ref, 'dependabot/nix/') }}
     steps:
       - name: Free disk space
-        if: runner.os == 'Linux'
+        if: env.BUILD == 'true' && runner.os == 'Linux'
         run: |
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
             /opt/hostedtoolcache/CodeQL /usr/local/share/boost
           df -h /
 
-      - uses: actions/checkout@v7
+      - if: env.BUILD == 'true'
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
 
-      - uses: DeterminateSystems/nix-installer-action@v22
+      - if: env.BUILD == 'true'
+        uses: DeterminateSystems/nix-installer-action@v22
 
-      - uses: cachix/cachix-action@v17
+      - if: env.BUILD == 'true'
+        uses: cachix/cachix-action@v17
         with:
           name: anntnzrb
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
 
       - name: Build machines and homes
+        if: env.BUILD == 'true'
         run: scripts/ci/build.sh
