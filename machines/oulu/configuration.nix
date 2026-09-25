@@ -1,15 +1,8 @@
-{
-  lib,
-  pkgs,
-  self,
-  ...
-}:
+{ lib, pkgs, ... }:
 let
   inherit (lib.liberion.module) on off;
 in
 {
-  imports = [ self.nixosModules.default ];
-
   nixpkgs.hostPlatform = "x86_64-linux";
 
   clan.core.enableRecommendedDefaults = true;

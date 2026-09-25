@@ -1,21 +1,23 @@
+# Fleet inventory: machines, tags and service instances.
+{ config, lib, ... }:
 let
-  liberionKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB45J5N5vAcQlF4kUHN8y12FMOzXhuav7bczaztcZHTq annt@liberion";
-
-  # every machine is reachable over tailscale magicdns as annt@<name>:2222
-  hosts = [
-    "oulu"
-    "munich"
-    "solna"
-    "tampa"
-    "zadar"
-    "beirut"
-    "incheon"
-  ];
+  keys = import ./modules/shared/network/ssh/keys.nix;
 in
 {
   meta.name = "liberion";
   # tailscale magicdns domain used for inter-machine clan communication
   meta.domain = "trex-gamut.ts.net";
+
+  # every machine gets the liberion module set of its class
+  # (keys from machines/, since clan derives inventory.machines from these)
+  machines =
+    lib.mapAttrs
+      (name: _: {
+        imports = [
+          config.self."${config.inventory.machines.${name}.machineClass}Modules".default
+        ];
+      })
+      (lib.filterAttrs (_: kind: kind == "directory") (builtins.readDir ./machines));
 
   inventory.machines = {
     oulu = {
@@ -89,7 +91,7 @@ in
     # already have them).
     sshd = {
       roles.server.machines.oulu = { };
-      roles.server.settings.authorizedKeys.annt-liberion = liberionKey;
+      roles.server.settings.authorizedKeys.annt-liberion = keys.admin;
     };
 
     user-annt = {
@@ -101,16 +103,16 @@ in
       };
     };
 
-    internet.roles.default.machines = builtins.listToAttrs (
-      map (host: {
-        name = host;
-        value.settings = {
-          inherit host;
-          user = "annt";
-          # openssh; 22 on the tailnet is tailscale ssh (no clan host keys)
-          port = 2222;
-        };
-      }) hosts
-    );
+    # every machine is reachable over tailscale magicdns as annt@<name>:2222
+    internet.roles.default = {
+      settings = {
+        user = "annt";
+        # openssh; 22 on the tailnet is tailscale ssh (no clan host keys)
+        port = 2222;
+      };
+      machines = lib.mapAttrs (host: _: {
+        settings = { inherit host; };
+      }) config.inventory.machines;
+    };
   };
 }

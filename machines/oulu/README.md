@@ -62,4 +62,4 @@ Rather than maintaining a custom forked kernel, the following sysctls are applie
 ## 6. Secrets & Fleet Management
 
 * **Clan 26.05 Vars**: Secrets (root password, host SSH keys, Age encryption keys) are generated deterministically and encrypted with SOPS/Age under `vars/per-machine/oulu/`.
-* **Modular Flake Composition**: `machines/oulu/configuration.nix` imports `self.nixosModules.default`; its profile toggles select the server and headless features.
+* **Modular Flake Composition**: `clan.nix` gives every machine the liberion module set of its class; `machines/oulu/configuration.nix` profile toggles select the server and headless features.

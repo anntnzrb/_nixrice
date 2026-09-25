@@ -6,12 +6,7 @@
 }:
 let
   inherit (lib.liberion.module) mkOpt' mkOptDisabled' off;
-  inherit (lib)
-    foldl'
-    mkIf
-    genList
-    readFile
-    ;
+  inherit (lib) mkIf readFile;
   inherit (lib.types) str listOf attrsOf;
 
   cfg = config.liberion.desktop.window-managers.wayland.sway;
@@ -172,21 +167,6 @@ in
               mod = cfg.modifier;
               modShift = "${mod}+Shift";
               modAlt = "${mod}+Alt";
-              numWorkspaces = 9;
-
-              genFocusMoveBinds = bind: {
-                "${mod}+${bind.key}" = "focus ${bind.dir}";
-                "${modShift}+${bind.key}" = "move ${bind.dir}";
-              };
-              genWorkspaceBinds =
-                i:
-                let
-                  ws = toString i;
-                in
-                {
-                  "${mod}+${ws}" = "workspace number ${ws}";
-                  "${modShift}+${ws}" = "move container to workspace number ${ws}";
-                };
             in
             {
               # TODO: mv
@@ -200,44 +180,26 @@ in
               "${modShift}+space" = "floating toggle";
               "${modShift}+f" = "fullscreen toggle";
             }
-            // foldl' (a: b: a // b) { } (
-              map genFocusMoveBinds [
+            //
+              lib.concatMapAttrs
+                (key: dir: {
+                  "${mod}+${key}" = "focus ${dir}";
+                  "${modShift}+${key}" = "move ${dir}";
+                })
                 {
-                  key = "h";
-                  dir = "left";
+                  h = "left";
+                  j = "down";
+                  k = "up";
+                  l = "right";
+                  Left = "left";
+                  Down = "down";
+                  Up = "up";
+                  Right = "right";
                 }
-                {
-                  key = "j";
-                  dir = "down";
-                }
-                {
-                  key = "k";
-                  dir = "up";
-                }
-                {
-                  key = "l";
-                  dir = "right";
-                }
-
-                {
-                  key = "Left";
-                  dir = "left";
-                }
-                {
-                  key = "Down";
-                  dir = "down";
-                }
-                {
-                  key = "Up";
-                  dir = "up";
-                }
-                {
-                  key = "Right";
-                  dir = "right";
-                }
-              ]
-              ++ map genWorkspaceBinds (genList (x: x + 1) numWorkspaces)
-            );
+            // lib.concatMapAttrs (ws: _: {
+              "${mod}+${ws}" = "workspace number ${ws}";
+              "${modShift}+${ws}" = "move container to workspace number ${ws}";
+            }) (lib.genAttrs (map toString (lib.range 1 9)) (_: null));
 
           gaps = {
             inner = 10;

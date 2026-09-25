@@ -10,47 +10,34 @@ let
   cfg = config.liberion.network.ssh;
   userName = config.liberion.user.name;
 
-  # one key per device, plus the fleet-wide admin key
-  fleetKeys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB45J5N5vAcQlF4kUHN8y12FMOzXhuav7bczaztcZHTq annt@liberion"
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBEpmEC2zcNWEgNAdHDzFZnK7dfOeDVh+r0sasP5PclS annt@beirut"
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHzBDSIjkAYW57NffyZkkKeFoA2YGqEKR7mzL5pgYYxV anntnzrb@munich"
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJi5TwdwALl2Sw0/MuE+r0u4s35Xw8TftkUQZE2lW3Gr annt@oulu"
-  ];
+  keys = import ./keys.nix;
 
-  nixosCfg = inputs.self.nixosConfigurations or { };
-  darwinCfg = inputs.self.darwinConfigurations or { };
-
-  remoteHosts = lib.filterAttrs (
-    hostName: hostCfg:
-    hostName != config.clan.core.settings.machine.name
-    && (hostCfg.config.liberion.user.name or null) != null
-  ) (nixosCfg // darwinCfg);
-
-  remoteHostsCfg = lib.concatMapStringsSep "\n" (
-    remoteHostName:
-    let
-      remote = remoteHosts.${remoteHostName};
-      remoteUserName = remote.config.liberion.user.name;
-      portEntry = lib.optionalString (builtins.hasAttr remoteHostName nixosCfg) ''
-        Port ${builtins.toString cfg.port}
-      '';
-    in
-    ''
-      Host ${remoteHostName}
-        Hostname ${remoteHostName}.${config.clan.core.settings.domain}
-        User ${remoteUserName}
-        ForwardAgent yes
-        ${portEntry}
-    ''
-  ) (builtins.attrNames remoteHosts);
+  # every other fleet machine, as annt@<name>.<tailnet domain>; the clan
+  # inventory knows each class, so no peer config is evaluated
+  remoteHostsCfg = lib.concatStringsSep "\n" (
+    lib.mapAttrsToList
+      (name: machine: ''
+        Host ${name}
+          Hostname ${name}.${config.clan.core.settings.domain}
+          User ${userName}
+          ForwardAgent yes
+          ${lib.optionalString (
+            machine.machineClass == "nixos"
+          ) "Port ${toString cfg.port}\n"}
+      '')
+      (
+        removeAttrs inputs.self.clan.inventory.machines [
+          config.clan.core.settings.machine.name
+        ]
+      )
+  );
 in
 {
   options.liberion.network.ssh = with lib.types; {
     enable = mkOptDisabled';
     extraConfig = mkOpt' str "";
     port = mkOpt' port 2222;
-    authorizedKeys = mkOpt' (listOf singleLineStr) fleetKeys;
+    authorizedKeys = mkOpt' (listOf singleLineStr) ([ keys.admin ] ++ keys.devices);
   };
 
   config = lib.mkIf cfg.enable {

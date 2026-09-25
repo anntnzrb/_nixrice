@@ -1,17 +1,9 @@
-{
-  lib,
-  pkgs,
-  self,
-  ...
-}:
+{ lib, pkgs, ... }:
 let
   inherit (lib.liberion.module) on;
 in
 {
-  imports = [
-    self.nixosModules.default
-    ./hardware
-  ];
+  imports = [ ./hardware ];
 
   nixpkgs.hostPlatform = "x86_64-linux";
 

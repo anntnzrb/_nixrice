@@ -1,10 +1,8 @@
-{ lib, self, ... }:
+{ lib, ... }:
 let
   inherit (lib.liberion.module) on;
 in
 {
-  imports = [ self.darwinModules.default ];
-
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   home-manager.users.annt.imports = [ ./home.nix ];
