@@ -3,6 +3,8 @@
     ./hardware
     # GRUB because of dual-boot
     grub
+    # accepts remote builds from beirut
+    builder
     docker
     virt-manager
   ];

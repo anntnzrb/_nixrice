@@ -5,19 +5,20 @@ host := `hostname -s`
 _default:
     @just --list
 
-# Build this machine's system without activating it
+# Build this machine's system without activating it; builder: a name in
+# /etc/nix/builders (e.g. oulu), "local" for none, empty for the defaults
 [macos]
-build:
-    nix build .#darwinConfigurations.{{ host }}.system
+build builder="":
+    nix build .#darwinConfigurations.{{ host }}.system {{ if builder == "" { "" } else if builder == "local" { "--builders ''" } else { "--builders @/etc/nix/builders/" + builder } }}
 
 # Build this machine's system without activating it
 [linux]
 build:
     nixos-rebuild build --flake .#{{ host }}
 
-# Build and activate this machine's system
+# Build and activate this machine's system (builder: as for build)
 [macos]
-switch: build
+switch builder="": (build builder)
     sudo ./result/sw/bin/darwin-rebuild switch --flake .#{{ host }}
 
 # Build and activate this machine's system

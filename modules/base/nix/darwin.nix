@@ -15,15 +15,33 @@ let
   # taken by tailscale ssh, whose host key is not the clan-managed one)
   builderHost = name: "${name}.${config.clan.core.settings.domain}";
   builderPort = lib.liberion.identity.sshPort;
+  sshKey = "/Users/${userName}/.ssh/liberion"; # the daemon (root) uses the fleet key
+  features = [
+    "benchmark"
+    "big-parallel"
+    "kvm"
+    "nixos-test"
+  ];
+
+  # one builder as a Nix machines-file line, for `--builders @/etc/nix/builders/<name>`
+  machineLine =
+    name: maxJobs:
+    "ssh-ng://${userName}@${builderHost name}:${toString builderPort} x86_64-linux ${sshKey} ${toString maxJobs} 1 ${lib.concatStringsSep "," features} - -";
 in
 {
   imports = [ inputs.determinate.darwinModules.default ];
 
-  options.liberion.nix.builders =
-    mkOpt' (lib.types.attrsOf lib.types.ints.positive) { }
-    // {
-      description = "x86_64-linux remote builders: clan machine name -> max jobs.";
-    };
+  options.liberion.nix = {
+    # x86_64-linux remote builders this Mac trusts: clan machine name -> max
+    # jobs. Each gets its host key pinned, ssh set up and a spec file, so any
+    # command can pick it: `nix build ... --builders @/etc/nix/builders/<name>`
+    # (or `--builders ''` to build locally).
+    builders = mkOpt' (lib.types.attrsOf lib.types.ints.positive) { };
+    # the builders Nix uses when a command does not pick any
+    defaultBuilders = mkOpt' (lib.types.listOf (
+      lib.types.enum (lib.attrNames cfg.builders)
+    )) [ ];
+  };
 
   config = {
     assertions = [
@@ -51,22 +69,16 @@ in
         builders-use-substitutes = lib.mkIf (cfg.builders != { }) true;
       };
 
-      distributedBuilds = cfg.builders != { };
-      buildMachines = lib.mapAttrsToList (name: maxJobs: {
+      distributedBuilds = cfg.defaultBuilders != [ ];
+      buildMachines = map (name: {
         hostName = "${builderHost name}:${toString builderPort}";
         protocol = "ssh-ng";
         sshUser = userName;
-        # root (the daemon) authenticates with the fleet key
-        sshKey = "/Users/${userName}/.ssh/liberion";
+        inherit sshKey;
         systems = [ "x86_64-linux" ];
-        inherit maxJobs;
-        supportedFeatures = [
-          "benchmark"
-          "big-parallel"
-          "kvm"
-          "nixos-test"
-        ];
-      }) cfg.builders;
+        maxJobs = cfg.builders.${name};
+        supportedFeatures = features;
+      }) cfg.defaultBuilders;
 
       determinateNixd = {
         # Daemon-side background GC; replaces nix-darwin's nix.gc.*
@@ -75,6 +87,13 @@ in
         telemetry.sentry.endpoint = null;
       };
     };
+
+    environment.etc = lib.mapAttrs' (
+      name: maxJobs:
+      lib.nameValuePair "nix/builders/${name}" {
+        text = machineLine name maxJobs + "\n";
+      }
+    ) cfg.builders;
 
     # nix sets no ssh timeout; fail over quickly when a builder is offline
     programs.ssh.extraConfig = lib.concatMapStrings (name: ''

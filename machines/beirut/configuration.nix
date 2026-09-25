@@ -17,8 +17,15 @@
   };
 
   liberion = {
-    # add munich once it runs NixOS with clan sshd (see clan.nix)
-    nix.builders.oulu = 12;
+    nix = {
+      # remote x86_64-linux builders this Mac may use; munich (personal) is
+      # the default, oulu (work) only when a command asks for it
+      builders = {
+        munich = 12;
+        oulu = 12;
+      };
+      defaultBuilders = [ "munich" ];
+    };
     system.ui.menuBar.hide = false;
   };
 }
