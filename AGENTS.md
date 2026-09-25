@@ -56,9 +56,11 @@ Evaluation reads the working tree through `path:.`, so new files count without
 ### CI (`.github/workflows/`)
 - `ci.yml` (PRs, pushes to dev): `just check` on Linux and macOS, `just probes`,
   and on PRs the `just report` summary against the base branch (job summary).
-- `build.yml` (pushes to dev touching Nix code, weekly, manual): builds every machine and home on
-  its platform and pushes to the `anntnzrb` Cachix cache (`CACHIX_AUTH_TOKEN`).
+- `build.yml` (Dependabot flake PRs, pushes to dev touching Nix code, weekly,
+  manual): builds every machine and home on its platform and pushes to the
+  `anntnzrb` Cachix cache. On Dependabot PRs it is a required check, so updates
+  land already built and cached.
 - `dependabot.yml` + `auto-merge.yml`: one grouped PR for all flake inputs and one for
-  GitHub Actions, weekly; each merges itself once the required checks (`check` on
+  GitHub Actions, weekly; each merges itself once the required checks (`check` and `build` on
   both platforms, `probes`) pass. The PR job summary carries `just report`.
 

@@ -1,10 +1,15 @@
 name: Nix build
 
 # Builds every machine and home on its platform and pushes the results to the
-# binary cache, so deploys substitute instead of building. Pushing needs the
-# CACHIX_AUTH_TOKEN secret; without it the cache is only read.
+# binary cache, so deploys substitute instead of building. Dependabot PRs are
+# built before they merge (a rebase merge keeps the same flake.lock, so the
+# merged commit is already cached) and the build is a required check, so an
+# update only lands if every machine builds. Pushing needs CACHIX_AUTH_TOKEN as
+# an Actions secret and, for Dependabot PRs, as a Dependabot secret.
 on:
   workflow_dispatch:
+  # every PR reports the check; only Dependabot flake updates build (job `if`)
+  pull_request:
   push:
     branches: ["dev"]
     # only what changes what gets built
@@ -20,20 +25,22 @@ on:
       - "overlays/**"
       - scripts/ci/build.sh
   schedule:
-    # after the weekly lock update, whose automation merges trigger nothing
+    # weekly safety net
     - cron: "30 8 * * 1"
 
 permissions:
   contents: read
 
-# queue behind a running build instead of cancelling it: a nearly finished
-# build still fills the cache (GitHub keeps only the newest queued run)
+# on dev, queue behind a running build (a nearly finished one still fills the
+# cache); on a PR, a newer push supersedes the running build
 concurrency:
-  group: build-${{ github.ref }}
-  cancel-in-progress: false
+  group: build-${{ github.head_ref || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
+    # flake-input PRs only; an Actions bump changes no derivation
+    if: github.event_name != 'pull_request' || startsWith(github.head_ref, 'dependabot/nix/')
     runs-on: ${{ matrix.os }}
     timeout-minutes: 240
     strategy:
