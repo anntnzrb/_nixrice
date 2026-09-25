@@ -7,7 +7,6 @@
 }:
 let
   inherit (lib.${namespace}.module) mkOpt' mkOptDisabled';
-  inherit (lib.${namespace}.launchd.home) mkAgent mkStableExecutableAgent;
   inherit (lib.types)
     bool
     enum
@@ -23,6 +22,7 @@ let
   sleepEnabled = cfg.enable && sleepCfg.enable;
   anyEnabled = idleEnabled || sleepEnabled;
   homeDir = config.home.homeDirectory;
+  sleepwatcherSource = "${pkgs.sleepwatcher}/bin/sleepwatcher";
   sleepwatcherPath = "${homeDir}/Library/Application Support/rice/bin/sleepwatcher";
 
   stateDirDefault = "${homeDir}/Library/Application Support/rice/whatsapp-idle-guard";
@@ -52,6 +52,16 @@ let
   sleepQuitCommand = lib.escapeShellArgs (
     [ (lib.getExe sleepQuit) ] ++ sleepQuitArgs
   );
+
+  sleepwatcherArgs =
+    lib.optionals sleepCfg.onSystemSleep [
+      "-s"
+      sleepQuitCommand
+    ]
+    ++ lib.optionals sleepCfg.onDisplaySleep [
+      "-S"
+      sleepQuitCommand
+    ];
 
   idleGuard = pkgs.writeShellApplication {
     name = "whatsapp-idle-guard";
@@ -156,42 +166,50 @@ in
 
     })
 
-    (lib.mkIf idleEnabled (mkAgent {
-      name = "whatsapp-idle-guard";
-      serviceConfig = {
-        ProgramArguments = [ (lib.getExe idleGuard) ] ++ idleGuardArgs;
-        RunAtLoad = true;
-        StartInterval = idleCfg.pollSeconds;
-        ProcessType = "Background";
-        LimitLoadToSessionType = [ "Aqua" ];
-        StandardOutPath = outLogFile;
-        StandardErrorPath = errLogFile;
+    (lib.mkIf idleEnabled {
+      launchd.agents.whatsapp-idle-guard = {
+        enable = true;
+        config = {
+          ProgramArguments = [ (lib.getExe idleGuard) ] ++ idleGuardArgs;
+          RunAtLoad = true;
+          StartInterval = idleCfg.pollSeconds;
+          ProcessType = "Background";
+          LimitLoadToSessionType = [ "Aqua" ];
+          StandardOutPath = outLogFile;
+          StandardErrorPath = errLogFile;
+        };
       };
-    }))
+    })
 
-    (mkStableExecutableAgent {
-      name = "whatsapp-sleepwatcher";
-      source = "${pkgs.sleepwatcher}/bin/sleepwatcher";
-      stablePath = sleepwatcherPath;
-      arguments =
-        lib.optionals sleepCfg.onSystemSleep [
-          "-s"
-          sleepQuitCommand
-        ]
-        ++ lib.optionals sleepCfg.onDisplaySleep [
-          "-S"
-          sleepQuitCommand
-        ];
-      serviceConfig = {
-        KeepAlive = true;
-        RunAtLoad = true;
-        ProcessType = "Background";
-        LimitLoadToSessionType = [ "Aqua" ];
-        StandardOutPath = "${idleCfg.logDir}/whatsapp-sleepwatcher.log";
-        StandardErrorPath = "${idleCfg.logDir}/whatsapp-sleepwatcher.error.log";
+    (lib.mkIf sleepEnabled {
+      launchd.agents.whatsapp-sleepwatcher = {
+        enable = sleepEnabled;
+        config = {
+          ProgramArguments = [ sleepwatcherPath ] ++ sleepwatcherArgs;
+          KeepAlive = true;
+          RunAtLoad = true;
+          ProcessType = "Background";
+          LimitLoadToSessionType = [ "Aqua" ];
+          StandardOutPath = "${idleCfg.logDir}/whatsapp-sleepwatcher.log";
+          StandardErrorPath = "${idleCfg.logDir}/whatsapp-sleepwatcher.error.log";
+        };
       };
-      dag = config.lib.dag;
-      enable = sleepEnabled;
+
+      # Stage the sleepwatcher binary to a stable path via temp file + rename,
+      # so launchd always executes the same absolute path.
+      home.activation."whatsapp-sleepwatcher-stable-executable" =
+        config.lib.dag.entryBetween [ "setupLaunchAgents" ] [ "writeBoundary" ]
+          ''
+            stable_path=${lib.escapeShellArg sleepwatcherPath}
+            stable_dir="$(dirname "$stable_path")"
+            tmp_path="$stable_path.tmp.$$"
+            trap 'rm -f "$tmp_path"' EXIT
+
+            run mkdir -p "$stable_dir"
+            run cp ${lib.escapeShellArg sleepwatcherSource} "$tmp_path"
+            run chmod 0755 "$tmp_path"
+            run mv -f "$tmp_path" "$stable_path"
+          '';
     })
   ];
 }
