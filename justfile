@@ -43,6 +43,14 @@ deploy +machines:
 check:
     scripts/ci/check-flake.sh
 
+# Print the drvPath of every machine and standalone home
+snap:
+    scripts/ci/snapshot.sh
+
+# Diff machine, home and probe drvPaths against a git ref; no output = pure refactor
+drvdiff ref="HEAD":
+    scripts/ci/drvdiff.sh {{ ref }}
+
 # Format tracked nix files
 fmt:
     nix fmt

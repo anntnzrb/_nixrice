@@ -8,19 +8,7 @@ nix run --option eval-cache false --no-write-lock-file --inputs-from path:. nixp
     --nixpkgs-keys nixpkgs,nixpkgs-unstable
 
 # every machine and standalone home must evaluate on every CI platform
-for attr in \
-    nixosConfigurations.oulu.config.system.build.toplevel \
-    nixosConfigurations.munich.config.system.build.toplevel \
-    nixosConfigurations.solna.config.system.build.toplevel \
-    nixosConfigurations.tampa.config.system.build.toplevel \
-    nixosConfigurations.zadar.config.system.build.toplevel \
-    darwinConfigurations.beirut.config.system.build.toplevel \
-    darwinConfigurations.incheon.config.system.build.toplevel \
-    'homeConfigurations."annt@wsl".activationPackage'; do
-    printf 'eval %s\n' "${attr}"
-    nix eval --option eval-cache false --no-write-lock-file --raw \
-        "path:.#${attr}.drvPath" >/dev/null
-done
+"$(dirname "$0")/snapshot.sh"
 
 nix fmt --option eval-cache false --no-write-lock-file -- --check
 
