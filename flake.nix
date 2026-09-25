@@ -158,19 +158,12 @@
           default = pkgs.mkShell {
             name = "liberion-shell";
             inherit (self.checks.${system}.pre-commit-check) shellHook;
-            nativeBuildInputs = [
+            # the hook tools (nixfmt, deadnix, statix, shellcheck, ...) plus the rest
+            nativeBuildInputs = self.checks.${system}.pre-commit-check.enabledPackages ++ [
               clan-core.packages.${system}.clan-cli
-            ]
-            ++ (with pkgs; [
-              actionlint
-              deadnix
-              just
-              nixd
-              nixfmt
-              shellcheck
-              shfmt
-              statix
-            ]);
+              pkgs.just
+              pkgs.nixd
+            ];
           };
         }
       );

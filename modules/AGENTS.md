@@ -1,71 +1,69 @@
 # AGENTS.md - Module System
 
-Modules are the core implementation units that define feature behavior across platforms. Each module provides a single, focused capability using standardized patterns and the namespace.
-
-### 1. Directory Structure
+One module = one feature, at `<platform>/<category>/<feature>/default.nix`, declaring
+`liberion.<category>.<feature>.enable` (option path mirrors the directory path).
 
 ```
 modules/
-├── darwin/     # macOS-specific modules
-├── home/       # Home Manager modules (user-space)
-├── nixos/      # NixOS system modules
-├── shared/     # Cross-platform modules
-├── default.nix # NixOS entrypoint (auto-imports nixos/)
-├── darwin.nix  # nix-darwin entrypoint (auto-imports darwin/)
-└── home.nix    # Home Manager entrypoint (auto-imports home/)
+├── darwin/  nixos/   # system modules (nix-darwin / NixOS)
+├── shared/           # system modules valid on both; imported by both entrypoints
+├── home/             # Home Manager modules
+├── toggle.nix        # factory for enable-only modules (not auto-imported)
+└── default.nix, darwin.nix, home.nix   # entrypoints
 ```
 
-**Organization Pattern:**
+### Discovery
+- Every `default.nix` below an entrypoint's tree is imported automatically
+  (`lib.liberion.fs.getDefaultFiles`); adding a feature needs no import list edit.
+- Sibling `*.nix` files are only imported when the module asks with
+  `getModuleFiles { path = ./.; ignore = [ "data.nix" ]; }` - list plain data files
+  in `ignore`, or they get imported as modules.
+
+### Writing a module
+Enable-only feature (most modules):
+
+```nix
+import ../../../toggle.nix "cli.btop" (
+  { config, ... }:
+  {
+    programs.btop.enable = true;
+  }
+)
 ```
-<platform>/<category>/<feature>/default.nix
+
+Install one package: `import ../../../toggle.nix "cli.husky" "husky"`.
+
+Feature with more options: declare them explicitly and gate on `cfg.enable`:
+
+```nix
+{ lib, config, ... }:
+let
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
+  cfg = config.liberion.cli.ssh;
+in
+{
+  options.liberion.cli.ssh = {
+    enable = mkOptDisabled';
+    identityFile = mkOpt' lib.types.str "~/.ssh/id_ed25519";
+  };
+
+  config = lib.mkIf cfg.enable { programs.ssh.enable = true; };
+}
 ```
 
-### 2. Platform Organization
+Helpers (`lib/default.nix`): `mkOpt' type default` (description-free option),
+`mkOptDisabled'` / `mkOptEnabled'` (bool, false / true), `on` / `off`
+(`{ enable = true/false; }`, e.g. `liberion.cli.git = on;`).
 
-**Platform-Specific Modules:**
-- Platform directories contain modules that leverage platform-specific capabilities and APIs
-- Each platform organizes modules by functional categories relevant to that environment
-- Category names reflect the natural groupings of features for each platform
+Baselines (`nixos/default.nix`, `darwin/default.nix`, `home/default.nix`,
+`home/xdg`, `shared/{nix,environment}`) apply to every host; keep new features opt-in.
 
-**Cross-Platform Modules:**
-- Shared modules provide consistent functionality across different platforms
-- Common abstractions that work regardless of underlying system
-- Platform-agnostic features and utilities
-
-**Organization Principles:**
-```
-<platform>/<category>/<feature>/default.nix
-```
-- Platform: The target system type
-- Category: Functional grouping of related features
-- Feature: Individual capability or tool
-
-### 3. Module Implementation Pattern
-
-**Key Principles:**
-- **Single responsibility** - One feature per module
-- **Conditional activation** - Feature modules gate config with `lib.mkIf cfg.enable`
-- **Namespace isolation** - Use prefix exclusively
-- **Option standardization** - Use helper functions
-- **Baseline modules** - Some root/shared modules are intentionally default-enabled by the host layer as baselines; keep leaf feature modules opt-in unless they are part of that established baseline
-### 4. Cross-Module Integration
-
-**Enabling Other Modules:**
-Modules can activate other features as dependencies.
-
-**Session Variable Integration:**
-Reference `config.home.sessionVariables` for consistent tool selection across modules.
-
-**Service Injection:**
-Modules can add keybindings, autostart programs, or configuration to other services.
-
-### 5. Module Types
-
-**Simple Modules:**
-Basic feature enablement with minimal configuration options.
-
-**Complex Modules:**
-Multi-file modules with subdirectories for organization, using imports to structure related functionality.
-
-**Integration Modules:**
-Modules that primarily orchestrate other modules and cross-platform abstractions.
+### Gotchas
+- `liberion.suites.desktop` exists in both the system and the Home Manager option
+  trees; they are different options. Use `just enabled <machine>` to see what is on.
+- Reordering list definitions changes drvPaths even when behaviour does not:
+  `home.packages`, `environment.systemPackages` and Homebrew casks merge in module
+  order. Check with `just drvdiff` and explain any diff.
+- Some unused modules do not evaluate when enabled (their probe reads
+  `eval-error`, e.g. sway/sxhkd need `home.sessionVariables.TERMINAL`). A refactor
+  must keep the probe unchanged unless it fixes the module on purpose.

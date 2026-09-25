@@ -7,29 +7,44 @@ fleet inventory (machines, tags, service instances).
 ### Layout
 - `machines/<name>/` - one directory per machine, auto-discovered by Clan
   (`configuration.nix`, optional `disko.nix`, `hardware/`, `home.nix`, readme).
-- `modules/` - feature modules (`nixos/`, `darwin/`, `home/`, `shared/`) and their
-  entrypoints (`default.nix`, `darwin.nix`, `home.nix`, `home-manager.nix`).
+- `modules/` - feature modules (`nixos/`, `darwin/`, `home/`, `shared/`), their
+  entrypoints (`default.nix`, `darwin.nix`, `home.nix`, `home-manager.nix`) and the
+  toggle factory `toggle.nix`. How to write one: `modules/AGENTS.md`.
 - `homes/` - standalone Home Manager configurations (hosts without a managed system).
-- `lib/` - repository helpers exposed as `lib.liberion.*`.
+- `lib/default.nix` - repository helpers exposed as `lib.liberion.*`.
 - `overlays/` - package overlay.
-- `justfile` - day-to-day tasks (build, switch, deploy, update, check); run `just` to list them.
+- `scripts/ci/` - CI gate plus the regression tools below.
+- `justfile` - day-to-day tasks; run `just` to list them.
 - `sops/`, `vars/` - Clan secrets and generated vars. Never print secret values.
 
 ### Architecture
-- Modules implement features; machines and homes compose them via toggles.
-- Cross-module integration uses the `liberion` namespace and explicit module arguments
-  (`lib`, `inputs`, `self`, `namespace`).
+- Modules implement features behind `liberion.<path>.enable`; machines and homes
+  compose them via toggles. Option paths are written literally (`liberion.cli.git`),
+  so `git grep 'cli.git'` finds declaration and setters alike.
+- `clan.nix` gives every machine the module set of its class
+  (`self.{nixos,darwin}Modules.default`); machine files hold only machine specifics.
+- Liberion homes import `modules/home.nix` (`machines/*/home.nix`, `homes/*.nix`).
 - Machines: `nixosConfigurations.<name>` / `darwinConfigurations.<name>`; hosted homes
   live under `…config.home-manager.users.<user>`.
 
 ### Core Principles
 1. **Separation of concerns**: Logic in modules, toggles in compositions
-2. **Conditional activation**: All config gated by `lib.mkIf cfg.enable`
-3. **Namespace isolation**: Use prefix exclusively
+2. **Conditional activation**: Feature config gated by its `enable`
+3. **Namespace isolation**: Every option lives under `liberion.`
 4. **Fail-safe defaults**: Features disabled by default, explicit opt-in
 
 ### Build / Test
-- Full gate: ensure all files tracked (`git add -N .`), then run `scripts/ci/check-flake.sh`
+- A refactor must not change what machines build. Prove it:
+  - `just drvdiff [ref]` - diffs every machine/home drvPath *and* every probe
+    against a git ref (default `HEAD`); no output means a pure refactor.
+    Probes switch on each toggle no host enables, over a real host, so unused
+    modules are checked too (`scripts/ci/probes.nix`). Takes a few minutes.
+  - `just snap` - machine/home drvPaths only (~30s), for quick iteration.
+  - Explain an intended diff with `nix run nixpkgs#nix-diff -- <old.drv> <new.drv>`.
+- `just enabled <machine>` - the liberion toggles a machine turns on (grep cannot
+  tell you this: suites enable toggles indirectly).
+- Full gate: ensure all files tracked (`git add -N .`), then run `scripts/ci/check-flake.sh`.
+  Flake evals use `path:.` so untracked files are seen; `.#` needs them tracked.
 
 ### Deploy
 - NixOS machines: `just deploy <machine>` (clan, as `annt@<machine>:2222`), then verify on the target.

@@ -51,6 +51,10 @@ snap:
 drvdiff ref="HEAD":
     scripts/ci/drvdiff.sh {{ ref }}
 
+# List the liberion toggles a machine enables (system and home users)
+enabled machine=host:
+    nix eval --impure --raw --expr "import ./scripts/ci/enabled.nix { flake = \"path:$PWD\"; machine = \"{{ machine }}\"; }"
+
 # Format tracked nix files
 fmt:
     nix fmt
