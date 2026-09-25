@@ -1,13 +1,17 @@
-# Weekly updates: one PR per flake input (so a broken input never blocks the
-# rest) and one grouped PR for GitHub Actions. auto-merge.yml merges each once
-# the required CI checks pass.
+# Weekly updates: one grouped PR for all flake inputs and one for GitHub
+# Actions. Grouping matters: every merge makes Dependabot rebase the other open
+# PRs, so per-input PRs rerun CI for each one after every merge.
+# auto-merge.yml merges each PR once the required CI checks pass; its job
+# summary (just report) shows what changes on each machine.
 version: 2
 updates:
   - package-ecosystem: nix
     directory: /
     schedule:
       interval: weekly
-    open-pull-requests-limit: 30
+    groups:
+      flake-inputs:
+        patterns: ["*"]
     commit-message:
       prefix: chore(flake)
 

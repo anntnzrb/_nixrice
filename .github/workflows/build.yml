@@ -7,6 +7,18 @@ on:
   workflow_dispatch:
   push:
     branches: ["dev"]
+    # only what changes what gets built
+    paths:
+      - flake.nix
+      - flake.lock
+      - clan.nix
+      - identity.nix
+      - "lib/**"
+      - "modules/**"
+      - "machines/**"
+      - "homes/**"
+      - "overlays/**"
+      - scripts/ci/build.sh
   schedule:
     # after the weekly lock update, whose automation merges trigger nothing
     - cron: "30 8 * * 1"
@@ -14,9 +26,11 @@ on:
 permissions:
   contents: read
 
+# queue behind a running build instead of cancelling it: a nearly finished
+# build still fills the cache (GitHub keeps only the newest queued run)
 concurrency:
   group: build-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:

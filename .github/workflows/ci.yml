@@ -9,6 +9,11 @@ on:
 permissions:
   contents: read
 
+# a newer push to the same branch or PR supersedes the running checks
+concurrency:
+  group: ci-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   # lint, evaluate every machine and home, flake checks (incl. tests/)
   check:
