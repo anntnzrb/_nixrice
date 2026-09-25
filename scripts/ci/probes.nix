@@ -9,8 +9,10 @@ let
   f = builtins.getFlake flake;
   inherit (f.inputs.nixpkgs) lib;
   targets = {
-    nixos-zadar = {
-      sys = f.nixosConfigurations.zadar;
+    # solna: a desktop NixOS host, so X/desktop modules probe without the
+    # conflicts a headless host would add
+    nixos-solna = {
+      sys = f.nixosConfigurations.solna;
       get = c: c.liberion;
       set = m: m;
     };
