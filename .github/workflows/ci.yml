@@ -25,10 +25,6 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@v22
 
-      - name: Test update selector
-        if: runner.os == 'Linux'
-        run: tests/ci/update-flake-inputs.sh
-
       - name: Check flake
         run: scripts/ci/check-flake.sh
 

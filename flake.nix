@@ -190,7 +190,8 @@
 
     clan-core = {
       # clan: machine inventory, deployment, vars & secrets
-      url = "https://git.clan.lol/clan/clan-core/archive/26.05.tar.gz";
+      # git (not the archive tarball) so Dependabot can update it
+      url = "git+https://git.clan.lol/clan/clan-core?ref=26.05&shallow=1";
     };
 
     nixpkgs = {

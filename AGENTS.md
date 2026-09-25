@@ -48,7 +48,7 @@ Evaluation reads the working tree through `path:.`, so new files count without
 
 ### Not for agents
 - `just switch`, `just build`, `just home`, `just deploy`: the owner deploys.
-- `just update`: lock updates come from CI (`.github/workflows/update-flake-lock*.yml`).
+- `just update`: flake inputs are updated by Dependabot PRs (`.github/dependabot.yml`).
 - `just clean`, `just optimise`, `just repair`, `bin/nix-install.sh`: host maintenance.
 - Do not commit or push unless asked. Never print values from `sops/` or `vars/`;
   generate secrets with `clan vars generate <machine>`, never by hand.
@@ -58,6 +58,7 @@ Evaluation reads the working tree through `path:.`, so new files count without
   and on PRs the `just report` summary against the base branch (job summary).
 - `build.yml` (pushes to dev, weekly, manual): builds every machine and home on
   its platform and pushes to the `anntnzrb` Cachix cache (`CACHIX_AUTH_TOKEN`).
-- `update-flake-lock*.yml`: selects input updates that pass `just check` on both
-  platforms and opens a PR whose body carries the `just report` summary.
+- `dependabot.yml` + `auto-merge.yml`: one PR per flake input and one for GitHub
+  Actions, weekly; each merges itself once the required checks (`check` on
+  both platforms, `probes`) pass. The PR job summary carries `just report`.
 
