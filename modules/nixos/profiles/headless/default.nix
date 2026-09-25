@@ -40,13 +40,11 @@ in
       linuxPackages.cpupower
     ];
 
+    # shared/nix already pins doc/info off; nixos docs are the only nested
+    # write that is not duplicated elsewhere
     documentation = {
       enable = false;
       nixos.enable = false;
-      doc.enable = false;
-      info.enable = false;
     };
-
-    programs.command-not-found.enable = false;
   };
 }
