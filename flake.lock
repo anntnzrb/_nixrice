@@ -643,11 +643,11 @@
     "rio-catppuccin": {
       "flake": false,
       "locked": {
-        "lastModified": 1781563735,
-        "narHash": "sha256-AzZmRLHptgQB3CC1fl/E9BR1Qw5a6VPprpQopn/O3CM=",
+        "lastModified": 1788547309,
+        "narHash": "sha256-o4UW/luCrHgewi53/nC3eLjSQMzMJG5c3rKAaTBtbe4=",
         "owner": "catppuccin",
         "repo": "rio",
-        "rev": "4d37b8334a3e8f853fc6543dc2a60c295a66ddca",
+        "rev": "ebb70c9775c5df04239f3a5a231766a6e0adf7e5",
         "type": "github"
       },
       "original": {
