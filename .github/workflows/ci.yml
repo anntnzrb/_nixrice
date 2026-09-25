@@ -28,7 +28,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: DeterminateSystems/nix-installer-action@v22
+      - uses: DeterminateSystems/nix-installer-action@v23
 
       # read-only: locked flake inputs and builds come from our cache, not from
       # (sometimes flaky) upstream hosts
@@ -49,7 +49,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: DeterminateSystems/nix-installer-action@v22
+      - uses: DeterminateSystems/nix-installer-action@v23
 
       # read-only: locked flake inputs and builds come from our cache, not from
       # (sometimes flaky) upstream hosts
@@ -72,7 +72,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: DeterminateSystems/nix-installer-action@v22
+      - uses: DeterminateSystems/nix-installer-action@v23
 
       # read-only: locked flake inputs and builds come from our cache, not from
       # (sometimes flaky) upstream hosts
