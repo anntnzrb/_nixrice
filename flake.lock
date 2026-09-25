@@ -53,11 +53,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787247584,
-        "narHash": "sha256-7pXBYgIonJjWJiHffrq5+jWBjamTXChxdq0u3sNtwH0=",
+        "lastModified": 1788620312,
+        "narHash": "sha256-qsfvPJszGMe3xzH4RDOSJ5ruPqgC/m2ps7HbZOsTskM=",
         "owner": "alleneubank",
         "repo": "bun-overlay",
-        "rev": "d830601dd496aaa8534c8513f8b3e453ca04f65d",
+        "rev": "7705bf47b3202134508da10a7b722b5529f28aab",
         "type": "github"
       },
       "original": {
