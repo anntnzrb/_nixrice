@@ -10,6 +10,8 @@
 {
   home-manager = {
     useGlobalPkgs = true;
+    # packages in /etc/profiles/per-user/<user>, not the user's nix profile
+    useUserPackages = true;
     extraSpecialArgs = { inherit inputs; };
   };
 

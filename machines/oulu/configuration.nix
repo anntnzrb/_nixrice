@@ -36,6 +36,4 @@
     # realtek 8852be wifi
     kernelModules = [ "rtw89_8852be" ];
   };
-
-  home-manager.useUserPackages = true;
 }
