@@ -1,6 +1,4 @@
-# Hardware facts identical on solna, zadar and munich: the NIX-BOOT/NIX-ROOT
-# label scheme and filesystem types. Per-host mount options and zram sizing
-# stay in machines/<host>/hardware/default.nix.
+# Filesystems by label: btrfs root (NIX-ROOT) and vfat /boot (NIX-BOOT). Mount options and swap stay with the machine.
 {
   fileSystems =
     let

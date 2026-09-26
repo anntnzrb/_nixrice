@@ -10,7 +10,7 @@ in
     (modulesPath + "/installer/scan/not-detected.nix")
     common-pc-laptop
     common-pc-laptop-hdd
-    ../../hardware-common.nix
+    inputs.self.nixosModules.btrfs-labels
   ]
   ++ [
     ./cpu.nix
