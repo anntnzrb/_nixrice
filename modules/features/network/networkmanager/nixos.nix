@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ lib, ... }: {
   networking.networkmanager.enable = true;
-  environment.systemPackages = [ pkgs.networkmanagerapplet ];
+  users.users.${lib.liberion.identity.user}.extraGroups = [ "networkmanager" ];
 }
