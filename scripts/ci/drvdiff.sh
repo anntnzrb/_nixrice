@@ -7,7 +7,12 @@ set -eu
 
 here="$(cd "$(dirname "$0")" && pwd)"
 tmp="$(mktemp -d)"
-trap 'git worktree remove --force "${tmp}/base" >/dev/null 2>&1 || true; rm -rf "${tmp}"' EXIT
+cleanup() {
+    git worktree remove --force "${tmp}/base" >/dev/null 2>&1 || true
+    rm -rf "${tmp}"
+}
+# shellcheck source=scripts/ci/cleanup.sh
+. "${here}/cleanup.sh"
 
 git worktree add --detach --quiet "${tmp}/base" "${1:-HEAD}"
 

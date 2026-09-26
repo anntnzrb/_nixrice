@@ -8,10 +8,13 @@ set -eu
 
 root="$(cd "$(dirname "$0")/../.." && pwd)"
 tmp="$(mktemp -d)"
-trap 'rm -rf "${tmp}"' EXIT
+cleanup() { rm -rf "${tmp}"; }
+# shellcheck source=scripts/ci/cleanup.sh
+. "${root}/scripts/ci/cleanup.sh"
 
 "${root}/scripts/ci/probe.sh" "${1:-.}" >"${tmp}/probes"
 
 # expected errors among the probes this shard ran
-awk '{ print $1 }' "${tmp}/probes" | grep -Fx -f - "${root}/tests/probe-errors.txt" >"${tmp}/expected" || true
+awk '{ print $1 }' "${tmp}/probes" >"${tmp}/ran"
+grep -Fx -f "${tmp}/ran" "${root}/tests/probe-errors.txt" >"${tmp}/expected" || true
 awk '$2 == "eval-error" { print $1 }' "${tmp}/probes" | diff -u "${tmp}/expected" -
