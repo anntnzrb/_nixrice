@@ -9,9 +9,5 @@
       "usbhid"
       "sd_mod"
     ];
-    kernelModules = [ "kvm-intel" ];
   };
-
-  # support for tablets
-  #hardware.opentabletdriver.enable = true;
 }

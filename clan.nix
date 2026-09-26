@@ -39,9 +39,10 @@ in
     munich = {
       description = "ASUS PRIME B660-PLUS D4 - Intel i5-12400 & NVIDIA GTX 1080 Pascal";
       tags = [
-        "desktop"
         "physical"
         "workstation"
+        "server"
+        "headless"
         "nvidia"
       ];
     };

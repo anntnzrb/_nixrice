@@ -1,10 +1,14 @@
-{ inputs, ... }: {
+{ inputs, config, ... }: {
   imports = with inputs.self.nixosModules; [
     ./hardware
-    # GRUB because of dual-boot
-    grub
+    disko-xfs # whole NVMe; no more dual-boot
     docker
     essentials
+    fish
+    intel-cpu
+    nvidia
+    systemd-boot
+    tailscale
     virt-manager
   ];
 
@@ -12,10 +16,14 @@
 
   system.stateVersion = "26.05";
 
-  time.hardwareClockInLocalTime = true; # dual-boot
+  # GTX 1080 (Pascal): dropped by the default driver branch
+  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
 
   networking = {
-    defaultGateway = "192.168.100.1";
+    defaultGateway = {
+      address = "192.168.100.1";
+      interface = "enp4s0";
+    };
     enableIPv6 = false;
     nameservers = [
       "216.199.54.9"
