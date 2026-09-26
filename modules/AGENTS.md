@@ -4,7 +4,8 @@
 modules/
 ├── base/<name>/       # always imported (every machine of the class / every home)
 ├── features/<category>/<name>/   # imported by machines, profiles or other features
-└── profiles/<tag>/    # imported into machines tagged <tag> in clan.nix
+├── profiles/<tag>/    # imported into machines tagged <tag> in clan.nix
+└── services/<name>/   # in-repo Clan services (_class = "clan.service")
 ```
 
 Each directory holds class files: `nixos.nix`, `darwin.nix`, `home.nix`, and
@@ -13,6 +14,22 @@ exports every feature by directory name as `self.nixosModules.<name>`,
 `self.darwinModules.<name>` and `self.homeModules.<name>`. Other files in a
 directory are helpers, imported explicitly; paths containing `/_` are ignored.
 Directory names are unique across features and profiles.
+
+### Profiles are traits
+Each tag `<t>` imports `modules/profiles/<t>/` into machines carrying it.
+Profiles never import other profiles. Clan adds computed tags (`all`,
+`nixos`, `darwin`) automatically (never list them by hand). Other tags
+without a matching directory in `modules/profiles/` are descriptive.
+
+### Clan services
+In-repo Clan services live in `modules/services/<name>/default.nix`
+(`_class = "clan.service"`). Register them in `clan.nix` under
+`modules.<name> = ./modules/services/<name>;` and instantiate them under
+`inventory.instances.<name>` with `module = { input = "self"; name = "<name>"; };`.
+For example, `remote-builders` defines a `builder` role (NixOS; sets `maxJobs`
+and trusts the owner for remote builds) and a `client` role (nix-darwin;
+generates `/etc/nix/builders/<name>` per builder, pins builder OpenSSH host
+keys, sets `ConnectTimeout 5`, and configures `defaultBuilders`).
 
 ### Adding a feature
 Drop a directory in `modules/features/<category>/<name>/` with the class file(s).
@@ -57,7 +74,9 @@ Helpers: `lib.liberion.module.{mkOpt', mkOptEnabled', mkOptDisabled'}`,
   order-sensitive: pin those with `lib.mkBefore`/`lib.mkAfter` instead of relying
   on import order. `just report` shows PATH and script changes.
 - `tests/probe-errors.txt` lists the modules expected not to evaluate on their
-  probe host: Linux-only home features on beirut, exclusive features (grub vs
-  systemd-boot, dhcp vs networkmanager, headless vs desktop). `just probes` fails
-  when that set changes; update the list only for such genuine cases.
-- oulu opts out of two base modules with `disabledModules`.
+  probe host (the synthetic base-only NixOS probe host for Linux features and
+  homes, and the primary Mac for darwin features and homes): genuine platform
+  mismatches, such as Linux-only home features probed on the Mac host, or
+  darwin-only home features probed on the synthetic Linux probe host.
+  `just probes` fails when that set changes; update the list only for such
+  genuine cases.

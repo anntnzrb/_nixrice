@@ -9,7 +9,9 @@ outputs; `clan.nix` holds the inventory (machines, tags, service instances).
 - `modules/base/` - imported into every machine of its class (and every home).
 - `modules/features/<category>/<name>/` - one feature per directory; importing it
   enables it. How to write one: `modules/AGENTS.md`.
-- `modules/profiles/<tag>/` - imported into every machine carrying Clan tag `<tag>`.
+- `modules/profiles/<tag>/` - imported into every machine carrying Clan tag `<tag>`
+  (tags are traits).
+- `modules/services/<name>/` - in-repo Clan services (`_class = "clan.service"`).
 - `machines/<name>/` - `configuration.nix` (imports features), optional `home.nix`
   (the owner's Home Manager config there), `hardware/`, `disko.nix`.
 - `homes/` - standalone Home Manager configurations (hosts without a managed system).
@@ -20,9 +22,26 @@ outputs; `clan.nix` holds the inventory (machines, tags, service instances).
 - `sops/`, `vars/` - Clan secrets and generated vars. Never print secret values.
 
 ### What a machine runs
-Its class base + the profile of each of its tags (`clan.nix`) + the features its
-`configuration.nix` and `home.nix` import. That is all plain text: grep for a
-feature name to see who uses it.
+Its class base + the profile of each of its tags (`clan.nix`) + Clan service
+instances targeting it or its tags (`clan.nix` `inventory.instances`) + the
+features its `configuration.nix` and `home.nix` import. That is all plain
+text: grep for a feature name to see who uses it.
+
+Tags are traits; profiles never import each other. Clan adds `all`, `nixos`,
+and `darwin` automatically. Traits in use:
+- `server` - always on (no sleep, lid/idle ignored, performance governor,
+  sshd, zram, Clan recommended defaults). Fleet `sshd` and `users` service
+  instances target this tag; only tag a machine `server` after `clan vars`
+  exist for it.
+- `headless` - no GUI (xserver off, documentation off).
+- `desktop` - graphical stack (on NixOS no live machine uses it; graphical
+  features remain ready to import).
+- `archived` - retired machine kept as history (base + sshd + user + hardware
+  facts only); excluded from CI builds/Cachix (`scripts/ci/targets.nix`) and
+  fleet SSH peer host lists (`network/sshd`).
+
+Other tags (`physical`, `laptop`, `workstation`, `nvidia`, `wsl`) are
+descriptive; a tag only does something if `modules/profiles/<tag>/` exists.
 
 ### Tools (run from the repo root; `just` lists them)
 Evaluation reads the working tree through `path:.`, so new files count without
@@ -44,7 +63,7 @@ Evaluation reads the working tree through `path:.`, so new files count without
   changes to features no machine imports, also `just drvdiff`. Explain any drvPath
   diff with `nix run nixpkgs#nix-diff -- <old.drv> <new.drv>`.
 - Adding a feature that cannot evaluate on a probe host (a Linux-only home
-  feature probed on beirut, say): add its line to `tests/probe-errors.txt`.
+  feature probed on the Mac host, say): add its line to `tests/probe-errors.txt`.
 - Lint hooks (nixfmt, deadnix, statix, shellcheck, shfmt, actionlint) run on
   `git commit` in the dev shell (`nix develop`) and in `just check`.
 
