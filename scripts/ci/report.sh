@@ -35,10 +35,13 @@ flat() {
 flat "${tmp}/base" >"${tmp}/before"
 flat "${PWD}" >"${tmp}/after"
 
-# "-"/"+" per line, grouped by machine, at most 40 lines each
+# "-"/"+" per line, grouped by machine (keeping diff order within a machine:
+# POSIX sort has no stable flag, so sort on the line number), at most 40 each
 diff "${tmp}/before" "${tmp}/after" \
     | sed -n 's/^< /- /p; s/^> /+ /p' \
-    | sort -s -k2,2 \
+    | awk '{ print $2, NR, $0 }' \
+    | sort -k1,1 -k2,2n \
+    | cut -d ' ' -f 3- \
     | awk '
         {
             sign = $1; machine = $2; $1 = ""; $2 = ""; sub(/^  /, "")
