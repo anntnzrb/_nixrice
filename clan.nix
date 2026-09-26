@@ -89,7 +89,24 @@ in
     };
   };
 
+  # in-repo clan services, used below with module.input = "self"
+  modules.remote-builders = ./modules/services/remote-builders;
+
   inventory.instances = {
+    # x86_64-linux builds for the Macs: each client uses its defaultBuilders
+    # unless a command picks another builder (/etc/nix/builders/<name>)
+    remote-builders = {
+      module = {
+        input = "self";
+        name = "remote-builders";
+      };
+      roles.builder.machines = {
+        munich.settings.maxJobs = 12;
+        oulu.settings.maxJobs = 12;
+      };
+      roles.client.machines.beirut.settings.defaultBuilders = [ "munich" ];
+    };
+
     # sshd + users are scoped by tag to machines installed through clan: users
     # sets mutableUsers = false and a generated password, sshd rotates host
     # keys. Only tag a machine `server` once `clan vars` exist for it
