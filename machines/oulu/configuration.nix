@@ -23,7 +23,13 @@
   };
   programs.nix-ld.enable = true;
 
+  # agents run in the owner's ssh session: let oomd kill the heaviest one under
+  # memory pressure instead of zram thrashing until the kernel oom killer fires
+  systemd.oomd.enableUserSlices = true;
+
   boot = {
+    # the base boot module that sets this is disabled above
+    tmp.cleanOnBoot = true;
     kernelPackages = pkgs.linuxPackages_latest;
     loader = {
       systemd-boot.enable = true;
