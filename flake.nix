@@ -168,14 +168,15 @@
           pkgs = pkgsFor.${system};
         in
         {
-          default = pkgs.mkShell {
+          # NoCC and no LSP: nothing here compiles, and the editors bring their own
+          # (neovim: nil, zed: nixd), so the shell stays a small download
+          default = pkgs.mkShellNoCC {
             name = "liberion-shell";
             inherit (self.checks.${system}.pre-commit-check) shellHook;
             # the hook tools (nixfmt, deadnix, statix, shellcheck, ...) plus the rest
             nativeBuildInputs = self.checks.${system}.pre-commit-check.enabledPackages ++ [
               clan-core.packages.${system}.clan-cli
               pkgs.just
-              pkgs.nixd
             ];
           };
         }

@@ -1,4 +1,5 @@
-# Every machine and standalone home as a build target:
+# Every machine, standalone home and dev shell as a build target (the shell
+# so a fresh sandbox, e.g. an Amp orb, substitutes clan-cli instead of building it):
 # [ { name; attr; system; out; } ], `attr` relative to the flake root.
 { flake }:
 let
@@ -22,3 +23,6 @@ lib.mapAttrsToList (
   n: h:
   target n "homeConfigurations.\"${n}\".activationPackage" h.activationPackage
 ) f.homeConfigurations
+++ lib.mapAttrsToList (
+  s: shells: target "devshell-${s}" "devShells.${s}.default" shells.default
+) f.devShells

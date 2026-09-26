@@ -1,6 +1,6 @@
 name: Nix build
 
-# Builds every machine and home that is not in the binary cache yet, each on
+# Builds every machine, home and dev shell not in the binary cache yet, each on
 # its own runner of the right platform, and pushes the results, so deploys
 # substitute instead of building. An unchanged fleet builds nothing.
 # Dependabot flake PRs are built before they merge (a rebase merge keeps the
