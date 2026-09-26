@@ -1,40 +1,29 @@
-{ pkgs, inputs, ... }: {
-  imports = [ inputs.self.nixosModules.podman ];
-
-  # oulu predates these liberion baselines; it owns its boot and packages
-  disabledModules = [
-    ../../modules/base/boot/nixos.nix
-    ../../modules/base/environment/system.nix
+{ inputs, ... }: {
+  imports = with inputs.self.nixosModules; [
+    fish
+    intel-cpu
+    kernel-latest
+    # NetworkManager defaults already rank ethernet (enp3s0, metric 100) over
+    # wifi (wlp2s0, metric 600)
+    networkmanager
+    podman
+    systemd-boot
+    tailscale
   ];
 
   nixpkgs.hostPlatform = "x86_64-linux";
 
-  clan.core.enableRecommendedDefaults = true;
-
   system.stateVersion = "26.05";
 
-  # NetworkManager defaults already rank ethernet (enp3s0, metric 100) over
-  # wifi (wlp2s0, metric 600)
-  networking.networkmanager.enable = true;
-
-  environment = {
-    localBinInPath = true;
-    systemPackages = [ pkgs.ripgrep ];
-  };
+  environment.localBinInPath = true;
   programs.nix-ld.enable = true;
 
   # agents run in the owner's ssh session: let oomd kill the heaviest one under
   # memory pressure instead of zram thrashing until the kernel oom killer fires
   systemd.oomd.enableUserSlices = true;
 
+  # hardware facts of the lenovo v15 g4
   boot = {
-    # the base boot module that sets this is disabled above
-    tmp.cleanOnBoot = true;
-    kernelPackages = pkgs.linuxPackages_latest;
-    loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
-    };
     initrd.availableKernelModules = [
       "xhci_pci"
       "thunderbolt"
@@ -44,34 +33,9 @@
       "usb_storage"
       "sd_mod"
     ];
-    kernelModules = [
-      "kvm-intel"
-      # realtek 8852be wifi on the lenovo v15 g4
-      "rtw89_8852be"
-    ];
+    # realtek 8852be wifi
+    kernelModules = [ "rtw89_8852be" ];
   };
-
-  hardware = {
-    cpu.intel.updateMicrocode = true;
-    enableRedistributableFirmware = true;
-  };
-
-  services.tailscale = {
-    enable = true;
-    openFirewall = true;
-    useRoutingFeatures = "client";
-    extraUpFlags = [
-      "--ssh"
-      "--hostname=oulu"
-      "--accept-routes=true"
-    ];
-  };
-
-  users.users.annt = {
-    extraGroups = [ "networkmanager" ];
-    shell = pkgs.fish;
-  };
-  programs.fish.enable = true;
 
   home-manager.useUserPackages = true;
 }

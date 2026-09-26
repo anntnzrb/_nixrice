@@ -1,6 +1,4 @@
-{ inputs, ... }: {
-  imports = [ inputs.self.homeModules.fish ];
-
+{
   home.stateVersion = "26.05";
 
   programs = {
