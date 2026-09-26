@@ -1,9 +1,11 @@
 { inputs, ... }: {
   imports = with inputs.self.darwinModules; [
     aerospace
+    essentials
     raycast
     tailscale
     ui
+    zsh
   ];
 
   nixpkgs.hostPlatform = "aarch64-darwin";

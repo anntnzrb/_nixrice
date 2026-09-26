@@ -6,10 +6,13 @@
     # accepts remote builds from beirut
     builder
     docker
+    essentials
     virt-manager
   ];
 
   nixpkgs.hostPlatform = "x86_64-linux";
+
+  system.stateVersion = "26.05";
 
   time.hardwareClockInLocalTime = true; # dual-boot
 

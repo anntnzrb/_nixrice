@@ -1,4 +1,4 @@
-# Small common toolset (oulu opts out via disabledModules).
+# Small everyday toolset (git, fetchers, archivers, nh) for interactive machines.
 { pkgs, ... }: {
   environment.systemPackages = with pkgs; [
     # tools
