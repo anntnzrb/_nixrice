@@ -25,6 +25,7 @@ in
       )
       (lib.filterAttrs (_: kind: kind == "directory") (builtins.readDir ./machines));
 
+  # tags are traits (modules/profiles/<tag>); clan adds all/nixos/darwin itself
   inventory.machines = {
     oulu = {
       description = "Lenovo V15 G4 IRU - Intel i7-1355U Build Server";
@@ -33,7 +34,6 @@ in
         "workstation"
         "headless"
         "server"
-        "nixos"
       ];
     };
     munich = {
@@ -43,7 +43,6 @@ in
         "physical"
         "workstation"
         "nvidia"
-        "nixos"
       ];
     };
     solna = {
@@ -53,15 +52,11 @@ in
         "physical"
         "laptop"
         "workstation"
-        "nixos"
       ];
     };
     tampa = {
       description = "NixOS-WSL";
-      tags = [
-        "wsl"
-        "nixos"
-      ];
+      tags = [ "wsl" ];
     };
     zadar = {
       description = "Laptop Server (HDD / Headless)";
@@ -69,7 +64,6 @@ in
         "physical"
         "laptop"
         "headless"
-        "nixos"
       ];
     };
     beirut = {
@@ -78,7 +72,6 @@ in
       tags = [
         "desktop"
         "physical"
-        "darwin"
         "laptop"
         "workstation"
       ];
