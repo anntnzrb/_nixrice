@@ -13,7 +13,9 @@ let
     inherit (drv) system;
     out = drv.outPath;
   };
-  live = lib.filterAttrs (n: _: !(builtins.elem "archived" f.clan.inventory.machines.${n}.tags));
+  live = lib.filterAttrs (
+    n: _: !(builtins.elem "archived" f.clan.inventory.machines.${n}.tags)
+  );
   retiredHomes = [ "${user}@wsl" ];
 in
 lib.mapAttrsToList (
