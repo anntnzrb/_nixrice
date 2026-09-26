@@ -15,6 +15,8 @@ outputs; `clan.nix` holds the inventory (machines, tags, service instances).
 - `homes/` - standalone Home Manager configurations (hosts without a managed system).
 - `lib/default.nix` - `lib.liberion`: discovery, module helpers, identity.
 - `scripts/ci/`, `justfile` - gates and tasks (`just` lists them).
+- `.agents/setup`, `.agents/resume` - Amp orb (cloud sandbox) setup; after editing
+  setup, stale snapshots stay until `amp projects snapshots delete anntnzrb/rice`.
 - `sops/`, `vars/` - Clan secrets and generated vars. Never print secret values.
 
 ### What a machine runs
@@ -58,7 +60,7 @@ Evaluation reads the working tree through `path:.`, so new files count without
   `just probes` split over 8 runners, and on PRs the `just report` summary
   against the base branch (job summary).
 - `build.yml` (Dependabot flake PRs, pushes to dev touching Nix code, weekly,
-  manual): `scripts/ci/build-plan.sh` lists the machines and homes missing from
+  manual): `scripts/ci/build-plan.sh` lists the machines, homes and dev shells missing from
   the `anntnzrb` Cachix cache (`scripts/ci/targets.nix`); each builds on its
   own runner and is pushed. Nothing uncached = nothing built. `builds` is
   required on Dependabot PRs, so updates land already built and cached.

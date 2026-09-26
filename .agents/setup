@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# Amp orb setup: Nix with the fleet cache, and the dev shell (just, clan, lint
+# hooks) downloaded into the snapshot. Idempotent. Amp keeps a snapshot up to
+# 72 h and editing this file does not invalidate it: after changing it, run
+# `amp projects snapshots delete anntnzrb/rice`.
+set -euo pipefail
+
+nix_sh=/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+
+# swap: evaluating the whole fleet outgrows a1.small's 4 GB of RAM
+if [[ ! -f /var/swapfile ]]; then
+    sudo fallocate -l 4G /var/swapfile
+    sudo chmod 600 /var/swapfile
+    sudo /sbin/mkswap /var/swapfile >/dev/null
+fi
+.agents/resume
+
+# CI pushes every machine and the dev shell to the fleet cache, so nothing
+# (clan-cli included) is built here
+if [[ ! -e ${nix_sh} ]]; then
+    user="$(id -un)"
+    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix \
+        | sh -s -- install --no-confirm \
+            --extra-conf "trusted-users = ${user}" \
+            --extra-conf "extra-substituters = https://anntnzrb.cachix.org" \
+            --extra-conf "extra-trusted-public-keys = anntnzrb.cachix.org-1:hG29RyjX45a9q1nZqdvOJUQ6nRDG/Jj4yt2d1dpWCgE="
+fi
+
+# login shells: Nix on PATH and, in this repo, the dev shell
+marker='# amp orb: nix'
+if ! grep -qF "${marker}" ~/.bash_profile 2>/dev/null; then
+    cat >>~/.bash_profile <<PROFILE
+
+${marker}
+unset __ETC_PROFILE_NIX_SOURCED
+. ${nix_sh}
+if [ -z "\${IN_NIX_SHELL:-}" ] && [ -f "\${PWD}/flake.nix" ]; then
+    eval "\$(nix print-dev-env "\${PWD}")"
+fi
+PROFILE
+fi
+
+unset __ETC_PROFILE_NIX_SOURCED
+# shellcheck disable=SC1090
+. "${nix_sh}"
+nix print-dev-env . >/dev/null
