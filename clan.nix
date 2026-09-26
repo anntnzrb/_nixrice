@@ -82,25 +82,24 @@ in
       tags = [
         "desktop"
         "physical"
-        "darwin"
         "laptop"
       ];
     };
   };
 
   inventory.instances = {
-    # sshd + users are scoped to machines installed through clan: users sets
-    # mutableUsers = false and a generated password, sshd rotates host keys.
-    # extend a machine only after `clan vars` exist for it (munich/solna/zadar
-    # already have them).
+    # sshd + users are scoped by tag to machines installed through clan: users
+    # sets mutableUsers = false and a generated password, sshd rotates host
+    # keys. Only tag a machine `server` once `clan vars` exist for it
+    # (oulu, munich, solna and zadar have them; beirut and incheon do not).
     sshd = {
-      roles.server.machines.oulu = { };
+      roles.server.tags = [ "server" ];
       roles.server.settings.authorizedKeys.annt-liberion = identity.keys.admin;
     };
 
     user-annt = {
       module.name = "users";
-      roles.default.machines.oulu = { };
+      roles.default.tags = [ "server" ];
       roles.default.settings = {
         inherit (identity) user;
         prompt = false;
