@@ -8,8 +8,12 @@ set -eu
 cache="https://anntnzrb.cachix.org"
 here="$(cd "$(dirname "$0")" && pwd)"
 
-nix eval --impure --json \
-    --expr "import ${here}/targets.nix { flake = \"path:${PWD}\"; }" 2>/dev/null \
+# evaluated first, not piped: a failing eval must fail the job, not yield an
+# empty matrix that builds nothing (dash, Ubuntu's sh, has no pipefail)
+targets="$(nix eval --impure --json \
+    --expr "import ${here}/targets.nix { flake = \"path:${PWD}\"; }" 2>/dev/null)"
+
+printf '%s\n' "${targets}" \
     | jq -c '.[]' \
     | while read -r target; do
         out="$(printf '%s' "${target}" | jq -r .out)"
