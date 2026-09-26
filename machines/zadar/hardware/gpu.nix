@@ -6,7 +6,7 @@
 
     nvidia = {
       open = false;
-      nvidiaSettings = false; # GUI tool; zadar is headless
+      nvidiaSettings = false; # GUI tool; no desktop here
       modesetting.enable = true;
     };
   };
