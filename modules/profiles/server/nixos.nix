@@ -1,4 +1,4 @@
-# Machines tagged `server`.
+# Machines tagged `server`: always on (never sleeps, performance governor), reachable over ssh, tuned for builds.
 { lib, pkgs, ... }:
 let
   inherit (lib.liberion.identity) keys sshPort;
@@ -27,6 +27,15 @@ in
     };
   };
 
+  powerManagement.cpuFreqGovernor = "performance";
+
+  systemd.targets = {
+    sleep.enable = false;
+    suspend.enable = false;
+    hibernate.enable = false;
+    hybrid-sleep.enable = false;
+  };
+
   zramSwap = {
     enable = true;
     algorithm = "zstd";
@@ -48,7 +57,11 @@ in
     };
   };
 
-  environment.systemPackages = [ pkgs.git ];
+  environment.systemPackages = with pkgs; [
+    cpufrequtils
+    git
+    linuxPackages.cpupower
+  ];
 
   security.sudo.wheelNeedsPassword = false;
 
@@ -75,6 +88,15 @@ in
         addresses = true;
         workstation = true;
       };
+    };
+
+    # stay reachable: never sleep on lid close or idle
+    logind.settings.Login = {
+      HandleLidSwitch = "ignore";
+      HandleLidSwitchDocked = "ignore";
+      HandleLidSwitchExternalPower = "ignore";
+      LidSwitchIgnoreInhibited = "no";
+      IdleAction = "ignore";
     };
   };
 
