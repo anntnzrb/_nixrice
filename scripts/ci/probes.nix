@@ -11,6 +11,32 @@ let
   inherit (f.inputs.nixpkgs) lib;
   inherit (import "${f}/identity.nix") user;
 
+  # A synthetic NixOS host: the nixos base, the owner's Home Manager user with
+  # the home base, and just enough to build a toplevel. It is evaluated through
+  # a clan of its own (the fleet's specialArgs and nixpkgs) whose directory has
+  # no machines/, so no real machine, tag or profile leaks into a probe.
+  probeClan = f.inputs.clan-core.lib.clan {
+    self = f;
+    directory = f + "/scripts/ci";
+    inherit (f.clan) specialArgs pkgsForSystem;
+    meta = { inherit (f.clan.inventory.meta) name domain; };
+    machines.probe = {
+      imports = [
+        f.nixosModules.default
+        { home-manager.users.${user}.imports = [ f.homeModules.default ]; }
+      ];
+      nixpkgs.hostPlatform = "x86_64-linux";
+      users.users.${user}.isNormalUser = true;
+      # a boot loader feature (grub, systemd-boot, wsl) may take over
+      boot.loader.grub.enable = lib.mkDefault false;
+      fileSystems."/" = {
+        device = "/dev/disk/by-label/probe";
+        fsType = "ext4";
+      };
+    };
+  };
+  probe = probeClan.config.nixosConfigurations.probe;
+
   home = sys: {
     inherit sys;
     modules = f.homeModules;
@@ -22,10 +48,9 @@ let
   };
 
   targets = {
-    # solna runs a desktop, so X/desktop modules probe without headless conflicts
-    nixos-solna = system f.nixosConfigurations.solna f.nixosModules;
+    nixos-probe = system probe f.nixosModules;
     darwin-beirut = system f.darwinConfigurations.beirut f.darwinModules;
-    home-zadar = home f.nixosConfigurations.zadar;
+    home-probe = home probe;
     home-beirut = home f.darwinConfigurations.beirut;
   };
   names = t: lib.attrNames (removeAttrs t.modules [ "default" ]);

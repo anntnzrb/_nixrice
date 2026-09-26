@@ -16,8 +16,4 @@ probe.home-beirut.wofi
 probe.home-beirut.xmonad
 probe.home-beirut.xsession
 probe.home-beirut.zen
-probe.home-zadar.whatsapp
-probe.nixos-solna.dhcp
-probe.nixos-solna.grub
-probe.nixos-solna.headless
-probe.nixos-solna.wsl
+probe.home-probe.whatsapp
