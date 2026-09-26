@@ -1,35 +1,48 @@
-#!/usr/bin/env bash
+#!/bin/sh
 # Amp orb setup: Nix with the fleet cache, and the dev shell (just, clan, lint
 # hooks) downloaded into the snapshot. Idempotent. Amp keeps a snapshot up to
 # 72 h and editing this file does not invalidate it: after changing it, run
 # `amp projects snapshots delete anntnzrb/rice`.
-set -euo pipefail
+set -eu
 
 nix_sh=/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+swapfile=/var/swapfile
 
-# swap: evaluating the whole fleet outgrows a1.small's 4 GB of RAM
-if [[ ! -f /var/swapfile ]]; then
-    sudo fallocate -l 4G /var/swapfile
-    sudo chmod 600 /var/swapfile
-    sudo /sbin/mkswap /var/swapfile >/dev/null
+# A half-made swap file is removed on exit, error, Ctrl+C, kill or hangup
+# (dash skips the EXIT trap on a signal, so those are trapped too and re-raised
+# so callers stop as well).
+cleanup() {
+    sudo rm -f "${swapfile}.new"
+}
+trap cleanup EXIT
+for sig in HUP INT TERM; do
+    # shellcheck disable=SC2064 # the signal name is fixed per handler
+    trap "trap '' HUP INT TERM; cleanup; trap - EXIT ${sig}; kill -s ${sig} \$\$" "${sig}"
+done
+
+# swap: evaluating the whole fleet outgrows a1.small's 4 GB of RAM. Built
+# aside and moved into place, so an interrupted run never leaves a
+# ${swapfile} that later runs would take as done.
+if [ ! -f "${swapfile}" ]; then
+    sudo fallocate -l 4G "${swapfile}.new"
+    sudo chmod 600 "${swapfile}.new"
+    sudo /sbin/mkswap "${swapfile}.new" >/dev/null
+    sudo mv "${swapfile}.new" "${swapfile}"
 fi
 .agents/resume
 
 # CI pushes every machine and the dev shell to the fleet cache, so nothing
 # (clan-cli included) is built here
-if [[ ! -e ${nix_sh} ]]; then
-    user="$(id -un)"
-    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix \
-        | sh -s -- install --no-confirm \
-            --extra-conf "trusted-users = ${user}" \
-            --extra-conf "extra-substituters = https://anntnzrb.cachix.org" \
-            --extra-conf "extra-trusted-public-keys = anntnzrb.cachix.org-1:hG29RyjX45a9q1nZqdvOJUQ6nRDG/Jj4yt2d1dpWCgE="
+if [ ! -e "${nix_sh}" ]; then
+    bin/nix-install.sh \
+        --extra-conf "extra-substituters = https://anntnzrb.cachix.org" \
+        --extra-conf "extra-trusted-public-keys = anntnzrb.cachix.org-1:hG29RyjX45a9q1nZqdvOJUQ6nRDG/Jj4yt2d1dpWCgE="
 fi
 
 # login shells: Nix on PATH and, in this repo, the dev shell
 marker='# amp orb: nix'
-if ! grep -qF "${marker}" ~/.bash_profile 2>/dev/null; then
-    cat >>~/.bash_profile <<PROFILE
+if ! grep -qF "${marker}" "${HOME}/.bash_profile" 2>/dev/null; then
+    cat >>"${HOME}/.bash_profile" <<PROFILE
 
 ${marker}
 unset __ETC_PROFILE_NIX_SOURCED

@@ -1,8 +1,9 @@
-#!/usr/bin/env bash
+#!/bin/sh
 # Amp orb resume (also run by setup): a restored snapshot has no swap enabled.
-set -euo pipefail
+# Nothing to clean up, so Ctrl+C and kill keep their default: stop at once.
+set -eu
 
-swaps="$(/sbin/swapon --show --noheadings)"
-if [[ -f /var/swapfile && -z ${swaps} ]]; then
+swaps=$(/sbin/swapon --show --noheadings)
+if [ -f /var/swapfile ] && [ -z "${swaps}" ]; then
     sudo /sbin/swapon /var/swapfile
 fi
