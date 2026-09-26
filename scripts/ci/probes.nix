@@ -29,7 +29,8 @@ let
       users.users.${user}.isNormalUser = true;
       # a boot loader feature (grub, systemd-boot, wsl) may take over
       boot.loader.grub.enable = lib.mkDefault false;
-      fileSystems."/" = {
+      # a filesystem feature (disko-xfs, btrfs-labels) may take over
+      fileSystems."/" = lib.mapAttrs (_: lib.mkDefault) {
         device = "/dev/disk/by-label/probe";
         fsType = "ext4";
       };
