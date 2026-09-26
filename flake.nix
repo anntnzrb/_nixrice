@@ -58,7 +58,7 @@
       inherit (clan.config) nixosConfigurations clanInternals;
       darwinConfigurations = clan.config.darwinConfigurations or { };
 
-      # standalone homes for hosts without a managed system (NixOS-WSL on tampa)
+      # standalone homes for hosts without a managed system (annt@wsl: NixOS-WSL on the archived tampa; kept, not built by CI)
       homeConfigurations."${lib.liberion.identity.user}@wsl" =
         home-manager.lib.homeManagerConfiguration
           {

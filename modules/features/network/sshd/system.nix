@@ -12,8 +12,9 @@ let
 
   inherit (lib.liberion.identity) keys;
 
-  # every other fleet machine, as annt@<name>.<tailnet domain>; the clan
-  # inventory knows each class, so no peer config is evaluated
+  # every other live fleet machine, as annt@<name>.<tailnet domain> (archived
+  # machines are left out); the clan inventory knows each class, so no peer
+  # config is evaluated
   remoteHostsCfg = lib.concatStringsSep "\n" (
     lib.mapAttrsToList
       (name: machine: ''
@@ -26,9 +27,11 @@ let
           ) "Port ${toString cfg.port}\n"}
       '')
       (
-        removeAttrs inputs.self.clan.inventory.machines [
-          config.clan.core.settings.machine.name
-        ]
+        lib.filterAttrs (_: machine: !(builtins.elem "archived" machine.tags)) (
+          removeAttrs inputs.self.clan.inventory.machines [
+            config.clan.core.settings.machine.name
+          ]
+        )
       )
   );
 in

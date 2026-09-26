@@ -48,22 +48,24 @@ in
     solna = {
       description = "Laptop Workstation (SSD)";
       tags = [
-        "desktop"
+        "archived"
         "physical"
         "laptop"
-        "workstation"
       ];
     };
     tampa = {
       description = "NixOS-WSL";
-      tags = [ "wsl" ];
+      tags = [
+        "archived"
+        "wsl"
+      ];
     };
     zadar = {
       description = "Laptop Server (HDD / Headless)";
       tags = [
+        "archived"
         "physical"
         "laptop"
-        "headless"
       ];
     };
     beirut = {
@@ -80,7 +82,7 @@ in
       description = "Apple M1 MacBook (Secondary Mac)";
       machineClass = "darwin";
       tags = [
-        "desktop"
+        "archived"
         "physical"
         "laptop"
       ];

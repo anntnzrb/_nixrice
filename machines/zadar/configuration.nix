@@ -2,10 +2,8 @@
   imports = with inputs.self.nixosModules; [
     ./hardware
     networkmanager
-    sshd
     # no dual-boot. systemd-boot suffices
     systemd-boot
-    user
   ];
 
   nixpkgs.hostPlatform = "x86_64-linux";
