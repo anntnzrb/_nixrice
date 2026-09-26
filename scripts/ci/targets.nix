@@ -1,6 +1,6 @@
 # Every live machine, standalone home and dev shell as a build target (the shell
 # so a fresh sandbox, e.g. an Amp orb, substitutes clan-cli instead of building it);
-# machines tagged `archived` and retired homes (annt@wsl, from archived tampa)
+# machines tagged `archived` and retired homes (the WSL home)
 # are neither built nor pushed to Cachix:
 # [ { name; attr; system; out; } ], `attr` relative to the flake root.
 { flake }:

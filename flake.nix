@@ -58,7 +58,7 @@
       inherit (clan.config) nixosConfigurations clanInternals;
       darwinConfigurations = clan.config.darwinConfigurations or { };
 
-      # standalone homes for hosts without a managed system (annt@wsl: NixOS-WSL on the archived tampa; kept, not built by CI)
+      # standalone homes for hosts without a managed system (the WSL home of an archived machine; kept, not built by CI)
       homeConfigurations."${lib.liberion.identity.user}@wsl" =
         home-manager.lib.homeManagerConfiguration
           {
@@ -287,7 +287,7 @@
     };
 
     neovim-annt = {
-      # annt's neovim
+      # the owner's neovim
       url = "github:anntnzrb/nixvim/main";
       # keeps its own nixpkgs: its pinned nixvim breaks on ours (typescript-go rename)
       inputs = {

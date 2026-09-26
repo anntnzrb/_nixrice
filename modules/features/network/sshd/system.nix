@@ -12,7 +12,7 @@ let
 
   inherit (lib.liberion.identity) keys;
 
-  # every other live fleet machine, as annt@<name>.<tailnet domain> (archived
+  # every other live fleet machine, as <owner>@<name>.<tailnet domain> (archived
   # machines are left out); the clan inventory knows each class, so no peer
   # config is evaluated
   remoteHostsCfg = lib.concatStringsSep "\n" (

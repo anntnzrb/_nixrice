@@ -40,7 +40,7 @@ in
   # open-source tailscaled (no GUI); state lives in /Library/Tailscale
   services.tailscale = {
     enable = true;
-    # track upstream; the stable channel lags the daemon beirut already ran
+    # track upstream; the stable channel lags the daemon this Mac already ran
     package = pkgs.unstable.tailscale;
   };
   launchd.daemons.tailscaled.serviceConfig.KeepAlive = true;

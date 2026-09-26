@@ -6,7 +6,7 @@ _default:
     @just --list
 
 # Build this machine's system without activating it; builder: a name in
-# /etc/nix/builders (e.g. oulu), "local" for none, empty for the defaults
+# /etc/nix/builders (a remote-builders builder), "local" for none, empty for the defaults
 [macos]
 build builder="":
     nix build .#darwinConfigurations.{{ host }}.system {{ if builder == "" { "" } else if builder == "local" { "--builders ''" } else { "--builders @/etc/nix/builders/" + builder } }}

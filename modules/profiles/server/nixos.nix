@@ -1,4 +1,5 @@
-# Machines tagged `server`: always on (never sleeps, performance governor), reachable over ssh, tuned for builds.
+# Machines tagged `server`: always on (never sleeps, performance governor),
+# reachable over ssh, tuned for builds.
 { lib, pkgs, ... }:
 let
   inherit (lib.liberion.identity) keys sshPort;
