@@ -41,11 +41,10 @@ _:
               "-d"
               "agcount=16"
             ];
-            # increase xfs in-memory log buffer size and disable access time updates for build server workload
+            # larger xfs log buffers and no access time updates for build/agent workload
+            # (noatime implies nodiratime; logbufs=8 is the default)
             mountOptions = [
               "noatime"
-              "nodiratime"
-              "logbufs=8"
               "logbsize=256k"
             ];
           };
