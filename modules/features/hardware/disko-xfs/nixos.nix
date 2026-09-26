@@ -1,9 +1,17 @@
-_:
-
+# Whole-disk layout: 1 GiB EFI system partition + XFS root with reflinks.
+# Wipes the disk on install.
+{ lib, config, ... }:
+let
+  cfg = config.liberion.hardware.disko-xfs;
+in
 {
-  disko.devices.disk.main = {
+  # the whole disk to partition; prefer a stable /dev/disk/by-id path
+  options.liberion.hardware.disko-xfs.device =
+    lib.liberion.module.mkOpt' lib.types.str "/dev/nvme0n1";
+
+  config.disko.devices.disk.main = {
     type = "disk";
-    device = "/dev/nvme0n1";
+    inherit (cfg) device;
     content = {
       type = "gpt";
       partitions = {

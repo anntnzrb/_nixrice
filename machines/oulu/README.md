@@ -23,7 +23,7 @@
 * **Driver Maturity**: Contains current upstream drivers for the `rtw89_8852be` Wi-Fi chip and Raptor Lake Iris Xe graphics.
 * **Hydra Binary Cache**: Zero local kernel compilation overhead and instant updates.
 
-### Native XanMod-Grade Sysctl Tuning (`modules/core/kernel.nix`)
+### Native XanMod-Grade Sysctl Tuning (`server` profile, `modules/profiles/server`)
 Rather than maintaining a custom forked kernel, the following sysctls are applied:
 * `net.ipv4.tcp_congestion_control = "bbr"` & `net.core.default_qdisc = "cake"`: High throughput, minimal bufferbloat for Tailscale gateway traffic and WAN transfers.
 * `net.ipv4.tcp_fastopen = 3`: Lowers TCP handshake latency for incoming and outgoing connections.
@@ -32,7 +32,7 @@ Rather than maintaining a custom forked kernel, the following sysctls are applie
 
 ---
 
-## 3. Storage & Filesystem (`disko.nix`)
+## 3. Storage & Filesystem (`disko-xfs` feature, `modules/features/hardware/disko-xfs`)
 
 * **Partition 1 (1 GB FAT32 ESP)**: Mounted at `/boot` (`systemd-boot`, EFI variables enabled).
 * **Partition 2 (100% Remaining XFS)**: Mounted at `/` with `crc=1,reflink=1`.
@@ -40,7 +40,7 @@ Rather than maintaining a custom forked kernel, the following sysctls are applie
 
 ---
 
-## 4. Memory & Swap Architecture (`modules/core/zram.nix`)
+## 4. Memory & Swap Architecture (`server` profile, `modules/profiles/server`)
 
 * **ZRAM Swap (`zstd`)**: Allocates 50% of RAM (12 GB) as compressed swap with priority 100, yielding ~36+ GB effective memory.
 * `vm.swappiness = 100`: Aggressively pages idle anonymous memory into fast Zstd compressed RAM, freeing physical RAM pages for the Linux page cache and active Nix builds.

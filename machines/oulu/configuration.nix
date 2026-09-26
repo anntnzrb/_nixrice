@@ -1,5 +1,6 @@
 { inputs, ... }: {
   imports = with inputs.self.nixosModules; [
+    disko-xfs
     fish
     intel-cpu
     kernel-latest
