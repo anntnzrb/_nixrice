@@ -6,6 +6,10 @@ let
   authorizedKeys = [ keys.admin ] ++ keys.devices;
 in
 {
+  # server-tagged machines are the clan-installed ones (see clan.nix): take
+  # clan's recommended defaults; everything else keeps base's `false`
+  clan.core.enableRecommendedDefaults = true;
+
   # network: bbr congestion control with cake qdisc against bufferbloat
   boot = {
     kernelModules = [
