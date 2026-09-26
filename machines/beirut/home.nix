@@ -3,7 +3,6 @@
     ghostty
     ssh
     whatsapp
-    zsh
   ];
 
   liberion.cli.ssh = {
