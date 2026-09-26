@@ -1,11 +1,3 @@
-# Boot baseline (oulu opts out via disabledModules).
-{
-  boot = {
-    consoleLogLevel = 3;
-    tmp.cleanOnBoot = true;
-    loader = {
-      timeout = 10;
-      efi.canTouchEfiVariables = true;
-    };
-  };
-}
+# Boot baseline for every NixOS host; the loader lives in a boot feature
+# (systemd-boot, grub) or wsl.
+{ boot.tmp.cleanOnBoot = true; }
