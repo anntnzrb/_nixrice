@@ -24,8 +24,6 @@ in
   # no NixOS manual (nixos-help): building it evaluates every option
   documentation.nixos.enable = false;
 
-  system.stateVersion = lib.mkDefault "22.05";
-
   # liberion hosts own their defaults; clan-installed machines opt in
   clan.core.enableRecommendedDefaults = lib.mkDefault false;
 

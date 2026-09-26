@@ -6,4 +6,8 @@
     sshd
     user
   ];
+
+  # installed long before clan; clan machines take theirs from the
+  # state-version var instead
+  system.stateVersion = "22.05";
 }
