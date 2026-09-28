@@ -7,6 +7,7 @@
 let
   casks = {
     aldente = "aldente";
+    brave = "brave-browser";
     obs = "obs";
     orbstack = "orbstack";
     raycast = "raycast";
