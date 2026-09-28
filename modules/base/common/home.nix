@@ -1,5 +1,8 @@
 { inputs, ... }: {
-  imports = with inputs.self.homeModules; [
+  imports = [
+    inputs.nix-index-database.homeModules.nix-index
+  ]
+  ++ (with inputs.self.homeModules; [
     btop
     direnv
     fastfetch
@@ -21,7 +24,12 @@
     neovim
     starship
     tmux
-  ];
+  ]);
+
+  programs = {
+    command-not-found.enable = false;
+    nix-index-database.comma.enable = true;
+  };
 
   home.sessionVariables.EDITOR = "nvim";
 }

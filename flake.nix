@@ -8,6 +8,7 @@
       clan-core,
       git-hooks,
       home-manager,
+      treefmt-nix,
       ...
     }@inputs:
     let
@@ -48,6 +49,32 @@
         imports = [ ./clan.nix ];
         pkgsForSystem = system: pkgsFor.${system};
       };
+
+      treefmtEval = forAllSystems (
+        system:
+        treefmt-nix.lib.evalModule pkgsFor.${system} {
+          projectRootFile = "flake.nix";
+          programs = {
+            nixfmt = {
+              enable = true;
+              strict = true;
+              width = 80;
+            };
+            shfmt = {
+              enable = true;
+              indent_size = 4;
+              excludes = [ ".envrc" ];
+            };
+            just.enable = true;
+          };
+          settings.formatter.shfmt.options = [
+            "-ln"
+            "posix"
+            "-bn"
+            "-ci"
+          ];
+        }
+      );
     in
     {
       clan = clan.config;
@@ -77,24 +104,11 @@
 
       overlays.default = import ./overlays/default.nix { inherit inputs; };
 
-      formatter = forAllSystems (
-        system:
-        let
-          pkgs = pkgsFor.${system};
-        in
-        pkgs.writeShellApplication {
-          name = "nixfmt-tracked";
-          runtimeInputs = [
-            pkgs.git
-            pkgs.nixfmt
-          ];
-          text = ''
-            git ls-files -z -- "*.nix" | xargs -0 nixfmt --strict --width=80 "$@"
-          '';
-        }
-      );
+      formatter = forAllSystems (system: treefmtEval.${system}.config.build.wrapper);
 
       checks = forAllSystems (system: {
+        formatting = treefmtEval.${system}.config.build.check self;
+
         tests =
           let
             failures = import ./tests { inherit lib self; };
@@ -105,15 +119,29 @@
             throw "tests failed:\n${lib.concatStringsSep "\n" failures}";
 
         pre-commit-check = git-hooks.lib.${system}.run {
-          src = ./.;
+          src = lib.fileset.toSource {
+            root = ./.;
+            fileset = lib.fileset.unions [
+              ./flake.nix
+              ./clan.nix
+              ./identity.nix
+              ./justfile
+              ./.agents
+              ./.github
+              ./bin
+              ./homes
+              ./lib
+              ./machines
+              ./modules
+              ./overlays
+              ./scripts
+              ./tests
+            ];
+          };
           hooks = {
-            nixfmt = {
+            treefmt = {
               enable = true;
-              args = [
-                "--strict"
-                "--verify"
-              ];
-              settings.width = 80;
+              package = treefmtEval.${system}.config.build.wrapper;
             };
 
             deadnix = {
@@ -123,17 +151,6 @@
             };
 
             statix.enable = true;
-
-            shfmt = {
-              enable = true;
-              excludes = [ "\\.envrc$" ];
-              settings = {
-                language-dialect = "posix";
-                indent = 4;
-                binary-next-line = true;
-                case-indent = true;
-              };
-            };
 
             shellcheck = {
               enable = true;
@@ -147,6 +164,11 @@
             };
 
             actionlint.enable = true;
+
+            zizmor = {
+              enable = true;
+              args = [ "--no-exit-codes" ];
+            };
           };
         };
       });
@@ -177,6 +199,15 @@
 
     nixpkgs = {
       follows = "clan-core/nixpkgs";
+    };
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nixpkgs-unstable = {

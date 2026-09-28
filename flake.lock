@@ -470,6 +470,26 @@
         "type": "github"
       }
     },
+    "nix-index-database": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1790499302,
+        "narHash": "sha256-Gbf/U9ptJhQh0qnDnJ/+a8MAcq1HXunbArUTHR2wNYk=",
+        "owner": "nix-community",
+        "repo": "nix-index-database",
+        "rev": "161d7c91accd93034bb3c295224d9d895a778573",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nix-index-database",
+        "type": "github"
+      }
+    },
     "nix-select": {
       "locked": {
         "lastModified": 1763303120,
@@ -687,6 +707,7 @@
         "home-manager": "home-manager",
         "neovim-annt": "neovim-annt",
         "nix-homebrew": "nix-homebrew",
+        "nix-index-database": "nix-index-database",
         "nix-spotlight": "nix-spotlight",
         "nixos-hardware": "nixos-hardware",
         "nixos-wsl": "nixos-wsl",
@@ -698,6 +719,7 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "rio-catppuccin": "rio-catppuccin",
         "rio-dracula": "rio-dracula",
+        "treefmt-nix": "treefmt-nix_2",
         "yazi-flavors": "yazi-flavors",
         "yazi-timu-macos": "yazi-timu-macos",
         "zen-browser": "zen-browser"
@@ -808,6 +830,26 @@
       "inputs": {
         "nixpkgs": [
           "clan-core",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1786901030,
+        "narHash": "sha256-WSFCsDSE5ffgD2MqzkM2CYjeFiKhRF/dJUN8uedb6YE=",
+        "owner": "numtide",
+        "repo": "treefmt-nix",
+        "rev": "27b3b12a8e6375f28ebe122f07d230ca5459bbfa",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "treefmt-nix_2": {
+      "inputs": {
+        "nixpkgs": [
           "nixpkgs"
         ]
       },
