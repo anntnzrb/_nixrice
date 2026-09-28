@@ -121,5 +121,20 @@ in
     mkOptDisabled' = mkOpt' lib.types.bool false;
   };
 
+  darwin.openAtLogin = app: managedBy: {
+    inherit managedBy;
+    serviceConfig = {
+      ProgramArguments = [
+        "/usr/bin/open"
+        "-a"
+        "/Applications/${app}.app"
+      ];
+      RunAtLoad = true;
+      KeepAlive = false;
+      ProcessType = "Interactive";
+      LimitLoadToSessionType = [ "Aqua" ];
+    };
+  };
+
   xorg.mkAutostartScript = xs: lib.concatStringsSep "\n" (map (x: x + " &") xs);
 }

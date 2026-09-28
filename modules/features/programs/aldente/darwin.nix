@@ -1,4 +1,4 @@
-{ inputs, ... }: {
+{ lib, inputs, ... }: {
   imports = [ inputs.self.darwinModules.homebrew ];
 
   config = {
@@ -8,19 +8,6 @@
       launchAtLogin = false;
     };
 
-    launchd.user.agents.aldente = {
-      serviceConfig = {
-        ProgramArguments = [
-          "/usr/bin/open"
-          "-a"
-          "/Applications/AlDente.app"
-        ];
-        RunAtLoad = true;
-        KeepAlive = false;
-        ProcessType = "Interactive";
-        LimitLoadToSessionType = [ "Aqua" ];
-      };
-      managedBy = "modules/features/programs/aldente";
-    };
+    launchd.user.agents.aldente = lib.liberion.darwin.openAtLogin "AlDente" "modules/features/programs/aldente";
   };
 }
