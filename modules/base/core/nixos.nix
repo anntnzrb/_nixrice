@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ self, lib, ... }:
 let
   defaultLocale = "en_US.UTF-8";
 in
@@ -25,4 +25,6 @@ in
   clan.core.enableRecommendedDefaults = lib.mkDefault false;
 
   programs.command-not-found.enable = lib.mkDefault false;
+
+  system.configurationRevision = self.rev or self.dirtyRev or null;
 }

@@ -1,5 +1,8 @@
-{ lib, ... }: {
+{ self, lib, ... }: {
   clan.core.enableRecommendedDefaults = lib.mkDefault false;
+
+  documentation.enable = false;
+  programs.info.enable = false;
 
   security.pam.services.sudo_local = {
     touchIdAuth = true;
@@ -8,6 +11,7 @@
 
   system = {
     primaryUser = lib.liberion.identity.user;
+    configurationRevision = self.rev or self.dirtyRev or null;
     stateVersion = 5;
     startup.chime = false;
 
