@@ -1,4 +1,9 @@
-{ lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   promptModules = [
     "$git_branch"
@@ -10,6 +15,7 @@ in
 {
   programs.starship = {
     enable = true;
+    enableZshIntegration = false;
 
     settings = {
       add_newline = false;
@@ -99,4 +105,17 @@ in
       singularity.disabled = true;
     };
   };
+
+  programs.zsh.initContent =
+    let
+      zshInit = pkgs.runCommand "starship-zsh-init" { } ''
+        ${lib.getExe config.programs.starship.package} init zsh --print-full-init > $out
+      '';
+    in
+    ''
+      if [[ $TERM != "dumb" ]]; then
+        source ${zshInit}
+        RPROMPT=
+      fi
+    '';
 }
