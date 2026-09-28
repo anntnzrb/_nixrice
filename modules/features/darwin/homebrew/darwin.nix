@@ -30,6 +30,11 @@ let
       builtins.filter (cask: lib.length (lib.splitString "/" cask) == 3) (pick casks)
     )
   );
+
+  brewPrefix = config.homebrew.prefix;
+  brewRepo = "${
+    config.nix-homebrew.prefixes.${brewPrefix}.library
+  }/.homebrew-is-managed-by-nix";
 in
 {
   imports = [ inputs.nix-homebrew.darwinModules.nix-homebrew ];
@@ -43,6 +48,7 @@ in
       enable = true;
       user = lib.liberion.identity.user;
       autoMigrate = true;
+      enableZshIntegration = false;
     };
 
     homebrew = {
@@ -60,6 +66,17 @@ in
       casks = pick casks;
       masApps = lib.mergeAttrsList (pick masApps);
     };
+
+    programs.zsh.interactiveShellInit = ''
+      export HOMEBREW_PREFIX="${brewPrefix}";
+      export HOMEBREW_CELLAR="${brewPrefix}/Cellar";
+      export HOMEBREW_REPOSITORY="${brewRepo}";
+      fpath[1,0]="${brewPrefix}/share/zsh/site-functions";
+      export FPATH;
+      export PATH="${brewPrefix}/bin:${brewPrefix}/sbin''${PATH+:$PATH}";
+      [ -z "''${MANPATH-}" ] || { export MANPATH="''${MANPATH%"''${MANPATH##*[!:]}"}"; export MANPATH=":''${MANPATH#"''${MANPATH%%[!:]*}"}"; };
+      export INFOPATH="${brewPrefix}/share/info:''${INFOPATH:-}";
+    '';
 
     environment.variables = {
       HOMEBREW_NO_ANALYTICS = "1";
