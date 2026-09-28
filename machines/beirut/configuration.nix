@@ -3,9 +3,9 @@
     aerospace
     brave
     essentials
-    raycast
     safari
     tailscale
+    tinycast
     ui
     zsh
   ];

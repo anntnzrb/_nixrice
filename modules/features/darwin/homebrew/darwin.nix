@@ -10,8 +10,8 @@ let
     brave = "brave-browser";
     obs = "obs";
     orbstack = "orbstack";
-    raycast = "raycast";
     rustdesk = "rustdesk";
+    tinycast = "abue-ammar/tinycast/tinycast";
     vlc = "vlc";
     vscode = "visual-studio-code";
   };
@@ -24,6 +24,12 @@ let
   apps = lib.unique config.liberion.homebrew.apps;
   pick =
     table: map (app: table.${app}) (builtins.filter (app: table ? ${app}) apps);
+  tapOf = cask: lib.concatStringsSep "/" (lib.take 2 (lib.splitString "/" cask));
+  taps = lib.unique (
+    map tapOf (
+      builtins.filter (cask: lib.length (lib.splitString "/" cask) == 3) (pick casks)
+    )
+  );
 in
 {
   imports = [ inputs.nix-homebrew.darwinModules.nix-homebrew ];
@@ -47,6 +53,10 @@ in
         upgrade = false;
       };
 
+      taps = map (name: {
+        inherit name;
+        trusted = true;
+      }) taps;
       casks = pick casks;
       masApps = lib.mergeAttrsList (pick masApps);
     };

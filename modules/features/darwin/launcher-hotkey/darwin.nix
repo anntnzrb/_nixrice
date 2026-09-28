@@ -1,20 +1,20 @@
-{
-  lib,
-  config,
-  inputs,
-  ...
-}:
+{ lib, config, ... }:
 let
   user = config.system.primaryUser;
+  owners = config.liberion.darwin.launcherHotkey.owners;
 in
 {
-  imports = [ inputs.self.darwinModules.homebrew ];
+  options.liberion.darwin.launcherHotkey.owners =
+    lib.liberion.module.mkOpt' (lib.types.listOf lib.types.str)
+      [ ];
 
-  config = {
-    liberion.homebrew.apps = [ "raycast" ];
-
-    system.defaults.CustomUserPreferences."com.raycast.macos".raycastGlobalHotkey =
-      "Command-49";
+  config = lib.mkIf (owners != [ ]) {
+    assertions = [
+      {
+        assertion = lib.length owners == 1;
+        message = "Cmd+Space is claimed by several launchers (${lib.concatStringsSep ", " owners}); give it to exactly one.";
+      }
+    ];
 
     system.activationScripts.postActivation.text = lib.mkAfter ''
       sudo -u ${user} defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys \
