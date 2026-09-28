@@ -17,7 +17,7 @@ modules/
 ├── features/<category>/<name>/   opt-in, imported by machines, profiles or other features
 ├── profiles/<tag>/          imported into machines carrying Clan tag <tag>
 └── services/<name>/         in-repo Clan services (_class = "clan.service")
-machines/<name>/             configuration.nix, optional home.nix, hardware/, readme.md
+machines/<name>/             configuration.nix, optional home.nix, facter.json or hardware/, readme.md
 homes/                       standalone Home Manager configs (hosts without a managed system)
 overlays/                    the flake overlay
 tests/                       `just test`; probe-errors.txt for `just probes`
@@ -129,6 +129,10 @@ In-repo Clan services: `modules/services/<name>/default.nix`
 - `network/dhcp` and NetworkManager are mutually exclusive (NM forces
   `networking.useDHCP = false`)
 - `hardware/disko-xfs` wipes its target device on install; use `/dev/disk/by-id`
+- Hardware on NixOS machines with `facter.json` comes from nixos-facter (Clan
+  wires it). Don't hand-write kernel modules, microcode or `hostPlatform` there;
+  switch off unwanted detections with `hardware.facter.detected.<x>.enable = false`.
+  Regenerate with `clan machines update-hardware-config <m> --backend nixos-facter`
 - Files deployed verbatim (scripts, WM configs) are compared by content: any
   edit, comments included, shows up in `just report`
 
