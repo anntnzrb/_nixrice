@@ -5,30 +5,30 @@ _default:
 
 [macos]
 build builder="":
-    nix build .#darwinConfigurations.{{ host }}.system {{ if builder == "" { "" } else if builder == "local" { "--builders ''" } else { "--builders @/etc/nix/builders/" + builder } }}
+    nh darwin build . {{ if builder == "" { "" } else if builder == "local" { "-- --builders ''" } else { "-- --builders @/etc/nix/builders/" + builder } }}
 
 [linux]
 build:
-    nixos-rebuild build --flake .#{{ host }}
+    nh os build .
 
 [macos]
-switch builder="": (build builder)
-    sudo ./result/sw/bin/darwin-rebuild switch --flake .#{{ host }}
+switch builder="":
+    nh darwin switch . {{ if builder == "" { "" } else if builder == "local" { "-- --builders ''" } else { "-- --builders @/etc/nix/builders/" + builder } }}
 
 [linux]
 switch:
-    nixos-rebuild switch --sudo --flake .#{{ host }}
+    nh os switch .
 
 [linux]
 boot:
-    nixos-rebuild boot --sudo --flake .#{{ host }}
+    nh os boot .
 
 home target="annt@wsl":
     nix build '.#homeConfigurations."{{ target }}".activationPackage'
     ./result/activate
 
-deploy +machines:
-    nix develop -c clan machines update {{ machines }}
+deploy *args:
+    nix develop -c clan machines update {{ args }}
 
 check:
     scripts/ci/check-flake.sh
