@@ -92,11 +92,8 @@ in
         input = "self";
         name = "remote-builders";
       };
-      roles.builder.machines = {
-        munich.settings.maxJobs = 12;
-        oulu.settings.maxJobs = 12;
-      };
-      roles.client.machines.beirut.settings.defaultBuilders = [ "munich" ];
+      roles.builder.machines.oulu.settings.maxJobs = 6;
+      roles.client.machines.beirut.settings.defaultBuilders = [ "oulu" ];
     };
 
     sshd = {

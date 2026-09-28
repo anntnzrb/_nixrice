@@ -11,8 +11,8 @@
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   determinateNix.customSettings = {
-    max-jobs = 10;
-    cores = 8;
+    max-jobs = 5;
+    cores = 4;
   };
 
   liberion = {
