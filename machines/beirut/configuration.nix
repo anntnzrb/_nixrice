@@ -1,6 +1,7 @@
 { inputs, ... }: {
   imports = with inputs.self.darwinModules; [
     aerospace
+    brave
     essentials
     raycast
     safari
