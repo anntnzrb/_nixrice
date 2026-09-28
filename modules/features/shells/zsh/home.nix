@@ -13,8 +13,12 @@ in
 
     completionInit = ''
       autoload -Uz compinit bashcompinit
+      zmodload -F zsh/stat b:zstat
       () {
-        local dump=$ZDOTDIR/.zcompdump key="$ZSH_VERSION ''${fpath:A}"
+        local dump=$ZDOTDIR/.zcompdump
+        local -a dirs=(''${^''${fpath:A}:#/nix/store/*}(N/)) mtimes
+        (( $#dirs )) && zstat -A mtimes +mtime -- $dirs
+        local key="$ZSH_VERSION ''${fpath:A} $mtimes"
         if [[ -r $dump.key && "$(<$dump.key)" == "$key" ]]; then
           compinit -C -d $dump
         else

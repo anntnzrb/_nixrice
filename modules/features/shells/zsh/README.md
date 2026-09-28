@@ -18,10 +18,12 @@ beirut (M4). Before this layout it was ~1 s (measured 2026-09-28).
   `darwin/homebrew`: disable the Home Manager `enableZshIntegration`, generate
   the script with `pkgs.runCommand`, `source` it with the same guard and
   `lib.mkOrder` Home Manager used. New integrations follow the same pattern
-- `completionInit` caches the dump keyed on `$ZSH_VERSION ${fpath:A}` in
-  `.zcompdump.key`. `:A` resolves the profile symlinks to store paths without
-  forking, so a new generation invalidates the cache on its own. Hit:
-  `compinit -C` (no `compaudit`, no fpath scan). Miss: rebuild + `zcompile`
+- `completionInit` caches the dump keyed on `$ZSH_VERSION`, `${fpath:A}` and
+  the mtime of every `fpath` directory outside `/nix/store` (Homebrew, OrbStack)
+  in `.zcompdump.key`. `:A` resolves the profile symlinks to store paths without
+  forking, so a new generation invalidates the cache on its own; `zstat`
+  catches `brew install` dropping a new completion. Hit: `compinit -C` (no
+  `compaudit`, no fpath scan). Miss: rebuild + `zcompile`
 - `ZSH_AUTOSUGGEST_MANUAL_REBIND`: zsh-autosuggestions otherwise rebinds every
   widget in `precmd` (~7 ms per prompt). Consequence: widgets defined after
   startup are not wrapped until `_zsh_autosuggest_bind_widgets` runs
