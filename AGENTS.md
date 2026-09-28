@@ -188,7 +188,10 @@ Evaluation reads the working tree through `path:.`, so new files count without
 
 ### CI (`.github/workflows/`)
 - `ci.yml`: `just check` (Linux; it evaluates darwin too), `just probes`, and
-  on PRs the `just report` summary against the base branch
+  on PRs the `just report` summary against the base branch. Pushes that only
+  touch docs (`**/*.md`, `docs/`, `COPYING`) skip it; PRs
+  always run it because the `dev` ruleset requires `check`, `probes` and
+  `builds`, and a path-filtered required check never reports and blocks merge
 - `build.yml`: `scripts/ci/build-plan.sh` lists the targets from
   `scripts/ci/targets.nix` missing from the Cachix cache; each builds on its
   own runner and is pushed. Nothing uncached = nothing built. Dev shells are

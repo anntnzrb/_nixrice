@@ -5,6 +5,10 @@ on:
   pull_request:
   push:
     branches: ["dev"]
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+      - COPYING
 
 permissions:
   contents: read
