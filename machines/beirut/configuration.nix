@@ -3,6 +3,7 @@
     aerospace
     essentials
     raycast
+    safari
     tailscale
     ui
     zsh
