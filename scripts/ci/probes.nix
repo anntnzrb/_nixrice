@@ -46,16 +46,12 @@ let
     home-beirut = home f.darwinConfigurations.beirut;
   };
   names = t: lib.attrNames (removeAttrs t.modules [ "default" ]);
+  evalTarget =
+    t: name:
+    (t.sys.extendModules { modules = [ (t.wrap t.modules.${name}) ]; })
+    .config.system.build.toplevel;
 in
-if target == null then
-  lib.concatStrings (
-    lib.concatLists (
-      lib.mapAttrsToList (n: t: map (m: "${n} ${m}\n") (names t)) targets
-    )
-  )
+if target != null && name != null then
+  evalTarget targets.${target} name
 else
-  let
-    t = targets.${target};
-  in
-  (t.sys.extendModules { modules = [ (t.wrap t.modules.${name}) ]; })
-  .config.system.build.toplevel.drvPath
+  lib.mapAttrs (_: t: lib.genAttrs (names t) (name: evalTarget t name)) targets
