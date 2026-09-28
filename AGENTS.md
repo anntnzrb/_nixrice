@@ -61,7 +61,8 @@ meaning outside their profile:
 - `archived`: retired machine kept as history; excluded from CI builds and
   Cachix (`scripts/ci/targets.nix`) and from fleet SSH peer lists
   (`network/sshd`). Its profile pins a fixed `system.stateVersion` because
-  those machines predate Clan; the rest use the generated state-version var
+  those machines predate Clan; the rest use the generated state-version var.
+  `clan machines update` without arguments skips them (`requireExplicitUpdate`)
 
 ### Writing modules
 Class files: `nixos.nix`, `darwin.nix`, `home.nix`, `system.nix` (NixOS and
