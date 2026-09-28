@@ -6,8 +6,7 @@ here="$(cd "$(dirname "$0")" && pwd)"
 flake="path:${PWD}"
 
 if test "$#" -eq 0; then
-    system="$(nix eval --impure --raw --expr builtins.currentSystem)"
-    attrs="$(nix eval --impure --raw --expr "builtins.concatStringsSep \" \" (map (t: t.attr) (builtins.filter (t: t.system == \"${system}\") (import ${here}/targets.nix { flake = \"${flake}\"; })))")"
+    attrs="$(nix eval --impure --raw --expr "builtins.concatStringsSep \" \" (map (t: t.attr) (builtins.filter (t: t.system == builtins.currentSystem) (import ${here}/targets.nix { flake = \"${flake}\"; })))")"
     # shellcheck disable=SC2086 # attribute paths contain no whitespace
     set -- ${attrs}
 fi
