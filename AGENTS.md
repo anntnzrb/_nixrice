@@ -203,6 +203,12 @@ Evaluation reads the working tree through `path:.`, so new files count without
   `nix eval` into a variable before piping; no `sort -s`. Scripts holding temp
   state define `cleanup()` then source `scripts/ci/cleanup.sh` (traps EXIT and
   re-raises HUP/INT/TERM, which dash would skip)
+- Waiting on a PR: one blocking `gh pr checks <N> --watch --interval 60`
+  with a 30 min shell timeout, never sleep loops. Rough timings (Sep 2026, re-measure with
+  `gh run list`): Nix CI on a PR ~14 min (probes shards + report), on a
+  push to `dev` ~4-8; Nix build ~4-8, up to ~22 on cache misses. Right after
+  `gh pr create`, checks take ~20 s to register. Still running past ~25 min:
+  inspect `gh run view <id> --json jobs` instead of waiting longer
 
 ### Upstream references
 When unsure how something works, read the source rather than guessing. Check
