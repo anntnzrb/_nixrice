@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) getExe;
 in
@@ -12,6 +17,7 @@ in
     {
       enable = true;
       inherit defaultCommand;
+      enableZshIntegration = false;
 
       historyWidgetOptions = [
         "--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
@@ -27,4 +33,16 @@ in
   home.sessionVariables = {
     FZF_COMPLETION_TRIGGER = "~~";
   };
+
+  programs.zsh.initContent =
+    let
+      zshInit = pkgs.runCommand "fzf-zsh-init" { } ''
+        HOME=$TMPDIR ${lib.getExe config.programs.fzf.package} --zsh > $out
+      '';
+    in
+    lib.mkOrder 910 ''
+      if [[ $options[zle] = on ]]; then
+        source ${zshInit}
+      fi
+    '';
 }
