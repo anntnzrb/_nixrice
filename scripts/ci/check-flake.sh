@@ -9,13 +9,16 @@ nix run --option eval-cache false --no-write-lock-file --inputs-from path:. nixp
 
 "$(dirname "$0")/snapshot.sh" . darwin home >/dev/null
 
-if test "$(uname -s)" = Linux; then
-    set -- --all-systems
-fi
+check() {
+    nix flake check --option eval-cache false --no-write-lock-file \
+        --option allow-import-from-derivation false \
+        --print-build-logs "$@" path:.
+}
 
-nix flake check --option eval-cache false --no-write-lock-file \
-    --option allow-import-from-derivation false \
-    --print-build-logs "$@" path:.
+if test "$(uname -s)" = Linux; then
+    check --all-systems --no-build
+fi
+check
 
 nix develop --option eval-cache false --no-write-lock-file path:. \
     -c clan vars check
