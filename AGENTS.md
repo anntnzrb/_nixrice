@@ -159,10 +159,10 @@ Evaluation reads the working tree through `path:.`, so new files count without
 - `just test`: run `tests/` (lib discovery + every machine keeps fleet SSH access); fast
 - `just report [ref]`: what your change does to each machine and home (packages, files, services, users, env, PATH order) versus `ref`; empty = no behaviour change; minutes
 - `just snap`: print every machine/home drvPath, a quick "does it still evaluate"; fast
-- `just probes`: import every feature into a real host; fails if the set that does not evaluate differs from `tests/probe-errors.txt` (shardable: `PROBE_SHARD`/`PROBE_SHARDS`); slow
+- `just probes`: import every feature into a real host in one `nix-eval-jobs` run; fails if the set that does not evaluate differs from `tests/probe-errors.txt` (`PROBE_WORKERS`, default one per core; `PROBE_MAX_MEMORY`); slow
 - `just drvdiff [ref]`: prove a pure refactor, machine, home **and** per-feature drvPaths identical to `ref` (the only check covering features no machine uses); slow
-- `just check`: the CI gate, flake-checker, evaluate everything, formatting, lint hooks, flake checks incl. tests; minutes
-- `just fmt`: format with the repo's formatter; use this, not `nixpkgs#nixfmt`; fast
+- `just check`: the CI gate, flake-checker, one `nix flake check` (formatting, lint hooks, tests; `--all-systems` on Linux), `clan vars check`; minutes
+- `just fmt`: treefmt (`flake.nix`: nixfmt, shfmt, just); use this, not `nixpkgs#nixfmt`; fast
 - `just build-all`: build every machine and home this platform can build, nothing is activated; very slow, needs disk
 
 - Before handing off any change: `just report` (state the result), then `just check`
@@ -172,22 +172,23 @@ Evaluation reads the working tree through `path:.`, so new files count without
 - `tests/probe-errors.txt` lists modules expected not to evaluate on their probe
   host (`scripts/ci/probes.nix`): genuine platform mismatches only, e.g. a
   Linux-only home feature probed on darwin. Add a line when your feature is one
-- Lint hooks (`flake.nix` pre-commit) run on `git commit` in the dev shell
-  (`nix develop`) and in `just check`
+- Lint hooks (`flake.nix` pre-commit: treefmt, deadnix, statix, shellcheck,
+  actionlint, zizmor) run on `git commit` in the dev shell (`nix develop`) and in `just check`
 - The synthetic probe host is its own Clan instance rooted at `scripts/ci/`, so
   no real machine, tag or profile leaks into probes. `just report`
   fingerprints repo files by content, so pure moves are invisible to it
 
 ### Not for agents
-- `just switch`, `build`, `boot`, `home`, `deploy`: the owner deploys
+- `just switch`, `build`, `boot`, `home`, `deploy`: the owner deploys (build/switch go
+  through `nh`; `deploy` takes `clan machines update` arguments, e.g. `--tags server`)
 - `just update`: flake inputs are updated by Dependabot PRs
 - `just clean`, `optimise`, `repair`, `bin/nix-install.sh`: host maintenance
 - Do not commit or push unless asked. Never print values from `sops/` or `vars/`;
   generate secrets with `clan vars generate <machine>`, never by hand
 
 ### CI (`.github/workflows/`)
-- `ci.yml`: `just check` (Linux; it evaluates darwin too), sharded
-  `just probes`, and on PRs the `just report` summary against the base branch
+- `ci.yml`: `just check` (Linux; it evaluates darwin too), `just probes`, and
+  on PRs the `just report` summary against the base branch
 - `build.yml`: `scripts/ci/build-plan.sh` lists the targets from
   `scripts/ci/targets.nix` missing from the Cachix cache; each builds on its
   own runner and is pushed. Nothing uncached = nothing built. Dev shells are
@@ -202,6 +203,20 @@ Evaluation reads the working tree through `path:.`, so new files count without
   `nix eval` into a variable before piping; no `sort -s`. Scripts holding temp
   state define `cleanup()` then source `scripts/ci/cleanup.sh` (traps EXIT and
   re-raises HUP/INT/TERM, which dash would skip)
+
+### Upstream references
+When unsure how something works, read the source rather than guessing. Check
+the version pinned in `flake.lock` first
+- Clan: `git.clan.lol/clan/clan-core` (`clanServices/`, `nixosModules/clanCore/`,
+  `pkgs/clan-cli/`, `docs/`)
+- Options and module source: `NixOS/nixpkgs` (`nixos/modules/`), `nix-darwin/nix-darwin`,
+  `nix-community/home-manager`
+- Nix CLI behaviour: `NixOS/nix` (`src/nix/`, release notes under `doc/manual/`)
+- Clan fleets to copy patterns from: `Mic92/dotfiles`, `nix-community/infra`
+- Server defaults: `nix-community/srvos`
+- Tools used here: `nix-community/nix-eval-jobs`, `nix-community/nh`,
+  `numtide/treefmt-nix`, `cachix/git-hooks.nix`, `nix-community/nixos-facter-modules`,
+  `nix-community/nix-index-database`
 
 ### Conventions
 - Skills: load nix and clan skills before writing Nix
