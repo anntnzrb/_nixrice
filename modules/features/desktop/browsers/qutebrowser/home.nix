@@ -13,14 +13,11 @@ in
     searchEngines = {
       DEFAULT = "https://search.brave.com/search?q={}";
 
-      # nix
       nixp = "https://search.nixos.org/packages?channel=unstable&type=packages&query={}";
       nixpgh = "https://github.com/search?q=repo:NixOS/nixpkgs%20{}&type=code";
       nixw = "https://nixos.wiki/index.php?search={}";
       nixhmgh = "https://github.com/search?q=repo:nix-community/home-manager%20{}&type=code";
       nixmy = "https://mynixos.com/search?q={}";
-
-      # misc
       aw = "https://wiki.archlinux.org/?search={}";
       hoogle = "https://hoogle.haskell.org/?hoogle=%2Bbase%20{}";
       gmaps = "https://www.google.com/maps/place/{}";
@@ -33,7 +30,6 @@ in
       backend = "webengine";
       changelog_after_upgrade = "minor";
       confirm_quit = [ "never" ];
-      # spellcheck.languages = [ "en-US" "en-GB" "es-ES" ];
       qt.chromium.low_end_device_mode = "never";
 
       window = {
@@ -85,7 +81,7 @@ in
       };
 
       input = {
-        mouse.back_forward_buttons = false; # forces me not to use it
+        mouse.back_forward_buttons = false;
 
         insert_mode = {
           auto_enter = true;

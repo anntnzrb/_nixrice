@@ -44,7 +44,7 @@ in
     };
 
     home.shellAliases = {
-      zll = "cd && ${lib.getExe config.programs.zellij.package}"; # ensure zellij is started at ~
+      zll = "cd && ${lib.getExe config.programs.zellij.package}";
       zllk = "${lib.getExe pkgs.killall} zellij";
     };
   };

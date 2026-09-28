@@ -1,5 +1,3 @@
-# Bridges hosted Home Manager users into NixOS/nix-darwin machines. Each home
-# imports its module set itself (liberion homes: `self.homeModules.default`).
 {
   lib,
   pkgs,
@@ -10,12 +8,10 @@
 {
   home-manager = {
     useGlobalPkgs = true;
-    # packages in /etc/profiles/per-user/<user>, not the user's nix profile
     useUserPackages = true;
     extraSpecialArgs = { inherit inputs; };
   };
 
-  # nix-darwin leaves `home` null, which home-manager needs
   users.users = lib.mapAttrs (name: _: {
     home = lib.mkDefault (
       if pkgs.stdenv.hostPlatform.isDarwin then "/Users/${name}" else "/home/${name}"

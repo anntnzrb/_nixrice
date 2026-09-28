@@ -1,5 +1,3 @@
-# Machines tagged `server`: always on (never sleeps, performance governor),
-# reachable over ssh, tuned for builds.
 { lib, pkgs, ... }:
 let
   inherit (lib.liberion.identity) keys sshPort;
@@ -7,11 +5,8 @@ let
   authorizedKeys = [ keys.admin ] ++ keys.devices;
 in
 {
-  # server-tagged machines are the clan-installed ones (see clan.nix): take
-  # clan's recommended defaults; everything else keeps base's `false`
   clan.core.enableRecommendedDefaults = true;
 
-  # network: bbr congestion control with cake qdisc against bufferbloat
   boot = {
     kernelModules = [
       "tcp_bbr"
@@ -20,13 +15,10 @@ in
     kernel.sysctl = {
       "net.core.default_qdisc" = "cake";
       "net.ipv4.tcp_congestion_control" = "bbr";
-      # tcp fast open for both client and server sockets
       "net.ipv4.tcp_fastopen" = 3;
       "kernel.nmi_watchdog" = 0;
-      # flush dirty pages earlier to avoid io latency spikes
       "vm.dirty_background_ratio" = 5;
       "vm.dirty_ratio" = 10;
-      # zram has no seek cost: swap eagerly, no readahead
       "vm.swappiness" = 100;
       "vm.page-cluster" = 0;
     };
@@ -51,7 +43,6 @@ in
   nix = {
     settings = {
       trusted-users = [ userName ];
-      # keep derivations/outputs so offline dev shells survive gc
       keep-outputs = true;
       keep-derivations = true;
       auto-optimise-store = true;
@@ -84,7 +75,6 @@ in
       };
     };
 
-    # resolve and publish .local hostnames over mdns
     avahi = {
       enable = true;
       nssmdns4 = true;
@@ -95,7 +85,6 @@ in
       };
     };
 
-    # stay reachable: never sleep on lid close or idle
     logind.settings.Login = {
       HandleLidSwitch = "ignore";
       HandleLidSwitchDocked = "ignore";

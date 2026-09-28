@@ -40,10 +40,7 @@ in
         wm-exec-sway = "command sway";
       };
 
-      packages = [
-        # fonts
-        pkgs.iosevka-comfy.comfy
-      ];
+      packages = [ pkgs.iosevka-comfy.comfy ];
     };
 
     wayland.windowManager.sway = {
@@ -126,8 +123,6 @@ in
             {
               inherit fonts;
 
-              # TODO: check if this was solved. i3status-rs should generate the proper file.
-              # statusCommand = "i3status-rs ${config.xdg.configHome}/i3status-rust/config-default.toml";
               command = "waybar";
               position = "top";
               trayOutput = "*";
@@ -174,7 +169,6 @@ in
               modAlt = "${mod}+Alt";
             in
             {
-              # TODO: mv
               "${mod}+Return" =
                 "exec ${lib.getExe config.liberion.desktop.session.apps.terminal}";
               "${mod}+d" = "exec bemenu-run";
@@ -213,13 +207,11 @@ in
 
           input = {
             "*" = {
-              # keyboard
               xkb_layout = keyboard.layout;
               xkb_variant = keyboard.variant;
               repeat_delay = toString keyboard.autoRepeatDelay;
               repeat_rate = toString keyboard.autoRepeatInterval;
 
-              # mouse/touchpad
               accel_profile = "flat";
               drag = "true";
               dwt = "true";

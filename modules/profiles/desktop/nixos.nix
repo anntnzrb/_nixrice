@@ -1,4 +1,3 @@
-# Machines tagged `desktop` (NixOS): startx-launched X, keyring and polkit.
 { pkgs, inputs, ... }: {
   imports = with inputs.self.nixosModules; [
     keyd

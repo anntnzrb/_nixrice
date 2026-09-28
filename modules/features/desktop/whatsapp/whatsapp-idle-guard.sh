@@ -1,32 +1,4 @@
 # shellcheck shell=sh
-# WhatsApp idle guard runtime.
-#
-# Intent:
-# - strict POSIX shell; no bashisms
-# - executed only through pkgs.writeShellApplication
-# - keep policy in Nix; keep runtime logic here
-#
-# Arguments, in order:
-# 1. bundle_id                  exact app bundle id to guard
-# 2. app_name                   friendly name for logs
-# 3. mode                       log-only | term | term-then-kill
-# 4. state_dir                  directory holding runtime state files
-# 5. timeout_seconds            inactivity threshold in seconds
-# 6. kill_grace_seconds         wait between SIGTERM and SIGKILL
-# 7. reset_on_frontmost         1 => refresh last-active when app is frontmost
-# 8. initialize_on_first_seen   1 => create initial last-active state
-#
-# State files in $state_dir:
-# - last-active : epoch seconds of last observed foreground activity
-# - instance    : pid / ASN / launch time of the tracked app instance
-# - lock        : best-effort overlap prevention for launchd re-entry
-#
-# High-level flow:
-# - resolve the frontmost app via lsappinfo
-# - resolve the target app by exact bundle id
-# - refuse to act if the target is ambiguous
-# - reset state when a new app instance appears
-# - terminate after timeout, optionally escalating to SIGKILL
 
 set -eu
 
@@ -44,7 +16,6 @@ instance_file="${state_dir}/instance"
 lock_file="${state_dir}/lock"
 lock_owned=0
 
-# Logging helpers. Launchd handles stdout/stderr redirection.
 timestamp() {
     date '+%Y-%m-%dT%H:%M:%S%z'
 }
@@ -63,7 +34,6 @@ err() {
     printf '%s ERROR: %s\n' "${timestamp_value}" "$*" >&2
 }
 
-# State persistence helpers.
 write_last_active() {
     date +%s >"${last_active_file}"
 }
@@ -89,7 +59,6 @@ read_instance_value() {
     sed -n "s/^${key}=//p" "${instance_file}" | head -n1
 }
 
-# Tiny validation helper for pid / epoch checks.
 is_numeric() {
     case $1 in
         '' | *[!0-9]*)
@@ -101,11 +70,6 @@ is_numeric() {
     esac
 }
 
-# Overlap prevention.
-#
-# launchd may start a new run while a previous one is still sleeping in the
-# TERM -> KILL grace period. The lock is intentionally simple: one pid in a
-# file, plus stale-lock recovery when that pid no longer exists.
 acquire_lock() {
     holder=""
 
@@ -143,10 +107,6 @@ cleanup() {
     [ "${lock_owned}" = "1" ] && rm -f "${lock_file}"
 }
 
-# lsappinfo queries.
-#
-# We key everything off bundle id and ASN/PID parsing from lsappinfo output to
-# avoid loose process-name matching.
 get_front_bundle_id() {
     front_asn=$(/usr/bin/lsappinfo front 2>/dev/null || true)
 
@@ -184,7 +144,6 @@ parse_launch_time() {
         | head -n1 || true
 }
 
-# Small text helpers for the newline-separated match list returned above.
 count_lines() {
     printf '%s\n' "$1" | sed '/^$/d' | wc -l | tr -d ' '
 }
@@ -193,8 +152,6 @@ first_line() {
     printf '%s\n' "$1" | sed -n '1p'
 }
 
-# Initialize both state files together so a first run or corrupt state does not
-# immediately count as a long idle period.
 maybe_initialize_state() {
     pid=$1
     asn=$2
@@ -244,7 +201,6 @@ if [ -z "${target_asn}" ] || [ -z "${target_pid}" ]; then
     exit 0
 fi
 
-# Frontmost app counts as activity. Optionally refresh the timer immediately.
 if [ "${front_bundle_id}" = "${bundle_id}" ]; then
     write_instance "${target_pid}" "${target_asn}" "${target_launch_time}"
     [ "${reset_on_frontmost}" = "1" ] && write_last_active
@@ -257,7 +213,6 @@ stored_pid=$(read_instance_value pid)
 stored_asn=$(read_instance_value asn)
 stored_launch_time=$(read_instance_value launch_time)
 
-# If WhatsApp was restarted, treat it as a fresh instance and reset idle state.
 if [ "${stored_pid}" != "${target_pid}" ] || [ "${stored_asn}" != "${target_asn}" ] || [ "${stored_launch_time}" != "${target_launch_time}" ]; then
     write_instance "${target_pid}" "${target_asn}" "${target_launch_time}"
     write_last_active
@@ -276,7 +231,6 @@ now=$(date +%s)
 idle_seconds=$((now - last_active_raw))
 [ "${idle_seconds}" -lt "${timeout_seconds}" ] && exit 0
 
-# Enforcement policy.
 case "${mode}" in
     log-only)
         log "${app_name} idle guard would terminate pid=${target_pid} asn=${target_asn} after ${idle_seconds}s idle"
@@ -323,7 +277,6 @@ case "${mode}" in
             exit 0
         fi
 
-        # Never SIGKILL a different instance than the one we originally timed out.
         if [ "${target_asn_after}" != "${target_asn}" ] || [ "${target_pid_after}" != "${target_pid}" ] || [ "${target_launch_time_after}" != "${target_launch_time}" ]; then
             log "${app_name} idle guard detected a different app instance after SIGTERM; skipping SIGKILL"
             exit 0

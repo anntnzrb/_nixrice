@@ -1,7 +1,5 @@
 { lib, ... }:
 let
-
-  # avoid `$all`
   promptModules = [
     "$git_branch"
     "$git_status"

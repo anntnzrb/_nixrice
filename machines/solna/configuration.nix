@@ -1,7 +1,6 @@
 { inputs, ... }: {
   imports = [
     ./hardware
-    # no dual-boot. systemd-boot suffices
     inputs.self.nixosModules.systemd-boot
   ];
 

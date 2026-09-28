@@ -1,20 +1,10 @@
 name: Nix build
 
-# Builds every machine, home and dev shell not in the binary cache yet, each on
-# its own runner of the right platform, and pushes the results, so deploys
-# substitute instead of building. An unchanged fleet builds nothing.
-# Dependabot flake PRs are built before they merge (a rebase merge keeps the
-# same flake.lock, so the merged commit is already cached) and `builds` is a
-# required check, so an update only lands if every machine builds. Pushing
-# needs CACHIX_AUTH_TOKEN as an Actions secret and, for Dependabot PRs, as a
-# Dependabot secret.
 on:
   workflow_dispatch:
-  # every PR reports `builds`; only Dependabot flake updates build anything
   pull_request:
   push:
     branches: ["dev"]
-    # only what changes what gets built
     paths:
       - flake.nix
       - flake.lock
@@ -26,20 +16,16 @@ on:
       - "homes/**"
       - "overlays/**"
   schedule:
-    # weekly safety net; a no-op when everything is cached
     - cron: "30 8 * * 1"
 
 permissions:
   contents: read
 
-# on dev, queue behind a running build (a nearly finished one still fills the
-# cache); on a PR, a newer push supersedes the running build
 concurrency:
   group: build-${{ github.head_ref || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  # which machines and homes are missing from the cache, and on which runner
   plan:
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -59,8 +45,6 @@ jobs:
 
       - id: plan
         env:
-          # PRs build only for flake-input updates (an Actions bump changes
-          # no derivation)
           BUILD: ${{ github.event_name != 'pull_request' || startsWith(github.head_ref, 'dependabot/nix/') }}
         run: |
           if test "$BUILD" = true; then
@@ -99,8 +83,7 @@ jobs:
         with:
           name: anntnzrb
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
-          # push once at the end instead of through the background daemon, whose
-          # drain timeout failed a build after everything had been pushed
+          # push at end; daemon drain timeout fails completed builds
           useDaemon: false
 
       - name: Build ${{ matrix.name }}
@@ -108,7 +91,6 @@ jobs:
           ATTR: ${{ matrix.attr }}
         run: scripts/ci/build.sh "$ATTR"
 
-  # the required check: the plan ran and every scheduled build passed
   builds:
     needs: [plan, build]
     if: always()

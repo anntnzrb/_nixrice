@@ -7,7 +7,6 @@ in
     containers.enable = true;
     podman = {
       enable = true;
-      # docker cli alias + compatibility socket
       dockerCompat = true;
       dockerSocket.enable = true;
       defaultNetwork.settings.dns_enabled = true;
@@ -19,7 +18,6 @@ in
     };
   };
 
-  # socket access for the primary user through the podman group
   users.groups.podman = { };
   users.users.${userName}.extraGroups = [ "podman" ];
   systemd.sockets.podman.socketConfig = {

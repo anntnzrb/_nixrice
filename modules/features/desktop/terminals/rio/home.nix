@@ -43,7 +43,7 @@ in
       enable = true;
       settings = {
         option-as-alt = lib.mkIf pkgs.stdenvNoCC.hostPlatform.isDarwin "both";
-        use-fork = false; # prefer clean process
+        use-fork = false;
         confirm-before-quit = false;
         hide-cursor-when-typing = false;
         theme = "catppuccin-mocha";
@@ -82,8 +82,8 @@ in
         renderer = {
           performance = "high";
           backend = "automatic";
-          disable-unfocused-render = true; # TODO: test
-          level = 1; # fonts/ligatures/emojis
+          disable-unfocused-render = true;
+          level = 1;
         };
 
         scroll = {

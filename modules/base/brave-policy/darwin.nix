@@ -5,8 +5,6 @@
   ...
 }:
 let
-  # the brave feature's settings (liberion.desktop.browsers.brave) when a home
-  # imports it; otherwise the policy is removed
   home = config.home-manager.users.${lib.liberion.identity.user} or { };
   cfg = home.liberion.desktop.browsers.brave or null;
   enabled = cfg != null;

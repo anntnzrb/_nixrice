@@ -12,7 +12,6 @@ let
 
   cfg = config.liberion.services.skhd;
 
-  # helpers
   keybindingsStr = concatStringsSep "\n" (
     lib.mapAttrsToList (
       hotkey: command:

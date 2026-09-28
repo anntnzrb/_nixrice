@@ -1,8 +1,3 @@
-# Weekly updates: one grouped PR for all flake inputs and one for GitHub
-# Actions. Grouping matters: every merge makes Dependabot rebase the other open
-# PRs, so per-input PRs rerun CI for each one after every merge.
-# auto-merge.yml merges each PR once the required CI checks pass; its job
-# summary (just report) shows what changes on each machine.
 version: 2
 updates:
   - package-ecosystem: nix

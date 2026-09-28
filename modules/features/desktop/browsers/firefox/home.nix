@@ -24,7 +24,6 @@ let
       "sidebar.main.tools" = lib.concatStringsSep "," cfg.sidebar.tools;
     };
 
-  # Convert privacy options to Firefox settings
   privacyToSettings = cfg: {
     "privacy.sanitize.sanitizeOnShutdown" = cfg.sanitizeOnShutdown.enable;
     "privacy.clearOnShutdown.browsingHistoryAndDownloads" = false;
@@ -49,7 +48,6 @@ let
       !cfg.disableNewTabHighlights;
   };
 
-  # Convert hide buttons list to CSS selectors
   buttonsToCss =
     buttons:
     let
@@ -66,10 +64,8 @@ let
     else
       "${lib.concatStringsSep ",\n" selectors} { display: none !important; }";
 
-  # Generate userChrome.css from UI options
   uiToUserChrome = cfg: ''
     ${lib.optionalString cfg.autoHideToolbar ''
-      /* === AUTO-HIDE TOOLBOX === */
       :root {
         --uc-autohide-toolbox-delay: 200ms;
         --uc-toolbox-rotation: 75deg;
@@ -124,12 +120,10 @@ let
     ''}
 
     ${lib.optionalString cfg.hideTabBar ''
-      /* === HIDE TAB BAR === */
       #TabsToolbar { visibility: collapse !important; }
     ''}
 
     ${lib.optionalString (cfg.hideButtons != [ ]) ''
-      /* === HIDE TOOLBAR BUTTONS === */
       ${buttonsToCss cfg.hideButtons}
     ''}
   '';
@@ -139,8 +133,8 @@ in
 
   options.liberion.desktop.browsers.firefox = {
     ui = {
-      autoHideToolbar = mkOptDisabled'; # show the nav toolbar on Cmd+L or hover
-      hideTabBar = mkOptEnabled'; # horizontal tabs, redundant with vertical ones
+      autoHideToolbar = mkOptDisabled';
+      hideTabBar = mkOptEnabled';
       hideButtons =
         mkOpt'
           (types.listOf (
@@ -159,7 +153,7 @@ in
           ];
 
       sidebar = {
-        enable = mkOptEnabled'; # the new Firefox sidebar
+        enable = mkOptEnabled';
         verticalTabs = mkOptEnabled';
         expandOnHover = mkOptDisabled';
         visibility = mkOpt' (types.enum [
@@ -190,18 +184,17 @@ in
 
     privacy = {
       sanitizeOnShutdown = {
-        enable = mkOptEnabled'; # clear data when Firefox closes
+        enable = mkOptEnabled';
         cache = mkOptEnabled';
         cookies = mkOptDisabled';
         history = mkOptDisabled';
       };
-      disableSync = mkOptEnabled'; # Firefox Account/Sync
-      disableNewTabHighlights = mkOptEnabled'; # "Recent Activity" on new tabs
+      disableSync = mkOptEnabled';
+      disableNewTabHighlights = mkOptEnabled';
     };
 
     betterfox = {
       enable = mkOptEnabled';
-      # scrolling preset, null to disable
       smoothfox = mkOpt' (types.nullOr (
         types.enum [
           "sharpen-scrolling"
@@ -230,7 +223,6 @@ in
       }
     ];
 
-    # on darwin, install firefox-bin separately (wrapper not supported)
     home.packages = lib.mkIf isDarwin [ pkgs.firefox-bin ];
 
     programs.firefox = {
@@ -252,13 +244,9 @@ in
 
         extensions.packages =
           with inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system}; [
-            # utils
-            ublock-origin # ad-blocker
-            #clearurls # broken
+            ublock-origin
             istilldontcareaboutcookies
             sponsorblock
-
-            # ui/ux
             refined-github
           ];
       };

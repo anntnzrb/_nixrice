@@ -1,15 +1,10 @@
 #!/usr/bin/env sh
-# Prints the build matrix for GitHub Actions as JSON: every machine and home
-# whose output is not in the binary cache yet, each on a runner of its
-# platform. Cached targets are skipped, so an unchanged fleet builds nothing.
 
 set -eu
 
 cache="https://anntnzrb.cachix.org"
 here="$(cd "$(dirname "$0")" && pwd)"
 
-# evaluated first, not piped: a failing eval must fail the job, not yield an
-# empty matrix that builds nothing (dash, Ubuntu's sh, has no pipefail)
 targets="$(nix eval --impure --json \
     --expr "import ${here}/targets.nix { flake = \"path:${PWD}\"; }" 2>/dev/null)"
 

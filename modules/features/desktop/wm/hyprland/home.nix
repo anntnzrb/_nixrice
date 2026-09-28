@@ -35,7 +35,6 @@ in
 
       settings = {
         "$mod" = "SUPER";
-        # launched by $mod+Return in hyprland.conf
         "$TERMINAL" = lib.getExe config.liberion.desktop.session.apps.terminal;
 
         inherit (cfg) monitor;

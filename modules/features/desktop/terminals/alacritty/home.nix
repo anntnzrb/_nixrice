@@ -71,7 +71,6 @@ in
         };
 
         keyboard.bindings = [
-          # copy/paste
           {
             key = "C";
             mods = "Control|Shift";
@@ -82,8 +81,6 @@ in
             mods = "Control|Shift";
             action = "Paste";
           }
-
-          # search
           {
             key = "/";
             mods = "Control";

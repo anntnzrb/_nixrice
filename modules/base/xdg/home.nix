@@ -1,4 +1,3 @@
-# XDG base and user dirs baseline (Linux homes).
 {
   config,
   lib,

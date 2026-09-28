@@ -18,9 +18,6 @@ let
 in
 {
   config.home.shellAliases = {
-    # ----------------------------------------------------------------------
-    # misc
-    # ----------------------------------------------------------------------
     ".." = "cd ..";
     cp = "${getExe' coreutils "cp"} --recursive --interactive --verbose";
     diff = "${getExe' pkgs.diffutils "diff"} --color=auto";
@@ -31,16 +28,13 @@ in
     wget = "${getExe pkgs.wget} --no-hsts";
     zip = "${getExe pkgs.zip} --recurse-paths --verbose -9";
 
-    # generate a 16-byte alphanumeric string
     gen-str = "${getExe' coreutils "tr"} --delete --complement 'A-Za-z0-9' < /dev/urandom | ${getExe' coreutils "head"} --bytes 16";
 
-    # empty files management
     dir-empty-print = "${getExe pkgs.fd} --color=always --type empty --type directory .";
     dir-empty-rm = "${getExe pkgs.fd} --color=always --type empty --type directory . --exec ${getExe' coreutils "rmdir"} --verbose {} \;";
     file-empty-print = "${getExe pkgs.fd} --color=always --type empty --type file .";
     file-empty-rm = "${getExe pkgs.fd} --color=always --type empty --type file . --exec ${getExe' coreutils "rm"} --verbose {} \;";
 
-    # network
     tnet = "${getExe pkgs.unixtools.ping} -c 4 8.8.8.8";
     "ip?" =
       "${getExe' pkgs.curlMinimal "curl"} --fail --silent --show-error --location icanhazip.com";
@@ -48,25 +42,15 @@ in
       ${getExe pkgs.unixtools.ifconfig} | ${getExe pkgs.gawk} '/inet / { if ($2 != "127.0.0.1") { print $2; exit } }'
     '';
 
-    # ----------------------------------------------------------------------
-    # nix
-    # ----------------------------------------------------------------------
     nix-lockfile-update = "${getExe pkgs.nix} flake update --commit-lock-file --option commit-lockfile-summary 'chore(flake): update lockfile'";
 
-    # ----------------------------------------------------------------------
-    # coreutils
-    # ----------------------------------------------------------------------
-
-    # ls => eza
     ls = "${eza.bin} --sort=Name --all --group --header";
     ll = "${eza.bin} --sort=Name --all --group --header --long";
 
-    # tree => eza
     tree = "${eza.bin} --group --header --tree";
     treea = "${eza.bin} --all --group --header --tree";
     treed = "${eza.bin} --group --header --tree --only-dirs";
 
-    # cat/less => bat
     cat = "${bat.bin} --paging=never";
     less = "${bat.bin}";
   }

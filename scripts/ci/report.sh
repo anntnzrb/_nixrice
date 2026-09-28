@@ -1,7 +1,4 @@
 #!/usr/bin/env sh
-# Markdown summary of what the working tree changes in every machine and home
-# versus a git ref (default: HEAD): packages, files, services, users, env...
-# (fingerprint.nix). Prints nothing when no machine's behaviour changes.
 
 set -eu
 
@@ -16,9 +13,6 @@ cleanup() {
 
 git worktree add --detach --quiet "${tmp}/base" "${1:-HEAD}"
 
-# one "<machine> <path> = <value>" line per leaf of the fingerprint of the
-# flake in $1; list positions become [], newlines are escaped. Evaluation
-# stderr (upstream deprecation traces) is shown only on failure.
 flat() {
     nix eval --impure --json \
         --expr "import ${here}/fingerprint.nix { flake = \"path:$1\"; }" \
@@ -35,8 +29,6 @@ flat() {
 flat "${tmp}/base" >"${tmp}/before"
 flat "${PWD}" >"${tmp}/after"
 
-# "-"/"+" per line, grouped by machine (keeping diff order within a machine:
-# POSIX sort has no stable flag, so sort on the line number), at most 40 each
 diff "${tmp}/before" "${tmp}/after" \
     | sed -n 's/^< /- /p; s/^> /+ /p' \
     | awk '{ print $2, NR, $0 }' \

@@ -1,6 +1,5 @@
 {
-  xdg.configFile."zellij/config.kdl".text = # kdl
-    ''
-      theme "catppuccin-frappe"
-    '';
+  xdg.configFile."zellij/config.kdl".text = ''
+    theme "catppuccin-frappe"
+  '';
 }

@@ -17,13 +17,11 @@ in
       split_ratio = 0.5;
       focus_follows_mouse = "autofocus";
 
-      # mouse
       mouse_modifier = "fn";
-      mouse_follows_focus = "on"; # warp mouse?
-      mouse_action1 = "move"; # mod + LMB
-      mouse_action2 = "resize"; # mod + RMB
+      mouse_follows_focus = "on";
+      mouse_action1 = "move";
+      mouse_action2 = "resize";
 
-      # gaps
       top_padding = 10;
       bottom_padding = 10;
       left_padding = 15;
@@ -33,7 +31,6 @@ in
 
     extraConfig =
       let
-        # windows yabai leaves floating
         unmanaged = [
           { app = "^System Settings$"; }
           { app = "^System Information$"; }
@@ -54,7 +51,6 @@ in
         ];
       in
       ''
-        # rules
         ${lib.concatMapStringsSep "\n" mkRule unmanaged}
       '';
   };

@@ -1,8 +1,5 @@
 name: Auto-merge Dependabot
 
-# Queues Dependabot PRs for merge; GitHub merges once the checks required on
-# dev pass. Runs without checking out PR code, so pull_request_target's write
-# token never touches untrusted content.
 on: pull_request_target
 
 permissions: {}

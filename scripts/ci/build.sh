@@ -1,7 +1,4 @@
 #!/usr/bin/env sh
-# Builds every machine and standalone home this platform can build, or only
-# the flake attributes given as arguments, so a package that evaluates but
-# fails to build shows up before a deploy.
 
 set -eu
 
@@ -15,7 +12,6 @@ if test "$#" -eq 0; then
     set -- ${attrs}
 fi
 
-# prefix every attribute with the flake reference
 n=$#
 while test "${n}" -gt 0; do
     set -- "$@" "${flake}#$1"

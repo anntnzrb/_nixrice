@@ -5,7 +5,6 @@
   ...
 }:
 {
-  # One-shot cleanup of leftover Espanso state on homes without Espanso.
   config = lib.mkIf (!config.services.espanso.enable) {
     home.activation.cleanupEspanso =
       config.lib.dag.entryAfter [ "writeBoundary" ]

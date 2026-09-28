@@ -1,8 +1,3 @@
-# What every machine and home actually configures, as comparable data:
-# package sets, files, users, services, launchd agents, activation scripts,
-# Homebrew, aliases, env vars and PATH order. Store hashes are normalised
-# and sets sorted, so reordering imports compares equal; report.sh diffs two
-# of these.
 { flake }:
 let
   f = builtins.getFlake flake;
@@ -24,7 +19,6 @@ let
 
   pkgs =
     ps: lib.sort lib.lessThan (lib.unique (map (p: norm (p.drvPath or p)) ps));
-  # repo files by content, so moving one is not a change
   source =
     s:
     let
@@ -112,7 +106,6 @@ let
         (c.environment.loginShellInit or "")
       ]
     );
-    # generated (derivation) files such as nix.conf only show by name above
     nixSettings = try (
       lib.mapAttrs (_: v: norm (builtins.toJSON v)) c.nix.settings
     );
@@ -124,7 +117,6 @@ let
     inherit (c.system) stateVersion;
   };
 
-  # long texts become a prefix plus a content hash: every change stays visible
   shorten =
     v:
     if builtins.isAttrs v then

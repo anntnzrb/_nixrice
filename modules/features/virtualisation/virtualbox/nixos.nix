@@ -21,7 +21,7 @@ in
       host = {
         enable = true;
 
-        inherit (cfg) enableExtensionPack; # causes recompilation
+        inherit (cfg) enableExtensionPack;
       };
     };
 

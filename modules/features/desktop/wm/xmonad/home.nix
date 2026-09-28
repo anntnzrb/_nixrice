@@ -14,7 +14,6 @@ in
 {
   imports = [
     inputs.self.homeModules.xsession
-    # $TERMINAL is spawned by the M-<Return> binding in xmonad.hs
     inputs.self.homeModules.session
   ];
 

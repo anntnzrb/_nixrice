@@ -11,8 +11,6 @@ let
   cfg = config.liberion.cli.ssh;
 in
 {
-  # Personal client defaults. Fleet hosts come from the system ssh_config
-  # (`liberion.network.ssh`), which ssh reads after this file.
   options.liberion.cli.ssh = {
     identityFile = mkOpt' str "~/.ssh/id_ed25519";
     includes = mkOpt' (listOf str) [ ];

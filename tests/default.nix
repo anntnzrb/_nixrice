@@ -1,6 +1,3 @@
-# Eval-time tests, run by `nix flake check` (checks.<system>.tests): module
-# discovery and wiring in lib/ against tests/fixtures, and access invariants
-# of every real machine. Evaluates to the list of failures; empty = pass.
 { lib, self }:
 let
   inherit (lib.liberion) identity load;
@@ -25,7 +22,6 @@ let
         "tool"
       ];
     };
-    # a home-only feature is no system module; a darwin-only profile no nixos one
     testNixosNames = {
       expr = lib.attrNames tree.modules.nixos;
       expected = [
@@ -41,7 +37,6 @@ let
         "svc"
       ];
     };
-    # class file + system.nix, and home.nix routed to the owner; `/_` skipped
     testSystemFeature = {
       expr = tree.modules.nixos.svc;
       expected = {
@@ -64,7 +59,6 @@ let
       expr = tree.modules.home.tool;
       expected = tool;
     };
-    # base modules never create a Home Manager user
     testBaseNotRouted = {
       expr = tree.modules.nixos.default.imports;
       expected = [
@@ -116,8 +110,6 @@ let
     };
   };
 
-  # Every machine stays reachable over fleet SSH: the owner's admin key, the
-  # fleet port, and (NixOS) no password logins and the port open.
   access =
     name: config:
     let

@@ -4,7 +4,6 @@ let
   inherit (prev.stdenv.hostPlatform) system;
 in
 {
-  # unstable package set for fast-moving tools
   unstable = import inputs.nixpkgs-unstable {
     inherit system;
     config.allowUnfree = true;

@@ -1,7 +1,5 @@
-# The toolset every liberion home gets.
 { inputs, ... }: {
   imports = with inputs.self.homeModules; [
-    # cli
     btop
     direnv
     fastfetch
@@ -13,7 +11,6 @@
     yt-dlp
     zoxide
 
-    # dev
     bun
     husky
     node
@@ -21,7 +18,6 @@
     repomix
     uv
 
-    # shell and editor
     neovim
     starship
     tmux

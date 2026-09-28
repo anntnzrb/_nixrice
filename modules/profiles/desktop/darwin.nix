@@ -1,4 +1,3 @@
-# Machines tagged `desktop` (macOS).
 { inputs, ... }: {
   imports = with inputs.self.darwinModules; [
     dock

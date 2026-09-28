@@ -9,7 +9,6 @@
         enable = true;
         systemService = true;
 
-        # devices & folders will not persist if configured via UI
         overrideDevices = true;
         overrideFolders = true;
 

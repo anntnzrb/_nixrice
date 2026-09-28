@@ -1,4 +1,3 @@
-# Home Manager baseline for every liberion home.
 { lib, config, ... }:
 let
   inherit (lib.liberion.module) mkOpt';
@@ -20,7 +19,7 @@ in
       stateVersion = lib.mkDefault "22.05";
     };
 
-    # disable manual generation (workaround for home-manager#7935)
+    # workaround for home-manager#7935
     manual = {
       manpages.enable = false;
       html.enable = false;

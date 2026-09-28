@@ -14,8 +14,6 @@ in
     browser = lib.mkPackageOption pkgs "firefox" { };
   };
 
-  # exported for scripts and configs that read the environment
-  # (hyprland.conf, awesome rc.lua, xmonad.hs)
   config.home.sessionVariables = lib.mapAttrs (_: lib.mkDefault) {
     TERMINAL = lib.getExe cfg.apps.terminal;
     FILE = lib.getExe cfg.apps.fileManager;

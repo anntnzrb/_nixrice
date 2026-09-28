@@ -2,29 +2,25 @@
   system.defaults = {
     dock = {
       autohide = true;
-      expose-group-apps = true; # shows all apps instead of per-space
+      expose-group-apps = true;
       largesize = 88;
       magnification = true;
       mineffect = "scale";
       orientation = "left";
       show-process-indicators = true;
       show-recents = false;
-      showhidden = false; # hide the hidden lol
+      showhidden = false;
       static-only = true;
       tilesize = 40;
     };
 
     CustomUserPreferences.NSGlobalDomain."com.apple.dock" = {
-      ## gestures
       showAppExposeGestureEnabled = 0;
 
-      # 3f up for mission-control
       showMissionControlGestureEnabled = 1;
 
-      # 3f shows launchpad
       showLaunchpadGestureEnabled = 0;
 
-      # 3f shows desktop
       showDesktopGestureEnabled = 0;
     };
   };

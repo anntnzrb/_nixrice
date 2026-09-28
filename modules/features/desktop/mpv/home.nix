@@ -7,27 +7,18 @@
     ];
 
     config = {
-      # disabled because of uosc script
       osd-bar = false;
       border = false;
     };
 
     bindings =
       let
-        # Seek {for,back}-ward by a number of seconds
-        # seek: number -> string
         seek = val: "no-osd seek ${toString val} exact";
 
-        # {In,De}-crease volume by a percentage value
-        # speed: number -> string
         speed = val: "add speed ${toString val}";
 
-        # {In,De}-crease volume by a percentage value
-        # vol: number -> string
         vol = val: "add volume ${toString val}";
 
-        # Disable a keybinding
-        # disabled -> string
         disabled = "noop";
       in
       {

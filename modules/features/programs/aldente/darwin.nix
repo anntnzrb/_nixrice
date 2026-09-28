@@ -1,4 +1,3 @@
-# AlDente battery limiter, launched at login.
 { inputs, ... }: {
   imports = [ inputs.self.darwinModules.homebrew ];
 
@@ -9,8 +8,6 @@
       launchAtLogin = false;
     };
 
-    # Opens the app via /usr/bin/open; launchd supervises open, not the GUI
-    # process.
     launchd.user.agents.aldente = {
       serviceConfig = {
         ProgramArguments = [

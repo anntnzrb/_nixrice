@@ -12,7 +12,7 @@ let
     pkg:
     (pkgs.emacsPackagesFor pkg).emacsWithPackages (
       epkgs: with epkgs; [
-        pkgs.coreutils-prefixed # provides gls
+        pkgs.coreutils-prefixed
         vterm
       ]
     );
@@ -26,7 +26,6 @@ in
     home.packages = [ cfg.package ];
 
     home.shellAliases = {
-      # NOTE: 'disown' is not POSIX
       eee = "${lib.getExe' pkgs.coreutils "nohup"} ${lib.getExe cfg.package} >/tmp/emacs-nohup.out 2>&1 & disown";
     };
   };

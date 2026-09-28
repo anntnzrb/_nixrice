@@ -1,6 +1,4 @@
 #!/bin/sh
-# Amp orb resume (also run by setup): a restored snapshot has no swap enabled.
-# Nothing to clean up, so Ctrl+C and kill keep their default: stop at once.
 set -eu
 
 swaps=$(/sbin/swapon --show --noheadings)

@@ -14,8 +14,6 @@ working_directory="${3-}"
 
 editor_command="${EDITOR:-nvim} ."
 
-# Layout profile derived from a single base unit.
-# Default math preserves existing geometry: 70x30 master, 7-row scratch.
 layout_unit_size="${TMUX_COCKPIT_LAYOUT_UNIT_SIZE:-10}"
 master_width_units="${TMUX_COCKPIT_MASTER_WIDTH_UNITS:-7}"
 master_height_units="${TMUX_COCKPIT_MASTER_HEIGHT_UNITS:-3}"
@@ -27,11 +25,9 @@ target_scratch_height_rows=$((target_master_height_rows / scratch_height_divisor
 
 tmux rename-window -t "${window_id}" "${project_name}"
 
-# Reset current window to one pane before rebuilding the cockpit.
 tmux kill-pane -a -t "${window_id}"
 tmux respawn-pane -k -t "${window_id}.1" -c "${working_directory}"
 
-# Right column: top editor, bottom git TUI.
 right_top_pane_id="$(
     tmux split-window \
         -d \
@@ -45,7 +41,6 @@ right_top_pane_id="$(
 
 tmux split-window -d -v -t "${right_top_pane_id}" -c "${working_directory}" "lazygit"
 
-# Left column: tiny scratch pane under the master pane.
 tmux split-window -d -v -l "${target_scratch_height_rows}" -t "${window_id}.1" -c "${working_directory}"
 
 tmux resize-pane -t "${window_id}.1" -x "${target_master_width_columns}" -y "${target_master_height_rows}" \

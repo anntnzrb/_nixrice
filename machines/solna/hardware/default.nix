@@ -26,7 +26,7 @@ in
   zramSwap = {
     enable = true;
     algorithm = "zstd";
-    memoryPercent = 50; # ~4GB
+    memoryPercent = 50;
   };
 
   powerManagement = {

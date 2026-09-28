@@ -1,4 +1,3 @@
-# Fleet inventory: machines, tags and service instances.
 { config, lib, ... }:
 let
   liberion = import ./lib { inherit lib; };
@@ -6,12 +5,8 @@ let
 in
 {
   meta.name = "liberion";
-  # tailscale magicdns domain used for inter-machine clan communication
   meta.domain = "trex-gamut.ts.net";
 
-  # every machine gets its class's base plus the profile of each of its tags
-  # (modules/profiles/<tag>); keys come from machines/, since clan derives
-  # inventory.machines from these
   machines =
     lib.mapAttrs
       (
@@ -25,7 +20,6 @@ in
       )
       (lib.filterAttrs (_: kind: kind == "directory") (builtins.readDir ./machines));
 
-  # tags are traits (modules/profiles/<tag>); clan adds all/nixos/darwin itself
   inventory.machines = {
     oulu = {
       description = "Lenovo V15 G4 IRU - Intel i7-1355U Build Server";
@@ -90,12 +84,9 @@ in
     };
   };
 
-  # in-repo clan services, used below with module.input = "self"
   modules.remote-builders = ./modules/services/remote-builders;
 
   inventory.instances = {
-    # x86_64-linux builds for the Macs: each client uses its defaultBuilders
-    # unless a command picks another builder (/etc/nix/builders/<name>)
     remote-builders = {
       module = {
         input = "self";
@@ -108,10 +99,6 @@ in
       roles.client.machines.beirut.settings.defaultBuilders = [ "munich" ];
     };
 
-    # sshd + users are scoped by tag to machines installed through clan: users
-    # sets mutableUsers = false and a generated password, sshd rotates host
-    # keys. Only tag a machine `server` once `clan vars` exist for it
-    # (oulu, munich, solna and zadar have them; beirut and incheon do not).
     sshd = {
       roles.server.tags = [ "server" ];
       roles.server.settings.authorizedKeys.annt-liberion = identity.keys.admin;
@@ -126,11 +113,9 @@ in
       };
     };
 
-    # every machine is reachable over tailscale magicdns as <user>@<name>:<sshPort>
     internet.roles.default = {
       settings = {
         inherit (identity) user;
-        # openssh; 22 on the tailnet is tailscale ssh (no clan host keys)
         port = identity.sshPort;
       };
       machines = lib.mapAttrs (host: _: {

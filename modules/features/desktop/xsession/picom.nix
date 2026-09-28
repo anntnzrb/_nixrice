@@ -16,16 +16,11 @@ in
       enable = true;
       inherit (cfg) backend vSync;
 
-      # opacity
       activeOpacity = 1.0;
       inactiveOpacity = 1.0;
       menuOpacity = 1.0;
-
-      # animations
       fade = true;
       fadeDelta = 5;
-
-      # shadows
       shadow = true;
       shadowOpacity = 0.8;
     };

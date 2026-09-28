@@ -1,4 +1,3 @@
-# NixOS baseline for every liberion host.
 { lib, ... }:
 let
   defaultLocale = "en_US.UTF-8";
@@ -21,13 +20,9 @@ in
     ] (_: defaultLocale);
   };
 
-  # no NixOS manual (nixos-help): building it evaluates every option
   documentation.nixos.enable = false;
 
-  # liberion hosts own their defaults; clan-installed machines opt in
   clan.core.enableRecommendedDefaults = lib.mkDefault false;
 
-  # the channel tarball behind clan-core/nixpkgs ships programs.sqlite, which
-  # would switch command-not-found on; keep it off as before
   programs.command-not-found.enable = lib.mkDefault false;
 }

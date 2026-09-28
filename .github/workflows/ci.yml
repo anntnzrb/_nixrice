@@ -9,15 +9,11 @@ on:
 permissions:
   contents: read
 
-# a newer push to the same branch or PR supersedes the running checks
 concurrency:
   group: ci-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
 
 jobs:
-  # lint, evaluate every machine and home (darwin too: --all-systems), flake
-  # checks incl. tests/. Linux only: a macOS copy re-checked the same things,
-  # and build.yml builds the Macs for real.
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -28,8 +24,6 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@v23
 
-      # read-only: locked flake inputs and builds come from our cache, not from
-      # (sometimes flaky) upstream hosts
       - uses: cachix/cachix-action@v17
         with:
           name: anntnzrb
@@ -38,8 +32,6 @@ jobs:
       - name: Check flake
         run: scripts/ci/check-flake.sh
 
-  # every feature and profile imported into a real host, split across runners
-  # (evaluation-bound: one runner took ~13 min)
   probe:
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -54,8 +46,6 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@v23
 
-      # read-only: locked flake inputs and builds come from our cache, not from
-      # (sometimes flaky) upstream hosts
       - uses: cachix/cachix-action@v17
         with:
           name: anntnzrb
@@ -67,7 +57,6 @@ jobs:
           PROBE_SHARDS: 8
         run: scripts/ci/check-probes.sh
 
-  # the required check: passes only if every probe shard did
   probes:
     needs: probe
     if: always()
@@ -79,7 +68,6 @@ jobs:
           RESULT: ${{ needs.probe.result }}
         run: test "$RESULT" = success
 
-  # what the pull request changes on each machine and home
   report:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
@@ -92,8 +80,6 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@v23
 
-      # read-only: locked flake inputs and builds come from our cache, not from
-      # (sometimes flaky) upstream hosts
       - uses: cachix/cachix-action@v17
         with:
           name: anntnzrb

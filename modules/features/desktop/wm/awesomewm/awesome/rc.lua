@@ -1,15 +1,12 @@
 pcall(require, "luarocks.loader")
 
-local awful = require("awful") -- window manager
-local beautiful = require("beautiful") -- theming
-local gears = require("gears") -- utils
-local hotkeys_popup = require("awful.hotkeys_popup") -- hotkey help
-local menubar = require("menubar") -- app launcher
-local naughty = require("naughty") -- notifications
+local awful = require("awful")
+local beautiful = require("beautiful")
+local gears = require("gears")
+local hotkeys_popup = require("awful.hotkeys_popup")
+local menubar = require("menubar")
+local naughty = require("naughty")
 
--- ----------------------------------------------------------------------------
--- aliases
--- ----------------------------------------------------------------------------
 local csignal_connect = client.connect_signal
 
 local awbutton = require("awful.button")
@@ -22,9 +19,6 @@ local awwidget = require("awful.widget")
 local wilayout = require("wibox.layout")
 local wiwidget = require("wibox.widget")
 
--- ----------------------------------------------------------------------------
--- globals
--- ----------------------------------------------------------------------------
 local terminal = os.getenv("TERMINAL") or "alacritty" or "xterm"
 local browser = os.getenv("BROWSER") or "firefox"
 local keys = {
@@ -38,9 +32,6 @@ local mbuttons = {
 }
 
 do
-    -- ------------------------------------------------------------------------
-    -- startup
-    -- ------------------------------------------------------------------------
     if awesome.startup_errors then
         naughty.notify({
             preset = naughty.config.presets.critical,
@@ -64,23 +55,15 @@ do
         in_error = false
     end)
 
-    -- auto focus new clients
     require("awful.autofocus")
 end
 
 do
-    -- ------------------------------------------------------------------------
-    -- themes
-    -- ------------------------------------------------------------------------
-    -- themes, icons, fonts, wallpapers
     beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
     beautiful.font = "Iosevka Comfy Motion Semilight 14"
 end
 
 do
-    -- ------------------------------------------------------------------------
-    -- layouts
-    -- ------------------------------------------------------------------------
     awful.layout.layouts = {
         awful.layout.suit.tile.right,
         awful.layout.suit.floating,
@@ -88,9 +71,6 @@ do
 end
 
 do
-    -- ------------------------------------------------------------------------
-    -- menu
-    -- ------------------------------------------------------------------------
     menubar.utils.terminal = terminal
 
     local launcher_main = awwidget.launcher({
@@ -123,13 +103,9 @@ do
         }),
     })
 
-    -- ------------------------------------------------------------------------
-    -- bar
-    -- ------------------------------------------------------------------------
     awscreen.connect_for_each_screen(function(s)
         awtag({ "𝛼", "ϐ", "ℽ", "𝛿", "ε", "ϝ", "ͷ", "ϛ", "𝜁" }, s, awful.layout.layouts[1])
 
-        -- layoutbox
         local layoutbox = awwidget.layoutbox(s)
         layoutbox:buttons(gears.table.join(
             awbutton({}, mbuttons.left, function()
@@ -140,27 +116,22 @@ do
             end)
         ))
 
-        -- taglist
         local taglist = awwidget.taglist({
             screen = s,
             filter = awwidget.taglist.filter.all,
             buttons = gears.table.join(
-                -- focus tag
                 awbutton({}, mbuttons.left, function(t)
                     t:view_only()
                 end),
 
-                -- move focused client to tag
                 awbutton({ keys.super }, mbuttons.middle, function(t)
                     if client.focus then
                         client.focus:move_to_tag(t)
                     end
                 end),
 
-                -- toggle tag view
                 awbutton({}, mbuttons.right, awtag.viewtoggle),
 
-                -- toggle focused client on tag
                 awbutton({ keys.super }, mbuttons.right, function(t)
                     if client.focus then
                         client.focus:toggle_tag(t)
@@ -169,7 +140,6 @@ do
             ),
         })
 
-        -- create wibar
         local bar = awful.wibar({
             screen = s,
             position = "top",
@@ -179,17 +149,17 @@ do
         bar:setup({
             layout = wilayout.align.horizontal,
 
-            { -- left
+            {
                 layout = wilayout.fixed.horizontal,
 
                 launcher_main,
                 taglist,
                 awwidget.prompt(),
             },
-            { -- middle
+            {
                 layout = wilayout.fixed.horizontal,
             },
-            { -- right
+            {
                 layout = wilayout.fixed.horizontal,
 
                 awwidget.keyboardlayout(),
@@ -202,9 +172,6 @@ do
 end
 
 do
-    -- ------------------------------------------------------------------------
-    -- binds: mouse
-    -- ------------------------------------------------------------------------
     local clientbuttons = gears.table.join(
         awbutton({}, mbuttons.left, function(c)
             c:emit_signal("request::activate", "mouse_click", { raise = true })
@@ -219,11 +186,7 @@ do
         end)
     )
 
-    -- ----------------------------------------------------------------------------
-    -- binds: keys
-    -- ----------------------------------------------------------------------------
     local globalkeys = gears.table.join(
-        -- awesome
         awkey({ keys.super, keys.meta }, "r", awesome.restart, {
             description = "reload awesome",
             group = "awesome",
@@ -233,7 +196,6 @@ do
             group = "awesome",
         }),
 
-        -- prompts
         awkey({ keys.super }, "r", function()
             awscreen.focused().mypromptbox:run()
         end, {
@@ -241,7 +203,6 @@ do
             group = "launcher",
         }),
 
-        -- menubar
         awkey({ keys.super, "Shift" }, "d", function()
             menubar.show()
         end, {
@@ -251,7 +212,6 @@ do
     )
 
     local clientkeys = gears.table.join(
-        -- focus/move/swap
         awkey({ keys.super }, "j", function()
             awclient.focus.byidx(1)
         end, {
@@ -277,7 +237,6 @@ do
             group = "client",
         }),
 
-        -- resizing
         awkey({ keys.super }, "l", function()
             awtag.incmwfact(0.01)
         end, {
@@ -291,7 +250,6 @@ do
             group = "layout",
         }),
 
-        -- screens
         awkey({ keys.super, "Shift" }, "bracketleft", function()
             awscreen.focus_relative(1)
         end, {
@@ -311,7 +269,6 @@ do
             group = "client",
         }),
 
-        -- misc
         awkey({ keys.super, "Shift" }, "q", function(c)
             c:kill()
         end, {
@@ -331,12 +288,10 @@ do
         })
     )
 
-    -- bind all number-row-keys to tags
     for i = 1, 9 do
         globalkeys = gears.table.join(
             globalkeys,
 
-            -- view tag
             awkey({ keys.super }, "#" .. i + 9, function()
                 local tag = awscreen.focused().tags[i]
                 if tag then
@@ -347,7 +302,6 @@ do
                 group = "tag",
             }),
 
-            -- toggle tag view
             awkey({ keys.super, "Control" }, "#" .. i + 9, function()
                 local tag = awscreen.focused().tags[i]
                 if tag then
@@ -358,7 +312,6 @@ do
                 group = "tag",
             }),
 
-            -- move client to tag
             awkey({ keys.super, "Shift" }, "#" .. i + 9, function()
                 if client.focus then
                     local tag = client.focus.screen.tags[i]
@@ -371,7 +324,6 @@ do
                 group = "tag",
             }),
 
-            -- toggle tag on focused client
             awkey({ keys.super, "Control", "Shift" }, "#" .. i + 9, function()
                 if client.focus then
                     local tag = client.focus.screen.tags[i]
@@ -386,14 +338,9 @@ do
         )
     end
 
-    -- set the keys
     root.keys(globalkeys)
 
-    -- -- ---------------------------------------------------------------------
-    -- rules
-    -- -- ---------------------------------------------------------------------
     awful.rules.rules = {
-        -- all clients
         {
             rule = {},
             properties = {
@@ -417,7 +364,6 @@ do
             properties = { floating = true },
         },
 
-        -- tag 1 clients
         {
             rule_any = {
                 class = {
@@ -428,7 +374,6 @@ do
             properties = { tag = "1" },
         },
 
-        -- titlebars for normal clients and dialogs
         {
             rule_any = { type = { "normal", "dialog" } },
             properties = { titlebars_enabled = true },
@@ -437,17 +382,12 @@ do
 end
 
 do
-    -- ------------------------------------------------------------------------
-    -- signals
-    -- ------------------------------------------------------------------------
-    -- prevent clients from being unreachable after screen changes
     csignal_connect("manage", function(c)
         if awesome.startup and not c.size_hints.user_position and not c.size_hints.program_position then
             awful.placement.no_offscreen(c)
         end
     end)
 
-    -- focus follows mouse
     csignal_connect("mouse::enter", function(c)
         c:emit_signal("request::activate", "mouse_enter", { raise = false })
     end)

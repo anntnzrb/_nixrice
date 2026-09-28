@@ -9,11 +9,9 @@
       clock_format = "%H:%M";
       temp_scale = "celsius";
 
-      # proc
       proc_tree = true;
       proc_sorting = "memory";
 
-      # net
       net_auto = false;
       net_sync = false;
       net_download = 100;

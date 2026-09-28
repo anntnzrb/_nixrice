@@ -2,7 +2,6 @@
   imports = with inputs.self.nixosModules; [
     ./hardware
     networkmanager
-    # no dual-boot. systemd-boot suffices
     systemd-boot
   ];
 

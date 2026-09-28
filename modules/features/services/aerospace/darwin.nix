@@ -14,7 +14,6 @@ let
   };
   workspaces = lib.genAttrs (map toString (lib.range 0 9)) lib.id;
 
-  # { key = arg; } -> { "<mods>-<key>" = "<command> <arg>"; }
   bind =
     mods: command:
     lib.mapAttrs' (
@@ -103,8 +102,6 @@ in
       ${pkgs.yashiki}/bin/yashiki stop >/dev/null 2>&1 || :
     '';
 
-    # goodies
-    # cf. https://nikitabobko.github.io/AeroSpace/goodies
     system.defaults.NSGlobalDomain = {
       NSWindowShouldDragOnGesture = true;
       NSAutomaticWindowAnimationsEnabled = true;

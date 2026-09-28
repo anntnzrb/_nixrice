@@ -9,7 +9,6 @@ in
 
     package = if isDarwin then null else pkgs.vscode;
 
-    # extensions can be installed or updated manually
     mutableExtensionsDir = true;
   };
 

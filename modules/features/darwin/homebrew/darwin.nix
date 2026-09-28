@@ -1,5 +1,3 @@
-# Homebrew (via nix-homebrew) for GUI apps that do not belong in the Nix store.
-# Features and machines pick apps by name: `liberion.homebrew.apps = [ "vlc" ];`.
 {
   lib,
   config,
@@ -10,8 +8,6 @@ let
   casks = {
     aldente = "aldente";
     obs = "obs";
-    # OrbStack updates itself and installs a privileged helper, so it lives in
-    # /Applications as a cask rather than in the read-only Nix store.
     orbstack = "orbstack";
     raycast = "raycast";
     rustdesk = "rustdesk";

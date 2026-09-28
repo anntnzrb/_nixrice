@@ -1,4 +1,3 @@
-# tailscaled with tailscale ssh; the node takes the machine's hostname.
 { config, ... }: {
   services.tailscale = {
     enable = true;

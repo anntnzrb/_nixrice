@@ -1,6 +1,4 @@
 #!/usr/bin/env sh
-# Prints "<class>.<name> <drvPath>" for every machine and standalone home of
-# the flake at $1 (default: .). Two identical runs prove a refactor is pure.
 
 set -eu
 

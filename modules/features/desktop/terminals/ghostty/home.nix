@@ -12,8 +12,6 @@ let
       inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.ghostty-bin
     else
       pkgs.ghostty;
-  # Ghostty's Darwin bundle ships numeric terminfo dirs; compiling a small DB
-  # keeps consumers like Codex from failing terminal capability lookup.
   ghosttyTerminfo =
     pkgs.runCommand "ghostty-terminfo" { nativeBuildInputs = [ pkgs.ncurses ]; }
       ''
@@ -37,14 +35,13 @@ in
       font-size = 16;
       macos-option-as-alt = true;
       keybind = [
-        "shift+enter=text:\n" # newline
+        "shift+enter=text:\n"
         "super+c=copy_to_clipboard"
         "super+v=paste_from_clipboard"
         "super+comma=open_config"
         "super+n=new_window"
         "super+t=new_tab"
       ]
-      # super+{digit_,}N switches to tab N
       ++ lib.concatMap (
         n:
         map (key: "super+${key}${n}=goto_tab:${n}") [
@@ -63,10 +60,7 @@ in
         "super+ctrl+f=toggle_fullscreen"
       ];
     }
-    // lib.optionalAttrs isDarwin {
-      # Prefer the normalized store DB over Ghostty's app-bundle TERMINFO.
-      env = "TERMINFO=${ghosttyTerminfo}";
-    }
+    // lib.optionalAttrs isDarwin { env = "TERMINFO=${ghosttyTerminfo}"; }
     // {
       "config-file" = "?${config.xdg.configHome}/ghostty/local.conf";
     };

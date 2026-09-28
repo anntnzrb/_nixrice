@@ -6,7 +6,7 @@
 
     nvidia = {
       open = false;
-      nvidiaSettings = false; # GUI tool; no desktop here
+      nvidiaSettings = false;
       modesetting.enable = true;
     };
   };

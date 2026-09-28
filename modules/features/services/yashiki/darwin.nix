@@ -11,7 +11,6 @@ let
     flag: value: actions:
     map (a: cmd "rule-add --${flag} ${lib.escapeShellArg value} ${a}") actions;
 
-  # tag N (key N, 0 for the tenth) is bitmask 2^(N-1)
   tagBindings = lib.concatLists (
     lib.imap0
       (

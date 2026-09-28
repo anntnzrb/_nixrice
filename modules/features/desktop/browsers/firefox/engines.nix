@@ -1,10 +1,8 @@
-# Firefox search engines: attr = engine name, aliases, icon, url template and
-# its query params as ordered [ name value ] pairs.
 let
   engine = name: aliases: icon: template: params: {
     inherit name icon;
     definedAliases = aliases;
-    updateInterval = 24 * 60 * 60 * 7 * 1000; # 1 week in ms
+    updateInterval = 24 * 60 * 60 * 7 * 1000;
     urls = [
       {
         inherit template;
@@ -30,7 +28,6 @@ let
   ];
 in
 {
-  # default
   perplexity =
     engine "Perplexity" [ "@p" "@perplexity" ]
       "https://www.perplexity.ai/favicon.ico"
@@ -41,8 +38,6 @@ in
           q
         ]
       ];
-
-  # nix
   nixpkgs =
     engine "Nix Packages" [ "@nixp" ] nixIcon
       "https://search.nixos.org/packages?channel=unstable"
@@ -79,8 +74,6 @@ in
   gh-home-manager =
     engine "GitHub: Home-Manager" [ "@gnixhm" ] nixIcon "https://github.com/search"
       (githubCode "repo:nix-community/home-manager ${q}");
-
-  # misc
   arch-wiki =
     engine "Arch Wiki" [ "@aw" ] "https://wiki.archlinux.org/favicon.ico"
       "https://wiki.archlinux.org/index.php"

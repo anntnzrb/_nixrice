@@ -12,7 +12,6 @@ let
   cfg = config.liberion.desktop.window-managers.xorg.awesomewm;
 in
 {
-  # rc.lua reads $TERMINAL and $BROWSER
   imports = with inputs.self.homeModules; [
     session
     xsession

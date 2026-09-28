@@ -1,9 +1,3 @@
-# Remote x86_64-linux builders over ssh-ng (clan.service, registered in
-# clan.nix). `builder` machines accept builds from the owner; `client`
-# machines (nix-darwin) get, per builder, its pinned openssh host key, a
-# short ssh ConnectTimeout and a machines file, so any command can pick one:
-# `nix build ... --builders @/etc/nix/builders/<name>` (or `--builders ''`
-# to build locally). `defaultBuilders` are used when a command picks none.
 { lib, ... }: {
   _class = "clan.service";
   manifest.name = "remote-builders";
@@ -38,19 +32,15 @@
         let
           builders = lib.mapAttrs (_: m: m.settings.maxJobs) roles.builder.machines;
           userName = lib.liberion.identity.user;
-          # clan machines reached over tailscale magicdns on their openssh
-          # port (22 is taken by tailscale ssh, whose host key is not the
-          # clan-managed one)
           host = name: "${name}.${config.clan.core.settings.domain}";
           port = lib.liberion.identity.sshPort;
-          sshKey = "/Users/${userName}/.ssh/liberion"; # the daemon (root) uses the fleet key
+          sshKey = "/Users/${userName}/.ssh/liberion";
           features = [
             "benchmark"
             "big-parallel"
             "kvm"
             "nixos-test"
           ];
-          # one builder as a Nix machines-file line
           machineLine =
             name: maxJobs:
             "ssh-ng://${userName}@${host name}:${toString port} x86_64-linux ${sshKey} ${toString maxJobs} 1 ${lib.concatStringsSep "," features} - -";
@@ -84,13 +74,11 @@
             }
           ) builders;
 
-          # nix sets no ssh timeout; fail over quickly when a builder is offline
           programs.ssh.extraConfig = lib.concatMapStrings (name: ''
             Host ${host name}
               ConnectTimeout 5
           '') (lib.attrNames builders);
 
-          # pin the clan-generated openssh host keys of the builders
           programs.ssh.knownHosts = lib.mapAttrs' (
             name: _:
             lib.nameValuePair "${name}-builder" {

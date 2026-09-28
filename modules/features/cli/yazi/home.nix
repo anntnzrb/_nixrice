@@ -8,9 +8,9 @@
     settings = {
       mgr = {
         ratio = [
-          1 # left
-          3 # middle
-          3 # right
+          1
+          3
+          3
         ];
         sort_by = "natural";
         sort_sensitive = true;

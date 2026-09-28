@@ -12,7 +12,6 @@ let
     ints
     str
     ;
-  # an absolute path outside the store
   dir = lib.types.pathWith {
     absolute = true;
     inStore = false;
@@ -197,8 +196,6 @@ in
         };
       };
 
-      # Stage the sleepwatcher binary to a stable path via temp file + rename,
-      # so launchd always executes the same absolute path.
       home.activation."whatsapp-sleepwatcher-stable-executable" =
         config.lib.dag.entryBetween [ "setupLaunchAgents" ] [ "writeBoundary" ]
           ''

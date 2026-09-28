@@ -1,7 +1,7 @@
 { inputs, config, ... }: {
   imports = with inputs.self.nixosModules; [
     ./hardware
-    disko-xfs # whole NVMe; no more dual-boot
+    disko-xfs
     docker
     essentials
     fish

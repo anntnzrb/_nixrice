@@ -1,25 +1,4 @@
 # shellcheck shell=sh
-# WhatsApp sleep/display-sleep quit hook.
-#
-# Runs from sleepwatcher when macOS is about to sleep or when the display goes
-# to sleep. This is intentionally separate from the idle guard: the idle guard
-# tracks frontmost activity over time, while this hook reacts to explicit power
-# transition events.
-#
-# Arguments, in order:
-# 1. bundle_id            exact app bundle id to quit
-# 2. app_name             friendly name for logs
-# 3. mode                 term | term-then-kill
-# 4. kill_grace_seconds   wait between SIGTERM and SIGKILL
-#
-# Behavior:
-# - resolve the target app via exact bundle id
-# - refuse to act if the target is ambiguous
-# - send SIGTERM first
-# - optionally re-resolve and SIGKILL the same instance if it survives
-#
-# Note: sleepwatcher documents that sleep hooks must finish quickly. Keep the
-# grace period below 15 seconds.
 
 set -eu
 

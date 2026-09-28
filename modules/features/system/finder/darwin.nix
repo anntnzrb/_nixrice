@@ -33,7 +33,6 @@ in
       ShowMountedServersOnDesktop = true;
       ShowRemovableMediaOnDesktop = true;
 
-      # multi-file tab view
       FinderSpawnTab = true;
     };
   };

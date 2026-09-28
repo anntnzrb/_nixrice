@@ -1,4 +1,3 @@
-# Filesystems by label: btrfs root (NIX-ROOT) and vfat /boot (NIX-BOOT). Mount options and swap stay with the machine.
 {
   fileSystems =
     let

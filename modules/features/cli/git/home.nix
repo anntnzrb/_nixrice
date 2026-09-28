@@ -7,7 +7,6 @@ in
 {
   options.liberion.cli.git = {
     diff = {
-      # TODO: check https://github.com/Wilfred/difftastic/issues/637
       difftastic.enable = mkOptDisabled';
     };
 

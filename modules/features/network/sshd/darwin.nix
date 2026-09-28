@@ -6,10 +6,6 @@ in
   config = {
     services.openssh.enable = true;
 
-    # macOS sshd is socket-activated from Apple's stock ssh.plist, whose
-    # socket is fixed at port 22, so a `Port` directive in sshd_config has no
-    # effect and nix-darwin's services.openssh has no port option. Run a
-    # second foreground sshd for cfg.port instead.
     launchd.daemons = lib.mkIf (cfg.port != 22) {
       "sshd-${toString cfg.port}" = {
         serviceConfig = {
