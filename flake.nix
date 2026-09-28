@@ -50,6 +50,26 @@
         pkgsForSystem = system: pkgsFor.${system};
       };
 
+      src = lib.fileset.toSource {
+        root = ./.;
+        fileset = lib.fileset.unions [
+          ./flake.nix
+          ./clan.nix
+          ./identity.nix
+          ./justfile
+          ./.agents
+          ./.github
+          ./bin
+          ./homes
+          ./lib
+          ./machines
+          ./modules
+          ./overlays
+          ./scripts
+          ./tests
+        ];
+      };
+
       treefmtEval = forAllSystems (
         system:
         treefmt-nix.lib.evalModule pkgsFor.${system} {
@@ -107,7 +127,7 @@
       formatter = forAllSystems (system: treefmtEval.${system}.config.build.wrapper);
 
       checks = forAllSystems (system: {
-        formatting = treefmtEval.${system}.config.build.check self;
+        formatting = treefmtEval.${system}.config.build.check src;
 
         tests =
           let
@@ -119,25 +139,7 @@
             throw "tests failed:\n${lib.concatStringsSep "\n" failures}";
 
         pre-commit-check = git-hooks.lib.${system}.run {
-          src = lib.fileset.toSource {
-            root = ./.;
-            fileset = lib.fileset.unions [
-              ./flake.nix
-              ./clan.nix
-              ./identity.nix
-              ./justfile
-              ./.agents
-              ./.github
-              ./bin
-              ./homes
-              ./lib
-              ./machines
-              ./modules
-              ./overlays
-              ./scripts
-              ./tests
-            ];
-          };
+          inherit src;
           hooks = {
             treefmt = {
               enable = true;
