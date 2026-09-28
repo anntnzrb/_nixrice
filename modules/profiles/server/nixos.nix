@@ -26,11 +26,19 @@ in
 
   powerManagement.cpuFreqGovernor = "performance";
 
-  systemd.targets = {
-    sleep.enable = false;
-    suspend.enable = false;
-    hibernate.enable = false;
-    hybrid-sleep.enable = false;
+  systemd = {
+    enableEmergencyMode = false;
+    settings.Manager = {
+      RuntimeWatchdogSec = lib.mkDefault "15s";
+      RebootWatchdogSec = lib.mkDefault "30s";
+      KExecWatchdogSec = lib.mkDefault "1m";
+    };
+    targets = {
+      sleep.enable = false;
+      suspend.enable = false;
+      hibernate.enable = false;
+      hybrid-sleep.enable = false;
+    };
   };
 
   zramSwap = {
