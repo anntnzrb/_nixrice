@@ -75,7 +75,6 @@ in
           (toWorkspace 2 "com.mitchellh.ghostty")
           (toWorkspace 2 "com.raphaelamorim.rio")
           (toWorkspace 3 "com.microsoft.VSCode")
-          (toWorkspace 4 "net.whatsapp.WhatsApp")
           (toWorkspace 4 "com.openai.chat")
           (rule { } [ "layout floating" ])
         ];
