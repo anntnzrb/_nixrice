@@ -26,8 +26,17 @@ let
         fsType = "ext4";
       };
     };
+    inventory.machines.darwin-probe.machineClass = "darwin";
+    machines.darwin-probe = {
+      imports = [
+        f.darwinModules.default
+        { home-manager.users.${user}.imports = [ f.homeModules.default ]; }
+      ];
+      nixpkgs.hostPlatform = "aarch64-darwin";
+    };
   };
   probe = probeClan.config.nixosConfigurations.probe;
+  darwinProbe = probeClan.config.darwinConfigurations.darwin-probe;
 
   home = sys: {
     inherit sys;
@@ -41,9 +50,9 @@ let
 
   targets = {
     nixos-probe = system probe f.nixosModules;
-    darwin-beirut = system f.darwinConfigurations.beirut f.darwinModules;
+    darwin-probe = system darwinProbe f.darwinModules;
     home-probe = home probe;
-    home-beirut = home f.darwinConfigurations.beirut;
+    home-darwin-probe = home darwinProbe;
   };
   names = t: lib.attrNames (removeAttrs t.modules [ "default" ]);
   evalTarget =

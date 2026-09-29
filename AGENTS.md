@@ -174,8 +174,9 @@ Evaluation reads the working tree through `path:.`, so new files count without
   Linux-only home feature probed on darwin. Add a line when your feature is one
 - Lint hooks (`flake.nix` pre-commit: treefmt, deadnix, statix, shellcheck,
   actionlint, zizmor) run on `git commit` in the dev shell (`nix develop`) and in `just check`
-- The synthetic probe host is its own Clan instance rooted at `scripts/ci/`, so
-  no real machine, tag or profile leaks into probes. `just report`
+- The synthetic probe hosts (one Linux, one Darwin) are their own Clan instance
+  rooted at `scripts/ci/`, so no real machine, tag, profile or feature leaks
+  into probes. `just report`
   fingerprints repo files by content, so pure moves are invisible to it
 
 ### Not for agents
