@@ -56,17 +56,11 @@ let
 
   rules = lib.concatLists [
     (rule "app-name" "*" [ "float" ])
-    (rule "app-id" "org.gnu.Emacs" [ "no-float" ])
-    (rule "app-id" "org.mozilla.firefox" [ "tags 1" ])
-    (rule "app-id" "com.apple.Safari" [ "tags 1" ])
-    (rule "app-id" "com.mitchellh.ghostty" [ "tags 2" ])
-    (rule "app-id" "org.alacritty" [ "tags 2" ])
-    (rule "app-id" "com.raphaelamorim.rio" [ "tags 2" ])
-    (rule "app-id" "com.microsoft.VSCode" [ "tags 4" ])
-    (rule "app-id" "com.openai.chat" [
-      "tags 8"
-      "float"
-    ])
+    (rule "app-id" "org.mozilla.firefox" [ (tags 1) ])
+    (rule "app-id" "com.apple.Safari" [ (tags 1) ])
+    (rule "app-id" "com.mitchellh.ghostty" [ (tags 2) ])
+    (rule "app-id" "org.alacritty" [ (tags 2) ])
+    (rule "app-id" "com.raphaelamorim.rio" [ (tags 2) ])
     (rule "app-id" "com.apple.systempreferences" [ "float" ])
     (rule "app-name" "System Settings" [ "float" ])
     (rule "app-name" "System Preferences" [ "float" ])
