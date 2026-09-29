@@ -102,7 +102,7 @@ let
   );
 
   wm = import ../_wm-handoff.nix {
-    inherit lib;
+    inherit lib pkgs;
     user = config.system.primaryUser;
   };
 
@@ -135,6 +135,16 @@ in
       wm.stop {
         label = "org.nixos.aerospace";
         evacuate = lib.getExe evacuateAerospace;
+      }
+    );
+
+    system.activationScripts.postActivation.text = lib.mkAfter (
+      wm.reloadOnChange {
+        label = "org.nixos.yashiki";
+        init = "${
+          config.users.users.${config.system.primaryUser}.home
+        }/.config/yashiki/init";
+        unpark = lib.getExe wm.unparkYashiki;
       }
     );
 
