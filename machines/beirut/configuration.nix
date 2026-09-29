@@ -1,12 +1,12 @@
 { inputs, ... }: {
   imports = with inputs.self.darwinModules; [
-    aerospace
     brave
     essentials
     safari
     tailscale
     tinycast
     ui
+    yashiki
     zsh
   ];
 
