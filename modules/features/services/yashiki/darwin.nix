@@ -7,9 +7,19 @@
 let
   cmd = args: "yashiki ${args}";
   bind = key: action: cmd "bind ${key} ${action}";
-  rule =
-    flag: value: actions:
-    map (a: cmd "rule-add --${flag} ${lib.escapeShellArg value} ${a}") actions;
+  ruleWith =
+    matchers: actions:
+    map (
+      a:
+      cmd "rule-add ${
+        lib.concatStringsSep " " (
+          lib.mapAttrsToList (
+            flag: value: "--${flag} ${lib.escapeShellArg value}"
+          ) matchers
+        )
+      } ${a}"
+    ) actions;
+  rule = flag: value: ruleWith { ${flag} = value; };
 
   mask = n: toString (lib.foldl' (acc: _: acc * 2) 1 (lib.range 2 n));
   tags = n: "tags ${mask n}";
@@ -63,7 +73,18 @@ let
     (rule "app-name" "*" [ "float" ])
     (rule "app-id" "org.mozilla.firefox" [ (tags 1) ])
     (rule "app-id" "com.apple.Safari" [ (tags 1) ])
-    (rule "app-id" "com.mitchellh.ghostty" [ (tags 2) ])
+    (rule "app-id" "com.mitchellh.ghostty" [
+      (tags 2)
+      "no-float"
+    ])
+    (rule "app-id" "com.brave.Browser" [
+      (tags 1)
+      "no-float"
+    ])
+    (ruleWith {
+      app-id = "com.brave.Browser";
+      subrole = "AXUnknown";
+    } [ "ignore" ])
     (rule "app-id" "org.alacritty" [ (tags 2) ])
     (rule "app-id" "com.raphaelamorim.rio" [ (tags 2) ])
     (rule "app-id" "com.apple.systempreferences" [ "float" ])
