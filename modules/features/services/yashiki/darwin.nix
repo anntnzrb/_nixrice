@@ -11,31 +11,19 @@ let
     flag: value: actions:
     map (a: cmd "rule-add --${flag} ${lib.escapeShellArg value} ${a}") actions;
 
-  tagBindings = lib.concatLists (
-    lib.imap0
-      (
-        i: mask:
-        let
-          key = toString (lib.mod (i + 1) 10);
-        in
-        [
-          (bind "alt-${key}" "tag-view ${toString mask}")
-          (bind "alt-shift-${key}" "window-move-to-tag ${toString mask}")
-        ]
-      )
-      [
-        1
-        2
-        4
-        8
-        16
-        32
-        64
-        128
-        256
-        512
-      ]
-  );
+  mask = n: toString (lib.foldl' (acc: _: acc * 2) 1 (lib.range 2 n));
+  tags = n: "tags ${mask n}";
+
+  tagBindings = lib.concatMap (
+    n:
+    let
+      key = toString (lib.mod n 10);
+    in
+    [
+      (bind "alt-${key}" "tag-view ${mask n}")
+      (bind "alt-shift-${key}" "window-move-to-tag ${mask n}")
+    ]
+  ) (lib.range 1 10);
 
   settings = map cmd [
     "layout-set-default tatami"
