@@ -27,6 +27,24 @@ let
   };
   toWorkspace =
     n: appId: rule { app-id = appId; } [ "move-node-to-workspace ${toString n}" ];
+
+  wm = import ../_wm-handoff.nix {
+    inherit lib;
+    user = config.system.primaryUser;
+  };
+
+  evacuateYashiki = pkgs.writeShellApplication {
+    name = "evacuate-yashiki";
+    runtimeInputs = [
+      pkgs.yashiki
+      pkgs.gnugrep
+    ];
+    text = ''
+      yashiki list-outputs | grep -oE '^[0-9]+' | while read -r id; do
+        yashiki tag-view --output "$id" 1023
+      done
+    '';
+  };
 in
 {
   config = {
@@ -86,20 +104,17 @@ in
       LimitLoadToSessionType = [ "Aqua" ];
     };
 
-    system.activationScripts.postActivation.text = lib.mkAfter ''
-      if [ -n "''${SUDO_USER:-}" ]; then
-        user="''${SUDO_USER}"
-      else
-        user="${config.system.primaryUser}"
-      fi
-
-      uid="$(id -u "$user" 2>/dev/null || true)"
-      if [ -n "$uid" ]; then
-        launchctl bootout "gui/$uid/org.nixos.yashiki" >/dev/null 2>&1 || :
-      fi
-
-      ${pkgs.yashiki}/bin/yashiki stop >/dev/null 2>&1 || :
-    '';
+    system.activationScripts.preActivation.text = lib.mkAfter (
+      wm.stop {
+        label = "org.nixos.yashiki";
+        evacuate = lib.getExe evacuateYashiki;
+        leftovers = [
+          "/tmp/yashiki.pid"
+          "/tmp/yashiki.sock"
+          "/tmp/yashiki-events.sock"
+        ];
+      }
+    );
 
     system.defaults.NSGlobalDomain = {
       NSWindowShouldDragOnGesture = true;
