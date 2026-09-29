@@ -35,10 +35,18 @@ let
     ]
   ) (lib.range 1 10);
 
+  gap = {
+    top = 6;
+    right = 4;
+    bottom = 8;
+    left = 6;
+    inner = 2;
+  };
+
   settings = map cmd [
     "layout-set-default tatami"
-    "set-outer-gap 8"
-    "layout-cmd --layout tatami set-inner-gap 8"
+    "set-outer-gap ${toString gap.top} ${toString gap.right} ${toString gap.bottom} ${toString gap.left}"
+    "layout-cmd --layout tatami set-inner-gap ${toString gap.inner}"
     "set-cursor-warp on-output-change"
     "retile"
   ];
