@@ -33,6 +33,11 @@ let
     "retile"
   ];
 
+  mainDisplay = [
+    ''main="$(yashiki list-outputs | ${lib.getExe pkgs.gawk} 'index($0, "(main)") { sub(":", "", $1); print $1 }')"''
+    ''[ -z "$main" ] || yashiki rule-add --app-name '*' output "$main"''
+  ];
+
   bindings = tagBindings ++ [
     (bind "alt-tab" "tag-view-last")
     (bind "alt-comma" "output-focus prev")
@@ -70,6 +75,7 @@ let
     lib.concatMapStringsSep "\n\n" (lib.concatStringsSep "\n") [
       settings
       bindings
+      mainDisplay
       rules
     ]
   );
