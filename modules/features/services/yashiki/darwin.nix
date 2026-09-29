@@ -37,14 +37,20 @@ let
       ]
   );
 
-  layout = map cmd [
+  settings = map cmd [
     "layout-set-default tatami"
     "set-outer-gap 8"
     "layout-cmd --layout tatami set-inner-gap 8"
+    "set-cursor-warp on-output-change"
     "retile"
   ];
 
   bindings = tagBindings ++ [
+    (bind "alt-tab" "tag-view-last")
+    (bind "alt-comma" "output-focus prev")
+    (bind "alt-period" "output-focus next")
+    (bind "alt-shift-comma" "output-send prev")
+    (bind "alt-shift-period" "output-send next")
     (bind "alt-h" "window-focus left")
     (bind "alt-j" "window-focus down")
     (bind "alt-k" "window-focus up")
@@ -53,7 +59,7 @@ let
     (bind "alt-shift-j" "window-swap down")
     (bind "alt-shift-k" "window-swap up")
     (bind "alt-shift-l" "window-swap right")
-    (bind "alt-shift-f" "window-toggle-float")
+    (bind "alt-shift-f" "window-toggle-fullscreen")
     (bind "alt-shift-space" "window-toggle-float")
     (bind "alt-shift-t" "layout-set tatami")
     (bind "alt-shift-b" "layout-set byobu")
@@ -66,6 +72,8 @@ let
     (rule "app-id" "org.mozilla.firefox" [ "tags 1" ])
     (rule "app-id" "com.apple.Safari" [ "tags 1" ])
     (rule "app-id" "com.mitchellh.ghostty" [ "tags 2" ])
+    (rule "app-id" "org.alacritty" [ "tags 2" ])
+    (rule "app-id" "com.raphaelamorim.rio" [ "tags 2" ])
     (rule "app-id" "com.microsoft.VSCode" [ "tags 4" ])
     (rule "app-id" "com.openai.chat" [
       "tags 8"
@@ -78,11 +86,32 @@ let
 
   initScript = pkgs.writeShellScript "yashiki-init" (
     lib.concatMapStringsSep "\n\n" (lib.concatStringsSep "\n") [
-      layout
+      settings
       bindings
       rules
     ]
   );
+
+  wm = import ../_wm-handoff.nix {
+    inherit lib;
+    user = config.system.primaryUser;
+  };
+
+  evacuateAerospace = pkgs.writeShellApplication {
+    name = "evacuate-aerospace";
+    runtimeInputs = [
+      pkgs.aerospace
+      pkgs.gnugrep
+    ];
+    text = ''
+      visible="$(aerospace list-workspaces --monitor all --visible)"
+      target="$(aerospace list-workspaces --focused)"
+      aerospace list-windows --all --format '%{window-id} %{workspace}' | while read -r id ws; do
+        grep -Fxq -- "$ws" <<<"$visible" ||
+          aerospace move-node-to-workspace --window-id "$id" -- "$target"
+      done
+    '';
+  };
 in
 {
   config = {
@@ -92,6 +121,13 @@ in
         message = "the yashiki feature cannot be imported together with the aerospace feature.";
       }
     ];
+
+    system.activationScripts.preActivation.text = lib.mkAfter (
+      wm.stop {
+        label = "org.nixos.aerospace";
+        evacuate = lib.getExe evacuateAerospace;
+      }
+    );
 
     environment.systemPackages = [ pkgs.yashiki ];
 
@@ -103,11 +139,8 @@ in
 
     launchd.user.agents.yashiki = {
       managedBy = "modules/features/services/yashiki";
+      command = "${lib.escapeShellArg "/Applications/Nix Apps/Yashiki.app/Contents/MacOS/yashiki"} start";
       serviceConfig = {
-        ProgramArguments = [
-          "/Applications/Nix Apps/Yashiki.app/Contents/MacOS/yashiki"
-          "start"
-        ];
         RunAtLoad = true;
         KeepAlive = true;
         ProcessType = "Interactive";
