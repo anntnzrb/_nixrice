@@ -143,6 +143,7 @@ in
       serviceConfig = {
         RunAtLoad = true;
         KeepAlive = true;
+        ThrottleInterval = 60;
         ProcessType = "Interactive";
         LimitLoadToSessionType = [ "Aqua" ];
         EnvironmentVariables = {
