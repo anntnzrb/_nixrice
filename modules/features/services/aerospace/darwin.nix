@@ -27,6 +27,15 @@ let
   };
   toWorkspace =
     n: appId: rule { app-id = appId; } [ "move-node-to-workspace ${toString n}" ];
+  tile =
+    n: appId:
+    rule { app-id = appId; } [
+      "move-node-to-workspace ${toString n}"
+      "layout tiling"
+    ]
+    // {
+      check-further-callbacks = false;
+    };
 
   wm = import ../_wm-handoff.nix {
     inherit lib pkgs;
