@@ -79,17 +79,10 @@ in
 
         on-window-detected = [
           (toWorkspace 1 "org.mozilla.firefox")
-          (
-            rule { app-id = "org.gnu.Emacs"; } [ "layout tiling" ]
-            // {
-              check-further-callbacks = false;
-            }
-          )
+          (tile 1 "com.brave.Browser")
           (toWorkspace 2 "org.alacritty")
-          (toWorkspace 2 "com.mitchellh.ghostty")
+          (tile 2 "com.mitchellh.ghostty")
           (toWorkspace 2 "com.raphaelamorim.rio")
-          (toWorkspace 3 "com.microsoft.VSCode")
-          (toWorkspace 4 "com.openai.chat")
           (rule { } [ "layout floating" ])
         ];
       };
