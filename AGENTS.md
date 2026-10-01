@@ -159,7 +159,7 @@ Evaluation reads the working tree through `path:.`, so new files count without
 - `just test`: run `tests/` (lib discovery + every machine keeps fleet SSH access); fast
 - `just report [ref]`: what your change does to each machine and home (packages, files, services, users, env, PATH order) versus `ref`; empty = no behaviour change; minutes
 - `just snap`: print every machine/home drvPath, a quick "does it still evaluate"; fast
-- `just probes`: import every feature into a real host in one `nix-eval-jobs` run; fails if the set that does not evaluate differs from `tests/probe-errors.txt` (`PROBE_WORKERS`, default one per core; `PROBE_MAX_MEMORY`); slow
+- `just probes`: locally import every feature into a real host in one unsharded `nix-eval-jobs` run; fails if the set that does not evaluate differs from `tests/probe-errors.txt` (`PROBE_WORKERS`, default one per core; `PROBE_MAX_MEMORY`); slow
 - `just drvdiff [ref]`: prove a pure refactor, machine, home **and** per-feature drvPaths identical to `ref` (the only check covering features no machine uses); slow
 - `just check`: the CI gate, flake-checker, one `nix flake check` (formatting, lint hooks, tests; `--all-systems` on Linux), `clan vars check`; minutes
 - `just fmt`: treefmt (`flake.nix`: nixfmt, shfmt, just); use this, not `nixpkgs#nixfmt`; fast
@@ -188,11 +188,14 @@ Evaluation reads the working tree through `path:.`, so new files count without
   generate secrets with `clan vars generate <machine>`, never by hand
 
 ### CI (`.github/workflows/`)
-- `ci.yml`: `just check` (Linux; it evaluates darwin too), `just probes`, and
-  on PRs the `just report` summary against the base branch. Pushes that only
-  touch docs (`**/*.md`, `docs/`, `COPYING`) skip it; PRs
-  always run it because the `dev` ruleset requires `check`, `probes` and
-  `builds`, and a path-filtered required check never reports and blocks merge
+- `ci.yml`: `just check` (Linux; it evaluates darwin too), four target-based
+  probe shards, and on PRs the `just report` summary against the base branch.
+  Each shard compares its output against the matching subset of
+  `tests/probe-errors.txt`; the required `probes` gate succeeds only when all
+  four shards succeed. Pushes that only touch docs (`**/*.md`, `docs/`,
+  `COPYING`) skip it; PRs always run it because the `dev` ruleset requires
+  `check`, `probes` and `builds`, and a path-filtered required check never
+  reports and blocks merge
 - `build.yml`: `scripts/ci/build-plan.sh` lists the targets from
   `scripts/ci/targets.nix` missing from the Cachix cache; each builds on its
   own runner and is pushed. Nothing uncached = nothing built. Dev shells are
@@ -208,11 +211,12 @@ Evaluation reads the working tree through `path:.`, so new files count without
   state define `cleanup()` then source `scripts/ci/cleanup.sh` (traps EXIT and
   re-raises HUP/INT/TERM, which dash would skip)
 - Waiting on a PR: one blocking `gh pr checks <N> --watch --interval 60`
-  with a 30 min shell timeout, never sleep loops. Rough timings (Sep 2026, re-measure with
-  `gh run list`): Nix CI on a PR ~14 min (probes shards + report), on a
-  push to `dev` ~4-8; Nix build ~4-8, up to ~22 on cache misses. Right after
-  `gh pr create`, checks take ~20 s to register. Still running past ~25 min:
-  inspect `gh run view <id> --json jobs` instead of waiting longer
+  with a 30 min shell timeout, never sleep loops. Measured baseline (Oct 2026,
+  PR #315): CI 531s from creation, probes job 525s, probe step 504s; latest
+  `dev` push probes job 523s. After-change Actions timing is pending; no
+  speedup is claimed before measurement. Right after `gh pr create`, checks
+  take ~20 s to register. Still running past ~25 min: inspect
+  `gh run view <id> --json jobs` instead of waiting longer
 
 ### Upstream references
 When unsure how something works, read the source rather than guessing. Check

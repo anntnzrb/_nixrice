@@ -33,12 +33,24 @@ jobs:
           name: anntnzrb
           skipPush: true
 
+      - name: Test probe sharding
+        run: dash tests/ci/probes.sh
+
       - name: Check flake
         run: scripts/ci/check-flake.sh
 
-  probes:
+  probe-shards:
+    name: probes ${{ matrix.target }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - nixos-probe
+          - darwin-probe
+          - home-probe
+          - home-darwin-probe
     steps:
       - uses: actions/checkout@v7
         with:
@@ -52,7 +64,21 @@ jobs:
           skipPush: true
 
       - name: Check probes
-        run: scripts/ci/check-probes.sh
+        env:
+          PROBE_TARGET: ${{ matrix.target }}
+        run: scripts/ci/check-probes.sh . "$PROBE_TARGET"
+
+  probes:
+    needs: probe-shards
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: All probe shards passed
+        env:
+          PROBE_SHARDS: ${{ needs.probe-shards.result }}
+        run: test "$PROBE_SHARDS" = success
+
   report:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest

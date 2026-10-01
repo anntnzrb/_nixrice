@@ -2,6 +2,17 @@
 
 set -eu
 
+target="${2:-}"
+if [ -n "${target}" ]; then
+    case "${target}" in
+        nixos-probe | darwin-probe | home-probe | home-darwin-probe) ;;
+        *)
+            printf 'unknown probe target: %s\n' "${target}" >&2
+            exit 2
+            ;;
+    esac
+fi
+
 flake="path:$(cd "${1:-.}" && pwd -P)"
 probes="$(cd "$(dirname "$0")" && pwd)/probes.nix"
 workers="${PROBE_WORKERS:-$(getconf NPROCESSORS_ONLN 2>/dev/null || getconf _NPROCESSORS_ONLN)}"
@@ -16,12 +27,18 @@ eval_jobs() {
     fi
 }
 
+expr="import ${probes} { flake = \"${flake}\"; }"
+if [ -n "${target}" ]; then
+    target_expr="$(jq -n --arg target "${target}" '$target')"
+    expr="import ${probes} { flake = \"${flake}\"; target = ${target_expr}; }"
+fi
+
 out="$(eval_jobs \
     --workers "${workers}" \
     --max-memory-size "${max_memory}" \
     --force-recurse \
     --impure \
-    --expr "import ${probes} { flake = \"${flake}\"; }")"
+    --expr "${expr}")"
 
 printf '%s\n' "${out}" \
     | jq -r '
