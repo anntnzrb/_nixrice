@@ -62,5 +62,11 @@ let
 in
 if target != null && name != null then
   evalTarget targets.${target} name
+else if target != null then
+  {
+    ${target} = lib.genAttrs (names targets.${target}) (
+      name: evalTarget targets.${target} name
+    );
+  }
 else
   lib.mapAttrs (_: t: lib.genAttrs (names t) (name: evalTarget t name)) targets

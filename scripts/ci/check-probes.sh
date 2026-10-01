@@ -8,7 +8,7 @@ cleanup() { rm -rf "${tmp}"; }
 # shellcheck source=scripts/ci/cleanup.sh
 . "${root}/scripts/ci/cleanup.sh"
 
-"${root}/scripts/ci/probe.sh" "${1:-.}" >"${tmp}/probes"
+"${root}/scripts/ci/probe.sh" "${1:-.}" "${2:-}" >"${tmp}/probes"
 
 awk '{ print $1 }' "${tmp}/probes" >"${tmp}/ran"
 grep -Fx -f "${tmp}/ran" "${root}/tests/probe-errors.txt" >"${tmp}/expected" || true
