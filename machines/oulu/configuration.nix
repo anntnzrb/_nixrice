@@ -12,7 +12,13 @@
   system.stateVersion = "26.05";
 
   environment.localBinInPath = true;
-  programs.nix-ld.enable = true;
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      libxkbcommon
+      wayland
+    ];
+  };
 
   environment.systemPackages = with pkgs; [
     ffmpeg
