@@ -1,4 +1,4 @@
-{ inputs, ... }: {
+{ inputs, pkgs, ... }: {
   imports = with inputs.self.nixosModules; [
     disko-xfs
     fish
@@ -13,6 +13,12 @@
 
   environment.localBinInPath = true;
   programs.nix-ld.enable = true;
+
+  environment.systemPackages = with pkgs; [
+    ffmpeg
+    labwc
+    wlr-randr
+  ];
 
   nix.settings = {
     max-jobs = 6;
