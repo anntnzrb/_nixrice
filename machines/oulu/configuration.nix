@@ -17,6 +17,7 @@
   environment.systemPackages = with pkgs; [
     ffmpeg
     labwc
+    (callPackage ./waymote.nix { })
     wlr-randr
   ];
 
