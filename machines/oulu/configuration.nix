@@ -12,17 +12,12 @@
   system.stateVersion = "26.05";
 
   environment.localBinInPath = true;
-  programs.nix-ld = {
-    enable = true;
-    libraries = with pkgs; [
-      libxkbcommon
-      wayland
-    ];
-  };
+  programs.nix-ld.enable = true;
 
   environment.systemPackages = with pkgs; [
     ffmpeg
     labwc
+    (callPackage ./waymote.nix { })
     wlr-randr
   ];
 
