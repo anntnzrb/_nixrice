@@ -162,19 +162,17 @@ in
         executable = true;
       };
 
-    launchd.user.agents.yashiki = {
-      managedBy = "modules/features/services/yashiki";
-      command = "${lib.escapeShellArg "/Applications/Nix Apps/Yashiki.app/Contents/MacOS/yashiki"} start";
-      serviceConfig = {
-        RunAtLoad = true;
-        KeepAlive = true;
-        ThrottleInterval = 60;
-        ProcessType = "Interactive";
-        LimitLoadToSessionType = [ "Aqua" ];
-        EnvironmentVariables = {
-          PATH = "${pkgs.yashiki}/bin:${config.environment.systemPath}";
+    launchd.user.agents.yashiki =
+      lib.liberion.darwin.aquaAgent "modules/features/services/yashiki"
+        {
+          command = "${lib.escapeShellArg "/Applications/Nix Apps/Yashiki.app/Contents/MacOS/yashiki"} start";
+          serviceConfig = {
+            KeepAlive = true;
+            ThrottleInterval = 60;
+            EnvironmentVariables = {
+              PATH = "${pkgs.yashiki}/bin:${config.environment.systemPath}";
+            };
+          };
         };
-      };
-    };
   };
 }

@@ -2,15 +2,14 @@
 let
   f = builtins.getFlake flake;
   inherit (f.inputs.nixpkgs) lib;
+  inherit (import "${f}/lib" { inherit lib; }) isArchived;
   inherit (import "${f}/identity.nix") user;
   target = name: attr: drv: {
     inherit name attr;
     inherit (drv) system;
     out = drv.outPath;
   };
-  live = lib.filterAttrs (
-    n: _: !(builtins.elem "archived" f.clan.inventory.machines.${n}.tags)
-  );
+  live = lib.filterAttrs (n: _: !(isArchived f.clan.inventory.machines.${n}));
   retiredHomes = [ "${user}@wsl" ];
 in
 lib.mapAttrsToList (

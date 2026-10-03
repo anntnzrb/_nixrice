@@ -1,8 +1,8 @@
 { lib, pkgs, ... }:
 let
-  inherit (lib.liberion.identity) keys sshPort;
+  inherit (lib.liberion) authorizedKeys;
+  inherit (lib.liberion.identity) sshPort;
   userName = lib.liberion.identity.user;
-  authorizedKeys = [ keys.admin ] ++ keys.devices;
 in
 {
   clan.core.enableRecommendedDefaults = true;

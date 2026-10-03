@@ -109,16 +109,12 @@ in
       ];
     };
 
-    launchd.user.agents.aerospace = {
-      managedBy = "modules/features/services/aerospace";
-      command = "/Applications/AeroSpace.app/Contents/MacOS/AeroSpace --config-path ${configFile}";
-      serviceConfig = {
-        KeepAlive = true;
-        RunAtLoad = true;
-        ProcessType = "Interactive";
-        LimitLoadToSessionType = [ "Aqua" ];
-      };
-    };
+    launchd.user.agents.aerospace =
+      lib.liberion.darwin.aquaAgent "modules/features/services/aerospace"
+        {
+          command = "/Applications/AeroSpace.app/Contents/MacOS/AeroSpace --config-path ${configFile}";
+          serviceConfig.KeepAlive = true;
+        };
 
     system.activationScripts.preActivation.text = lib.mkAfter (
       wm.stop {

@@ -34,15 +34,12 @@ in
     FZF_COMPLETION_TRIGGER = "~~";
   };
 
-  programs.zsh.initContent =
-    let
-      zshInit = pkgs.runCommand "fzf-zsh-init" { } ''
-        HOME=$TMPDIR ${lib.getExe config.programs.fzf.package} --zsh > $out
-      '';
-    in
-    lib.mkOrder 910 ''
-      if [[ $options[zle] = on ]]; then
-        source ${zshInit}
-      fi
-    '';
+  programs.zsh.initContent = lib.mkOrder 910 ''
+    if [[ $options[zle] = on ]]; then
+      source ${
+        lib.liberion.zshInit pkgs "fzf"
+          "HOME=$TMPDIR ${getExe config.programs.fzf.package} --zsh"
+      }
+    fi
+  '';
 }

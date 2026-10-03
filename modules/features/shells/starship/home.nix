@@ -106,16 +106,13 @@ in
     };
   };
 
-  programs.zsh.initContent =
-    let
-      zshInit = pkgs.runCommand "starship-zsh-init" { } ''
-        ${lib.getExe config.programs.starship.package} init zsh --print-full-init > $out
-      '';
-    in
-    ''
-      if [[ $TERM != "dumb" ]]; then
-        source ${zshInit}
-        RPROMPT=
-      fi
-    '';
+  programs.zsh.initContent = ''
+    if [[ $TERM != "dumb" ]]; then
+      source ${
+        lib.liberion.zshInit pkgs "starship"
+          "${lib.getExe config.programs.starship.package} init zsh --print-full-init"
+      }
+      RPROMPT=
+    fi
+  '';
 }
