@@ -6,7 +6,8 @@
 }:
 let
 
-  package = inputs.neovim-annt.packages.${pkgs.stdenv.hostPlatform.system}.nixvim;
+  package =
+    inputs.neovim-annt.packages.${pkgs.stdenv.hostPlatform.system}.default;
 in
 {
   home = {
