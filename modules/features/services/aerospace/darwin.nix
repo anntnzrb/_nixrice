@@ -83,8 +83,8 @@ let
 
   configFile = (pkgs.formats.toml { }).generate "aerospace.toml" settings;
 
-  wm = import ../_wm-handoff.nix {
-    inherit lib pkgs;
+  wm = lib.liberion.darwin.wmHandoff {
+    inherit pkgs;
     user = config.system.primaryUser;
   };
 in

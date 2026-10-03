@@ -2,7 +2,7 @@
 
 set -eu
 
-root="$(cd "$(dirname "$0")/../.." && pwd)"
+root="$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
 tmp="$(mktemp -d)"
 cleanup() { rm -rf "${tmp}"; }
 # shellcheck source=scripts/ci/cleanup.sh

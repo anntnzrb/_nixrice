@@ -2,7 +2,13 @@
 let
   f = builtins.getFlake flake;
   inherit (f.inputs.nixpkgs) lib;
-  inherit (import "${f}/lib" { inherit lib; }) isArchived;
+  inherit
+    (import "${f}/lib" {
+      inherit lib;
+      root = "${f}";
+    })
+    isArchived
+    ;
   inherit (import "${f}/identity.nix") user;
   target = name: attr: drv: {
     inherit name attr;

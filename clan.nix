@@ -1,6 +1,9 @@
 { config, lib, ... }:
 let
-  liberion = import ./lib { inherit lib; };
+  liberion = import ./lib {
+    inherit lib;
+    root = ./.;
+  };
   inherit (liberion) identity;
 in
 {
