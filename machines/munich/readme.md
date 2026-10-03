@@ -18,6 +18,10 @@
 
 Always-on NixOS server (tags `server`, `headless`, `nvidia`), whole-disk XFS via disko, `systemd-boot`, and remote builder for the Macs. The PCPartPicker list predates the RAM upgrade.
 
+Not installed yet: the hardware still runs Debian (CLIProxyAPI gateway,
+Hermes), so `clan machines update` and `just deploy` must not target it until
+it is installed with this configuration.
+
 - [PCPartPicker build](https://pcpartpicker.com/list/hP82TY)
 
 ## Peripherals
