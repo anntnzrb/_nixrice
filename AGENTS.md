@@ -17,7 +17,7 @@ modules/
 ├── features/<category>/<name>/   opt-in, imported by machines, profiles or other features
 ├── profiles/<tag>/          imported into machines carrying Clan tag <tag>
 └── services/<name>/         in-repo Clan services (_class = "clan.service")
-machines/<name>/             configuration.nix, optional home.nix, facter.json or hardware/, readme.md
+machines/<name>/             configuration.nix, optional home.nix, facter.json or hardware/, optional disk.nix (disko), readme.md
 homes/                       standalone Home Manager configs (hosts without a managed system)
 overlays/                    the flake overlay
 tests/                       `just test`; probe-errors.txt for `just probes`
@@ -45,8 +45,10 @@ sops/, vars/                 Clan secrets and generated vars; never print values
 - Enable a feature on one machine: `imports` in `machines/<name>/configuration.nix` or `home.nix`
 - Enable it in every home / every machine: `modules/base/common/home.nix` / a `modules/base/<name>/`
 - What a trait means: `modules/profiles/<tag>/`
-- Add a machine or change its tags: `clan.nix` `inventory.machines` + `machines/<name>/`
-- Fleet services (sshd, users, remote builders): `clan.nix` `inventory.instances`; in-repo ones in `modules/services/`
+- Add a machine or change its tags: `clan.nix` `inventory.machines` + `machines/<name>/`;
+  installing it is the "Installing a NixOS machine" section below
+- Fleet services (sshd, users, remote builders, wifi, internet): `clan.nix`
+  `inventory.instances`; in-repo ones in `modules/services/`
 - User, git identity, SSH keys, SSH port: `identity.nix`
 - Binary caches: `liberion.nix.caches` (`modules/base/nix/`)
 - darwin GUI apps as Homebrew casks: `liberion.homebrew.apps`
@@ -60,8 +62,9 @@ meaning outside their profile:
   `server` after `clan vars` exist for it
 - `archived`: retired machine kept as history; excluded from CI builds and
   Cachix (`scripts/ci/targets.nix`) and from fleet SSH peer lists
-  (`network/sshd`). Its profile pins a fixed `system.stateVersion` because
-  those machines predate Clan; the rest use the generated state-version var.
+  (`network/sshd`). On NixOS its profile pins a fixed `system.stateVersion`
+  because those machines predate Clan; the rest use the generated
+  state-version var.
   `clan machines update` without arguments skips them (`requireExplicitUpdate`)
 
 ### Writing modules
@@ -100,8 +103,18 @@ in
 }
 ```
 
-Helpers: `lib.liberion.module.{mkOpt', mkOptEnabled', mkOptDisabled'}`,
-`lib.liberion.identity`. Prefer precise types (`enum`, `package`, `port`) over `str`.
+Helpers live in `lib/default.nix` (`lib.liberion`); read it before writing a
+module, its exports are the list, not this file. Prefer precise types (`enum`,
+`package`, `port`) over `str`.
+
+Shared code goes in `lib.liberion`, not in copies. Before writing a block, grep
+`modules/` for the same shape: launchd agent, activation snippet, `defaults`
+write, `launchctl asuser`, option boilerplate. A shape already in a second
+module becomes a helper in `lib/default.nix` (pure functions get a case in
+`tests/default.nix` `libFailures`) and every copy moves to it in the same
+change. Shell scripts read from a file take the helper's output as an argument
+instead of re-typing it. Values that come from `identity.nix`, another option
+or a package are referenced, never hardcoded.
 
 In-repo Clan services: `modules/services/<name>/default.nix`
 (`_class = "clan.service"`), registered in `clan.nix` as
@@ -135,6 +148,15 @@ In-repo Clan services: `modules/services/<name>/default.nix`
   Regenerate with `clan machines update-hardware-config <m> --backend nixos-facter`
 - Files deployed verbatim (scripts, WM configs) are compared by content: any
   edit, comments included, shows up in `just report`
+- A machine home that must skip `modules/base` home (headless servers) is a
+  `_home.nix` the machine imports itself: `machineModule` adds the base home to
+  any `home.nix`, and `/_` paths are invisible to discovery
+- Evaluate attributes with `nix eval path:.#nixosConfigurations.<m>.config.<opt>`
+  (`darwinConfigurations`, `homeConfigurations."<user>@<host>"`, inventory under
+  `clan.inventory`); `path:.` reads the working tree without the dirty-tree
+  warning. Don't guess other flake attributes: `nix flake show path:.` lists them
+- A machine's `clan.nix` entry and `machines/<name>/` describe the target
+  state; its `readme.md` says when the hardware runs something else today
 
 ### darwin patterns
 - launchd opens `StandardOutPath`/`StandardErrorPath` eagerly: create
@@ -195,6 +217,45 @@ Evaluation reads the working tree through `path:.`, so new files count without
   rooted at `scripts/ci/`, so no real machine, tag, profile or feature leaks
   into probes. `just report`
   fingerprints repo files by content, so pure moves are invisible to it
+
+### Installing a NixOS machine
+Owner-run (it wipes a disk), but an agent prepares the repo and the commands.
+Source: `clan-core` `pkgs/clan-cli/clan_lib/machines/install.py`,
+`docs/src/getting-started/getting-started-physical.md`, nixos-anywhere `src/nixos-anywhere.sh`.
+
+1. Repo: `inventory.machines.<m>` with tags, `machines/<m>/configuration.nix`,
+   a `disk.nix` (or `hardware/disko-xfs`) whose device is a `/dev/disk/by-id/`
+   path matched by serial, `readme.md`. Tag `server` only after step 4
+2. Live ISO, on the console: `sudo passwd root`, `ip -br a`. Its sshd already
+   accepts root; everything else runs remotely. Keep a laptop awake for the
+   whole install: `ssh root@<ip> systemd-run --unit=keep-awake systemd-inhibit
+   --what=sleep:idle:handle-lid-switch sleep infinity` (a transient unit
+   survives the SSH session; NixOS `/etc` is read-only, so don't mask units or
+   edit `sshd_config` there)
+3. Hardware: `clan machines update-hardware-config <m> --target-host root@<ip>
+   --backend nixos-facter` writes `facter.json` over plain SSH.
+   `init-hardware-config` kexecs, which a live ISO does not need. Confirm the
+   disk serial with `lsblk -o NAME,SIZE,MODEL,SERIAL` on the ISO and unplug or
+   identify every other disk (installer USB included)
+4. `clan vars generate <m>`
+5. `CLAN_NO_COMMIT=1 clan machines install <m> --target-host
+   'root@<ip>?ServerAliveInterval=15&ServerAliveCountMax=4' --phases disko,install
+   --build-on local --update-hardware-config none`. `CLAN_NO_COMMIT` stops Clan's
+   auto-commits so the change lands as a normal commit. nixos-anywhere forces
+   `StrictHostKeyChecking=no` and `UserKnownHostsFile=/dev/null`, so known_hosts
+   options passed to the install are ignored; the ISO's changing host key
+   only matters to your own `ssh` calls. Don't run other SSH sessions against
+   the ISO during the install: nixos-anywhere opens a fresh connection per
+   command, and a burst can trip OpenSSH's per-source penalties
+   (`kex_exchange_identification: ... Not allowed at this time`). The penalty
+   expires; wait a few minutes and rerun the failed phase
+6. Interrupted after disko: rerun with `--phases install` only if the ISO did
+   not reboot (`findmnt /mnt` shows the target). After a reboot `/mnt` is gone
+   and an install would land in the ISO's tmpfs: rerun from `disko`, or mount
+   first with disko's `--mode mount`
+7. First boot: `sudo tailscale up` on the console (the `tailscale` feature
+   carries no auth key), then check `systemctl --failed`, `findmnt`, and that
+   `ssh -p <identity sshPort> <m>` works. Later changes: `just deploy <m>`
 
 ### Not for agents
 - `just switch`, `build`, `boot`, `home`, `deploy`: the owner deploys (build/switch go
