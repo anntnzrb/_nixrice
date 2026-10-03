@@ -134,7 +134,12 @@
             failures = import ./tests { inherit lib self; };
           in
           if failures == [ ] then
-            pkgsFor.${system}.runCommand "liberion-tests" { } "touch $out"
+            pkgsFor.${system}.runCommand "liberion-tests"
+              { nativeBuildInputs = [ pkgsFor.${system}.jq ]; }
+              ''
+                bash ${./tests/reconcile.sh} ${./modules/base/reconcile/reconcile.sh}
+                touch $out
+              ''
           else
             throw "tests failed:\n${lib.concatStringsSep "\n" failures}";
 

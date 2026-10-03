@@ -33,6 +33,8 @@ in
   imports = [ inputs.self.darwinModules.homebrew ];
 
   liberion.homebrew.apps = [ "brave" ];
+  liberion.darwin.owned.files."/Library/Managed Preferences/com.brave.Browser.plist".restart =
+    [ "cfprefsd" ];
 
   system.activationScripts.postActivation.text = lib.mkAfter ''
     brave_policy_target="/Library/Managed Preferences/com.brave.Browser.plist"

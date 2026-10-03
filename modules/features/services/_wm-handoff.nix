@@ -4,7 +4,7 @@
   user,
 }:
 let
-  asUser = ''launchctl asuser "$(id -u ${user})" sudo --user=${user} --'';
+  asUser = lib.liberion.darwin.asUser user;
   stampDir = "/var/lib/wm-handoff";
 in
 {

@@ -116,11 +116,9 @@ let
 
   evacuateAerospace = pkgs.writeShellApplication {
     name = "evacuate-aerospace";
-    runtimeInputs = [
-      pkgs.aerospace
-      pkgs.gnugrep
-    ];
+    runtimeInputs = [ pkgs.gnugrep ];
     text = ''
+      aerospace() { ${config.homebrew.prefix}/bin/aerospace "$@"; }
       visible="$(aerospace list-workspaces --monitor all --visible)"
       target="$(aerospace list-workspaces --focused)"
       aerospace list-windows --all --format '%{window-id} %{workspace}' | while read -r id ws; do
@@ -134,7 +132,7 @@ in
   config = {
     assertions = [
       {
-        assertion = !config.services.aerospace.enable;
+        assertion = !(config.launchd.user.agents ? aerospace);
         message = "the yashiki feature cannot be imported together with the aerospace feature.";
       }
     ];

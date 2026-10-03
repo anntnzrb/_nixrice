@@ -143,12 +143,29 @@ In-repo Clan services: `modules/services/<name>/default.nix`
   stable path instead of a store path. Launch GUI apps via `/usr/bin/open -a`
 - Wrap store executables in `/bin/wait4path /nix/store` (nix-darwin `command`)
   when a daemon can start before the store volume mounts
-- `system.defaults` overwrites whole preference domains; change single keys
-  with `defaults write` in `system.activationScripts.postActivation`
+- Removing a feature must undo what it wrote. `modules/base/reconcile`
+  records what the configuration owns and, on the next switch, deletes what
+  no module claims anymore. Preferences go through `system.defaults`
+  (`CustomUserPreferences` for app domains) or
+  `liberion.darwin.defaults.currentHost` (ByHost), which are tracked
+  automatically. Anything an activation script writes itself must be claimed
+  in `liberion.darwin.owned.defaults` (a key, or a nested `path` inside one)
+  or `liberion.darwin.owned.files`. Unreadable domains are kept and retried.
+  A new nix-darwin `system.defaults` scope fails evaluation until it is mapped.
+  Only what the configuration claimed is ever removed: apps, preferences and
+  grants the owner set up by hand are never touched. A failing reconcile warns
+  and retries on the next switch instead of aborting activation
+- Privacy grants (TCC) cannot be given declaratively: macOS requires MDM, and
+  macOS 27 removed silent Accessibility grants even there. Claim the grants a
+  feature needs in `liberion.darwin.owned.privacy` so removing it revokes them
+  (`tccutil reset`); the owner grants them once per machine
 - Stock sshd socket activation is fixed to port 22, so `network/sshd` runs its
   own launchd daemon for other ports
-- Self-updating apps or ones with privileged helpers go through Homebrew
-  casks (`liberion.homebrew.apps`), not the store
+- GUI apps come from Homebrew casks (`liberion.homebrew.apps`) or a nixpkgs
+  `-bin` package that ships the vendor's `.app`, never a nixpkgs source build.
+  TCC binds a grant to the code signature: a vendor-signed app keeps it across
+  updates, an ad-hoc signed store build loses it on every rebuild. Check with
+  `codesign -dr - <App>.app`: `cdhash` in the requirement means ad-hoc
 - HM's Firefox wrapper can't wrap `firefox-bin`: set `programs.firefox.package =
   null` and install the package separately
 

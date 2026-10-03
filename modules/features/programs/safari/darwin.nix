@@ -56,30 +56,26 @@ let
 
   settings = lib.mergeAttrsList (lib.attrValues groups);
 
-  typeFlag =
-    value:
-    if lib.isBool value then
-      "-bool"
-    else if lib.isInt value then
-      "-int"
-    else if lib.isFloat value then
-      "-float"
-    else
-      "-string";
-
-  render =
-    value: if lib.isBool value then lib.boolToString value else toString value;
-
-  asUser = ''launchctl asuser "$(id -u -- ${user})" sudo --user=${user} --'';
+  asUser = lib.liberion.darwin.asUser user;
 
   writes = lib.concatStringsSep "\n" (
     lib.mapAttrsToList (
       key: value:
-      "    ${asUser} defaults write ${lib.escapeShellArg plist} ${lib.escapeShellArg key} ${typeFlag value} ${lib.escapeShellArg (render value)}"
+      "    ${asUser} ${
+            lib.liberion.darwin.writeDefault {
+              domain = plist;
+              inherit key value;
+            }
+          }"
     ) settings
   );
 in
 {
+  liberion.darwin.owned.defaults = map (key: {
+    domain = plist;
+    inherit key;
+  }) (lib.attrNames settings);
+
   system.activationScripts.postActivation.text = lib.mkAfter ''
     if [ ! -d ${lib.escapeShellArg container} ]; then
       echo "safari: container missing, open Safari once and switch again" >&2
