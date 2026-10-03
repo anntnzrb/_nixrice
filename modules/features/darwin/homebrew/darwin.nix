@@ -6,6 +6,7 @@
 }:
 let
   casks = {
+    aerospace = "nikitabobko/tap/aerospace";
     aldente = "aldente";
     brave = "brave-browser";
     obs = "obs";
