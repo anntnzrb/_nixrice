@@ -10,7 +10,8 @@ code for those; do not copy them here.
 ```
 identity.nix                 owner: user name, git identity, fleet SSH keys and port
 clan.nix                     inventory: machines + tags, service instances
-flake.nix                    inputs, outputs, dev shell, pre-commit hooks
+flake.nix                    inputs; flake-parts: systems, shared pkgs, Clan, exported modules
+flake/                       flake-parts modules: dev.nix = formatter, hooks, checks, dev shell
 lib/default.nix              lib.liberion: discovery, machineModule, module helpers, identity
 modules/
 ├── base/<name>/             always imported (every machine of the class / every home)
@@ -208,7 +209,7 @@ Evaluation reads the working tree through `path:.`, so new files count without
 - `just probes`: locally import every feature into a real host in one unsharded `nix-eval-jobs` run; fails if the set that does not evaluate differs from `tests/probe-errors.txt` (`PROBE_WORKERS`, default one per core; `PROBE_MAX_MEMORY`); slow
 - `just drvdiff [ref]`: prove a pure refactor, machine, home **and** per-feature drvPaths identical to `ref` (the only check covering features no machine uses); slow
 - `just check`: the CI gate, flake-checker, one `nix flake check` (formatting, lint hooks, tests; `--all-systems` on Linux), `clan vars check`; minutes
-- `just fmt`: treefmt (`flake.nix`: nixfmt, shfmt, just); use this, not `nixpkgs#nixfmt`; fast
+- `just fmt`: treefmt (`flake/dev.nix`: nixfmt, shfmt, just); use this, not `nixpkgs#nixfmt`; fast
 - `just build-all`: build every machine and home this platform can build, nothing is activated; very slow, needs disk
 
 - Before handing off any change: `just report` (state the result), then `just check`
@@ -218,7 +219,7 @@ Evaluation reads the working tree through `path:.`, so new files count without
 - `tests/probe-errors.txt` lists modules expected not to evaluate on their probe
   host (`scripts/ci/probes.nix`): genuine platform mismatches only, e.g. a
   Linux-only home feature probed on darwin. Add a line when your feature is one
-- Lint hooks (`flake.nix` pre-commit: treefmt, deadnix, statix, shellcheck,
+- Lint hooks (`flake/dev.nix` pre-commit: treefmt, deadnix, statix, shellcheck,
   actionlint, zizmor, no-parent-paths) run on `git commit` in the dev shell
   (`nix develop`) and in `just check`
 - The synthetic probe hosts (one Linux, one Darwin) are their own Clan instance
@@ -325,8 +326,17 @@ the version pinned in `flake.lock` first
   (upstream bug refs, opaque IDs, magic values)
 - This file holds no state. If an edit here would need updating when a machine,
   tag, import, version or count changes, point to the source file instead
-- `flake.nix`: `nixpkgs` follows `clan-core/nixpkgs`; clan-core is a
-  `git+https://` URL so Dependabot can bump it; the dev shell has no LSPs
-  (editors bring their own)
+- `flake.nix` is flake-parts: Clan, treefmt-nix and git-hooks come in as
+  their flake modules and are configured, not wired by hand. One `pkgs`
+  per system (`perSystem._module.args.pkgs`, overlays + `allowUnfree`) feeds
+  Clan (`clan.pkgs`), checks and the dev shell; other outputs reach it via
+  `withSystem`. A new per-system output is a `perSystem` attribute in a
+  `flake/` module, using `inputs'`/`self'` instead of `${system}` lookups.
+  `lib.liberion` stays the module discovery; flake-parts' `flake.modules`
+  does not replace it
+- Inputs: `nixpkgs`, `flake-parts`, `treefmt-nix` and every `systems` follow
+  clan-core, so `flake.lock` keeps one copy of each; a new input that
+  brings its own copy gets a `follows`. clan-core is a `git+https://` URL so
+  Dependabot can bump it; the dev shell has no LSPs (editors bring their own)
 - After editing `.agents/setup`, stale Amp snapshots stay until
   `amp projects snapshots delete anntnzrb/rice`
