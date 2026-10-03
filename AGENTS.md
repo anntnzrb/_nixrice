@@ -116,6 +116,13 @@ change. Shell scripts read from a file take the helper's output as an argument
 instead of re-typing it. Values that come from `identity.nix`, another option
 or a package are referenced, never hardcoded.
 
+Paths never climb parent directories (the `no-parent-paths` hook rejects it in
+`.nix` and `.sh`). Siblings use `./x`. Anything else is anchored at the repo
+root: a feature through `inputs.self.<class>Modules.<name>`, any other file
+through `self + "/path"` (`inputs.self` in Home Manager), `lib/` through its
+`root` argument, shell scripts through a root argument or
+`git rev-parse --show-toplevel`.
+
 In-repo Clan services: `modules/services/<name>/default.nix`
 (`_class = "clan.service"`), registered in `clan.nix` as
 `modules.<name> = ./modules/services/<name>;` and instantiated under
@@ -212,7 +219,8 @@ Evaluation reads the working tree through `path:.`, so new files count without
   host (`scripts/ci/probes.nix`): genuine platform mismatches only, e.g. a
   Linux-only home feature probed on darwin. Add a line when your feature is one
 - Lint hooks (`flake.nix` pre-commit: treefmt, deadnix, statix, shellcheck,
-  actionlint, zizmor) run on `git commit` in the dev shell (`nix develop`) and in `just check`
+  actionlint, zizmor, no-parent-paths) run on `git commit` in the dev shell
+  (`nix develop`) and in `just check`
 - The synthetic probe hosts (one Linux, one Darwin) are their own Clan instance
   rooted at `scripts/ci/`, so no real machine, tag, profile or feature leaks
   into probes. `just report`

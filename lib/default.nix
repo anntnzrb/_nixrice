@@ -1,6 +1,6 @@
-{ lib }:
+{ lib, root }:
 let
-  identity = import ../identity.nix;
+  identity = import (root + "/identity.nix");
 
   mkOpt' =
     type: default:
@@ -106,9 +106,9 @@ let
     };
 
   fleet = load {
-    base = ../modules/base;
-    features = ../modules/features;
-    profiles = ../modules/profiles;
+    base = root + "/modules/base";
+    features = root + "/modules/features";
+    profiles = root + "/modules/profiles";
   };
 in
 {
@@ -132,6 +132,8 @@ in
     '';
 
   darwin = rec {
+    wmHandoff = { pkgs, user }: import ./wm-handoff.nix { inherit lib pkgs user; };
+
     asUser =
       user:
       ''launchctl asuser "$(id -u -- ${lib.escapeShellArg user})" sudo --user=${lib.escapeShellArg user} --'';

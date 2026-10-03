@@ -20,7 +20,12 @@
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
 
       lib = nixpkgs.lib.extend (
-        final: _: { liberion = import ./lib { lib = final; }; }
+        final: _: {
+          liberion = import ./lib {
+            lib = final;
+            root = ./.;
+          };
+        }
       );
 
       nixpkgsArgs = {
@@ -158,6 +163,21 @@
             };
 
             statix.enable = true;
+
+            no-parent-paths = {
+              enable = true;
+              name = "no-parent-paths";
+              description = "Reach other directories from the repo root (self, inputs.self, root), never through parent directories";
+              files = "\\.(nix|sh)$";
+              entry = toString (
+                pkgsFor.${system}.writeShellScript "no-parent-paths" ''
+                  if ${pkgsFor.${system}.gnugrep}/bin/grep -nE '\.\./|/\.\.(["/)]|$)' "$@"; then
+                    echo "parent-relative paths are not allowed; anchor them at the repo root" >&2
+                    exit 1
+                  fi
+                ''
+              );
+            };
 
             shellcheck = {
               enable = true;

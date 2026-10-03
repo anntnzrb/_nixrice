@@ -1,7 +1,7 @@
 { inputs, ... }: {
   imports = [
-    ../../modules/base/core/home.nix
-    ../../modules/base/shells/home.nix
+    (inputs.self + "/modules/base/core/home.nix")
+    (inputs.self + "/modules/base/shells/home.nix")
   ]
   ++ (with inputs.self.homeModules; [
     btop
