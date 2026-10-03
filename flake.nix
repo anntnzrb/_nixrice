@@ -2,23 +2,13 @@
   description = "Liberion's Core";
 
   outputs =
-    {
+    inputs@{
       self,
       nixpkgs,
-      clan-core,
-      git-hooks,
-      home-manager,
-      treefmt-nix,
+      flake-parts,
       ...
-    }@inputs:
+    }:
     let
-      supportedSystems = [
-        "x86_64-linux"
-        "aarch64-darwin"
-      ];
-
-      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
-
       lib = nixpkgs.lib.extend (
         final: _: {
           liberion = import ./lib {
@@ -36,186 +26,79 @@
         ];
       };
 
-      pkgsFor = forAllSystems (
-        system: import nixpkgs (nixpkgsArgs // { inherit system; })
-      );
-
-      specialArgs = {
-        inherit
-          inputs
-          self
-          lib
-          nixpkgsArgs
-          ;
-      };
-
-      clan = clan-core.lib.clan {
-        inherit self specialArgs;
-        imports = [ ./clan.nix ];
-        pkgsForSystem = system: pkgsFor.${system};
-      };
-
       src = lib.fileset.toSource {
         root = ./.;
-        fileset = lib.fileset.unions [
-          ./flake.nix
-          ./clan.nix
-          ./identity.nix
-          ./justfile
-          ./.agents
-          ./.github
-          ./bin
-          ./homes
-          ./lib
-          ./machines
-          ./modules
-          ./overlays
-          ./scripts
-          ./tests
-        ];
+        fileset = lib.fileset.difference ./. (lib.fileset.maybeMissing ./.git);
       };
-
-      treefmtEval = forAllSystems (
-        system:
-        treefmt-nix.lib.evalModule pkgsFor.${system} {
-          projectRootFile = "flake.nix";
-          programs = {
-            nixfmt = {
-              enable = true;
-              strict = true;
-              width = 80;
-            };
-            shfmt = {
-              enable = true;
-              indent_size = 4;
-              excludes = [ ".envrc" ];
-            };
-            just.enable = true;
-          };
-          settings.formatter.shfmt.options = [
-            "-ln"
-            "posix"
-            "-bn"
-            "-ci"
-          ];
-        }
-      );
     in
-    {
-      clan = clan.config;
-      inherit (clan.config) nixosConfigurations clanInternals;
-      darwinConfigurations = clan.config.darwinConfigurations or { };
+    # flake-parts' nixosModules and Clan's darwinModules options re-wrap each
+    # module, which reorders list merges (systemPackages); export them raw.
+    flake-parts.lib.mkFlake
+      {
+        inherit inputs;
+        specialArgs = { inherit lib; };
+      }
+      (
+        { withSystem, ... }: {
+          imports = [
+            inputs.clan-core.flakeModules.default
+            inputs.treefmt-nix.flakeModule
+            inputs.git-hooks.flakeModule
+            ./flake/dev.nix
+          ];
 
-      homeConfigurations."${lib.liberion.identity.user}@wsl" =
-        home-manager.lib.homeManagerConfiguration
-          {
-            pkgs = pkgsFor.x86_64-linux;
-            inherit lib;
-            extraSpecialArgs = { inherit inputs; };
-            modules = [
-              ./homes/wsl.nix
-              {
-                home = {
-                  username = lib.liberion.identity.user;
-                  homeDirectory = "/home/${lib.liberion.identity.user}";
-                };
-              }
-            ];
+          systems = [
+            "x86_64-linux"
+            "aarch64-darwin"
+          ];
+
+          perSystem = { system, pkgs, ... }: {
+            _module.args.pkgs = import nixpkgs (nixpkgsArgs // { inherit system; });
+            clan.pkgs = pkgs;
+            treefmt.projectRoot = src;
+            pre-commit.settings.rootSrc = lib.mkForce src;
           };
 
+          flake = {
+            clan = {
+              imports = [ ./clan.nix ];
+              specialArgs = {
+                inherit
+                  inputs
+                  self
+                  lib
+                  nixpkgsArgs
+                  ;
+              };
+            };
+
+            homeConfigurations."${lib.liberion.identity.user}@wsl" =
+              withSystem "x86_64-linux"
+                (
+                  { pkgs, ... }:
+                  inputs.home-manager.lib.homeManagerConfiguration {
+                    inherit pkgs lib;
+                    extraSpecialArgs = { inherit inputs; };
+                    modules = [
+                      ./homes/wsl.nix
+                      {
+                        home = {
+                          username = lib.liberion.identity.user;
+                          homeDirectory = "/home/${lib.liberion.identity.user}";
+                        };
+                      }
+                    ];
+                  }
+                );
+
+            overlays.default = import ./overlays/default.nix { inherit inputs; };
+          };
+        }
+      )
+    // {
       nixosModules = lib.liberion.modules.nixos;
       darwinModules = lib.liberion.modules.darwin;
       homeModules = lib.liberion.modules.home;
-
-      overlays.default = import ./overlays/default.nix { inherit inputs; };
-
-      formatter = forAllSystems (system: treefmtEval.${system}.config.build.wrapper);
-
-      checks = forAllSystems (system: {
-        formatting = treefmtEval.${system}.config.build.check src;
-
-        tests =
-          let
-            failures = import ./tests { inherit lib self; };
-          in
-          if failures == [ ] then
-            pkgsFor.${system}.runCommand "liberion-tests"
-              { nativeBuildInputs = [ pkgsFor.${system}.jq ]; }
-              ''
-                bash ${./tests/reconcile.sh} ${./modules/base/reconcile/reconcile.sh}
-                touch $out
-              ''
-          else
-            throw "tests failed:\n${lib.concatStringsSep "\n" failures}";
-
-        pre-commit-check = git-hooks.lib.${system}.run {
-          inherit src;
-          hooks = {
-            treefmt = {
-              enable = true;
-              package = treefmtEval.${system}.config.build.wrapper;
-            };
-
-            deadnix = {
-              enable = true;
-              args = [ "--warn-used-underscore" ];
-              settings.edit = true;
-            };
-
-            statix.enable = true;
-
-            no-parent-paths = {
-              enable = true;
-              name = "no-parent-paths";
-              description = "Reach other directories from the repo root (self, inputs.self, root), never through parent directories";
-              files = "\\.(nix|sh)$";
-              entry = toString (
-                pkgsFor.${system}.writeShellScript "no-parent-paths" ''
-                  if ${pkgsFor.${system}.gnugrep}/bin/grep -nE '\.\./|/\.\.(["/)]|$)' "$@"; then
-                    echo "parent-relative paths are not allowed; anchor them at the repo root" >&2
-                    exit 1
-                  fi
-                ''
-              );
-            };
-
-            shellcheck = {
-              enable = true;
-              args = [
-                "--enable=all"
-                "-a"
-                "-x"
-                "-P"
-                "SCRIPTDIR"
-              ];
-            };
-
-            actionlint.enable = true;
-
-            zizmor = {
-              enable = true;
-              args = [ "--no-exit-codes" ];
-            };
-          };
-        };
-      });
-
-      devShells = forAllSystems (
-        system:
-        let
-          pkgs = pkgsFor.${system};
-        in
-        {
-          default = pkgs.mkShellNoCC {
-            name = "liberion-shell";
-            inherit (self.checks.${system}.pre-commit-check) shellHook;
-            nativeBuildInputs = self.checks.${system}.pre-commit-check.enabledPackages ++ [
-              clan-core.packages.${system}.clan-cli
-              pkgs.just
-            ];
-          };
-        }
-      );
     };
 
   inputs = {
@@ -227,9 +110,11 @@
     nixpkgs = {
       follows = "clan-core/nixpkgs";
     };
+    flake-parts = {
+      follows = "clan-core/flake-parts";
+    };
     treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+      follows = "clan-core/treefmt-nix";
     };
 
     nix-index-database = {
@@ -259,6 +144,7 @@
       inputs = {
         nixpkgs.follows = "nixpkgs-unstable";
         flake-compat.follows = "";
+        flake-utils.inputs.systems.follows = "clan-core/systems";
       };
     };
 
@@ -301,7 +187,10 @@
       inputs = {
         nixpkgs.follows = "nixpkgs";
         treefmt-nix.follows = "clan-core/treefmt-nix";
-        nixvim.inputs.flake-parts.follows = "clan-core/flake-parts";
+        nixvim.inputs = {
+          flake-parts.follows = "clan-core/flake-parts";
+          systems.follows = "clan-core/systems";
+        };
       };
     };
 
@@ -346,6 +235,7 @@
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-parts.follows = "clan-core/flake-parts";
+        systems.follows = "clan-core/systems";
       };
     };
 
