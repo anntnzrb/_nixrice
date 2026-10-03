@@ -41,11 +41,13 @@ in
       ];
     };
     solna = {
-      description = "Laptop Workstation (SSD)";
+      description = "HP 15-dw0083wm - Pentium N5000 Headless Server";
       tags = [
-        "archived"
         "physical"
         "laptop"
+        "workstation"
+        "server"
+        "headless"
       ];
     };
     tampa = {
@@ -87,6 +89,10 @@ in
   modules.remote-builders = ./modules/services/remote-builders;
 
   inventory.instances = {
+    wifi = {
+      roles.default.machines.solna.settings.networks.home = { };
+    };
+
     remote-builders = {
       module = {
         input = "self";
