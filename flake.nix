@@ -278,11 +278,10 @@
 
     neovim-annt = {
       url = "github:anntnzrb/nixvim/main";
-      # keeps own nixpkgs: pinned nixvim breaks on ours (typescript-go rename)
       inputs = {
-        flake-parts.follows = "clan-core/flake-parts";
+        nixpkgs.follows = "nixpkgs";
         treefmt-nix.follows = "clan-core/treefmt-nix";
-        git-hooks-nix.follows = "git-hooks";
+        nixvim.inputs.flake-parts.follows = "clan-core/flake-parts";
       };
     };
 
