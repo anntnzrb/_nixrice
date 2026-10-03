@@ -115,13 +115,23 @@ in
   inherit identity load;
   inherit (fleet) modules machineModule;
 
+  authorizedKeys = [ identity.keys.admin ] ++ identity.keys.devices;
+
+  isArchived = machine: builtins.elem "archived" machine.tags;
+
   module = {
     inherit mkOpt';
     mkOptEnabled' = mkOpt' lib.types.bool true;
     mkOptDisabled' = mkOpt' lib.types.bool false;
   };
 
-  darwin = {
+  zshInit =
+    pkgs: name: command:
+    pkgs.runCommand "${name}-zsh-init" { } ''
+      ${command} > $out
+    '';
+
+  darwin = rec {
     asUser =
       user:
       ''launchctl asuser "$(id -u -- ${lib.escapeShellArg user})" sudo --user=${lib.escapeShellArg user} --'';
@@ -146,20 +156,50 @@ in
         ]
       );
 
-    openAtLogin = app: managedBy: {
-      inherit managedBy;
-      serviceConfig = {
-        ProgramArguments = [
-          "/usr/bin/open"
-          "-a"
-          "/Applications/${app}.app"
-        ];
-        RunAtLoad = true;
-        KeepAlive = false;
-        ProcessType = "Interactive";
-        LimitLoadToSessionType = [ "Aqua" ];
+    writeDefaults =
+      user:
+      {
+        domain,
+        settings,
+        currentHost ? false,
+      }:
+      lib.mapAttrsToList (
+        key: value:
+        "${asUser user} ${
+          writeDefault {
+            inherit
+              domain
+              key
+              value
+              currentHost
+              ;
+          }
+        }"
+      ) (lib.filterAttrs (_: v: v != null) settings);
+
+    aquaAgent =
+      managedBy: agent:
+      lib.recursiveUpdate {
+        inherit managedBy;
+        serviceConfig = {
+          RunAtLoad = true;
+          ProcessType = "Interactive";
+          LimitLoadToSessionType = [ "Aqua" ];
+        };
+      } agent;
+
+    openAtLogin =
+      app: managedBy:
+      aquaAgent managedBy {
+        serviceConfig = {
+          ProgramArguments = [
+            "/usr/bin/open"
+            "-a"
+            "/Applications/${app}.app"
+          ];
+          KeepAlive = false;
+        };
       };
-    };
   };
 
   xorg.mkAutostartScript = xs: lib.concatStringsSep "\n" (map (x: x + " &") xs);

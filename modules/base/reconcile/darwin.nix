@@ -155,20 +155,13 @@ let
     text = builtins.readFile ./reconcile.sh;
   };
 
-  asUser = lib.liberion.darwin.asUser user;
-
   hostWrites = lib.concatLists (
     lib.mapAttrsToList (
-      domain: attrs:
-      lib.mapAttrsToList (
-        key: value:
-        "${asUser} ${
-          lib.liberion.darwin.writeDefault {
-            inherit domain key value;
-            currentHost = true;
-          }
-        }"
-      ) (lib.filterAttrs (_: v: v != null) attrs)
+      domain: settings:
+      lib.liberion.darwin.writeDefaults user {
+        inherit domain settings;
+        currentHost = true;
+      }
     ) cfg.defaults.currentHost
   );
 

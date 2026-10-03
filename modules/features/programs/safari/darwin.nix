@@ -58,16 +58,11 @@ let
 
   asUser = lib.liberion.darwin.asUser user;
 
-  writes = lib.concatStringsSep "\n" (
-    lib.mapAttrsToList (
-      key: value:
-      "    ${asUser} ${
-            lib.liberion.darwin.writeDefault {
-              domain = plist;
-              inherit key value;
-            }
-          }"
-    ) settings
+  writes = lib.concatMapStringsSep "\n" (w: "    ${w}") (
+    lib.liberion.darwin.writeDefaults user {
+      domain = plist;
+      inherit settings;
+    }
   );
 in
 {

@@ -26,27 +26,13 @@
             };
           };
 
-          folders =
-            let
-              devices = [ "bergkamp" ];
-            in
-            {
-              notes = {
-                enable = true;
-                label = "notes";
-                path = "${syncPath}/notes";
-                versioning.type = "trashcan";
-                inherit devices;
-              };
-
-              bergkamp = {
-                enable = true;
-                label = "bergkamp";
-                path = "${syncPath}/bergkamp";
-                versioning.type = "trashcan";
-                inherit devices;
-              };
-            };
+          folders = lib.genAttrs [ "notes" "bergkamp" ] (name: {
+            enable = true;
+            label = name;
+            path = "${syncPath}/${name}";
+            versioning.type = "trashcan";
+            devices = [ "bergkamp" ];
+          });
 
           options = {
             limitBandwidthInLan = false;

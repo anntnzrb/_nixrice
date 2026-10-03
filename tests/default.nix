@@ -118,6 +118,52 @@ let
       );
       expected = true;
     };
+    testDarwinWriteDefaultsSkipsNull = {
+      expr = lib.liberion.darwin.writeDefaults "u" {
+        domain = "d";
+        settings = {
+          a = 1;
+          b = null;
+        };
+        currentHost = true;
+      };
+      expected = [
+        "${lib.liberion.darwin.asUser "u"} ${
+          lib.liberion.darwin.writeDefault {
+            domain = "d";
+            key = "a";
+            value = 1;
+            currentHost = true;
+          }
+        }"
+      ];
+    };
+    testDarwinAquaAgentMergesServiceConfig = {
+      expr = lib.liberion.darwin.aquaAgent "m" {
+        command = "c";
+        serviceConfig.KeepAlive = true;
+      };
+      expected = {
+        managedBy = "m";
+        command = "c";
+        serviceConfig = {
+          RunAtLoad = true;
+          KeepAlive = true;
+          ProcessType = "Interactive";
+          LimitLoadToSessionType = [ "Aqua" ];
+        };
+      };
+    };
+    testIsArchived = {
+      expr = map lib.liberion.isArchived [
+        { tags = [ "archived" ]; }
+        { tags = [ "server" ]; }
+      ];
+      expected = [
+        true
+        false
+      ];
+    };
     testFeatureProfileClashThrows = {
       expr = throws (
         lib.attrNames

@@ -10,7 +10,7 @@ let
   cfg = config.liberion.network.ssh;
   userName = lib.liberion.identity.user;
 
-  inherit (lib.liberion.identity) keys;
+  inherit (lib.liberion) authorizedKeys;
 
   remoteHostsCfg = lib.concatStringsSep "\n" (
     lib.mapAttrsToList
@@ -24,7 +24,7 @@ let
           ) "Port ${toString cfg.port}\n"}
       '')
       (
-        lib.filterAttrs (_: machine: !(builtins.elem "archived" machine.tags)) (
+        lib.filterAttrs (_: machine: !(lib.liberion.isArchived machine)) (
           removeAttrs inputs.self.clan.inventory.machines [
             config.clan.core.settings.machine.name
           ]
@@ -36,7 +36,7 @@ in
   options.liberion.network.ssh = with lib.types; {
     extraConfig = mkOpt' str "";
     port = mkOpt' port lib.liberion.identity.sshPort;
-    authorizedKeys = mkOpt' (listOf singleLineStr) ([ keys.admin ] ++ keys.devices);
+    authorizedKeys = mkOpt' (listOf singleLineStr) authorizedKeys;
   };
 
   config = {

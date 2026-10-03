@@ -35,15 +35,9 @@ in
     }
 
     {
-      launchd.user.agents.keyboard-user-key-mapping = {
-        managedBy = "modules/features/system/keyboard";
-        serviceConfig = {
-          ProgramArguments = [ "${applyKeyMapping}" ];
-          RunAtLoad = true;
-          ProcessType = "Interactive";
-          LimitLoadToSessionType = [ "Aqua" ];
-        };
-      };
+      launchd.user.agents.keyboard-user-key-mapping =
+        lib.liberion.darwin.aquaAgent "modules/features/system/keyboard"
+          { serviceConfig.ProgramArguments = [ "${applyKeyMapping}" ]; };
     }
   ];
 }

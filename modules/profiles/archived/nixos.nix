@@ -4,7 +4,5 @@
     user
   ];
 
-  clan.core.deployment.requireExplicitUpdate = true;
-
   system.stateVersion = "22.05";
 }

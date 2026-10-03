@@ -6,9 +6,9 @@
 }:
 let
   cfgOptions = lib.concatStringsSep " " config.programs.zoxide.options;
-  zshInit = pkgs.runCommand "zoxide-zsh-init" { } ''
-    HOME=$TMPDIR ${lib.getExe config.programs.zoxide.package} init zsh ${cfgOptions} > $out
-  '';
+  zshInit =
+    lib.liberion.zshInit pkgs "zoxide"
+      "HOME=$TMPDIR ${lib.getExe config.programs.zoxide.package} init zsh ${cfgOptions}";
 in
 {
   programs.zoxide = {
