@@ -45,15 +45,11 @@ remove_file() {
     fi
 }
 
-# Revoking a grant needs the app installed: tccutil resolves the bundle id
-# through Launch Services. Once the app is gone, so is any use of its grant.
 remove_privacy() {
     if ! launchctl asuser "${uid}" sudo --user="${user}" -- \
         tccutil reset "${service}" "${bundle_id}" >"${work}/tcc.log" 2>&1; then
-        if ! grep -q -- '-10814' "${work}/tcc.log"; then
-            echo "reconcile: could not revoke ${service} for ${bundle_id}" >&2
-            carry
-        fi
+        echo "reconcile: could not revoke ${service} for ${bundle_id}" >&2
+        carry
         return 0
     fi
     echo "reconcile: revoked ${service} for ${bundle_id}" >&2
