@@ -97,6 +97,27 @@ let
       );
       expected = true;
     };
+    testDarwinWriteDefaultCurrentHost = {
+      expr = lib.liberion.darwin.writeDefault {
+        domain = "-g";
+        key = "a key";
+        value = true;
+        currentHost = true;
+      };
+      expected = "defaults -currentHost write -g 'a key' ${
+        lib.escapeShellArg (lib.generators.toPlist { escape = true; } true)
+      }";
+    };
+    testDarwinWriteDefaultUserDomain = {
+      expr = lib.hasPrefix "defaults write com.example n " (
+        lib.liberion.darwin.writeDefault {
+          domain = "com.example";
+          key = "n";
+          value = 1;
+        }
+      );
+      expected = true;
+    };
     testFeatureProfileClashThrows = {
       expr = throws (
         lib.attrNames

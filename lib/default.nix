@@ -121,18 +121,44 @@ in
     mkOptDisabled' = mkOpt' lib.types.bool false;
   };
 
-  darwin.openAtLogin = app: managedBy: {
-    inherit managedBy;
-    serviceConfig = {
-      ProgramArguments = [
-        "/usr/bin/open"
-        "-a"
-        "/Applications/${app}.app"
-      ];
-      RunAtLoad = true;
-      KeepAlive = false;
-      ProcessType = "Interactive";
-      LimitLoadToSessionType = [ "Aqua" ];
+  darwin = {
+    asUser =
+      user:
+      ''launchctl asuser "$(id -u -- ${lib.escapeShellArg user})" sudo --user=${lib.escapeShellArg user} --'';
+
+    activateSettings = "/System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u";
+
+    writeDefault =
+      {
+        domain,
+        key,
+        value,
+        currentHost ? false,
+      }:
+      lib.concatStringsSep " " (
+        [ "defaults" ]
+        ++ lib.optional currentHost "-currentHost"
+        ++ [
+          "write"
+          (lib.escapeShellArg domain)
+          (lib.escapeShellArg key)
+          (lib.escapeShellArg (lib.generators.toPlist { escape = true; } value))
+        ]
+      );
+
+    openAtLogin = app: managedBy: {
+      inherit managedBy;
+      serviceConfig = {
+        ProgramArguments = [
+          "/usr/bin/open"
+          "-a"
+          "/Applications/${app}.app"
+        ];
+        RunAtLoad = true;
+        KeepAlive = false;
+        ProcessType = "Interactive";
+        LimitLoadToSessionType = [ "Aqua" ];
+      };
     };
   };
 
