@@ -43,3 +43,25 @@ if bash "${reconcile}" "${work}/broken.json" "${work}/manifest.json" "${user}"; 
     exit 1
 fi
 test "$(<"${work}/broken.json")" = '{invalid'
+
+export DSCL_SHELL="${work}/login-shell"
+# shellcheck disable=SC2016 # Expanded by the generated command, not the test.
+printf '%s\n' '#!/bin/sh' '[ -e "${DSCL_SHELL}" ] || exit 1' 'if [ "$2" = -read ]; then printf "UserShell: %s\n" "$(cat "${DSCL_SHELL}")"; else printf "%s\n" "$5" >"${DSCL_SHELL}"; fi' >"${work}/bin/dscl"
+chmod +x "${work}/bin/dscl"
+shell_entry='[{"kind":"shell","id":"shell","shell":"/run/current-system/sw/bin/bash","restart":[]}]'
+printf '%s\n' '[]' >"${work}/manifest.json"
+
+printf '%s\n' "${shell_entry}" >"${work}/shell.json"
+bash "${reconcile}" "${work}/shell.json" "${work}/manifest.json" "${user}"
+jq -e --argjson entry "${shell_entry}" '. == $entry' "${work}/shell.json"
+
+printf '%s\n' /run/current-system/sw/bin/bash >"${DSCL_SHELL}"
+bash "${reconcile}" "${work}/shell.json" "${work}/manifest.json" "${user}"
+test "$(<"${DSCL_SHELL}")" = /bin/zsh
+jq -e '. == []' "${work}/shell.json"
+
+printf '%s\n' /opt/homebrew/bin/fish >"${DSCL_SHELL}"
+printf '%s\n' "${shell_entry}" >"${work}/shell.json"
+bash "${reconcile}" "${work}/shell.json" "${work}/manifest.json" "${user}"
+test "$(<"${DSCL_SHELL}")" = /opt/homebrew/bin/fish
+jq -e '. == []' "${work}/shell.json"

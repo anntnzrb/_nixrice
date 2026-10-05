@@ -55,6 +55,20 @@ remove_privacy() {
     echo "reconcile: revoked ${service} for ${bundle_id}" >&2
 }
 
+remove_shell() {
+    if ! current=$(dscl . -read "/Users/${user}" UserShell); then
+        carry
+        return 0
+    fi
+    if [ "${current#UserShell: }" != "${shell}" ]; then
+        return 0
+    fi
+    echo "reconcile: resetting the login shell of ${user} to /bin/zsh" >&2
+    if ! dscl . -create "/Users/${user}" UserShell /bin/zsh; then
+        carry
+    fi
+}
+
 remove_default() {
     set_runner
     # shellcheck disable=SC2086,SC2248 # runner and host are word lists by design
@@ -100,7 +114,7 @@ if [ -f "${state}" ]; then
         "${state}" >"${work}/stale"
     while IFS= read -r entry; do
         printf '%s\n' "${entry}" | jq -r \
-            '.kind, (.file // ""), (.scope // ""), (.currentHost // false), (.domain // ""), (.key // ""), (.service // ""), (.bundleId // ""), ((.path // []) | map(":" + .) | join(""))' \
+            '.kind, (.file // ""), (.scope // ""), (.currentHost // false), (.domain // ""), (.key // ""), (.service // ""), (.bundleId // ""), (.shell // ""), ((.path // []) | map(":" + .) | join(""))' \
             >"${work}/fields"
         {
             read -r kind
@@ -111,12 +125,14 @@ if [ -f "${state}" ]; then
             read -r key
             read -r service
             read -r bundle_id
+            read -r shell
             read -r nested || nested=""
         } <"${work}/fields"
         case ${kind} in
             file) remove_file ;;
             defaults) remove_default ;;
             privacy) remove_privacy ;;
+            shell) remove_shell ;;
             *) echo "reconcile: unknown kind ${kind}, keeping it" >&2 && carry ;;
         esac
     done <"${work}/stale"
