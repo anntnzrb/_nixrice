@@ -115,6 +115,12 @@
 
   openai-compatibility = [
     {
+      name = "openrouter";
+      base-url = "https://openrouter.ai/api/v1";
+      prefix = "openrouter";
+      x-credential-pool = "openrouter";
+    }
+    {
       name = "opencode-go-custom";
       base-url = "https://opencode.ai/zen/go/v1";
       prefix = "opencode-go";
