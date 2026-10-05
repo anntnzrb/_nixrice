@@ -4,7 +4,7 @@
       name = "rice";
       description = "rice";
       repository = "https://github.com/anntnzrb/_nixrice";
-      destination = "repos/rice";
+      destination = "src/rice";
       branch = "dev";
     })
   ];
