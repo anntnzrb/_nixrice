@@ -6,15 +6,8 @@ let
 
   inherit (pkgs.stdenvNoCC.hostPlatform) isLinux;
 
-  eza = {
-    flags = "--color=auto --group-directories-first --icons";
-    bin = "${getExe pkgs.eza} ${eza.flags}";
-  };
-
-  bat = {
-    flags = "--color=auto --style=full";
-    bin = "${getExe pkgs.bat} ${bat.flags}";
-  };
+  ls = "${getExe' coreutils "ls"} --color=auto --group-directories-first --almost-all";
+  tree = "${getExe pkgs.tree} -C --dirsfirst";
 in
 {
   config.home.shellAliases = {
@@ -44,15 +37,11 @@ in
 
     nix-lockfile-update = "${getExe pkgs.nix} flake update --commit-lock-file --option commit-lockfile-summary 'chore(flake): update lockfile'";
 
-    ls = "${eza.bin} --sort=Name --all --group --header";
-    ll = "${eza.bin} --sort=Name --all --group --header --long";
+    inherit ls tree;
+    ll = "${ls} -l --human-readable";
 
-    tree = "${eza.bin} --group --header --tree";
-    treea = "${eza.bin} --all --group --header --tree";
-    treed = "${eza.bin} --group --header --tree --only-dirs";
-
-    cat = "${bat.bin} --paging=never";
-    less = "${bat.bin}";
+    treea = "${tree} -a";
+    treed = "${tree} -d";
   }
   // optionalAttrs isLinux {
     lsblk = "${getExe' pkgs.util-linux "lsblk"} --all --ascii";

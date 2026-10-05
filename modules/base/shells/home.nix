@@ -37,12 +37,14 @@ in
 
       file.".hushlogin".text = "";
 
-      shellAliases.grep = "${lib.getExe ripgrep} --color=auto --column --hidden --ignore-case --line-number --with-filename";
+      shellAliases.grep = "${lib.getExe pkgs.gnugrep} --color=auto --ignore-case --line-number --with-filename";
 
       packages = with pkgs; [
         dust
         fd
+        jq
         ripgrep
+        yq-go
       ];
     };
   };
