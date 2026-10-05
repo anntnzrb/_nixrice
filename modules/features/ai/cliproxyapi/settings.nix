@@ -45,6 +45,7 @@
     disable-codex-cloaking = false;
     optimize-multi-agent-v2 = true;
     stream-bootstrap-buffering = true;
+    stream-bootstrap-timeout = "60s";
     model-level-cooling = true;
   };
 
