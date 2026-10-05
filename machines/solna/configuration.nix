@@ -1,4 +1,13 @@
-{ inputs, lib, ... }: {
+{
+  inputs,
+  lib,
+  config,
+  ...
+}:
+let
+  proxy = config.liberion.ai.cliproxyapi;
+in
+{
   imports = with inputs.self.nixosModules; [
     ./disk.nix
     bash
@@ -6,9 +15,23 @@
     networkmanager
     systemd-boot
     tailscale
+    cliproxyapi
   ];
 
   users.users.${lib.liberion.identity.user}.linger = true;
+
+  liberion.network.tailscale.expose = {
+    proxy-private = {
+      port = 9443;
+      target = "http://${proxy.settings.host}:${toString proxy.settings.port}";
+    };
+    proxy-public = {
+      port = 443;
+      target = "http://127.0.0.1:${toString proxy.publicAuthPort}";
+      funnel = true;
+    };
+  };
+  liberion.ai.cliproxyapi.publicAuth = true;
 
   hardware.facter.detected = {
     bluetooth.enable = false;
