@@ -26,5 +26,6 @@ The server profile disables sleep and lid-triggered suspension, enables ZRAM,
 and configures key-only SSH. Tailscale enrollment is separate from enabling
 its daemon. Automatic power-on after battery exhaustion is not verified.
 
-`_home.nix` explicitly selects administration tools and Python/JavaScript
-runtimes rather than importing the full common Home Manager package set.
+`home.nix` receives the shared Home Manager base through machine discovery.
+GitHub CLI and direnv settings belong to their shared feature modules; system
+and hardware configuration remain machine-specific.
