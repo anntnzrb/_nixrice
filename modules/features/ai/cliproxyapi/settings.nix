@@ -8,7 +8,7 @@
     disable-auto-update-panel = true;
   };
 
-  auth-dir = stateDir;
+  auth-dir = "${stateDir}/auth";
 
   debug = false;
   logging-to-file = true;

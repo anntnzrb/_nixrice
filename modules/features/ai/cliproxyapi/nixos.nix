@@ -64,7 +64,10 @@ in
         serviceConfig = {
           User = account;
           Group = account;
-          StateDirectory = account;
+          StateDirectory = [
+            account
+            "${account}/auth"
+          ];
           StateDirectoryMode = "0700";
           RuntimeDirectory = account;
           RuntimeDirectoryMode = "0700";
