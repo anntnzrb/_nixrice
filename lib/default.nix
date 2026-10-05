@@ -131,6 +131,66 @@ in
       ${command} > $out
     '';
 
+  gitCheckout =
+    {
+      name,
+      description,
+      repository,
+      destination,
+      branch,
+    }:
+    { config, pkgs, ... }:
+    let
+      updater = pkgs.writeShellApplication {
+        name = "update-${name}";
+        runtimeInputs = with pkgs; [
+          coreutils
+          git
+          openssh
+        ];
+        text = builtins.readFile ./git-checkout.sh;
+      };
+      arguments = [
+        (lib.getExe updater)
+        repository
+        "${config.home.homeDirectory}/${destination}"
+        branch
+      ];
+    in
+    {
+      systemd.user = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+        services.${name} = {
+          Unit.Description = "Prepare and fast-forward the ${description} source checkout";
+          Service = {
+            Type = "oneshot";
+            ExecStart = lib.escapeShellArgs arguments;
+            TimeoutStartSec = 120;
+            Nice = 19;
+          };
+        };
+        timers.${name} = {
+          Unit.Description = "Update the ${description} source checkout every five minutes";
+          Timer = {
+            OnStartupSec = "1min";
+            OnUnitInactiveSec = "5min";
+          };
+          Install.WantedBy = [ "timers.target" ];
+        };
+      };
+
+      launchd.agents.${name} = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+        enable = true;
+        config = {
+          ProgramArguments = arguments;
+          RunAtLoad = true;
+          StartInterval = 300;
+          ProcessType = "Background";
+          LowPriorityIO = true;
+          Nice = 19;
+        };
+      };
+    };
+
   darwin = rec {
     wmHandoff = { pkgs, user }: import ./wm-handoff.nix { inherit lib pkgs user; };
 
