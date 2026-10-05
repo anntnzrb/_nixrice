@@ -72,6 +72,7 @@ in
   };
 
   config = {
+    programs.nix-ld.enable = true;
     users.users.cliproxyapi = {
       isSystemUser = true;
       group = account;
