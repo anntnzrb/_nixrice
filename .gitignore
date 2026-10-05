@@ -8,3 +8,6 @@ result*
 tmp/
 CLAUDE.md
 target/
+__pycache__/
+*.py[cod]
+.pytest_cache/
