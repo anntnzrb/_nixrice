@@ -4,6 +4,7 @@
     (inputs.self + "/modules/base/shells/home.nix")
   ]
   ++ (with inputs.self.homeModules; [
+    ai-agents
     btop
     bun
     direnv

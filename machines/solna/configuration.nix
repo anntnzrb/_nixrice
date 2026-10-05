@@ -9,6 +9,7 @@
   ];
 
   home-manager.users.${lib.liberion.identity.user}.imports = [ ./_home.nix ];
+  users.users.${lib.liberion.identity.user}.linger = true;
 
   hardware.facter.detected = {
     bluetooth.enable = false;
