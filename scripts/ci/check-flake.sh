@@ -21,4 +21,4 @@ fi
 check
 
 nix develop --option eval-cache false --no-write-lock-file path:. \
-    -c clan vars check
+    -c clan vars check --flake path:.
