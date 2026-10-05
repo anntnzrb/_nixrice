@@ -1,6 +1,6 @@
 { lib, config, ... }:
 let
-  inherit (lib.liberion.module) mkOpt' mkOptEnabled';
+  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
 
   cfg = config.liberion.shells.tmux;
   cockpit = "${config.xdg.configHome}/tmux/scripts/cockpit-reset.sh";
@@ -8,7 +8,7 @@ in
 {
   options.liberion.shells.tmux = {
     layouts.cockpit = {
-      enable = mkOptEnabled';
+      enable = mkOptDisabled';
       bind = mkOpt' lib.types.str "M";
     };
   };
