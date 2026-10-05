@@ -389,6 +389,19 @@ def sync_file_atomically(path: Path, content: str, mode: int = 0o600) -> None:
     tmp_name.replace(path)
 
 
+def write_in_place(path: Path, content: str) -> None:
+    """Rewrite the live config without replacing its inode.
+
+    CLIProxyAPI watches the config file itself; a rename would drop that watch,
+    so only an in-place write triggers its hot reload.
+    """
+    if path.exists() and path.read_text(encoding="utf-8") == content:
+        return
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as handle:
+        handle.write(content)
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Generate runtime CLIProxyAPI config.")
     parser.add_argument("--settings", required=True, help="Path to base settings YAML")
@@ -407,7 +420,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         rendered_yaml = merge_config(settings_text, pools, cache=cache)
         sync_file_atomically(cache_path, f"{json.dumps(cache, indent=2, sort_keys=True)}\n")
         if args.out:
-            sync_file_atomically(Path(args.out), rendered_yaml)
+            write_in_place(Path(args.out), rendered_yaml)
     except ConfigureError as err:
         sys.stderr.write(f"cliproxyapi configure error: {err}\n")
         return 1

@@ -199,6 +199,17 @@ def test_discovery_without_a_listing_or_cache_declares_no_models(tmp_path):
     assert run_configure(tmp_path, "http://127.0.0.1:9/v1")["models"] == []
 
 
+def test_regenerating_keeps_the_watched_config_inode(tmp_path):
+    run_configure(tmp_path, "http://127.0.0.1:9/v1")
+    out = tmp_path / "config.yaml"
+    inode = out.stat().st_ino
+    (tmp_path / "models.json").write_text(json.dumps({"zen": [{"name": "fresh"}]}))
+
+    assert run_configure(tmp_path, "http://127.0.0.1:9/v1")["models"] == [{"name": "fresh"}]
+    assert out.stat().st_ino == inode
+    assert out.stat().st_mode & 0o777 == 0o600
+
+
 def test_exclusion_without_discovery_is_rejected():
     settings_yaml = """
 openai-compatibility:

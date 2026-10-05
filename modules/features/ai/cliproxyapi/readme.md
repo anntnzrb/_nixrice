@@ -13,10 +13,10 @@ Nix generates the public YAML from `settings.nix`. Before every start, `configur
 - `x-credential-pool` expands to the API keys of the named pool. Every pool in the secrets file must be referenced.
 - `x-model-discovery` reads the pool's `{base-url}/models` with its first key. `x-model-exclude` removes model IDs that another section already serves. The last successful listing is stored in `/var/lib/cliproxyapi/models.json`; an unreachable upstream keeps its cached models.
 
-Provision `secrets.json` and the OAuth credential files under the state directory, owned by `cliproxyapi` with mode `0600`. They are runtime state: the proxy renews OAuth files itself, so deployments never overwrite them. Without `secrets.json` the services do not start; start them after provisioning.
+Provision `secrets.json` in the state directory and the OAuth credential files in its `auth/` subdirectory, owned by `cliproxyapi` with mode `0600`. The proxy treats every `.json` in `auth/` as a credential, so nothing else belongs there. Both are runtime state: the proxy renews OAuth files itself, so deployments never overwrite them. Without `secrets.json` the services do not start; start them after provisioning.
 
 ## Updates
 
-At 04:00 daily, `cliproxyapi-update` installs the latest checksum-verified release and refreshes the model catalog. It restarts the backend only when the selected release or the catalog changed. A restart can interrupt in-flight requests. Failed downloads keep the selected release and fail the unit visibly.
+At 04:00 daily, `cliproxyapi-update` installs the latest checksum-verified release and regenerates the runtime configuration with a refreshed model catalog. The proxy hot-reloads that file, so a catalog change needs no restart; the file is rewritten in place because the proxy watches its inode. The update restarts the backend only when the selected release changed. The proxy closes connections on stop without draining, so that restart interrupts in-flight requests. Failed downloads keep the selected release and fail the unit visibly.
 
 Inspect with `systemctl status cliproxyapi`, `systemctl list-timers cliproxyapi-update`, and `journalctl -u cliproxyapi`.

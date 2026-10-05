@@ -21,14 +21,14 @@ let
 
   update = pkgs.writeShellScript "cliproxyapi-update" ''
     set -eu
-    state() {
-      ${pkgs.coreutils}/bin/readlink "${releases}/current" || true
-      ${pkgs.coreutils}/bin/cat "${modelsCache}" 2>/dev/null || true
-    }
-    before=$(state)
+    before=$(${pkgs.coreutils}/bin/readlink "${releases}/current" || true)
     ${pkgs.util-linux}/bin/runuser -u ${account} -- ${install}
-    ${pkgs.util-linux}/bin/runuser -u ${account} -- ${configure} --secrets ${secretsFile}
-    if [ "$before" != "$(state)" ]; then
+    if [ -d "$(${pkgs.coreutils}/bin/dirname ${runtimeConfig})" ]; then
+      ${pkgs.util-linux}/bin/runuser -u ${account} -- ${configure} --secrets ${secretsFile} --out ${runtimeConfig}
+    else
+      ${pkgs.util-linux}/bin/runuser -u ${account} -- ${configure} --secrets ${secretsFile}
+    fi
+    if [ "$before" != "$(${pkgs.coreutils}/bin/readlink "${releases}/current")" ]; then
       ${pkgs.systemd}/bin/systemctl try-restart cliproxyapi.service
     fi
   '';
