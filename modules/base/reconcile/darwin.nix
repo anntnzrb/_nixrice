@@ -142,8 +142,17 @@ let
     }
   ) cfg.owned.files;
 
+  shellEntries = lib.optional (cfg.owned.shell != null) (
+    withId "shell" {
+      inherit (cfg.owned) shell;
+      restart = [ ];
+    }
+  );
+
   manifest = pkgs.writeText "liberion-owned.json" (
-    builtins.toJSON (lib.unique (defaultsEntries ++ fileEntries ++ privacyEntries))
+    builtins.toJSON (
+      lib.unique (defaultsEntries ++ fileEntries ++ privacyEntries ++ shellEntries)
+    )
   );
 
   reconcile = pkgs.writeShellApplication {
@@ -229,6 +238,7 @@ in
       files = mkOpt' (types.attrsOf (
         types.submodule { options.restart = restartOpt; }
       )) { };
+      shell = mkOpt' (types.nullOr types.path) null;
     };
   };
 

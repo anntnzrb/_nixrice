@@ -180,7 +180,9 @@ In-repo Clan services: `modules/services/<name>/default.nix`
   `liberion.darwin.defaults.currentHost` (ByHost), which are tracked
   automatically. Anything an activation script writes itself must be claimed
   in `liberion.darwin.owned.defaults` (a key, or a nested `path` inside one)
-  or `liberion.darwin.owned.files`. Unreadable domains are kept and retried.
+  or `liberion.darwin.owned.files`. A login shell set through `users.knownUsers`
+  is claimed in `liberion.darwin.owned.shell`; removing the claim resets it to
+  `/bin/zsh` unless it was changed since. Unreadable domains are kept and retried.
   A new nix-darwin `system.defaults` scope fails evaluation until it is mapped.
   Only what the configuration claimed is ever removed: apps, preferences and
   grants the owner set up by hand are never touched. A failing reconcile warns
