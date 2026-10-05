@@ -5,7 +5,9 @@
 Merges Nix-generated native YAML settings and private JSON secrets into a
 concrete runtime YAML config. Expands x-credential-pool markers across native
 credential sections and openai-compatibility pools, validating that every
-referenced pool exists and that no credentials are duplicated.
+referenced pool exists and that no credentials are duplicated. Pools marked
+x-model-discovery list the upstream's current models; the last successful
+listing is cached so an unreachable upstream keeps its previous models.
 """
 
 from __future__ import annotations
@@ -17,15 +19,26 @@ import re
 import stat
 import sys
 import tempfile
-from collections.abc import Mapping, Sequence
+import urllib.request
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Final, TypeIs
+from typing import Final, NotRequired, TypedDict, TypeIs
 
 import yaml
 
 POOL_NAME_PATTERN: Final[re.Pattern[str]] = re.compile(r"^[a-z][a-z0-9-]*$")
 POOL_MARKER: Final[str] = "x-credential-pool"
+DISCOVERY_MARKER: Final[str] = "x-model-discovery"
+EXCLUDE_MARKER: Final[str] = "x-model-exclude"
+DISCOVERY_TIMEOUT_SECONDS: Final[float] = 10.0
+
+ModelEntry = TypedDict(
+    "ModelEntry",
+    {"name": str, "display-name": NotRequired[str], "max-context-length": NotRequired[int]},
+)
+type ModelFetcher = Callable[[str, str], list[ModelEntry] | None]
+type ModelCache = dict[str, list[ModelEntry]]
 
 NATIVE_CREDENTIAL_SECTIONS: Final[tuple[str, ...]] = (
     "claude-api-key",
@@ -124,6 +137,95 @@ def credential_config(cred: Credential) -> dict[str, object]:
     return res
 
 
+def parse_model_listing(payload: object) -> list[ModelEntry] | None:
+    """Project an OpenAI-style `/models` response into CLIProxyAPI model entries."""
+    if not is_obj_dict(payload):
+        return None
+    data = payload.get("data")
+    if not is_obj_list(data):
+        return None
+    models: list[ModelEntry] = []
+    for item in data:
+        if not is_obj_dict(item):
+            continue
+        identifier = item.get("id")
+        if not isinstance(identifier, str) or not identifier:
+            continue
+        entry: ModelEntry = {"name": identifier}
+        display_name = item.get("name")
+        if isinstance(display_name, str) and display_name:
+            entry["display-name"] = display_name
+        context_length = item.get("context_length")
+        if isinstance(context_length, int) and not isinstance(context_length, bool) and context_length > 0:
+            entry["max-context-length"] = context_length
+        models.append(entry)
+    return models
+
+
+def fetch_models(base_url: str, api_key: str) -> list[ModelEntry] | None:
+    """Return the upstream's current models, or None when it cannot be listed."""
+    request = urllib.request.Request(
+        f"{base_url.rstrip('/')}/models",
+        headers={
+            "Accept": "application/json",
+            "Authorization": f"Bearer {api_key}",
+            "User-Agent": "rice-cliproxyapi/1.0",
+        },
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=DISCOVERY_TIMEOUT_SECONDS) as response:
+            payload: object = json.load(response)
+    except (OSError, ValueError):
+        return None
+    return parse_model_listing(payload)
+
+
+def parse_model_cache(content: str) -> ModelCache:
+    try:
+        raw: object = json.loads(content)
+    except ValueError as err:
+        raise ConfigureError(f"failed to parse model cache: {err}") from err
+    if not is_obj_dict(raw):
+        raise ConfigureError("model cache root must be an object")
+    cache: ModelCache = {}
+    for profile_name, entries in raw.items():
+        if not is_obj_list(entries):
+            raise ConfigureError(f"model cache entry {profile_name!r} must be a list")
+        models: list[ModelEntry] = []
+        for item in entries:
+            if not is_obj_dict(item) or not isinstance(item.get("name"), str):
+                raise ConfigureError(f"model cache entry {profile_name!r} has an invalid model")
+            entry: ModelEntry = {"name": str(item["name"])}
+            display_name = item.get("display-name")
+            if isinstance(display_name, str):
+                entry["display-name"] = display_name
+            context_length = item.get("max-context-length")
+            if isinstance(context_length, int) and not isinstance(context_length, bool):
+                entry["max-context-length"] = context_length
+            models.append(entry)
+        cache[profile_name] = models
+    return cache
+
+
+def discover_models(
+    profile_name: str,
+    base_url: str,
+    credential: Credential,
+    fetch: ModelFetcher,
+    cache: ModelCache,
+) -> list[ModelEntry]:
+    listed = fetch(base_url, credential.api_key)
+    if listed is not None:
+        cache[profile_name] = listed
+        return listed
+    cached = cache.get(profile_name)
+    if cached is None:
+        sys.stderr.write(f"cliproxyapi configure: cannot list models for {profile_name}; none declared\n")
+        return []
+    sys.stderr.write(f"cliproxyapi configure: cannot list models for {profile_name}; reusing cached models\n")
+    return cached
+
+
 def expand_native_section(
     section_name: str,
     items: object,
@@ -167,6 +269,8 @@ def expand_compatibility_section(
     items: object,
     pools: Mapping[str, Sequence[Credential]],
     referenced: set[str],
+    fetch: ModelFetcher,
+    cache: ModelCache,
 ) -> list[dict[str, object]]:
     if not is_obj_list(items):
         raise ConfigureError("'openai-compatibility' must be a list")
@@ -179,6 +283,9 @@ def expand_compatibility_section(
         profile = dict(item)
 
         if POOL_MARKER not in profile:
+            for marker in (DISCOVERY_MARKER, EXCLUDE_MARKER):
+                if marker in profile:
+                    raise ConfigureError(f"{label}.{marker} requires {POOL_MARKER}")
             expanded.append(profile)
             continue
 
@@ -196,6 +303,30 @@ def expand_compatibility_section(
 
         referenced.add(pool_name)
         creds = pools[pool_name]
+
+        excluded: frozenset[str] = frozenset()
+        if EXCLUDE_MARKER in profile:
+            raw_excluded = profile.pop(EXCLUDE_MARKER)
+            if DISCOVERY_MARKER not in profile:
+                raise ConfigureError(f"{label}.{EXCLUDE_MARKER} requires {DISCOVERY_MARKER}")
+            if not is_obj_list(raw_excluded) or not all(isinstance(m, str) and m for m in raw_excluded):
+                raise ConfigureError(f"{label}.{EXCLUDE_MARKER} must be a list of model ids")
+            excluded = frozenset(m for m in raw_excluded if isinstance(m, str))
+        if DISCOVERY_MARKER in profile:
+            if profile.pop(DISCOVERY_MARKER) is not True:
+                raise ConfigureError(f"{label}.{DISCOVERY_MARKER} must be true")
+            if "models" in profile:
+                raise ConfigureError(f"{label} cannot declare models when using {DISCOVERY_MARKER}")
+            profile_name = profile.get("name")
+            base_url = profile.get("base-url")
+            if not isinstance(profile_name, str) or not isinstance(base_url, str):
+                raise ConfigureError(f"{label}.{DISCOVERY_MARKER} requires name and base-url")
+            profile["models"] = [
+                model
+                for model in discover_models(profile_name, base_url, creds[0], fetch, cache)
+                if model["name"] not in excluded
+            ]
+
         profile["api-key-entries"] = [credential_config(c) for c in creds]
         expanded.append(profile)
 
@@ -205,7 +336,11 @@ def expand_compatibility_section(
 def merge_config(
     settings_content: str,
     pools: Mapping[str, Sequence[Credential]],
+    fetch: ModelFetcher = fetch_models,
+    cache: ModelCache | None = None,
 ) -> str:
+    """Render the runtime config; discovery updates `cache` in place."""
+    model_cache: ModelCache = {} if cache is None else cache
     try:
         raw_config: object = yaml.safe_load(settings_content)
     except Exception as err:  # noqa: BLE001 - parse boundary
@@ -226,6 +361,8 @@ def merge_config(
             config["openai-compatibility"],
             pools,
             referenced_pools,
+            fetch,
+            model_cache,
         )
 
     # Validate that no defined pool was left unused
@@ -256,16 +393,21 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Generate runtime CLIProxyAPI config.")
     parser.add_argument("--settings", required=True, help="Path to base settings YAML")
     parser.add_argument("--secrets", required=True, help="Path to secrets JSON file")
-    parser.add_argument("--out", required=True, help="Output runtime config YAML path")
+    parser.add_argument("--models-cache", required=True, help="Path to the discovered-model cache")
+    parser.add_argument("--out", help="Output runtime config YAML path; omit to refresh only the cache")
 
     args = parser.parse_args(argv)
 
     try:
         settings_text = Path(args.settings).read_text(encoding="utf-8")
         secrets_text = Path(args.secrets).read_text(encoding="utf-8")
+        cache_path = Path(args.models_cache)
+        cache = parse_model_cache(cache_path.read_text(encoding="utf-8")) if cache_path.exists() else {}
         pools = parse_secrets_json(secrets_text)
-        rendered_yaml = merge_config(settings_text, pools)
-        sync_file_atomically(Path(args.out), rendered_yaml)
+        rendered_yaml = merge_config(settings_text, pools, cache=cache)
+        sync_file_atomically(cache_path, f"{json.dumps(cache, indent=2, sort_keys=True)}\n")
+        if args.out:
+            sync_file_atomically(Path(args.out), rendered_yaml)
     except ConfigureError as err:
         sys.stderr.write(f"cliproxyapi configure error: {err}\n")
         return 1

@@ -122,6 +122,11 @@
       headers = {
         x-opencode-session = "$CPA-SESSION-ID";
       };
+      x-model-discovery = true;
+      x-model-exclude = [
+        "muse-spark-1.2-contributor"
+        "muse-spark-1.3-contributor"
+      ];
     }
     {
       name = "opencode-zen-custom";
@@ -131,18 +136,21 @@
       headers = {
         x-opencode-session = "$CPA-SESSION-ID";
       };
+      x-model-discovery = true;
     }
     {
       name = "cline-pass-custom";
       base-url = "https://api.cline.bot/api/v1";
       prefix = "cline-pass";
       x-credential-pool = "cline-pass";
+      x-model-discovery = true;
     }
     {
       name = "command-code-custom";
       base-url = "https://api.commandcode.ai/provider/v1";
       prefix = "command-code";
       x-credential-pool = "command-code";
+      x-model-discovery = true;
     }
     {
       name = "mimo-custom";
