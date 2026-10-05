@@ -5,7 +5,6 @@ let
 in
 {
   programs.bash.enable = true;
-  environment.shells = [ shell ];
 
   users = {
     knownUsers = [ user ];
