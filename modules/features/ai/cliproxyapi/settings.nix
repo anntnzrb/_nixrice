@@ -1,12 +1,5 @@
-{ paths }: {
-  host = "127.0.0.1";
-  port = 18317;
-
-  tls = {
-    enable = false;
-    cert = "";
-    key = "";
-  };
+{ stateDir }: {
+  port = 8317;
 
   remote-management = {
     allow-remote = true;
@@ -15,7 +8,7 @@
     disable-auto-update-panel = true;
   };
 
-  auth-dir = paths.state;
+  auth-dir = stateDir;
 
   debug = false;
   logging-to-file = true;
