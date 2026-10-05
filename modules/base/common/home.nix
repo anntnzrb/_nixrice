@@ -17,8 +17,6 @@
     bun
     husky
     node
-    omnix
-    repomix
     uv
 
     neovim
