@@ -25,11 +25,7 @@
   save-cooldown-status = false;
   transient-error-cooldown-seconds = -1;
 
-  quota-exceeded = {
-    switch-project = true;
-    switch-preview-model = true;
-    antigravity-credits = true;
-  };
+  quota-exceeded.antigravity-credits = true;
 
   nonstream-keepalive-interval = 15;
 
@@ -51,6 +47,8 @@
     stream-bootstrap-buffering = true;
     model-level-cooling = true;
   };
+
+  claude.model-level-cooling = true;
 
   antigravity = {
     connection-pool = {
@@ -112,6 +110,7 @@
       base-url = "https://opencode.ai/zen/go/v1";
       prefix = "opencode-go";
       x-credential-pool = "opencode-go";
+      support-prompt-cache-key = true;
       headers = {
         x-opencode-session = "$CPA-SESSION-ID";
       };
@@ -126,6 +125,7 @@
       base-url = "https://opencode.ai/zen/v1";
       prefix = "opencode-zen";
       x-credential-pool = "opencode-zen";
+      support-prompt-cache-key = true;
       headers = {
         x-opencode-session = "$CPA-SESSION-ID";
       };
@@ -136,6 +136,7 @@
       base-url = "https://api.cline.bot/api/v1";
       prefix = "cline-pass";
       x-credential-pool = "cline-pass";
+      support-prompt-cache-key = true;
       x-model-discovery = true;
     }
     {
@@ -143,6 +144,7 @@
       base-url = "https://api.commandcode.ai/provider/v1";
       prefix = "command-code";
       x-credential-pool = "command-code";
+      support-prompt-cache-key = true;
       x-model-discovery = true;
     }
     {
@@ -150,6 +152,7 @@
       base-url = "https://token-plan-sgp.xiaomimimo.com/v1";
       prefix = "mimo";
       x-credential-pool = "mimo";
+      support-prompt-cache-key = true;
       models = [
         {
           name = "mimo-v2.6-flash";
