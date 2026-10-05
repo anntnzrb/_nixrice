@@ -1,7 +1,8 @@
 { inputs, lib, ... }: {
   imports = with inputs.self.nixosModules; [
     ./disk.nix
-    fish
+    bash
+    essentials
     networkmanager
     systemd-boot
     tailscale

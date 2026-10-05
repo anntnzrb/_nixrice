@@ -1,7 +1,8 @@
 { inputs, pkgs, ... }: {
   imports = with inputs.self.nixosModules; [
+    bash
     disko-xfs
-    fish
+    essentials
     kernel-latest
     networkmanager
     podman
