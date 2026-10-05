@@ -92,6 +92,8 @@ in
             User = account;
             Group = account;
             StateDirectory = account;
+            StateDirectoryMode = "0700";
+            UMask = "0077";
             ExecStart = "${installerScript}";
             TimeoutStartSec = policy.preparationTimeout;
           };
