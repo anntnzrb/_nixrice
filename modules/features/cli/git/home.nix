@@ -100,7 +100,13 @@ in
         };
       };
 
-      gh = lib.mkIf cfg.gh.enable { enable = true; };
+      gh = lib.mkIf cfg.gh.enable {
+        enable = true;
+        settings = {
+          git_protocol = "ssh";
+          prompt = "enabled";
+        };
+      };
 
       lazygit = lib.mkIf cfg.lazygit.enable {
         enable = true;
