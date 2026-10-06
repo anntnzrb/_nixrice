@@ -77,12 +77,24 @@
       checks.tests =
         let
           failures = import "${self}/tests" { inherit lib self; };
+          vendoredUpdater = import (self + "/modules/base/vendored/package.nix") {
+            inherit pkgs;
+          };
         in
         if failures == [ ] then
-          pkgs.runCommand "liberion-tests" { nativeBuildInputs = [ pkgs.jq ]; } ''
-            bash ${self}/tests/reconcile.sh ${self}/modules/base/reconcile/reconcile.sh
-            touch $out
-          ''
+          pkgs.runCommand "liberion-tests"
+            {
+              nativeBuildInputs = [
+                pkgs.jq
+                pkgs.git
+                pkgs.flock
+              ];
+            }
+            ''
+              bash ${self}/tests/reconcile.sh ${self}/modules/base/reconcile/reconcile.sh
+              bash ${self}/tests/vendored.sh ${lib.getExe vendoredUpdater}
+              touch $out
+            ''
         else
           throw "tests failed:\n${lib.concatStringsSep "\n" failures}";
 
