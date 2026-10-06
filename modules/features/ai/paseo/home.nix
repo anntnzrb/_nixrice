@@ -7,6 +7,7 @@
 }:
 let
   port = "6767";
+  wrapper = "${config.home.homeDirectory}/.local/bin/paseo";
 in
 {
   imports = [
@@ -17,7 +18,7 @@ in
       name = "paseo";
       description = "Paseo agent daemon";
       command = [
-        "${config.home.homeDirectory}/.local/bin/paseo"
+        wrapper
         "daemon"
         "run"
       ];
@@ -34,9 +35,11 @@ in
       description = "Restart the Paseo daemon onto its newest release when idle";
       schedule = "nightly";
       timeout = 900;
-      command = lib.liberion.agentsSync config ++ [
-        "job"
-        "paseo-update"
+      command = [
+        (lib.getExe pkgs.python3)
+        "${./paseo-update.py}"
+        "--wrapper"
+        wrapper
         "--service"
         (
           if pkgs.stdenv.hostPlatform.isLinux then
