@@ -4,7 +4,7 @@ Import `inputs.self.nixosModules.cliproxyapi` on the Linux gateway host. It runs
 
 ## Exposure
 
-The backend listens on its configured port on every interface, and the firewall opens that port only on `tailscale0`. Tailnet clients reach it directly, without authentication. The module publishes `auth-gateway.py` through Tailscale Funnel for Amp, which requires a hosted endpoint. That gateway accepts inference only with `CLIPROXY_FUNNEL_TOKEN` and refuses management routes. Never expose the backend directly through Funnel.
+The backend listens on its configured port on every interface, and the firewall opens that port only on `tailscale0`. Tailnet clients reach it directly, without authentication; `endpoint.nix` builds their `/v1` URL for modules here, and the agents repository declares the same URL for harnesses in `agents.toml`. The module publishes `auth-gateway.py` through Tailscale Funnel for Amp, which requires a hosted endpoint. That gateway accepts inference only with `CLIPROXY_FUNNEL_TOKEN` and refuses management routes. Never expose the backend directly through Funnel.
 
 ## Configuration and secrets
 
@@ -20,3 +20,9 @@ Provision `secrets.json` in the state directory and the OAuth credential files i
 At 04:00 daily, `cliproxyapi-update` installs the latest checksum-verified release and regenerates the runtime configuration with a refreshed model catalog. The proxy hot-reloads that file, so a catalog change needs no restart; the file is rewritten in place because the proxy watches its inode. The update restarts the backend only when the selected release changed. The proxy closes connections on stop without draining, so that restart interrupts in-flight requests. Failed downloads keep the selected release and fail the unit visibly.
 
 Inspect with `systemctl status cliproxyapi`, `systemctl list-timers cliproxyapi-update`, and `journalctl -u cliproxyapi`.
+
+Test: `nix shell nixpkgs#python3Packages.{pytest,pyyaml} -c pytest modules/features/ai/cliproxyapi/tests -q`.
+
+## Upstream
+
+Source: <https://github.com/router-for-me/CLIProxyAPI>. Configuration keys: `config.example.yaml` there.
