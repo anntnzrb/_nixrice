@@ -105,6 +105,8 @@
 
     clan-core = {
       url = "git+https://git.clan.lol/clan/clan-core?ref=26.05&shallow=1";
+      inputs.flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
+      inputs.treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nixpkgs = {
