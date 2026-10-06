@@ -12,6 +12,11 @@ let
   log = "${home}/.cache/amp/logs/runner-agents.log";
 in
 {
+  # Amp refuses to start when a --discover-dirs directory is missing.
+  home.activation.ampRunnerRepos = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    run mkdir -p ${lib.escapeShellArg "${home}/repos"}
+  '';
+
   imports = [
     inputs.self.homeModules.ai-agents
     # Serves ~/repos checkouts and the agents checkout from a neutral cwd. Only
