@@ -43,6 +43,9 @@ in
       "--hostname=${config.networking.hostName}"
       "--accept-routes=true"
     ];
+    # Serve and Funnel belong to the root-owned tailscale-expose units below;
+    # no login user may reconfigure tailscaled without sudo.
+    extraSetFlags = [ "--operator=" ];
   };
   systemd.services = builtins.listToAttrs mappings;
 }
