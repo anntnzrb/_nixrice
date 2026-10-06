@@ -1,12 +1,15 @@
 { inputs, lib, ... }: {
   imports = with inputs.self.nixosModules; [
     ./disk.nix
+    amp-runner
     bash
+    cliproxyapi
     essentials
     networkmanager
+    paseo
     systemd-boot
+    t3
     tailscale
-    cliproxyapi
   ];
 
   users.users.${lib.liberion.identity.user}.linger = true;
