@@ -110,20 +110,168 @@ let
     features = root + "/modules/features";
     profiles = root + "/modules/profiles";
   };
-in
-{
-  inherit identity load;
-  inherit (fleet) modules machineModule;
 
-  authorizedKeys = [ identity.keys.admin ] ++ identity.keys.devices;
+  # A user service starts with a bare PATH; this one reaches the sync-managed
+  # wrappers, Home Manager and system profiles, and the base system tools.
+  userPath =
+    config:
+    let
+      home = config.home.homeDirectory;
+    in
+    lib.concatStringsSep ":" [
+      "${home}/.local/bin"
+      "${home}/.bun/bin"
+      "${home}/.nix-profile/bin"
+      "/etc/profiles/per-user/${config.home.username}/bin"
+      "/run/current-system/sw/bin"
+      "/nix/var/nix/profiles/default/bin"
+      "/usr/bin"
+      "/bin"
+      "/usr/sbin"
+      "/sbin"
+    ];
 
-  isArchived = machine: builtins.elem "archived" machine.tags;
+  # The agents sync CLI from its installed runtime, never from the checkout.
+  agentsSync = config: [
+    "${config.home.homeDirectory}/.local/share/agents/sync-current/.venv/bin/python"
+    "-m"
+    "sync.cli"
+  ];
 
-  module = {
-    inherit mkOpt';
-    mkOptEnabled' = mkOpt' lib.types.bool true;
-    mkOptDisabled' = mkOpt' lib.types.bool false;
-  };
+  nightlyHours = [
+    3
+    4
+    5
+  ];
+
+  # A scheduled oneshot user job at idle priority: a systemd service and timer
+  # on Linux, a launchd agent on Darwin. `schedule` is "nightly" or an interval
+  # in seconds; `startup` (seconds) also runs it shortly after login or boot.
+  userJob =
+    {
+      name,
+      description,
+      command,
+      schedule,
+      startup ? null,
+      timeout ? null,
+    }:
+    { config, pkgs, ... }:
+    let
+      nightly = schedule == "nightly";
+      log = "${config.home.homeDirectory}/Library/Logs/${name}.log";
+    in
+    assert lib.assertMsg (
+      nightly || builtins.isInt schedule
+    ) "userJob ${name}: schedule must be \"nightly\" or seconds";
+    {
+      systemd.user = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+        services.${name} = {
+          Unit.Description = description;
+          Service = {
+            Type = "oneshot";
+            ExecStart = lib.escapeShellArgs command;
+            Environment = [ "PATH=${userPath config}" ];
+            Nice = 19;
+            IOSchedulingClass = "idle";
+          }
+          // lib.optionalAttrs (timeout != null) { TimeoutStartSec = timeout; };
+        };
+        timers.${name} = {
+          Unit.Description = description;
+          Timer =
+            if nightly then
+              {
+                OnCalendar = "*-*-* ${toString (lib.head nightlyHours)}..${toString (lib.last nightlyHours)}:00:00";
+                RandomizedDelaySec = "20min";
+                Persistent = true;
+              }
+            else
+              {
+                OnUnitInactiveSec = schedule;
+              }
+              // lib.optionalAttrs (startup != null) { OnStartupSec = startup; };
+          Install.WantedBy = [ "timers.target" ];
+        };
+      };
+
+      launchd.agents.${name} = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+        enable = true;
+        config = {
+          ProgramArguments = command;
+          EnvironmentVariables.PATH = userPath config;
+          ProcessType = "Background";
+          LowPriorityIO = true;
+          Nice = 19;
+          StandardOutPath = log;
+          StandardErrorPath = log;
+        }
+        // (
+          if nightly then
+            {
+              StartCalendarInterval = map (hour: {
+                Hour = hour;
+                Minute = 0;
+              }) nightlyHours;
+            }
+          else
+            {
+              StartInterval = schedule;
+              RunAtLoad = startup != null;
+            }
+        );
+      };
+    };
+
+  # A long-running user service restarted whenever it exits: a systemd user
+  # service on Linux, a kept-alive launchd agent on Darwin.
+  userService =
+    {
+      name,
+      description,
+      command,
+      environment ? { },
+    }:
+    { config, pkgs, ... }:
+    let
+      home = config.home.homeDirectory;
+      env = environment // {
+        PATH = userPath config;
+      };
+      log = "${home}/Library/Logs/${name}.log";
+    in
+    {
+      systemd.user = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+        services.${name} = {
+          Unit = {
+            Description = description;
+            After = [ "network-online.target" ];
+          };
+          Service = {
+            ExecStart = lib.escapeShellArgs command;
+            Environment = lib.mapAttrsToList (key: value: "${key}=${value}") env;
+            WorkingDirectory = home;
+            Restart = "always";
+            RestartSec = 5;
+          };
+          Install.WantedBy = [ "default.target" ];
+        };
+      };
+
+      launchd.agents.${name} = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+        enable = true;
+        config = {
+          ProgramArguments = command;
+          EnvironmentVariables = env;
+          WorkingDirectory = home;
+          RunAtLoad = true;
+          KeepAlive = true;
+          ThrottleInterval = 5;
+          StandardOutPath = log;
+          StandardErrorPath = log;
+        };
+      };
+    };
 
   zshInit =
     pkgs: name: command:
@@ -140,7 +288,7 @@ in
       branch,
       update ? null,
     }:
-    { config, pkgs, ... }:
+    { config, pkgs, ... }@args:
     let
       updater = pkgs.writeShellApplication {
         name = "update-${name}";
@@ -151,7 +299,11 @@ in
         ];
         text = builtins.readFile ./git-checkout.sh;
       };
-      arguments = [
+    in
+    userJob {
+      inherit name;
+      description = "Prepare and fast-forward the ${description} source checkout";
+      command = [
         (lib.getExe updater)
         repository
         "${config.home.homeDirectory}/${destination}"
@@ -162,41 +314,33 @@ in
           inherit config pkgs;
         })
       );
-    in
-    {
-      systemd.user = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
-        services.${name} = {
-          Unit.Description = "Prepare and fast-forward the ${description} source checkout";
-          Service = {
-            Type = "oneshot";
-            ExecStart = lib.escapeShellArgs arguments;
-            TimeoutStartSec = "20min";
-            Nice = 19;
-            IOSchedulingClass = "idle";
-          };
-        };
-        timers.${name} = {
-          Unit.Description = "Update the ${description} source checkout every five minutes";
-          Timer = {
-            OnStartupSec = "1min";
-            OnUnitInactiveSec = "5min";
-          };
-          Install.WantedBy = [ "timers.target" ];
-        };
-      };
+      schedule = 300;
+      startup = 60;
+      timeout = 1200;
+    } args;
+in
+{
+  inherit identity load;
+  inherit (fleet) modules machineModule;
 
-      launchd.agents.${name} = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
-        enable = true;
-        config = {
-          ProgramArguments = arguments;
-          RunAtLoad = true;
-          StartInterval = 300;
-          ProcessType = "Background";
-          LowPriorityIO = true;
-          Nice = 19;
-        };
-      };
-    };
+  authorizedKeys = [ identity.keys.admin ] ++ identity.keys.devices;
+
+  isArchived = machine: builtins.elem "archived" machine.tags;
+
+  module = {
+    inherit mkOpt';
+    mkOptEnabled' = mkOpt' lib.types.bool true;
+    mkOptDisabled' = mkOpt' lib.types.bool false;
+  };
+
+  inherit
+    userPath
+    agentsSync
+    userJob
+    userService
+    zshInit
+    gitCheckout
+    ;
 
   darwin = rec {
     wmHandoff = { pkgs, user }: import ./wm-handoff.nix { inherit lib pkgs user; };

@@ -10,4 +10,4 @@ The clone is prepared beside the destination and moved into place after completi
 
 On Linux the job runs as a user systemd service and timer named after `name`, every five minutes, at idle CPU and I/O priority, with a 20-minute start timeout to fit a project reconcile. It requires an active user manager; persistent operation after logout requires lingering configured separately. On Darwin it runs as a Home Manager launchd agent while the user's launchd session is available.
 
-Inspect Linux failures with `journalctl --user -u <name>.service` and the schedule with `systemctl --user status <name>.timer`. On Darwin inspect the generated agent in `~/Library/LaunchAgents/` and its launchd status. A checkout must not be scheduled by more than one updater.
+Inspect Linux failures with `journalctl --user -u <name>.service` and the schedule with `systemctl --user status <name>.timer`. On Darwin inspect the generated agent in `~/Library/LaunchAgents/`, logs in `~/Library/Logs/<name>.log`, and its launchd status. A checkout must not be scheduled by more than one updater.
