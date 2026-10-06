@@ -1,5 +1,4 @@
 {
-  config,
   inputs,
   lib,
   osConfig,
@@ -7,7 +6,6 @@
   ...
 }:
 let
-  bin = "${config.home.homeDirectory}/.local/bin";
   gateway = import (
     inputs.self + "/modules/features/ai/cliproxyapi/endpoint.nix"
   ) osConfig.clan.core.settings.domain;
@@ -25,12 +23,6 @@ let
     "${settings}"
     "--gateway"
     gateway
-    "--wrapper"
-    "pi=${bin}/pi"
-    "--wrapper"
-    "codex=${bin}/codex"
-    "--wrapper"
-    "claudeAgent=${bin}/claude"
   ];
 in
 {

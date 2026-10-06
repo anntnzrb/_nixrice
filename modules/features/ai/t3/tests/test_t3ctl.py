@@ -95,8 +95,6 @@ def run(home: Path, gateway: str, command: str, settings: Path) -> subprocess.Co
             str(settings),
             "--gateway",
             gateway,
-            "--wrapper",
-            "claudeAgent=/wrappers/claude",
         ],
         env={**os.environ, "T3CODE_HOME": str(home)},
         capture_output=True,
@@ -134,7 +132,6 @@ def test_update_merges_settings_and_restarts_through_t3_when_idle(
         "worktreeAfterDays": 30,
     }
     claude = live["providerInstances"]["claudeAgent"]["config"]  # type: ignore[index]
-    assert claude["binaryPath"] == "/wrappers/claude"
     assert claude["customModels"] == [{"slug": "gpt-x", "name": "GPT X"}]
     assert (tmp_path / "t3.log").read_text(encoding="utf-8") == "update --yes --channel nightly\n"
 

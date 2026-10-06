@@ -33,7 +33,6 @@ class Context:
     home: Path
     channel: str
     settings: Path
-    wrappers: dict[str, str]
     gateway: str
 
     @property
@@ -113,14 +112,6 @@ def instance_config(live: JsonObject, instance_id: str) -> JsonObject | None:
     return config
 
 
-def point_at_wrappers(live: JsonObject, wrappers: dict[str, str]) -> None:
-    """Run every harness through its sync-managed wrapper."""
-    for instance_id, wrapper in wrappers.items():
-        config = instance_config(live, instance_id)
-        if config is not None:
-            config["binaryPath"] = wrapper
-
-
 def gateway_models(gateway: str) -> list[Json] | None:
     """Non-Anthropic gateway models as Claude custom models; None if unreachable."""
     request = urllib.request.Request(  # noqa: S310 - fixed tailnet gateway
@@ -183,7 +174,6 @@ def apply_settings(ctx: Context) -> bool:
         raise SystemExit(msg)
     before = json.dumps(live, sort_keys=True)
     merge(live, declared)
-    point_at_wrappers(live, ctx.wrappers)
     refresh_claude_models(live, ctx.gateway)
     if json.dumps(live, sort_keys=True) == before:
         return False
@@ -244,20 +234,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--channel", required=True, choices=("stable", "nightly"))
     parser.add_argument("--settings", required=True, type=Path)
     parser.add_argument("--gateway", required=True)
-    parser.add_argument(
-        "--wrapper",
-        action="append",
-        default=[],
-        metavar="INSTANCE=PATH",
-        help="harness instance id and the wrapper T3 must run for it",
-    )
     args = parser.parse_args(argv)
-    wrappers = dict(entry.split("=", 1) for entry in cast("list[str]", args.wrapper))
     ctx = Context(
         home=Path(os.environ.get("T3CODE_HOME") or Path.home() / ".t3"),
         channel=cast("str", args.channel),
         settings=cast("Path", args.settings),
-        wrappers=wrappers,
         gateway=cast("str", args.gateway),
     )
     match cast("str", args.command):
