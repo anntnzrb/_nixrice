@@ -1,5 +1,7 @@
 { inputs, ... }: {
   imports = with inputs.self.homeModules; [
+    ai-agents
+    amp-runner
     ghostty
     ssh
     whatsapp

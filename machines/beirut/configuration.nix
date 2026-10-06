@@ -4,7 +4,9 @@
     bash
     brave
     essentials
+    paseo
     safari
+    t3
     tailscale
     tinycast
     ui

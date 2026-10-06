@@ -55,7 +55,7 @@ Rather than maintaining a custom forked kernel, the following sysctls are applie
   * Physical Gigabit Ethernet (`enp3s0`): Primary route (metric `100`).
   * Wi-Fi (`wlp2s0`): Automatic fallback route (metric `600`).
   * `nmtui` / `nmcli`: Available for headless emergency wireless configuration.
-* **OpenSSH**: Strict ED25519 public key authentication with `PermitRootLogin = "yes"` for automated remote Clan deployments; password authentication disabled.
+* **OpenSSH**: Strict ED25519 public key authentication for the admin user only; root login and password authentication are disabled. Clan deploys connect as the admin user and escalate with `sudo`.
 
 ---
 

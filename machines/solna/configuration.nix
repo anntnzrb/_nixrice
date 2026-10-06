@@ -1,14 +1,18 @@
 { inputs, lib, ... }: {
   imports = with inputs.self.nixosModules; [
     ./disk.nix
+    amp-runner
     bash
+    cliproxyapi
     essentials
     networkmanager
+    paseo
     systemd-boot
+    t3
     tailscale
   ];
 
-  home-manager.users.${lib.liberion.identity.user}.imports = [ ./_home.nix ];
+  users.users.${lib.liberion.identity.user}.linger = true;
 
   hardware.facter.detected = {
     bluetooth.enable = false;

@@ -1,6 +1,6 @@
 ''
   layout {
-      cwd "~/repos/rice"
+      cwd "~/src/rice"
 
       default_tab_template {
           children

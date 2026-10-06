@@ -75,6 +75,9 @@ by directory name as `self.{nixos,darwin,home}Modules.<name>`. Other files in
 a directory are helpers, imported explicitly; paths containing `/_` are
 ignored. Directory names are unique across features and profiles.
 
+Keep retired modules as reusable history; disconnect their imports instead of
+deleting them. Unimported modules add no packages or services to a machine.
+
 **Importing a feature is enabling it** - there are no `enable` toggles:
 
 ```nix

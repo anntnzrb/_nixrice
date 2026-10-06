@@ -39,7 +39,7 @@ test "$(<"${work}/unmanaged")" = unmanaged
 jq -e '. == []' "${work}/first-run.json"
 
 printf '%s\n' '{invalid' >"${work}/broken.json"
-if bash "${reconcile}" "${work}/broken.json" "${work}/manifest.json" "${user}"; then
+if bash "${reconcile}" "${work}/broken.json" "${work}/manifest.json" "${user}" 2>/dev/null; then
     exit 1
 fi
 test "$(<"${work}/broken.json")" = '{invalid'

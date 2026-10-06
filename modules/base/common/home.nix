@@ -17,8 +17,6 @@
     bun
     husky
     node
-    omnix
-    repomix
     uv
 
     neovim
@@ -28,6 +26,11 @@
 
   programs = {
     command-not-found.enable = false;
+    nix-index = {
+      enableBashIntegration = false;
+      enableZshIntegration = false;
+      enableFishIntegration = false;
+    };
     nix-index-database.comma.enable = true;
   };
 

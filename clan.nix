@@ -105,10 +105,9 @@ in
       roles.client.machines.beirut.settings.defaultBuilders = [ "oulu" ];
     };
 
-    sshd = {
-      roles.server.tags = [ "server" ];
-      roles.server.settings.authorizedKeys.annt-liberion = identity.keys.admin;
-    };
+    # Host keys and certificates only; root has no SSH keys, the admin user
+    # logs in and escalates with sudo.
+    sshd.roles.server.tags = [ "server" ];
 
     user-annt = {
       module.name = "users";

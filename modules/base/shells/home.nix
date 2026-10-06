@@ -47,5 +47,12 @@ in
         yq-go
       ];
     };
+
+    # sessionPath reaches login shells only. systemd user services, and every
+    # process they start, read environment.d; ordering after NixOS's
+    # 50-systemd-path.conf keeps its PATH assignment from discarding ours.
+    xdg.configFile."environment.d/60-local-bin.conf" =
+      lib.mkIf pkgs.stdenv.hostPlatform.isLinux
+        { text = "PATH=${config.home.homeDirectory}/.local/bin:\${PATH}\n"; };
   };
 }

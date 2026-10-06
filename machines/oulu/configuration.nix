@@ -1,12 +1,15 @@
 { inputs, pkgs, ... }: {
   imports = with inputs.self.nixosModules; [
+    amp-runner
     bash
     disko-xfs
     essentials
     kernel-latest
     networkmanager
+    paseo
     podman
     systemd-boot
+    t3
     tailscale
   ];
 
@@ -15,12 +18,7 @@
   environment.localBinInPath = true;
   programs.nix-ld.enable = true;
 
-  environment.systemPackages = with pkgs; [
-    ffmpeg
-    labwc
-    (callPackage ./waymote.nix { })
-    wlr-randr
-  ];
+  environment.systemPackages = [ (pkgs.callPackage ./waymote.nix { }) ];
 
   nix.settings = {
     max-jobs = 6;

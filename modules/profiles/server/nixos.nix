@@ -78,7 +78,8 @@ in
       ];
       openFirewall = true;
       settings = {
-        PermitRootLogin = "yes";
+        # Deploys and admin log in as the user and escalate with sudo.
+        PermitRootLogin = "no";
         PasswordAuthentication = false;
       };
     };
@@ -111,12 +112,9 @@ in
     ];
   };
 
-  users.users = {
-    ${userName} = {
-      isNormalUser = true;
-      extraGroups = [ "wheel" ];
-      openssh.authorizedKeys.keys = authorizedKeys;
-    };
-    root.openssh.authorizedKeys.keys = authorizedKeys;
+  users.users.${userName} = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ];
+    openssh.authorizedKeys.keys = authorizedKeys;
   };
 }
