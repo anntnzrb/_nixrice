@@ -138,6 +138,7 @@ in
       repository,
       destination,
       branch,
+      update ? null,
     }:
     { config, pkgs, ... }:
     let
@@ -155,7 +156,12 @@ in
         repository
         "${config.home.homeDirectory}/${destination}"
         branch
-      ];
+      ]
+      ++ lib.optional (update != null) (
+        lib.getExe (update {
+          inherit config pkgs;
+        })
+      );
     in
     {
       systemd.user = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
@@ -164,8 +170,9 @@ in
           Service = {
             Type = "oneshot";
             ExecStart = lib.escapeShellArgs arguments;
-            TimeoutStartSec = 120;
+            TimeoutStartSec = "20min";
             Nice = 19;
+            IOSchedulingClass = "idle";
           };
         };
         timers.${name} = {

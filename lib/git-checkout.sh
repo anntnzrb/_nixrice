@@ -4,6 +4,7 @@ set -eu
 repository=$1
 destination=$2
 branch=$3
+update=${4:-}
 
 export GIT_TERMINAL_PROMPT=0
 export GIT_SSH_COMMAND='ssh -o BatchMode=yes -o ConnectTimeout=15'
@@ -20,7 +21,11 @@ if [ ! -e "${destination}" ] && [ ! -L "${destination}" ]; then
         exit 1
     fi
     mv "${temporary}/repository" "${destination}"
-    exit 0
+    rmdir "${temporary}"
+    trap - EXIT
+    if [ -z "${update}" ]; then
+        exit 0
+    fi
 fi
 
 if [ -L "${destination}" ] || [ ! -d "${destination}/.git" ]; then
@@ -31,6 +36,9 @@ origin=$(git -C "${destination}" remote get-url origin)
 if [ "${origin}" != "${repository}" ]; then
     echo "git-checkout: unexpected origin; leaving checkout untouched" >&2
     exit 1
+fi
+if [ -n "${update}" ]; then
+    exec "${update}" "${destination}"
 fi
 current=$(git -C "${destination}" symbolic-ref --quiet --short HEAD) || exit 0
 if [ "${current}" != "${branch}" ]; then
