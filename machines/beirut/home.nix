@@ -3,7 +3,6 @@
     ai-agents
     amp-runner
     ghostty
-    paseo
     ssh
     whatsapp
   ];
