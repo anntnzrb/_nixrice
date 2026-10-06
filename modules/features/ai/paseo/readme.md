@@ -6,7 +6,7 @@ The system module publishes the daemon to the tailnet with Tailscale Serve on HT
 
 ## Updates
 
-The wrapper installs the newest release on every launch, but the daemon keeps its version until it restarts. The nightly `paseo-update` job runs `paseo-update.py`: it restarts the service when `paseo --version` is newer than the running daemon and no agent is initializing or running. An unreadable status or agent listing never restarts.
+The wrapper installs the newest release on every launch, but the daemon keeps its version until it restarts. The nightly `paseo-update` job (`lib.liberion.idleRestartJob`, kind `paseo`, script `modules/features/ai/idle-restart.py`) restarts the service when `paseo --version` differs from the running daemon's `daemonVersion` and no agent is initializing or running. An unreadable status or agent listing never restarts.
 
 ## Operate
 

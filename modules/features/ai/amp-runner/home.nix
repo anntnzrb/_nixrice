@@ -44,18 +44,11 @@ in
         log
       ];
     })
-    (lib.liberion.userJob {
-      name = "amp-runner-update";
-      description = "Restart the Amp runner onto its newest release when idle";
-      schedule = "nightly";
-      timeout = 900;
-      command = [
-        (lib.getExe pkgs.python3)
-        "${./amp-runner-update.py}"
-        "--wrapper"
-        wrapper
-        "--service"
-        (if linux then "amp-runner.service" else "org.nix-community.home.amp-runner")
+    (lib.liberion.idleRestartJob {
+      service = "amp-runner";
+      kind = "amp";
+      inherit wrapper;
+      extraArgs = [
         "--log-file"
         log
       ];

@@ -2,7 +2,6 @@
   config,
   inputs,
   lib,
-  pkgs,
   ...
 }:
 let
@@ -30,24 +29,10 @@ in
         PASEO_TRUSTED_PROXIES = "loopback";
       };
     })
-    (lib.liberion.userJob {
-      name = "paseo-update";
-      description = "Restart the Paseo daemon onto its newest release when idle";
-      schedule = "nightly";
-      timeout = 900;
-      command = [
-        (lib.getExe pkgs.python3)
-        "${./paseo-update.py}"
-        "--wrapper"
-        wrapper
-        "--service"
-        (
-          if pkgs.stdenv.hostPlatform.isLinux then
-            "paseo.service"
-          else
-            "org.nix-community.home.paseo"
-        )
-      ];
+    (lib.liberion.idleRestartJob {
+      service = "paseo";
+      kind = "paseo";
+      inherit wrapper;
     })
   ];
 }

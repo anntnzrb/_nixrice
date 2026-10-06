@@ -273,6 +273,40 @@ let
       };
     };
 
+  # Nightly job that restarts a wrapper-launched `userService` onto the
+  # wrapper's newest release once `kind` (see modules/features/ai/
+  # idle-restart.py) reports no work in flight.
+  idleRestartJob =
+    {
+      service,
+      kind,
+      wrapper,
+      extraArgs ? [ ],
+    }:
+    { pkgs, ... }@args:
+    userJob {
+      name = "${service}-update";
+      description = "Restart ${service} onto its newest release when idle";
+      schedule = "nightly";
+      timeout = 900;
+      command = [
+        (lib.getExe pkgs.python3)
+        "${root + "/modules/features/ai/idle-restart.py"}"
+        "--kind"
+        kind
+        "--wrapper"
+        wrapper
+        "--service"
+        (
+          if pkgs.stdenv.hostPlatform.isLinux then
+            "${service}.service"
+          else
+            "org.nix-community.home.${service}"
+        )
+      ]
+      ++ extraArgs;
+    } args;
+
   zshInit =
     pkgs: name: command:
     pkgs.runCommand "${name}-zsh-init" { } ''
@@ -338,6 +372,7 @@ in
     agentsSync
     userJob
     userService
+    idleRestartJob
     zshInit
     gitCheckout
     ;
