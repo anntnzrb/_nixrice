@@ -9,6 +9,7 @@
 let
   home = config.home.homeDirectory;
   linux = pkgs.stdenv.hostPlatform.isLinux;
+  wrapper = "${home}/.local/bin/amp";
   log = "${home}/.cache/amp/logs/runner-agents.log";
 in
 {
@@ -26,7 +27,7 @@ in
       name = "amp-runner";
       description = "Amp runner";
       command = [
-        "${home}/.local/bin/amp"
+        wrapper
         "--no-tui"
         "--runner-id"
         osConfig.networking.hostName
@@ -48,9 +49,11 @@ in
       description = "Restart the Amp runner onto its newest release when idle";
       schedule = "nightly";
       timeout = 900;
-      command = lib.liberion.agentsSync config ++ [
-        "job"
-        "amp-runner-update"
+      command = [
+        (lib.getExe pkgs.python3)
+        "${./amp-runner-update.py}"
+        "--wrapper"
+        wrapper
         "--service"
         (if linux then "amp-runner.service" else "org.nix-community.home.amp-runner")
         "--log-file"
