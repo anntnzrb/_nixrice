@@ -1,0 +1,60 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: ["Nix build"]
+    types: [completed]
+    branches: ["dev"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  # Runs that deploy nothing must not cancel one awaiting approval.
+  group: ${{ (github.event_name == 'workflow_dispatch' || github.event.workflow_run.event == 'push') && 'deploy' || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  spec:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      spec: ${{ steps.spec.outputs.spec }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || 'dev' }}
+          persist-credentials: false
+
+      - uses: DeterminateSystems/nix-installer-action@v23
+
+      - id: spec
+        run: |
+          spec="$(scripts/ci/deploy-spec.sh)"
+          echo "spec=$spec" >> "$GITHUB_OUTPUT"
+          printf '~~~json\n%s\n~~~\n' "$(printf '%s' "$spec" | jq .)" >> "$GITHUB_STEP_SUMMARY"
+
+  activate:
+    needs: spec
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: production
+    steps:
+      - uses: DeterminateSystems/nix-installer-action@v23
+
+      - uses: cachix/cachix-action@v17
+        with:
+          name: anntnzrb
+          skipPush: true
+
+      - env:
+          CACHIX_ACTIVATE_TOKEN: ${{ secrets.CACHIX_ACTIVATE_TOKEN }}
+          SPEC: ${{ needs.spec.outputs.spec }}
+        run: |
+          printf '%s\n' "$SPEC" > deploy.json
+          cachix deploy activate deploy.json
