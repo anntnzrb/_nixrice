@@ -484,27 +484,6 @@
         "url": "https://git.clan.lol/clan/nix-select/archive/main.tar.gz"
       }
     },
-    "nix-spotlight": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs-unstable"
-        ]
-      },
-      "locked": {
-        "lastModified": 1790489939,
-        "narHash": "sha256-yqVwyCnpunoGnNdtDqJwf0o6KJBHrxW+AHRNgRVNmmE=",
-        "owner": "anntnzrb",
-        "repo": "nix-spotlight",
-        "rev": "54d4048993202eebdf349bf3b129e1bedede1f45",
-        "type": "github"
-      },
-      "original": {
-        "owner": "anntnzrb",
-        "ref": "main",
-        "repo": "nix-spotlight",
-        "type": "github"
-      }
-    },
     "nixos-hardware": {
       "inputs": {
         "nixpkgs": [
@@ -659,7 +638,6 @@
         "neovim-annt": "neovim-annt",
         "nix-homebrew": "nix-homebrew",
         "nix-index-database": "nix-index-database",
-        "nix-spotlight": "nix-spotlight",
         "nixos-hardware": "nixos-hardware",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": [

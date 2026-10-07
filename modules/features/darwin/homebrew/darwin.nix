@@ -46,6 +46,10 @@ in
   )) [ ];
 
   config = {
+    home-manager.users.${lib.liberion.identity.user}.home.sessionPath =
+      lib.mkAfter
+        [ "${brewPrefix}/bin" ];
+
     nix-homebrew = {
       enable = true;
       user = lib.liberion.identity.user;
