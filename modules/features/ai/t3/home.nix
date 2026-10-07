@@ -1,4 +1,5 @@
 {
+  config,
   inputs,
   lib,
   osConfig,
@@ -6,12 +7,11 @@
   ...
 }:
 let
+  json = pkgs.formats.json { };
   gateway = import (
     inputs.self + "/modules/features/ai/cliproxyapi/endpoint.nix"
   ) osConfig.clan.core.settings.domain;
-  settings = (pkgs.formats.json { }).generate "t3-settings.json" (
-    import ./settings.nix
-  );
+  settings = json.generate "t3-settings.json" config.liberion.ai.t3.settings;
   t3ctl = [
     (lib.getExe pkgs.python3)
     "${./t3ctl.py}"
@@ -26,6 +26,10 @@ let
   ];
 in
 {
+  options.liberion.ai.t3.settings = lib.liberion.module.mkOpt' json.type { };
+
+  config.liberion.ai.t3.settings = import ./settings.nix;
+
   imports = [
     inputs.self.homeModules.ai-agents
     # T3 writes and supervises its own t3code service; these jobs install it on
