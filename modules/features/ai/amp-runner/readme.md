@@ -2,7 +2,7 @@
 
 Import `inputs.self.homeModules.amp-runner` (or the NixOS module, which routes it) to run `amp-runner`, an Amp runner identified by the machine's hostname, through the agents-managed `amp` wrapper. It serves checkouts under `~/repos` and the agents checkout.
 
-On Linux the runner starts with `--desktop`, a private headless desktop that needs `labwc`, `wlr-randr` and `ffmpeg`; the NixOS module installs them and enables lingering so the runner survives logout. On Darwin the flag is omitted because it would share the Mac's real screen. Check readiness with `amp runner desktop status`.
+On Linux the runner starts with `--desktop`, a private headless desktop that needs `labwc`, `wlr-randr` and `ffmpeg`; the NixOS module installs them and enables lingering so the runner survives logout. On Darwin the flag is omitted because it would share the Mac's real screen. Check readiness with `amp runner desktop status`. `liberion.ai.amp-runner.desktop` (default: Linux) turns the flag off on a host.
 
 ## Updates
 
