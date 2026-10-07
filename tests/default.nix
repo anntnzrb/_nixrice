@@ -172,6 +172,10 @@ let
       expr = fixtureLib.varValue "per-machine/m/gen/key.pub";
       expected = "ssh-ed25519 AAAA m";
     };
+    testVarValueTrimsTrailingSpace = {
+      expr = fixtureLib.varValue "per-machine/m/gen/host.pub";
+      expected = "ssh-ed25519 AAAA";
+    };
     testVarValueMissingIsNull = {
       expr = fixtureLib.varValue "per-machine/m/gen/absent";
       expected = null;
