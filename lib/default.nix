@@ -404,6 +404,27 @@ in
     ;
 
   darwin = rec {
+    managedPreferences =
+      { domain, settings }:
+      { pkgs, ... }:
+      let
+        target = "/Library/Managed Preferences/${domain}.plist";
+        plist = pkgs.writeText "${domain}.plist" (
+          lib.generators.toPlist { escape = true; } settings
+        );
+      in
+      {
+        liberion.darwin.owned.files.${target}.restart = [ "cfprefsd" ];
+        system.activationScripts.postActivation.text = lib.mkAfter ''
+          managed_policy_target=${lib.escapeShellArg target}
+          mkdir -p "/Library/Managed Preferences"
+          if ! cmp -s ${plist} "$managed_policy_target"; then
+            install -m 0644 -o root -g wheel ${plist} "$managed_policy_target"
+            killall cfprefsd >/dev/null 2>&1 || :
+          fi
+        '';
+      };
+
     homebrewApps = apps: { inputs, ... }: {
       imports = [ inputs.self.darwinModules.homebrew ];
       liberion.homebrew.apps = apps;
