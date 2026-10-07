@@ -9,6 +9,7 @@ let
     aerospace = "nikitabobko/tap/aerospace";
     aldente = "aldente";
     brave = "brave-browser";
+    firefox = "firefox";
     obs = "obs";
     orbstack = "orbstack";
     rustdesk = "rustdesk";

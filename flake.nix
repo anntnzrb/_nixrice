@@ -20,10 +20,7 @@
 
       nixpkgsArgs = {
         config.allowUnfree = true;
-        overlays = [
-          inputs.nixpkgs-firefox-darwin.overlay
-          self.overlays.default
-        ];
+        overlays = [ self.overlays.default ];
       };
 
       src = lib.fileset.toSource {
@@ -241,9 +238,5 @@
       };
     };
 
-    nixpkgs-firefox-darwin = {
-      url = "github:bandithedoge/nixpkgs-firefox-darwin/main";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 }

@@ -11,7 +11,6 @@ let
   inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
 
   cfg = config.liberion.desktop.browsers.firefox;
-  hasFirefoxBin = pkgs ? firefox-bin;
 
   uiToSettings =
     cfg:
@@ -26,15 +25,33 @@ let
 
   privacyToSettings = cfg: {
     "privacy.sanitize.sanitizeOnShutdown" = cfg.sanitizeOnShutdown.enable;
+    "privacy.sanitize.timeSpan" = 0;
+    "privacy.sanitize.clearOnShutdown.hasMigratedToNewPrefs2" = true;
+    "privacy.sanitize.clearOnShutdown.hasMigratedToNewPrefs3" = true;
+    "privacy.clearOnShutdown.cache" = cfg.sanitizeOnShutdown.cache;
+    "privacy.clearOnShutdown.cookies" = cfg.sanitizeOnShutdown.cookies;
+    "privacy.clearOnShutdown.offlineApps" = cfg.sanitizeOnShutdown.cookies;
+    "privacy.clearOnShutdown.downloads" = cfg.sanitizeOnShutdown.history;
+    "privacy.clearOnShutdown.sessions" = false;
+    "privacy.clearOnShutdown.siteSettings" = false;
+    "privacy.clearOnShutdown.openWindows" = false;
     "privacy.clearOnShutdown.browsingHistoryAndDownloads" = false;
     "privacy.clearOnShutdown_v2.cache" = cfg.sanitizeOnShutdown.cache;
     "privacy.clearOnShutdown_v2.cookiesAndStorage" = cfg.sanitizeOnShutdown.cookies;
     "privacy.clearOnShutdown_v2.browsingHistoryAndDownloads" = false;
     "privacy.clearOnShutdown_v2.formdata" = false;
+    "privacy.clearOnShutdown_v2.siteSettings" = false;
     "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" =
       cfg.sanitizeOnShutdown.history;
     "privacy.clearOnShutdown.formdata" = false;
-    "privacy.clearOnShutdown.history" = false;
+    "privacy.clearOnShutdown.history" = cfg.sanitizeOnShutdown.history;
+    "places.history.enabled" = true;
+    "browser.formfill.enable" = true;
+    "browser.privatebrowsing.autostart" = false;
+    "browser.sessionstore.resume_from_crash" = true;
+    "signon.rememberSignons" = true;
+    "signon.formlessCapture.enabled" = true;
+    "signon.privateBrowsingCapture.enabled" = true;
     "identity.fxaccounts.enabled" = !cfg.disableSync;
     "browser.newtabpage.activity-stream.feeds.section.highlights" =
       !cfg.disableNewTabHighlights;
@@ -160,7 +177,7 @@ in
           "always-show"
           "hide-sidebar"
           "expand-on-hover"
-        ]) "hide-sidebar";
+        ]) "always-show";
         position = mkOpt' (types.enum [
           "left"
           "right"
@@ -205,35 +222,74 @@ in
       )) "sharpen-scrolling";
     };
 
-    search.default = mkOpt' types.str "perplexity";
+    search.default = mkOpt' types.str "ddg";
   };
 
   config = {
     assertions = [
-      {
-        assertion = isDarwin -> hasFirefoxBin;
-        message = ''
-          Firefox on Darwin requires the nixpkgs-firefox-darwin overlay.
-          Add 'inputs.nixpkgs-firefox-darwin.overlay' to your flake overlays.
-        '';
-      }
       {
         assertion = !isDarwin -> (pkgs ? firefox);
         message = "Firefox package not found in nixpkgs.";
       }
     ];
 
-    home.packages = lib.mkIf isDarwin [ pkgs.firefox-bin ];
-
     programs.firefox = {
       enable = true;
       package = if isDarwin then null else pkgs.firefox;
+      darwinDefaultsId = "org.mozilla.firefox";
+
+      policies = {
+        DisableTelemetry = true;
+        DisableFirefoxStudies = true;
+        DisablePocket = true;
+        DisableFeedbackCommands = true;
+        DontCheckDefaultBrowser = true;
+        NoDefaultBookmarks = true;
+        "3rdparty".Extensions."uBlock0@raymondhill.net".toOverwrite.filterLists = [
+          "user-filters"
+          "ublock-filters"
+          "ublock-badware"
+          "ublock-privacy"
+          "ublock-quick-fixes"
+          "ublock-unbreak"
+          "easylist"
+          "easyprivacy"
+          "urlhaus-1"
+          "plowe-0"
+          "ublock-annoyances"
+          "ublock-cookies-easylist"
+          "fanboy-cookiemonster"
+          "fanboy-social"
+          "easylist-chat"
+          "easylist-newsletters"
+          "easylist-notifications"
+          "easylist-annoyances"
+          "fanboy-ai-suggestions"
+        ];
+      };
 
       profiles.default = {
         id = 0;
         name = "default";
 
-        settings = privacyToSettings cfg.privacy // uiToSettings cfg.ui;
+        settings =
+          lib.mapAttrs (
+            name: value:
+            if
+              builtins.elem name [
+                "browser.formfill.enable"
+                "signon.formlessCapture.enabled"
+                "signon.privateBrowsingCapture.enabled"
+              ]
+            then
+              lib.mkForce value
+            else
+              value
+          ) (privacyToSettings cfg.privacy)
+          // lib.mapAttrs (_: lib.mkDefault) (uiToSettings cfg.ui)
+          // {
+            "extensions.autoDisableScopes" = 0;
+          };
         userChrome = uiToUserChrome cfg.ui;
 
         search = {
