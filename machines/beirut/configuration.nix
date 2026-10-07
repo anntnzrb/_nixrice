@@ -4,6 +4,7 @@
     bash
     brave
     essentials
+    firefox
     safari
     t3
     tailscale
