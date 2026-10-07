@@ -10,6 +10,7 @@ let
     aldente = "aldente";
     brave = "brave-browser";
     firefox = "firefox";
+    ghostty = "ghostty";
     obs = "obs";
     orbstack = "orbstack";
     rustdesk = "rustdesk";
@@ -46,6 +47,10 @@ in
   )) [ ];
 
   config = {
+    home-manager.users.${lib.liberion.identity.user}.home.sessionPath =
+      lib.mkAfter
+        [ "${brewPrefix}/bin" ];
+
     nix-homebrew = {
       enable = true;
       user = lib.liberion.identity.user;

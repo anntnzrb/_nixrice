@@ -5,6 +5,7 @@
     brave
     essentials
     firefox
+    ghostty
     safari
     t3
     tailscale

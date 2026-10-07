@@ -1,4 +1,9 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 let
   inherit (lib.liberion.module) mkOpt';
   inherit (lib.types) str ints;
@@ -17,6 +22,11 @@ in
     home = {
       keyboard = { inherit (cfg.keyboard) layout variant; };
       stateVersion = lib.mkDefault "22.05";
+    };
+
+    targets.darwin = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+      copyApps.enable = true;
+      linkApps.enable = false;
     };
 
     # workaround for home-manager#7935

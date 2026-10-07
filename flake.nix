@@ -170,11 +170,6 @@
       url = "github:zhaofengli/nix-homebrew/main";
     };
 
-    nix-spotlight = {
-      url = "github:anntnzrb/nix-spotlight/main";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
 
