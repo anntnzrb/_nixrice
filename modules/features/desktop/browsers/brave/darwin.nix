@@ -1,9 +1,4 @@
-{
-  lib,
-  pkgs,
-  inputs,
-  ...
-}:
+{ lib, pkgs, ... }:
 let
   policies = {
     HighEfficiencyModeEnabled = true;
@@ -30,9 +25,7 @@ let
   );
 in
 {
-  imports = [ inputs.self.darwinModules.homebrew ];
-
-  liberion.homebrew.apps = [ "brave" ];
+  imports = [ (lib.liberion.darwin.homebrewApps [ "brave" ]) ];
   liberion.darwin.owned.files."/Library/Managed Preferences/com.brave.Browser.plist".restart =
     [ "cfprefsd" ];
 

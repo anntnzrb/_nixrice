@@ -407,6 +407,11 @@ in
     ;
 
   darwin = rec {
+    homebrewApps = apps: { inputs, ... }: {
+      imports = [ inputs.self.darwinModules.homebrew ];
+      liberion.homebrew.apps = apps;
+    };
+
     wmHandoff = { pkgs, user }: import ./wm-handoff.nix { inherit lib pkgs user; };
 
     asUser =

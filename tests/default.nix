@@ -18,6 +18,18 @@ let
   };
 
   libFailures = lib.runTests {
+    testDarwinHomebrewApps = {
+      expr = lib.liberion.darwin.homebrewApps [ "firefox" "brave" ] {
+        inputs.self.darwinModules.homebrew = "homebrew-module";
+      };
+      expected = {
+        imports = [ "homebrew-module" ];
+        liberion.homebrew.apps = [
+          "firefox"
+          "brave"
+        ];
+      };
+    };
     testHomeNames = {
       expr = lib.attrNames tree.modules.home;
       expected = [

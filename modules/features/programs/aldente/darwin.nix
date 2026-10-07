@@ -1,9 +1,7 @@
-{ lib, inputs, ... }: {
-  imports = [ inputs.self.darwinModules.homebrew ];
+{ lib, ... }: {
+  imports = [ (lib.liberion.darwin.homebrewApps [ "aldente" ]) ];
 
   config = {
-    liberion.homebrew.apps = [ "aldente" ];
-
     system.defaults.CustomUserPreferences."com.apphousekitchen.aldente-pro" = {
       launchAtLogin = false;
     };

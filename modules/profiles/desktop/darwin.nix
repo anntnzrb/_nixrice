@@ -1,15 +1,14 @@
-{ inputs, ... }: {
+{ lib, inputs, ... }: {
   imports = with inputs.self.darwinModules; [
     dock
     finder
-    homebrew
+    (lib.liberion.darwin.homebrewApps [
+      "bitwarden"
+      "orbstack"
+      "whatsapp"
+    ])
     keyboard
     trackpad
   ];
 
-  liberion.homebrew.apps = [
-    "bitwarden"
-    "orbstack"
-    "whatsapp"
-  ];
 }
