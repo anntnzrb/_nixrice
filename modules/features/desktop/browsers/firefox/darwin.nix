@@ -1,14 +1,28 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
 let
   home = config.home-manager.users.${lib.liberion.identity.user};
-  domain = home.programs.firefox.darwinDefaultsId;
+  shared = import ./settings.nix { inherit lib; };
+  policies = import ./policies.nix {
+    inherit lib inputs;
+    cfg = home.liberion.desktop.browsers.firefox;
+    policies = home.programs.firefox.policies;
+    extensions =
+      shared.extensions
+        inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system};
+  };
 in
 {
-  imports = [ (lib.liberion.darwin.homebrewApps [ "firefox" ]) ];
-
-  liberion.darwin.owned.defaults = lib.optionals (domain != null) (
-    map (key: { inherit domain key; }) (
-      lib.attrNames (home.targets.darwin.defaults.${domain} or { })
-    )
-  );
+  imports = [
+    (lib.liberion.darwin.homebrewApps [ "firefox" ])
+    (lib.liberion.darwin.managedPreferences {
+      domain = "org.mozilla.firefox";
+      settings = policies;
+    })
+  ];
 }
