@@ -4,9 +4,11 @@ Import `inputs.self.nixosModules.paseo` or `inputs.self.darwinModules.paseo` (bo
 
 The system module publishes the daemon to the tailnet with Tailscale Serve on HTTPS port 6767 (`liberion.network.tailscale.expose.paseo`). On NixOS it also enables lingering so the daemon survives logout; on Darwin the launchd agent runs while the user is logged in.
 
+Set `liberion.ai.paseo.autostart = false` (Linux) to keep the unit installed but out of `default.target`: start it with `systemctl --user start paseo.service`. Switching to it does not stop a running daemon.
+
 ## Updates
 
-The wrapper installs the newest release on every launch, but the daemon keeps its version until it restarts. The nightly `paseo-update` job (`lib.liberion.idleRestartJob`, kind `paseo`, script `modules/features/ai/idle-restart.py`) restarts the service when `paseo --version` differs from the running daemon's `daemonVersion` and no agent is initializing or running. An unreadable status or agent listing never restarts.
+The wrapper installs the newest release on every launch, but the daemon keeps its version until it restarts. The nightly `paseo-update` job (`lib.liberion.idleRestartJob`, kind `paseo`, script `modules/features/ai/idle-restart.py`) restarts the service when `paseo --version` differs from the running daemon's `daemonVersion` and no agent is initializing or running. An unreadable status or agent listing never restarts. Without autostart the job runs only while `paseo.service` is active, so it never starts a stopped daemon.
 
 ## Operate
 
