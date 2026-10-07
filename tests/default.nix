@@ -12,6 +12,10 @@ let
   tool = fixtures + "/features/cli/tool/home.nix";
   routed = home: { home-manager.users.${identity.user}.imports = [ home ]; };
   throws = x: !(builtins.tryEval (builtins.deepSeq x x)).success;
+  fixtureLib = import (self + "/lib") {
+    inherit lib;
+    root = fixtures;
+  };
 
   libFailures = lib.runTests {
     testHomeNames = {
@@ -164,6 +168,14 @@ let
         false
       ];
     };
+    testVarValueStripsNewline = {
+      expr = fixtureLib.varValue "per-machine/m/gen/key.pub";
+      expected = "ssh-ed25519 AAAA m";
+    };
+    testVarValueMissingIsNull = {
+      expr = fixtureLib.varValue "per-machine/m/gen/absent";
+      expected = null;
+    };
     testFeatureProfileClashThrows = {
       expr = throws (
         lib.attrNames
@@ -176,6 +188,15 @@ let
       expected = true;
     };
   };
+
+  admins =
+    let
+      keyFile = self + "/sops/users/${identity.user}/key.json";
+      expected = lib.liberion.adminAgeKeys self.clan.inventory.machines;
+      actual = map (key: key.publickey) (lib.importJSON keyFile);
+    in
+    lib.optional (lib.sort lib.lessThan expected != lib.sort lib.lessThan actual)
+      "admins: sops/users/${identity.user} keys are not identity.keys.adminAge plus every admin machine's admin-age key; run `just admins`";
 
   access =
     name: config:
@@ -211,6 +232,7 @@ map (
   t:
   "lib: ${t.name}: expected ${builtins.toJSON t.expected}, got ${builtins.toJSON t.result}"
 ) libFailures
+++ admins
 ++ lib.concatLists (
   lib.mapAttrsToList (name: c: access name c.config) (
     self.nixosConfigurations // self.darwinConfigurations

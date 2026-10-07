@@ -27,6 +27,7 @@ in
     oulu = {
       description = "Lenovo V15 G4 IRU - Intel i7-1355U Build Server";
       tags = [
+        "admin"
         "physical"
         "workstation"
         "headless"
@@ -36,6 +37,7 @@ in
     munich = {
       description = "ASUS PRIME B660-PLUS D4 - Intel i5-12400 & NVIDIA GTX 1080 Pascal";
       tags = [
+        "admin"
         "physical"
         "workstation"
         "server"
@@ -46,6 +48,7 @@ in
     solna = {
       description = "HP 15-dw0083wm - Pentium N5000 Headless Server";
       tags = [
+        "admin"
         "physical"
         "laptop"
         "workstation"
@@ -72,6 +75,7 @@ in
       description = "Apple M4 MacBook (Primary Mac)";
       machineClass = "darwin";
       tags = [
+        "admin"
         "desktop"
         "physical"
         "laptop"

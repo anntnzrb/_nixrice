@@ -67,6 +67,15 @@ meaning outside their profile:
   because those machines predate Clan; the rest use the generated
   state-version var.
   `clan machines update` without arguments skips them (`requireExplicitUpdate`)
+- `admin`: the allowlist of devices that control the fleet. Its profile
+  generates a per-device user SSH key (`user-ssh`) and age key (`admin-age`)
+  as Clan vars; every machine authorizes the `user-ssh` keys of admin
+  machines, and `sops/users/<user>` must hold exactly
+  `identity.keys.adminAge` plus each admin's `admin-age` key (`tests/`
+  enforces it). Grant: tag, `clan vars generate <m>`, `just admins`, deploy.
+  Revoke: untag, `just admins`, regenerate the vars it could read, deploy.
+  `identity.keys.admin` (SSH) and `identity.keys.adminAge` are the offline
+  break-glass keys; no machine holds them by design
 
 ### Writing modules
 Class files: `nixos.nix`, `darwin.nix`, `home.nix`, `system.nix` (NixOS and

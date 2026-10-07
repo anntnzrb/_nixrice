@@ -352,6 +352,30 @@ let
       startup = 60;
       timeout = 1200;
     } args;
+  isAdmin = machine: builtins.elem "admin" machine.tags;
+  mdnsDomain = "local";
+
+  varValue =
+    path:
+    let
+      file = root + "/vars/${path}/value";
+    in
+    if builtins.pathExists file then
+      lib.removeSuffix "\n" (builtins.readFile file)
+    else
+      null;
+
+  adminValues =
+    machines: file:
+    lib.filter (value: value != null) (
+      lib.mapAttrsToList (name: _: varValue "per-machine/${name}/${file}") (
+        lib.filterAttrs (_: isAdmin) machines
+      )
+    );
+
+  adminAgeKeys =
+    machines:
+    [ identity.keys.adminAge ] ++ adminValues machines "admin-age/key.pub";
 in
 {
   inherit identity load;
@@ -368,6 +392,11 @@ in
   };
 
   inherit
+    isAdmin
+    mdnsDomain
+    varValue
+    adminValues
+    adminAgeKeys
     userPath
     agentsSync
     userJob
