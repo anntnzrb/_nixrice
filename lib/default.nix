@@ -360,10 +360,7 @@ let
     let
       file = root + "/vars/${path}/value";
     in
-    if builtins.pathExists file then
-      lib.removeSuffix "\n" (builtins.readFile file)
-    else
-      null;
+    if builtins.pathExists file then lib.trim (builtins.readFile file) else null;
 
   adminValues =
     machines: file:
