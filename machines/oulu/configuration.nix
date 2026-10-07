@@ -6,7 +6,6 @@
     essentials
     kernel-latest
     networkmanager
-    paseo
     podman
     systemd-boot
     t3
