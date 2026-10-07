@@ -48,7 +48,7 @@ sops/, vars/                 Clan secrets and generated vars; never print values
 - What a trait means: `modules/profiles/<tag>/`
 - Add a machine or change its tags: `clan.nix` `inventory.machines` + `machines/<name>/`;
   installing it is the "Installing a NixOS machine" section below
-- Fleet services (sshd, users, remote builders, wifi, internet): `clan.nix`
+- Fleet services (sshd, users, remote builders, deploy agents, wifi, internet): `clan.nix`
   `inventory.instances`; in-repo ones in `modules/services/`
 - User, git identity, SSH keys, SSH port: `identity.nix`
 - Binary caches: `liberion.nix.caches` (`modules/base/nix/`)
