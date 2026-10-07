@@ -289,9 +289,23 @@ Source: `clan-core` `pkgs/clan-cli/clan_lib/machines/install.py`,
    carries no auth key), then check `systemctl --failed`, `findmnt`, and that
    `ssh -p <identity sshPort> <m>` works. Later changes: `just deploy <m>`
 
+### Deploying
+Deploys are supervised: the owner agrees, agents may execute.
+- An agent may run `just deploy <m>` (`clan machines update` arguments, e.g.
+  `--tags server`) or start the `deploy` workflow without asking first only
+  when the change is merged into `dev`, `just check` passes, and it is
+  non-disruptive: no boot loader, kernel, disk, network, SSH access, user or
+  secret-rotation change. Say which machines it touches before starting, then
+  verify each one (`systemctl --failed`, SSH on the fleet port) and report
+- Anything else waits for the owner's explicit go: disruptive or unmerged
+  changes, the first deploy of a new access path, and a machine whose
+  `readme.md` says it does not run its target system yet
+- darwin: `clan machines update` needs non-interactive sudo on the Mac. Cachix
+  Deploy agents switch without sudo once the owner approves the run in the
+  `production` environment
+
 ### Not for agents
-- `just switch`, `build`, `boot`, `home`, `deploy`: the owner deploys (build/switch go
-  through `nh`; `deploy` takes `clan machines update` arguments, e.g. `--tags server`)
+- `just switch`, `build`, `boot`, `home`: local `nh` runs on the owner's machine
 - `just update`: flake inputs are updated by Dependabot PRs
 - `just clean`, `optimise`, `repair`, `bin/nix-install.sh`: host maintenance
 - Do not commit or push unless asked. Never print values from `sops/` or `vars/`;
