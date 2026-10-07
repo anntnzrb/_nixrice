@@ -94,6 +94,7 @@ in
   };
 
   modules.remote-builders = ./modules/services/remote-builders;
+  modules.cachix-deploy = ./modules/services/cachix-deploy;
 
   inventory.instances = {
     wifi = {
@@ -107,6 +108,18 @@ in
       };
       roles.builder.machines.oulu.settings.maxJobs = 6;
       roles.client.machines.beirut.settings.defaultBuilders = [ "oulu" ];
+    };
+
+    cachix-deploy = {
+      module = {
+        input = "self";
+        name = "cachix-deploy";
+      };
+      roles.agent.machines = {
+        beirut = { };
+        oulu = { };
+        solna = { };
+      };
     };
 
     # Host keys and certificates only; root has no SSH keys, the admin user

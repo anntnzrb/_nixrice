@@ -1,3 +1,15 @@
 # Synced to GitHub by the Settings app (https://github.com/apps/settings).
 # Inherits the shared baseline from anntnzrb/.github; override keys here.
 _extends: .github
+
+# The app deletes environments missing from this list.
+environments:
+  - name: copilot
+  - name: production
+    reviewers:
+      # anntnzrb
+      - id: 51257127
+        type: User
+    deployment_branch_policy:
+      custom_branches:
+        - dev

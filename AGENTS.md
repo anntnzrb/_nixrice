@@ -48,7 +48,7 @@ sops/, vars/                 Clan secrets and generated vars; never print values
 - What a trait means: `modules/profiles/<tag>/`
 - Add a machine or change its tags: `clan.nix` `inventory.machines` + `machines/<name>/`;
   installing it is the "Installing a NixOS machine" section below
-- Fleet services (sshd, users, remote builders, wifi, internet): `clan.nix`
+- Fleet services (sshd, users, remote builders, deploy agents, wifi, internet): `clan.nix`
   `inventory.instances`; in-repo ones in `modules/services/`
 - User, git identity, SSH keys, SSH port: `identity.nix`
 - Binary caches: `liberion.nix.caches` (`modules/base/nix/`)
@@ -310,6 +310,17 @@ Source: `clan-core` `pkgs/clan-cli/clan_lib/machines/install.py`,
   `scripts/ci/targets.nix` missing from the Cachix cache; each builds on its
   own runner and is pushed. Nothing uncached = nothing built. Dev shells are
   targets too so sandboxes substitute `clan-cli`
+- `deploy.yml`: after a successful `build.yml` push run on `dev` (or a manual
+  dispatch), `scripts/ci/deploy-spec.sh` maps each machine in the
+  `cachix-deploy` `agent` role (`clan.nix`) to its target from
+  `deploy-targets.nix` and fails if any is missing from the cache, so agents
+  only ever substitute. The `activate` job waits for approval in the
+  `production` environment, declared in `.github/settings.yml` (the Settings
+  app deletes environments that file omits), then runs `cachix deploy
+  activate`. A newer deploy run cancels one still awaiting approval
+- Cachix Deploy agents: the `cachix-deploy` service (`modules/services/`).
+  Each agent's token is a Clan var prompt (`clan vars generate <m>`); a new
+  agent's first activation is a `just deploy`/`switch`, since no agent runs yet
 - `dependabot.yml` + `auto-merge.yml`: grouped update PRs that merge themselves
   once the required checks pass, so updates land already built and cached.
   `auto-merge.yml` runs on `pull_request_target` and never checks out PR code
