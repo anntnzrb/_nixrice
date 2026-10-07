@@ -23,18 +23,14 @@
     };
     perInstance = { roles, settings, ... }: {
       darwinModule =
-        {
-          lib,
-          self,
-          config,
-          ...
-        }:
+        { lib, config, ... }:
         let
           builders = lib.mapAttrs (_: m: m.settings.maxJobs) roles.builder.machines;
           userName = lib.liberion.identity.user;
           host = name: "${name}.${config.clan.core.settings.domain}";
           port = lib.liberion.identity.sshPort;
-          sshKey = "/Users/${userName}/.ssh/liberion";
+          inherit (config.clan.core.vars) generators;
+          sshKey = generators.user-ssh.files.id_ed25519.path;
           features = [
             "benchmark"
             "big-parallel"
@@ -47,6 +43,10 @@
         in
         {
           assertions = [
+            {
+              assertion = generators ? user-ssh;
+              message = "remote-builders: a client authenticates with its admin user-ssh key; tag it admin.";
+            }
             {
               assertion = lib.all (name: builders ? ${name}) settings.defaultBuilders;
               message = "remote-builders: defaultBuilders names a machine without the builder role.";
@@ -83,11 +83,7 @@
             name: _:
             lib.nameValuePair "${name}-builder" {
               hostNames = [ "[${host name}]:${toString port}" ];
-              publicKey = lib.trim (
-                builtins.readFile (
-                  self + "/vars/per-machine/${name}/openssh/ssh.id_ed25519.pub/value"
-                )
-              );
+              publicKey = lib.liberion.varValue "per-machine/${name}/openssh/ssh.id_ed25519.pub";
             }
           ) builders;
         };
