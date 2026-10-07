@@ -1,11 +1,10 @@
 { lib, inputs, ... }: {
-  imports = with inputs.self.darwinModules; [
-    homebrew
-    launcher-hotkey
+  imports = [
+    (lib.liberion.darwin.homebrewApps [ "tinycast" ])
+    inputs.self.darwinModules.launcher-hotkey
   ];
 
   config = {
-    liberion.homebrew.apps = [ "tinycast" ];
     liberion.darwin.launcherHotkey.owners = [ "tinycast" ];
 
     system.defaults.CustomUserPreferences."com.tinycast.app" = {

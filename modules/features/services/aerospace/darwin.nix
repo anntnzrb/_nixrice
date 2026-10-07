@@ -2,7 +2,6 @@
   lib,
   pkgs,
   config,
-  inputs,
   ...
 }:
 let
@@ -89,7 +88,7 @@ let
   };
 in
 {
-  imports = [ inputs.self.darwinModules.homebrew ];
+  imports = [ (lib.liberion.darwin.homebrewApps [ "aerospace" ]) ];
 
   config = {
     assertions = [
@@ -100,7 +99,6 @@ in
     ];
 
     liberion = {
-      homebrew.apps = [ "aerospace" ];
       darwin.owned.privacy = [
         {
           service = "Accessibility";

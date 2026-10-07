@@ -561,27 +561,6 @@
         "url": "https://nixos.org/channels/nixos-26.05/nixexprs.tar.xz"
       }
     },
-    "nixpkgs-firefox-darwin": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1790911776,
-        "narHash": "sha256-Gpxuc4IzzCCy/Fv+PqI0dZGWRsVLCvuC3I9piCzdrwY=",
-        "owner": "bandithedoge",
-        "repo": "nixpkgs-firefox-darwin",
-        "rev": "32ee28acf0d169c19cd7862abee69d46adf60df6",
-        "type": "github"
-      },
-      "original": {
-        "owner": "bandithedoge",
-        "ref": "main",
-        "repo": "nixpkgs-firefox-darwin",
-        "type": "github"
-      }
-    },
     "nixpkgs-unstable": {
       "locked": {
         "lastModified": 1790822859,
@@ -687,7 +666,6 @@
           "clan-core",
           "nixpkgs"
         ],
-        "nixpkgs-firefox-darwin": "nixpkgs-firefox-darwin",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "rio-catppuccin": "rio-catppuccin",
         "rio-dracula": "rio-dracula",
