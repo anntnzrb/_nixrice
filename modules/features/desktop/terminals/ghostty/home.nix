@@ -23,12 +23,18 @@ in
 {
   xdg.configFile."ghostty/themes".source = inputs.ghostty-protesilaos + "/themes";
 
+  home.file.".local/bin/ghostty" = lib.mkIf isDarwin {
+    executable = true;
+    text = ''
+      #!/bin/sh
+      exec /Applications/Ghostty.app/Contents/MacOS/ghostty "$@"
+    '';
+  };
+
   programs.ghostty = {
     enable = true;
 
-    installBatSyntax = true;
-
-    package = ghosttyPackage;
+    package = if isDarwin then null else ghosttyPackage;
     clearDefaultKeybinds = true;
     settings = {
       theme = "ef-elea-light";

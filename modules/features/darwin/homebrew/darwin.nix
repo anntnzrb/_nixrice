@@ -10,6 +10,7 @@ let
     aldente = "aldente";
     brave = "brave-browser";
     firefox = "firefox";
+    ghostty = "ghostty";
     obs = "obs";
     orbstack = "orbstack";
     rustdesk = "rustdesk";
