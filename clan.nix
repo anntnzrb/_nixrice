@@ -111,7 +111,10 @@ in
 
     # Host keys and certificates only; root has no SSH keys, the admin user
     # logs in and escalates with sudo.
-    sshd.roles.server.tags = [ "server" ];
+    sshd.roles.server = {
+      tags = [ "server" ];
+      settings.certificate.searchDomains = [ liberion.mdnsDomain ];
+    };
 
     user-annt = {
       module.name = "users";
@@ -130,6 +133,19 @@ in
       machines = lib.mapAttrs (host: _: {
         settings = { inherit host; };
       }) config.inventory.machines;
+    };
+
+    lan = {
+      module.name = "internet";
+      roles.default = {
+        settings = {
+          inherit (identity) user;
+          port = identity.sshPort;
+        };
+        machines = lib.mapAttrs (name: _: {
+          settings.host = "${name}.${liberion.mdnsDomain}";
+        }) config.inventory.machines;
+      };
     };
   };
 }
