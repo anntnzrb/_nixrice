@@ -30,12 +30,19 @@ in
       }
     ];
   };
-  # Background text runs Pi without extensions, so it needs a built-in provider
-  # rather than the cliproxy extension.
+  # Titles, branch names, and commit messages. T3 runs Pi's background text
+  # with --no-extensions, which drops the cliproxy provider, and it falls back
+  # only when this provider is disabled, not when a call fails. Codex reaches
+  # the gateway through its own config.
   textGenerationModelSelection = {
-    instanceId = "pi";
-    model = "openai-codex/gpt-6.1-sol";
-    options = [ ];
+    instanceId = "codex";
+    model = "gpt-6-luna";
+    options = [
+      {
+        id = "reasoningEffort";
+        value = "low";
+      }
+    ];
   };
 
   backgroundActivity = {
