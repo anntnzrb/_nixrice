@@ -3,12 +3,8 @@
     ai-agents
     amp-runner
     ghostty
-    ssh
     whatsapp
   ];
 
-  liberion.cli.ssh = {
-    identityFile = "~/.ssh/beirut";
-    includes = [ "~/.orbstack/ssh/config" ];
-  };
+  liberion.cli.ssh.includes = [ "~/.orbstack/ssh/config" ];
 }

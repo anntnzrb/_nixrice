@@ -1,8 +1,10 @@
-{ lib, ... }:
+{ lib, inputs, ... }:
 let
   defaultLocale = "en_US.UTF-8";
 in
 {
+  imports = [ inputs.self.nixosModules.sshd ];
+
   time.timeZone = "America/Guayaquil";
 
   i18n = {

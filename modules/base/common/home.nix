@@ -9,6 +9,7 @@
     fzf
     git
     janet
+    ssh
     tldr
     yazi
     yt-dlp

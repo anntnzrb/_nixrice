@@ -1,8 +1,5 @@
 { inputs, ... }: {
-  imports = with inputs.self.nixosModules; [
-    sshd
-    user
-  ];
+  imports = [ inputs.self.nixosModules.user ];
 
   system.stateVersion = "22.05";
 }
