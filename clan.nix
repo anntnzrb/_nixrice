@@ -117,7 +117,6 @@ in
       };
       roles.agent.machines = {
         beirut = { };
-        munich = { };
         oulu = { };
         solna = { };
       };
