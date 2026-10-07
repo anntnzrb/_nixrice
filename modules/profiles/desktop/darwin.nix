@@ -4,7 +4,6 @@
     finder
     homebrew
     keyboard
-    sshd
     trackpad
   ];
 

@@ -38,14 +38,15 @@ in
     enable = true;
     openFirewall = true;
     useRoutingFeatures = "client";
-    extraUpFlags = [
-      "--ssh"
-      "--hostname=${config.networking.hostName}"
-      "--accept-routes=true"
-    ];
+    # Applied by tailscaled-set on every start; extraUpFlags would need authKeyFile.
     # Serve and Funnel belong to the root-owned tailscale-expose units below;
     # no login user may reconfigure tailscaled without sudo.
-    extraSetFlags = [ "--operator=" ];
+    extraSetFlags = [
+      "--ssh=false"
+      "--hostname=${config.networking.hostName}"
+      "--accept-routes=true"
+      "--operator="
+    ];
   };
   systemd.services = builtins.listToAttrs mappings;
 }

@@ -1,4 +1,6 @@
-{ lib, ... }: {
+{ lib, inputs, ... }: {
+  imports = [ inputs.self.darwinModules.sshd ];
+
   documentation.enable = false;
   programs.info.enable = false;
 

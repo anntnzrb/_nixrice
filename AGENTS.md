@@ -67,6 +67,15 @@ meaning outside their profile:
   because those machines predate Clan; the rest use the generated
   state-version var.
   `clan machines update` without arguments skips them (`requireExplicitUpdate`)
+- `admin`: the allowlist of devices that control the fleet. Its profile
+  generates a per-device user SSH key (`user-ssh`) and age key (`admin-age`)
+  as Clan vars; every machine authorizes the `user-ssh` keys of admin
+  machines, and `sops/users/<user>` must hold exactly
+  `identity.keys.adminAge` plus each admin's `admin-age` key (`tests/`
+  enforces it). Grant: tag, `clan vars generate <m>`, `just admins`, deploy.
+  Revoke: untag, `just admins`, regenerate the vars it could read, deploy.
+  `identity.keys.admin` (SSH) and `identity.keys.adminAge` are the offline
+  break-glass keys; no machine holds them by design
 
 ### Writing modules
 Class files: `nixos.nix`, `darwin.nix`, `home.nix`, `system.nix` (NixOS and
@@ -145,9 +154,18 @@ In-repo Clan services: `modules/services/<name>/default.nix`
 - Boot loaders live in `features/boot/`; base only sets baselines
 - SSH: `cli/ssh` is the personal `~/.ssh/config`. Fleet `Host` blocks come from
   `network/sshd` into `/etc/ssh/ssh_config` (read after the user file), built
-  from Clan inventory metadata without evaluating peers. The fleet port
-  (`identity.nix`) is not 22 because tailnet 22 is Tailscale SSH, which lacks
-  Clan host keys; everything SSH-related reads it from `lib.liberion.identity`
+  from Clan inventory metadata without evaluating peers. Base imports
+  `network/sshd` everywhere: sshd listens on 22 and the fleet port
+  (`identity.nix`, for networks that block 22) and trusts only declared keys
+  (no `~/.ssh/authorized_keys`). Tailscale SSH is off (`--ssh=false`) so
+  tailnet access obeys the same keys; everything SSH-related reads the port
+  from `lib.liberion.identity`
+- Transport: Tailscale is one network, not a dependency. Clan reaches
+  machines through the `internet` (MagicDNS name) and `lan`
+  (`<m>.local`, avahi) instances, and host certificates cover both domains.
+  Replacing Tailscale means another network instance plus `meta.domain`
+- `services.tailscale.extraUpFlags` only applies with `authKeyFile`; persistent
+  flags go in `extraSetFlags`
 - `desktop/session` exports `liberion.desktop.session.apps.*` as environment
   variables that window manager configs read; WM features import `session`
 - `network/dhcp` and NetworkManager are mutually exclusive (NM forces

@@ -4,7 +4,6 @@
     mullvad
     networkmanager
     pipewire
-    sshd
     syncthing
     user
   ];

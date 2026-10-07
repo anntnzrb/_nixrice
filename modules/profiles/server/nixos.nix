@@ -1,7 +1,5 @@
 { lib, pkgs, ... }:
 let
-  inherit (lib.liberion) authorizedKeys;
-  inherit (lib.liberion.identity) sshPort;
   userName = lib.liberion.identity.user;
 in
 {
@@ -70,20 +68,6 @@ in
   security.sudo.wheelNeedsPassword = false;
 
   services = {
-    openssh = {
-      enable = true;
-      ports = [
-        22
-        sshPort
-      ];
-      openFirewall = true;
-      settings = {
-        # Deploys and admin log in as the user and escalate with sudo.
-        PermitRootLogin = "no";
-        PasswordAuthentication = false;
-      };
-    };
-
     avahi = {
       enable = true;
       nssmdns4 = true;
@@ -106,15 +90,10 @@ in
   networking.firewall = {
     enable = true;
     allowPing = true;
-    allowedTCPPorts = [
-      22
-      sshPort
-    ];
   };
 
   users.users.${userName} = {
     isNormalUser = true;
     extraGroups = [ "wheel" ];
-    openssh.authorizedKeys.keys = authorizedKeys;
   };
 }

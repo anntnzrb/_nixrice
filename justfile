@@ -30,6 +30,9 @@ home target="annt@wsl":
 deploy *args:
     nix develop -c clan machines update {{ args }}
 
+admins:
+    nix develop -c scripts/admins.sh
+
 check:
     scripts/ci/check-flake.sh
 
