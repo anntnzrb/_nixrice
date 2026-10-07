@@ -193,7 +193,9 @@ In-repo Clan services: `modules/services/<name>/default.nix`
 - launchd agents need executables that survive generations: stage them at a
   stable path instead of a store path. Launch GUI apps via `/usr/bin/open -a`
 - Wrap store executables in `/bin/wait4path /nix/store` (nix-darwin `command`)
-  when a daemon can start before the store volume mounts
+  when a daemon can start before the store volume mounts. `wait4path` only
+  rechecks on mount events, so a daemon waiting for a sops secret file polls
+  for it instead: sops-nix mounts its ramfs before writing the files
 - Removing a feature must undo what it wrote. `modules/base/reconcile`
   records what the configuration owns and, on the next switch, deletes what
   no module claims anymore. Preferences go through `system.defaults`

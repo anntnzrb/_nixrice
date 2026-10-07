@@ -39,7 +39,7 @@
 
           launchd.daemons.cachix-agent = {
             script = ''
-              /bin/wait4path ${lib.escapeShellArg (env config)}
+              until [ -e ${lib.escapeShellArg (env config)} ]; do sleep 1; done
               set -a
               . ${lib.escapeShellArg (env config)}
               set +a
