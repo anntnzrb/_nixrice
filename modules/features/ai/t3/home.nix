@@ -13,8 +13,12 @@ let
   ) osConfig.clan.core.settings.domain;
   settings = json.generate "t3-settings.json" config.liberion.ai.t3.settings;
   t3ctl = [
-    (lib.getExe pkgs.python3)
-    "${./t3ctl.py}"
+    (lib.getExe (
+      lib.liberion.pythonScript pkgs {
+        name = "t3ctl";
+        script = ./t3ctl.py;
+      }
+    ))
   ];
   flags = [
     "--channel"
@@ -38,16 +42,17 @@ in
     (lib.liberion.userJob {
       name = "t3-update";
       description = "Install or update T3 Code when no thread runs";
-      schedule = "nightly";
+      schedule = 3600;
+      startup = 300;
       timeout = 900;
       command = t3ctl ++ [ "update" ] ++ flags;
     })
     (lib.liberion.userJob {
-      name = "t3-refresh-models";
-      description = "Refresh T3 Code's Claude models from the gateway catalog";
+      name = "t3-sync";
+      description = "Apply T3 Code settings and Claude models from the gateway catalog";
       schedule = 900;
       startup = 300;
-      command = t3ctl ++ [ "refresh-models" ] ++ flags;
+      command = t3ctl ++ [ "sync" ] ++ flags;
     })
   ];
 }

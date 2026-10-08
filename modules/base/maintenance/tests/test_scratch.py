@@ -1,4 +1,3 @@
-# ruff: noqa: S101 - pytest asserts
 """Behavior of the scratch cleaner rules."""
 
 from __future__ import annotations
@@ -7,22 +6,36 @@ import importlib.util
 import os
 import shutil
 import socket
+import subprocess
 import sys
 import tempfile
 import time
 from pathlib import Path
+from typing import Protocol, cast
 
-spec = importlib.util.spec_from_file_location(
-    "scratch",
-    Path(__file__).parents[1] / "scratch.py",
-)
-if spec is None or spec.loader is None:
-    raise ImportError("failed to locate scratch.py")
+
+class Scratch(Protocol):
+    """The parts of scratch.py these tests call."""
+
+    def clean_scratch(self, root: Path, *, days: int, dry_run: bool) -> None: ...
+
+    def stale_scratch(self, root: Path, uid: int, cutoff: float) -> list[Path]: ...
+
+    def size_mb(self, path: Path) -> int: ...
+
+    def newest_mtime(self, path: Path) -> float: ...
+
+
+SCRIPT = Path(__file__).parents[1] / "scratch.py"
+spec = importlib.util.spec_from_file_location("scratch", SCRIPT)
+assert spec is not None
+assert spec.loader is not None
 scratch = importlib.util.module_from_spec(spec)
 sys.modules[spec.name] = scratch
 spec.loader.exec_module(scratch)
 
-gc = scratch
+# The module was just executed from scratch.py, which defines these functions.
+gc = cast("Scratch", cast("object", scratch))
 OLD = time.time() - 30 * 86400
 
 
@@ -101,3 +114,95 @@ def test_scratch_skips_entries_owned_by_another_user(tmp_path: Path) -> None:
     stale.mkdir()
     _age(stale)
     assert gc.stale_scratch(tmp_path, os.getuid() + 1, time.time()) == []
+
+
+def _run_cli(*args: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(  # noqa: S603 - fixed argv
+        [sys.executable, str(SCRIPT), *args],
+        capture_output=True,
+        text=True,
+        check=False,
+        env=dict(os.environ),
+    )
+
+
+def test_cli_dry_run_reports_stale_entries_and_keeps_them(tmp_path: Path) -> None:
+    """The command line lists what it would remove without touching it."""
+    stale = tmp_path / "old"
+    stale.mkdir()
+    _age(stale)
+    result = _run_cli("--root", str(tmp_path), "--dry-run")
+    assert result.returncode == 0
+    assert f"scratch: would remove {stale}" in result.stdout
+    assert f"scratch: {tmp_path}: 1 entries idle >7d" in result.stdout
+    assert stale.is_dir()
+
+
+def test_cli_removes_stale_symlinks_and_honours_scratch_days(tmp_path: Path) -> None:
+    """A stale symlink is unlinked, not followed; --scratch-days moves the cutoff."""
+    target = tmp_path / "target"
+    target.mkdir()
+    link = tmp_path / "link"
+    link.symlink_to(target)
+    os.utime(link, (OLD, OLD), follow_symlinks=False)
+    young = tmp_path / "young"
+    young.mkdir()
+    _age(young, time.time() - 3 * 86400)
+    assert _run_cli("--root", str(tmp_path), "--scratch-days", "60").returncode == 0
+    assert link.is_symlink()
+    result = _run_cli("--root", str(tmp_path), "--scratch-days", "2")
+    assert result.returncode == 0
+    assert not link.is_symlink()
+    assert not young.exists()
+    assert target.is_dir()
+    assert "idle >2d" in result.stdout
+
+
+def test_cli_missing_root_reports_nothing_to_clean(tmp_path: Path) -> None:
+    """An unreadable root is an empty scratch area, not a failure."""
+    result = _run_cli("--root", str(tmp_path / "absent"))
+    assert result.returncode == 0
+    assert "0 entries idle >7d, ~0M" in result.stdout
+
+
+def test_unreadable_entries_are_skipped_without_failing(tmp_path: Path) -> None:
+    """Entries that cannot be inspected are never candidates and never crash."""
+    locked = tmp_path / "locked"
+    inner = locked / "inner"
+    inner.mkdir(parents=True)
+    _age(locked)
+    locked.chmod(0o444)
+    try:
+        assert gc.stale_scratch(tmp_path, os.getuid(), time.time()) == [locked]
+        assert gc.size_mb(locked) == 0
+        tmp_path.chmod(0o444)
+        assert gc.stale_scratch(tmp_path, os.getuid(), time.time()) == []
+    finally:
+        tmp_path.chmod(0o755)
+        locked.chmod(0o755)
+
+
+def test_newest_mtime_of_a_vanished_entry_counts_as_fresh(tmp_path: Path) -> None:
+    """An entry that disappears mid-scan is treated as fresh, never stale."""
+    before = time.time()
+    assert gc.newest_mtime(tmp_path / "gone") >= before
+
+
+def test_entry_refreshed_after_its_stat_is_not_reported_stale(tmp_path: Path) -> None:
+    """A refresh between the ownership stat and the age check keeps the entry."""
+    cutoff = time.time() - 7 * 86400
+    path = tmp_path / "report.json"
+    _ = path.write_text("{}", encoding="utf-8")
+    _age(path)
+    info = path.lstat()
+    assert info.st_mtime < cutoff
+    os.utime(path, None)
+    assert gc.newest_mtime(path) >= cutoff
+    assert gc.stale_scratch(tmp_path, os.getuid(), cutoff) == []
+
+
+def test_size_mb_counts_allocated_blocks(tmp_path: Path) -> None:
+    """Large files contribute their allocated size in MiB."""
+    big = tmp_path / "big"
+    _ = big.write_bytes(b"x" * (3 * 1024 * 1024))
+    assert gc.size_mb(tmp_path) >= 3

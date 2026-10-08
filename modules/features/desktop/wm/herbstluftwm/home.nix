@@ -11,7 +11,6 @@ let
   inherit (lib)
     mkMerge
     listToAttrs
-    map
     elemAt
     length
     range

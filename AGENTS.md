@@ -141,6 +141,29 @@ In-repo Clan services: `modules/services/<name>/default.nix`
 `modules.<name> = ./modules/services/<name>;` and instantiated under
 `inventory.instances.<name>` with `module = { input = "self"; name = "<name>"; };`.
 
+### Scripts
+Python for anything with logic, Bash for glue; another language needs a
+reason written in its PR. A script lives beside the module that runs it; a
+tool several modules share becomes its own package.
+
+- Python runs only through `lib.liberion.pythonScript pkgs { name; script;
+  libraries; }`: the nixpkgs `python3`, third-party packages from
+  `python3Packages`. A package missing from nixpkgs is the point to evaluate
+  uv2nix, not a hand-pinned wheel
+- Tests live in `tests/` beside the script and drive it through its real
+  entry point; fakes stand in only for the network, the clock and external
+  executables
+- The root `pyproject.toml` holds tool configuration only. Ruff (`ALL`,
+  preview) runs through treefmt; `checks.python` runs basedpyright (`all`)
+  over every `.py`, then pytest under coverage with 100% branch coverage of
+  everything below `modules/`. No `# type: ignore`, `# pyright: ignore` or
+  `# pragma: no cover`; a `# noqa` names a real Ruff code and a reason; a new
+  ignore goes in `pyproject.toml` with the reason in its PR. In the dev shell:
+  `pytest`, `basedpyright`, `ruff check`
+- Shell is a `writeShellApplication` (shellcheck and strict options at build
+  time), with the body in a `.sh` file beside the module once it holds logic.
+  `writeShellScript` only for a few lines without branching
+
 ### Gotchas
 - Import order is merge order for list options. Harmless for package lists,
   but PATH (`home.sessionPath`) and script snippets are order-sensitive: pin

@@ -84,7 +84,7 @@ in
 policies
 // {
   EnterprisePoliciesEnabled = true;
-  Preferences = builtins.removeAttrs preferences dedicatedPolicyPreferences;
+  Preferences = removeAttrs preferences dedicatedPolicyPreferences;
   DisableFirefoxAccounts = cfg.privacy.disableSync;
   SanitizeOnShutdown =
     if sanitize.enable then

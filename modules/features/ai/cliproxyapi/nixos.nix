@@ -1,4 +1,9 @@
-{ inputs, pkgs, ... }:
+{
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
 let
   account = "cliproxyapi";
   stateDir = "/var/lib/${account}";
@@ -10,10 +15,28 @@ let
 
   settings = import ./settings.nix { inherit stateDir; };
   baseConfig = (pkgs.formats.yaml { }).generate "cliproxyapi-base.yaml" settings;
-  python = pkgs.python313.withPackages (p: [ p.pyyaml ]);
+  release = lib.getExe (
+    lib.liberion.pythonScript pkgs {
+      name = "cliproxyapi-release";
+      script = ./release.py;
+    }
+  );
+  configureScript = lib.getExe (
+    lib.liberion.pythonScript pkgs {
+      name = "cliproxyapi-configure";
+      script = ./configure.py;
+      libraries = ps: [ ps.pyyaml ];
+    }
+  );
+  authGateway = lib.getExe (
+    lib.liberion.pythonScript pkgs {
+      name = "cliproxy-auth-gateway";
+      script = ./auth-gateway.py;
+    }
+  );
 
-  install = "${python}/bin/python ${./release.py} install --state ${releases} --version latest";
-  configure = "${python}/bin/python ${./configure.py} --settings ${baseConfig} --models-cache ${modelsCache}";
+  install = "${release} install --state ${releases} --version latest";
+  configure = "${configureScript} --settings ${baseConfig} --models-cache ${modelsCache}";
 
   installIfMissing = pkgs.writeShellScript "cliproxyapi-install" ''
     [ -x "${releases}/current/cli-proxy-api" ] || exec ${install}
@@ -77,7 +100,7 @@ in
             installIfMissing
             "${configure} --secrets %d/secrets.json --out ${runtimeConfig}"
           ];
-          ExecStart = "${python}/bin/python ${./release.py} run --state ${releases} --config ${runtimeConfig}";
+          ExecStart = "${release} run --state ${releases} --config ${runtimeConfig}";
           TimeoutStartSec = "10min";
           Restart = "always";
           NoNewPrivileges = true;
@@ -111,7 +134,7 @@ in
           Group = account;
           LoadCredential = "secrets.json:${secretsFile}";
           Environment = "CLIPROXY_UPSTREAM=http://127.0.0.1:${toString settings.port}";
-          ExecStart = "${python}/bin/python ${./auth-gateway.py}";
+          ExecStart = authGateway;
           Restart = "always";
           NoNewPrivileges = true;
           PrivateTmp = true;

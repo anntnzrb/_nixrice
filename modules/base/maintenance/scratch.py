@@ -7,11 +7,12 @@ import contextlib
 import os
 import shutil
 import stat
+import sys
 import time
 from pathlib import Path
 
 SCRATCH_DAYS = 7
-SCRATCH_ROOT = Path("/tmp")
+SCRATCH_ROOT = Path("/tmp")  # noqa: S108 - the directory being cleaned, not a temp file
 # Live runtime state that other processes find by name; never removed.
 KEEP_PREFIXES = (
     ".",
@@ -25,33 +26,48 @@ KEEP_PREFIXES = (
 )
 
 
+class Args(argparse.Namespace):
+    """Parsed command line."""
+
+    dry_run: bool = False
+    scratch_days: int = SCRATCH_DAYS
+    root: Path = SCRATCH_ROOT
+
+
 def say(message: str) -> None:
     """Report one line to the service log."""
     print(f"scratch: {message}", flush=True)
 
 
 def size_mb(path: Path) -> int:
-    """Return the allocated size of a tree in MiB, ignoring unreadable entries."""
+    """Measure a tree, ignoring unreadable entries.
+
+    Returns:
+        The allocated size in MiB.
+    """
     total = 0
     for root, _dirs, files in os.walk(path, onerror=lambda _e: None):
         for name in files:
             with contextlib.suppress(OSError):
-                st = (Path(root) / name).lstat()
-                blocks = getattr(st, "st_blocks", None)
-                if blocks is not None:
-                    total += blocks * 512
-                else:
-                    total += st.st_size
+                total += (Path(root) / name).lstat().st_blocks * 512
     return total // (1024 * 1024)
 
 
 def newest_mtime(path: Path) -> float:
-    """Newest modification time of an entry and everything beneath it."""
+    """Find the newest modification time of an entry and everything beneath it.
+
+    The entry is statted again here, so a refresh after the ownership check
+    counts. A vanished entry counts as fresh and is never deleted.
+
+    Returns:
+        The modification time as seconds since the epoch.
+    """
     try:
-        newest = path.lstat().st_mtime
+        info = path.lstat()
     except OSError:
         return time.time()
-    if not path.is_dir() or path.is_symlink():
+    newest = info.st_mtime
+    if not stat.S_ISDIR(info.st_mode):
         return newest
     for root, dirs, files in os.walk(path, onerror=lambda _e: None):
         for name in (*dirs, *files):
@@ -61,7 +77,11 @@ def newest_mtime(path: Path) -> float:
 
 
 def stale_scratch(root: Path, uid: int, cutoff: float) -> list[Path]:
-    """List top-level entries this user owns that went untouched since cutoff."""
+    """List top-level entries this user owns that went untouched since cutoff.
+
+    Returns:
+        The stale entries.
+    """
     stale: list[Path] = []
     try:
         entries = list(root.iterdir())
@@ -106,17 +126,19 @@ def clean_scratch(
 
 
 def main() -> int:
-    """CLI entrypoint."""
+    """Run the command line.
+
+    Returns:
+        The process exit status.
+    """
     parser = argparse.ArgumentParser(description="Reclaim stale scratch entries.")
-    parser.add_argument("--dry-run", action="store_true", help="report only")
-    parser.add_argument("--scratch-days", type=int, default=SCRATCH_DAYS)
-    parser.add_argument("--root", type=Path, default=SCRATCH_ROOT)
-    args = parser.parse_args()
+    _ = parser.add_argument("--dry-run", action="store_true", help="report only")
+    _ = parser.add_argument("--scratch-days", type=int)
+    _ = parser.add_argument("--root", type=Path)
+    args = parser.parse_args(namespace=Args())
     clean_scratch(args.root, days=args.scratch_days, dry_run=args.dry_run)
     return 0
 
 
 if __name__ == "__main__":
-    import sys
-
     sys.exit(main())

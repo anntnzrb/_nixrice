@@ -9,7 +9,7 @@ let
 in
 {
   defaultThreadEnvMode = "worktree";
-  addProjectBaseDirectory = "~/repos";
+  addProjectBaseDirectory = "~/src";
   defaultAutoPull = true;
   defaultRuntimeMode = "full-access";
   continueThreadsAfterServerUpdate = true;
