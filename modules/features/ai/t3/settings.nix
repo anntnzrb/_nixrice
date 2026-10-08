@@ -18,14 +18,20 @@ in
   snoozeLimitedThreads = true;
   autoResumeLimitedThreads = true;
   pullRequestMergeMethod = "squash";
-  sourceControlWritingStyle.mode = "conventional_commits";
+  branchNamingMode = "custom";
+  branchNameInstructions = "Follow repository branch-naming rules; otherwise use `work/<8-lowercase-hex>`";
+  sourceControlWritingStyle = {
+    mode = "repo_conventions";
+    followChangeRequestTemplates = true;
+  };
+  sourceControlWriterModelSelection = null;
 
   defaultModelSelection = {
-    instanceId = "pi";
-    model = "cliproxy/gpt-6.1-sol";
+    instanceId = "codex";
+    model = "gpt-6.1-sol";
     options = [
       {
-        id = "thinking";
+        id = "reasoningEffort";
         value = "medium";
       }
     ];
@@ -36,11 +42,11 @@ in
   # the gateway through its own config.
   textGenerationModelSelection = {
     instanceId = "codex";
-    model = "gpt-6-luna";
+    model = "gemini-3.8-flash-high";
     options = [
       {
         id = "reasoningEffort";
-        value = "low";
+        value = "medium";
       }
     ];
   };
