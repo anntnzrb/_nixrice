@@ -24,6 +24,16 @@ in
           '';
         };
     })
+    (lib.liberion.userJob {
+      name = "agents-refresh-packages";
+      description = "Install newer agent harness and tool releases";
+      schedule = 900;
+      startup = 300;
+      command = sync ++ [
+        "job"
+        "refresh-packages"
+      ];
+    })
   ];
 
   liberion.maintenance.tasks.npm.command = sync ++ [
