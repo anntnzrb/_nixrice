@@ -6,6 +6,33 @@
       pkgs,
       ...
     }:
+    let
+      python = pkgs.python3.withPackages (ps: [
+        ps.coverage
+        ps.hypothesis
+        ps.pytest
+        ps.pytest-timeout
+        ps.pyyaml
+        ps.types-pyyaml
+      ]);
+      pythonCheck =
+        pkgs.runCommand "liberion-python"
+          {
+            nativeBuildInputs = [
+              pkgs.basedpyright
+              pkgs.openssl
+            ];
+          }
+          ''
+            cd ${self}
+            basedpyright --pythonpath ${lib.getExe python}
+            export COVERAGE_FILE=$TMPDIR/.coverage
+            ${lib.getExe python} -m coverage run -m pytest
+            ${lib.getExe python} -m coverage combine --quiet
+            ${lib.getExe python} -m coverage report
+            touch $out
+          '';
+    in
     {
       treefmt = {
         programs = {
@@ -20,6 +47,12 @@
             excludes = [ ".envrc" ];
           };
           just.enable = true;
+          nixf-diagnose = {
+            enable = true;
+            ignore = [ "sema-primop-unknown" ];
+          };
+          ruff-check.enable = true;
+          ruff-format.enable = true;
         };
         settings.formatter.shfmt.options = [
           "-ln"
@@ -74,36 +107,42 @@
         };
       };
 
-      checks.tests =
-        let
-          failures = import "${self}/tests" { inherit lib self; };
-          vendoredUpdater = import (self + "/modules/base/vendored/package.nix") {
-            inherit pkgs;
-          };
-        in
-        if failures == [ ] then
-          pkgs.runCommand "liberion-tests"
-            {
-              nativeBuildInputs = [
-                pkgs.jq
-                pkgs.git
-                pkgs.flock
-              ];
-            }
-            ''
-              bash ${self}/tests/reconcile.sh ${self}/modules/base/reconcile/reconcile.sh
-              bash ${self}/tests/vendored.sh ${lib.getExe vendoredUpdater}
-              touch $out
-            ''
-        else
-          throw "tests failed:\n${lib.concatStringsSep "\n" failures}";
+      checks = {
+        tests =
+          let
+            failures = import "${self}/tests" { inherit lib self; };
+            vendoredUpdater = import (self + "/modules/base/vendored/package.nix") {
+              inherit pkgs;
+            };
+          in
+          if failures == [ ] then
+            pkgs.runCommand "liberion-tests"
+              {
+                nativeBuildInputs = [
+                  pkgs.jq
+                  pkgs.git
+                  pkgs.flock
+                ];
+              }
+              ''
+                bash ${self}/tests/reconcile.sh ${self}/modules/base/reconcile/reconcile.sh
+                bash ${self}/tests/vendored.sh ${lib.getExe vendoredUpdater}
+                touch $out
+              ''
+          else
+            throw "tests failed:\n${lib.concatStringsSep "\n" failures}";
+      }
+      // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux { python = pythonCheck; };
 
       devShells.default = pkgs.mkShellNoCC {
         name = "liberion-shell";
         inherit (config.pre-commit) shellHook;
         nativeBuildInputs = config.pre-commit.settings.enabledPackages ++ [
           inputs'.clan-core.packages.clan-cli
+          pkgs.basedpyright
           pkgs.just
+          pkgs.ruff
+          python
         ];
       };
     };
