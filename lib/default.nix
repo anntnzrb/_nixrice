@@ -144,6 +144,24 @@ let
     5
   ];
 
+  # A module's Python script as an executable on the nixpkgs interpreter. Its
+  # tests run repo-wide in the flake's `checks.python`.
+  pythonScript =
+    pkgs:
+    {
+      name,
+      script,
+      libraries ? _: [ ],
+    }:
+    pkgs.runCommand name { meta.mainProgram = name; } ''
+      mkdir -p $out/bin
+      {
+        echo '#!${(pkgs.python3.withPackages libraries).interpreter}'
+        sed '1{/^#!/d}' ${script}
+      } > $out/bin/${name}
+      chmod +x $out/bin/${name}
+    '';
+
   # A scheduled oneshot user job at idle priority: a systemd service and timer
   # on Linux, a launchd agent on Darwin. `schedule` is "nightly" or an interval
   # in seconds; `startup` (seconds) also runs it shortly after login or boot.
@@ -290,8 +308,12 @@ let
       schedule = "nightly";
       timeout = 900;
       command = [
-        (lib.getExe pkgs.python3)
-        "${root + "/modules/features/ai/idle-restart.py"}"
+        (lib.getExe (
+          pythonScript pkgs {
+            name = "idle-restart";
+            script = root + "/modules/features/ai/idle-restart.py";
+          }
+        ))
         "--kind"
         kind
         "--wrapper"
@@ -396,6 +418,7 @@ in
     adminAgeKeys
     userPath
     agentsSync
+    pythonScript
     userJob
     userService
     idleRestartJob
