@@ -21,7 +21,7 @@ At 04:00 daily, `cliproxyapi-update` installs the latest checksum-verified relea
 
 Inspect with `systemctl status cliproxyapi`, `systemctl list-timers cliproxyapi-update`, and `journalctl -u cliproxyapi`.
 
-Test: `nix shell nixpkgs#python3Packages.{pytest,pyyaml} -c pytest modules/features/ai/cliproxyapi/tests -q`.
+Test: `checks.python` (`just check`); in the dev shell, `pytest modules/features/ai/cliproxyapi/tests`.
 
 ## Upstream
 
