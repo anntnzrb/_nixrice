@@ -1,5 +1,6 @@
-{ inputs, ... }: {
-  imports = [ inputs.self.darwinModules.tailscale ];
+{ inputs, ... }@args:
+{
+  imports = [ inputs.self."${args._class}Modules".tailscale ];
 
   liberion.network.tailscale.expose.paseo = {
     port = 6767;
