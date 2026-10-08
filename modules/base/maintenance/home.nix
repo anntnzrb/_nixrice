@@ -9,7 +9,10 @@ let
 
   sortedTaskNames = lib.sort (a: b: a < b) (builtins.attrNames cfg.tasks);
 
-  scratchScript = ./scratch.py;
+  scratch = lib.liberion.pythonScript pkgs {
+    name = "scratch";
+    script = ./scratch.py;
+  };
 
   uvPrune = pkgs.writeShellScript "maintenance-uv" ''
     if ! command -v uv >/dev/null 2>&1; then
@@ -67,10 +70,7 @@ in
       liberion.maintenance.tasks = {
         uv.command = [ "${uvPrune}" ];
         bun.command = [ "${bunClean}" ];
-        scratch.command = [
-          "${pkgs.python3}/bin/python3"
-          "${scratchScript}"
-        ];
+        scratch.command = [ (lib.getExe scratch) ];
       };
     }
     (lib.liberion.userJob {

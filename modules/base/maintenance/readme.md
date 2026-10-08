@@ -18,4 +18,4 @@ A task owns its safety rules. The npm task in `features/cli/ai-agents` runs `syn
 
 Run now and inspect: `systemctl --user start maintenance.service` and `journalctl --user -u maintenance.service` on Linux; `launchctl kickstart gui/$(id -u)/org.nix-community.home.maintenance` and `~/Library/Logs/maintenance.log` on Darwin.
 
-Test the scratch rules: `nix shell nixpkgs#python3Packages.pytest -c pytest modules/base/maintenance/tests -q`.
+Test the scratch rules: `checks.python` (`just check`); in the dev shell, `pytest modules/base/maintenance/tests`.
