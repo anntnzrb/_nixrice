@@ -1,12 +1,4 @@
-{
-  inputs,
-  lib,
-  pkgs,
-  ...
-}:
-{
-  imports = [ inputs.self.nixosModules.tailscale ];
-
+{ lib, pkgs, ... }: {
   programs.nix-ld = {
     enable = true;
     libraries = with pkgs; [
@@ -30,11 +22,6 @@
       nss
       systemd
     ];
-  };
-
-  liberion.network.tailscale.expose.t3 = {
-    port = 8443;
-    target = "http://127.0.0.1:3773";
   };
 
   users.users.${lib.liberion.identity.user}.linger = true;
