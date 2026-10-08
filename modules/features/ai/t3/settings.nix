@@ -42,11 +42,11 @@ in
   # the gateway through its own config.
   textGenerationModelSelection = {
     instanceId = "codex";
-    model = "gpt-6-luna";
+    model = "gemini-3.8-flash-high";
     options = [
       {
         id = "reasoningEffort";
-        value = "low";
+        value = "medium";
       }
     ];
   };
