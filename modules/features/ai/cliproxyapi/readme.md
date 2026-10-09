@@ -17,7 +17,7 @@ Provision `secrets.json` in the state directory and the OAuth credential files i
 
 ## Updates
 
-At 04:00 daily, `cliproxyapi-update` installs the latest checksum-verified release and regenerates the runtime configuration with a refreshed model catalog. The proxy hot-reloads that file, so a catalog change needs no restart; the file is rewritten in place because the proxy watches its inode. The update restarts the backend only when the selected release changed. The proxy closes connections on stop without draining, so that restart interrupts in-flight requests. Failed downloads keep the selected release and fail the unit visibly.
+Every hour, `cliproxyapi-update` checks the latest release, installs it with checksum verification if needed, and regenerates the runtime configuration with a refreshed model catalog. The proxy hot-reloads that file, so a catalog change needs no restart; the file is rewritten in place because the proxy watches its inode. The update compares the running process's executable with the selected release and restarts the backend only when they differ. This also retries an update whose previous configuration or restart step failed. A stopped backend stays stopped. The proxy closes connections on stop without draining, so that restart interrupts in-flight requests. Failed downloads keep the selected release and fail the unit visibly.
 
 Inspect with `systemctl status cliproxyapi`, `systemctl list-timers cliproxyapi-update`, and `journalctl -u cliproxyapi`.
 

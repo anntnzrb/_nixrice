@@ -42,19 +42,15 @@ let
     [ -x "${releases}/current/cli-proxy-api" ] || exec ${install}
   '';
 
-  update = pkgs.writeShellScript "cliproxyapi-update" ''
-    set -eu
-    before=$(${pkgs.coreutils}/bin/readlink "${releases}/current" || true)
-    ${pkgs.util-linux}/bin/runuser -u ${account} -- ${install}
-    if [ -d "$(${pkgs.coreutils}/bin/dirname ${runtimeConfig})" ]; then
-      ${pkgs.util-linux}/bin/runuser -u ${account} -- ${configure} --secrets ${secretsFile} --out ${runtimeConfig}
-    else
-      ${pkgs.util-linux}/bin/runuser -u ${account} -- ${configure} --secrets ${secretsFile}
-    fi
-    if [ "$before" != "$(${pkgs.coreutils}/bin/readlink "${releases}/current")" ]; then
-      ${pkgs.systemd}/bin/systemctl try-restart cliproxyapi.service
-    fi
-  '';
+  update = pkgs.writeShellApplication {
+    name = "cliproxyapi-update";
+    runtimeInputs = [
+      pkgs.coreutils
+      pkgs.systemd
+      pkgs.util-linux
+    ];
+    text = builtins.readFile ./update.sh;
+  };
 in
 {
   imports = [ inputs.self.nixosModules.tailscale ];
@@ -117,7 +113,17 @@ in
         wants = [ "network-online.target" ];
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = update;
+          ExecStart = lib.escapeShellArgs [
+            (lib.getExe update)
+            account
+            releases
+            release
+            configureScript
+            baseConfig
+            modelsCache
+            runtimeConfig
+            secretsFile
+          ];
           TimeoutStartSec = "10min";
           Nice = 19;
         };
@@ -147,7 +153,7 @@ in
     timers.cliproxyapi-update = {
       wantedBy = [ "timers.target" ];
       timerConfig = {
-        OnCalendar = "04:00";
+        OnCalendar = "hourly";
         Persistent = true;
       };
     };

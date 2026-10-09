@@ -13,6 +13,7 @@ import io
 import json
 import os
 import runpy
+import shlex
 import shutil
 import ssl
 import subprocess
@@ -280,6 +281,115 @@ def fake_systemctl(directory: Path, exit_code: int, message: str) -> Path:
 
 def link_target(state: Path) -> str:
     return str((state / "current").readlink())
+
+
+@pytest.mark.parametrize("failure", ["configure", "restart"])
+def test_update_retries_selected_release_until_running(
+    github: GitHub, tmp_path: Path, failure: str
+) -> None:
+    state = tmp_path / "releases"
+    archive = tarball("cli-proxy-api", Path("/proc/self/exe").read_bytes())
+    publish(github, "1.2.3", archive=archive)
+    done = install(github, state)
+    assert done.returncode == 0, done.stderr
+    old_binary = (state / "current/cli-proxy-api").resolve()
+    publish(github, "1.3.0", archive=archive)
+
+    helpers = tmp_path / "bin"
+    helpers.mkdir()
+    for name, content in {
+        "release": (
+            f'exec {shlex.quote(sys.executable)} {shlex.quote(str(SCRIPT))} "$@"'
+        ),
+        "configure": (
+            f"exec {shlex.quote(sys.executable)} "
+            f'{shlex.quote(str(SCRIPT.with_name("configure.py")))} "$@"'
+        ),
+        "runuser": 'shift 3; exec "$@"',
+        "systemctl": (
+            'if [ "$1" = show ]; then cat "$CPA_PID_FILE"; exit; fi\n'
+            'printf "%s\\n" "$*" >> "$CPA_RESTARTS"\n'
+            '[ ! -f "$CPA_RESTART_FAIL" ]'
+        ),
+    }.items():
+        _ = (helpers / name).write_text(f"#!/bin/sh\n{content}\n", encoding="utf-8")
+        (helpers / name).chmod(0o755)
+
+    settings = tmp_path / "settings.yaml"
+    secrets = tmp_path / "secrets.json"
+    pid_file = tmp_path / "pid"
+    restarts = tmp_path / "restarts"
+    restart_fail = tmp_path / "restart-fail"
+    _ = settings.write_text("port: 8317\n", encoding="utf-8")
+    valid_secrets = '{"CLIPROXY_CREDENTIAL_POOLS": {}}'
+    _ = secrets.write_text(
+        "invalid" if failure == "configure" else valid_secrets, encoding="utf-8"
+    )
+    if failure == "restart":
+        restart_fail.touch()
+    env = {
+        **github.env,
+        "PATH": f"{helpers}:{os.environ['PATH']}",
+        "CPA_PID_FILE": str(pid_file),
+        "CPA_RESTARTS": str(restarts),
+        "CPA_RESTART_FAIL": str(restart_fail),
+    }
+    command = [
+        "bash",
+        "-euo",
+        "pipefail",
+        str(SCRIPT.with_name("update.sh")),
+        "cliproxyapi",
+        str(state),
+        str(helpers / "release"),
+        str(helpers / "configure"),
+        str(settings),
+        str(tmp_path / "models.json"),
+        str(tmp_path / "runtime.yaml"),
+        str(secrets),
+    ]
+    with subprocess.Popen(  # noqa: S603 - real executable in the temporary release tree
+        [str(old_binary), "-c", "import sys; sys.stdin.read()"], stdin=subprocess.PIPE
+    ) as process:
+        _ = pid_file.write_text(str(process.pid), encoding="utf-8")
+        done = subprocess.run(  # noqa: S603 - real updater with external service helpers
+            command, env=env, capture_output=True, text=True, check=False, timeout=60
+        )
+        assert done.returncode != 0
+        assert link_target(state) == "versions/1.3.0/linux-amd64"
+        assert Path(f"/proc/{process.pid}/exe").resolve() == old_binary
+        _ = secrets.write_text(valid_secrets, encoding="utf-8")
+        restart_fail.unlink(missing_ok=True)
+        done = subprocess.run(  # noqa: S603 - retry through the same updater entry point
+            command, env=env, capture_output=True, text=True, check=False, timeout=60
+        )
+        assert done.returncode == 0, done.stderr
+        attempts = (
+            restarts.read_text(encoding="utf-8").splitlines()
+            if restarts.exists()
+            else []
+        )
+        assert attempts == ["try-restart cliproxyapi.service"] * (
+            1 if failure == "configure" else 2
+        )
+    with subprocess.Popen(  # noqa: S603 - selected release now represents the running service
+        [str(state / "current/cli-proxy-api"), "-c", "import sys; sys.stdin.read()"],
+        stdin=subprocess.PIPE,
+    ) as process:
+        _ = pid_file.write_text(str(process.pid), encoding="utf-8")
+        done = subprocess.run(  # noqa: S603 - an unchanged running release must not restart
+            command, env=env, capture_output=True, text=True, check=False, timeout=60
+        )
+        assert done.returncode == 0, done.stderr
+        assert restarts.read_text(encoding="utf-8").splitlines() == attempts
+    _ = pid_file.write_text("0", encoding="utf-8")
+    command[-2] = str(tmp_path / "absent-runtime/config.yaml")
+    done = subprocess.run(  # noqa: S603 - a stopped service stays stopped, with cache-only sync
+        command, env=env, capture_output=True, text=True, check=False, timeout=60
+    )
+    assert done.returncode == 0, done.stderr
+    assert restarts.read_text(encoding="utf-8").splitlines() == attempts
+    assert not (tmp_path / "absent-runtime").exists()
 
 
 def test_install_latest_installs_verifies_and_links(

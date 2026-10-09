@@ -4,9 +4,12 @@ Import `inputs.self.nixosModules.t3` or `inputs.self.darwinModules.t3`. T3 write
 
 ## Jobs
 
-Both run `t3ctl.py` and start 5 minutes after the user session does. Each host decides from its own state, so a busy host postpones while an idle one updates.
+Both run `cli.py`, packaged as `t3ctl`, by its absolute Nix store path; the module
+does not add it to the user's `PATH`. They start 5 minutes after the user session
+does. Each host decides from its own state, so a busy host postpones while an
+idle one updates.
 
-- `t3-sync`, every 15 minutes, never restarts anything: merges `settings.nix` and replaces the Claude instance's custom models with the non-Anthropic models the gateway lists. A deploy that changes settings reaches the host on the next run. Does nothing before T3 is installed.
+- `t3-sync`, every 15 minutes, never restarts anything: merges server and desktop client settings and replaces the Claude instance's custom models with the non-Anthropic models the gateway lists. A deploy that changes settings reaches the host on the next run. Does nothing before T3 is installed.
 - `t3-update`, hourly: installs T3 with `npx t3@<channel> service install` on a host without it. Otherwise it applies settings like `t3-sync`, then runs the installed `t3 update --yes --channel <channel>`, which exits without a restart when the service already runs the channel head; otherwise it verifies the release checksums, checks that the new runtime starts, and restarts the service. While any thread has an unsettled run in `userdata/statev2.sqlite`, it postpones the update; an unreadable database aborts it.
 
 T3 has no unattended updater of its own: `t3 update` restarts the service without checking for running turns.
@@ -14,6 +17,31 @@ T3 has no unattended updater of its own: `t3 update` restarts the service withou
 ## Settings
 
 `settings.nix` holds the declared server settings, the default of `liberion.ai.t3.settings`; a machine deep-merges host-specific keys into that option. Each run deep-merges them into `~/.t3/userdata/settings.json`; keys it does not set keep the value a client chose, and T3 reloads the file while running. Harnesses are found on the service's `PATH`, which includes the agents-managed wrappers in `~/.local/bin`. Check a key against `packages/contracts/src/settings.ts` upstream before adding it: T3 replaces an invalid file with defaults.
+
+Keep `providerInstances.claudeAgent.config.homePath` unset. Setting it redirects
+`CLAUDE_CONFIG_DIR` away from the agents-managed `~/.claude/settings.json`, so
+the Bash timeout cap and tool hooks stop applying.
+
+`followUpBehavior` belongs to `ClientSettings`, not the server settings.
+`client-settings.json` holds the declared desktop preferences, including
+`steer`: both jobs merge it into `~/.t3/userdata/client-settings.json`, preserving
+undeclared preferences such as font sizes. Restart the desktop app after the
+sync to load it. Steer interrupts the active tool call;
+Queue waits for the whole turn to finish. Use Stop to request session
+cancellation; do not rely on Steer to stop background Bash jobs.
+
+Nix packages both declarations together. `t3ctl` takes the server declaration
+through `--settings` and reads `client-settings.json` from the same directory.
+The release channel, gateway, and job schedules are configured in `home.nix`.
+
+Browser and mobile preferences are local to each client and do not sync from
+that desktop file. Set them manually on every client:
+
+- Browser: **Settings → General → Follow-up behavior → Steer**. Repeat for each
+  browser profile and origin; the value lives in localStorage under
+  `t3code:client-settings:v1`.
+- Mobile: **Settings → Follow-ups → While the agent is running → Steer**. The
+  value lives in the app's private preferences database.
 
 The release channel (`--channel` in `home.nix`) is `nightly` or `stable`. Moving to an older channel head needs `t3 update --allow-downgrade` by hand.
 

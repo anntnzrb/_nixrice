@@ -11,12 +11,21 @@ let
   gateway = import (
     inputs.self + "/modules/features/ai/cliproxyapi/endpoint.nix"
   ) osConfig.clan.core.settings.domain;
-  settings = json.generate "t3-settings.json" config.liberion.ai.t3.settings;
+  settings = pkgs.linkFarm "t3-settings" [
+    {
+      name = "settings.json";
+      path = json.generate "t3-settings.json" config.liberion.ai.t3.settings;
+    }
+    {
+      name = "client-settings.json";
+      path = ./client-settings.json;
+    }
+  ];
   t3ctl = [
     (lib.getExe (
       lib.liberion.pythonScript pkgs {
         name = "t3ctl";
-        script = ./t3ctl.py;
+        script = ./cli.py;
       }
     ))
   ];
@@ -24,7 +33,7 @@ let
     "--channel"
     "nightly"
     "--settings"
-    "${settings}"
+    "${settings}/settings.json"
     "--gateway"
     gateway
   ];
