@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 type Json = str | int | float | bool | list[Json] | dict[str, Json] | None
 
-SCRIPT = Path(__file__).parents[1] / "t3ctl.py"
+SCRIPT = Path(__file__).parents[1] / "cli.py"
 VERSION = "0.0.1-nightly.1"
 UNREACHABLE = "http://127.0.0.1:1/v1"
 CATALOG: Json = {
@@ -127,6 +127,11 @@ def run(
     settings: Path,
     bin_dir: Path | None = None,
 ) -> subprocess.CompletedProcess[str]:
+    client_settings = settings.with_name("client-settings.json")
+    if not client_settings.exists():
+        _ = client_settings.write_bytes(
+            SCRIPT.with_name("client-settings.json").read_bytes()
+        )
     path = os.environ["PATH"]
     if bin_dir is not None:
         path = f"{bin_dir}{os.pathsep}{path}"
@@ -295,6 +300,79 @@ def test_sync_twice_rewrites_nothing_the_second_time(
     assert "applied settings" in first.stdout
     assert second.returncode == 0, second.stderr
     assert not second.stdout
+
+
+@pytest.mark.parametrize("wrapped", [False, True])
+def test_sync_applies_desktop_settings_and_preserves_device_preferences(
+    tmp_path: Path, gateway: str, declared: Path, *, wrapped: bool
+) -> None:
+    home = make_home(tmp_path, busy_status=None)
+    target = home / "userdata" / "client-settings.json"
+    preferences: dict[str, Json] = {
+        "followUpBehavior": "queue",
+        "sendShortcut": "enter",
+        "fontSizePrompt": 18,
+    }
+    document: dict[str, Json] = (
+        {"settings": preferences, "version": 1} if wrapped else preferences
+    )
+    _ = target.write_text(json.dumps(document), encoding="utf-8")
+    result = run(home, gateway, "sync", declared)
+    assert result.returncode == 0, result.stderr
+    saved = obj(cast("Json", json.loads(target.read_text(encoding="utf-8"))))
+    client = obj(saved["settings"]) if wrapped else saved
+    expected = obj(
+        cast(
+            "Json",
+            json.loads(
+                SCRIPT.with_name("client-settings.json").read_text(encoding="utf-8")
+            ),
+        )
+    )
+    assert client == expected | {"fontSizePrompt": 18}
+    if wrapped:
+        assert saved["version"] == 1
+    assert "followUpBehavior" not in obj(live_settings(home))
+    assert not (tmp_path / "t3.log").exists()
+
+
+@pytest.mark.parametrize("command", ["sync", "update"])
+def test_commands_create_desktop_preferences_when_missing(
+    tmp_path: Path, gateway: str, declared: Path, command: str
+) -> None:
+    home = make_home(tmp_path, busy_status=None)
+    result = run(home, gateway, command, declared)
+    assert result.returncode == 0, result.stderr
+    target = home / "userdata" / "client-settings.json"
+    assert json.loads(target.read_text(encoding="utf-8")) == json.loads(
+        SCRIPT.with_name("client-settings.json").read_text(encoding="utf-8")
+    )
+
+
+@pytest.mark.parametrize("content", ["not json", "[]", '{"settings":null}'])
+def test_sync_preserves_invalid_desktop_preferences(
+    tmp_path: Path, gateway: str, declared: Path, content: str
+) -> None:
+    home = make_home(tmp_path, busy_status=None)
+    target = home / "userdata" / "client-settings.json"
+    _ = target.write_text(content, encoding="utf-8")
+    result = run(home, gateway, "sync", declared)
+    assert result.returncode == 1
+    assert str(target) in result.stderr
+    assert "not a JSON object" in result.stderr
+    assert target.read_text(encoding="utf-8") == content
+
+
+def test_sync_rejects_invalid_client_declaration(
+    tmp_path: Path, gateway: str, declared: Path
+) -> None:
+    home = make_home(tmp_path, busy_status=None)
+    source = tmp_path / "client-settings.json"
+    _ = source.write_text("[]", encoding="utf-8")
+    result = run(home, gateway, "sync", declared)
+    assert result.returncode == 1
+    assert f"{source} is not a JSON object" in result.stderr
+    assert not (home / "userdata" / "client-settings.json").exists()
 
 
 def test_sync_rejects_a_declaration_that_is_not_an_object(

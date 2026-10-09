@@ -1,0 +1,12 @@
+{
+  "followUpBehavior": "steer",
+  "sendShortcut": "mod-enter",
+  "composerRichTextEnabled": true,
+  "confirmThreadArchive": false,
+  "confirmThreadDelete": true,
+  "confirmThreadUnpin": false,
+  "wordWrap": true,
+  "diffLayout": "stacked",
+  "timestampFormat": "24-hour",
+  "browserLinkTarget": "app"
+}

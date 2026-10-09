@@ -1,8 +1,8 @@
 """Install, update, configure, and refresh the T3 Code user service.
 
 T3 writes and supervises its own service unit. This script decides when it is
-safe to update, applies the declared server settings, and keeps Claude's model
-list in step with the model gateway.
+safe to update, applies the declared server and desktop client settings, and
+keeps Claude's model list in step with the model gateway.
 """
 
 from __future__ import annotations
@@ -96,7 +96,7 @@ def load_object(path: Path) -> JsonObject | None:
 
 
 def write_object(path: Path, data: JsonObject) -> None:
-    """Replace a JSON file atomically; T3 watches the settings file for edits."""
+    """Replace a JSON file atomically."""
     fd, tmp = tempfile.mkstemp(dir=path.parent, suffix=".json")
     with os.fdopen(fd, "w", encoding="utf-8") as handle:
         json.dump(data, handle, indent=2)
@@ -207,35 +207,50 @@ def refresh_claude_models(live: JsonObject, gateway: str) -> bool:
 
 
 def apply_settings(ctx: Context) -> bool:
-    """Merge declared settings into the live file.
+    """Merge declared settings into the server and desktop client files.
 
     Keys the declaration does not set, including ones changed from a client,
-    survive. T3 reloads the file while running.
+    survive. The server reloads its file while running; desktop clients read
+    theirs when they open.
 
     Returns:
-        True if the file changed.
+        True if either file changed.
 
     Raises:
         SystemExit: A settings file is not a JSON object.
     """
-    target = ctx.userdata / "settings.json"
-    declared = load_object(ctx.settings)
-    if declared is None:
-        msg = f"{ctx.settings} is not a JSON object"
-        raise SystemExit(msg)
-    live = load_object(target) if target.exists() else {}
-    if live is None:
-        msg = f"{target} is not a JSON object"
-        raise SystemExit(msg)
-    before = json.dumps(live, sort_keys=True)
-    merge(live, declared)
-    _ = refresh_claude_models(live, ctx.gateway)
-    if json.dumps(live, sort_keys=True) == before:
-        return False
-    target.parent.mkdir(parents=True, exist_ok=True)
-    write_object(target, live)
-    say(f"applied settings to {target}")
-    return True
+    changed = False
+    for filename, source in (
+        ("settings.json", ctx.settings),
+        ("client-settings.json", ctx.settings.with_name("client-settings.json")),
+    ):
+        target = ctx.userdata / filename
+        declared = load_object(source)
+        if declared is None:
+            msg = f"{source} is not a JSON object"
+            raise SystemExit(msg)
+        live = load_object(target) if target.exists() else {}
+        if live is None:
+            msg = f"{target} is not a JSON object"
+            raise SystemExit(msg)
+        before = json.dumps(live, sort_keys=True)
+        settings = live
+        if filename == "client-settings.json" and "settings" in live:
+            stored = live["settings"]
+            if not isinstance(stored, dict):
+                msg = f"{target}: settings is not a JSON object"
+                raise SystemExit(msg)
+            settings = stored
+        merge(settings, declared)
+        if filename == "settings.json":
+            _ = refresh_claude_models(settings, ctx.gateway)
+        if json.dumps(live, sort_keys=True) == before:
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        write_object(target, live)
+        say(f"applied settings to {target}")
+        changed = True
+    return changed
 
 
 def run(argv: list[str]) -> int:
@@ -286,7 +301,7 @@ def update(ctx: Context) -> int:
 
 
 def sync(ctx: Context) -> int:
-    """Apply settings and Claude models; T3 reloads them without a restart.
+    """Apply server and desktop settings and refresh Claude models.
 
     Returns:
         The exit status.
