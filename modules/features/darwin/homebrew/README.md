@@ -1,7 +1,7 @@
 # homebrew
 
 Homebrew on darwin, installed and pinned by nix-homebrew; casks and Mac App
-Store apps picked per machine through `liberion.homebrew.apps`.
+Store apps picked per machine through `liberion.darwin.homebrew.apps`.
 
 ## zsh environment
 

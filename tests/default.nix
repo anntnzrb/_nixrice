@@ -18,13 +18,37 @@ let
   };
 
   libFailures = lib.runTests {
+    testTailscaleExposeServe = {
+      expr = lib.liberion.tailscaleExpose "/bin/tailscale" "paseo" {
+        funnel = false;
+        port = 6767;
+        target = "http://127.0.0.1:6767";
+      };
+      expected = {
+        description = "Tailscale Serve mapping paseo";
+        start = "/bin/tailscale serve --bg --https=6767 http://127.0.0.1:6767";
+        stop = "/bin/tailscale serve --https=6767 off";
+      };
+    };
+    testTailscaleExposeFunnel = {
+      expr = lib.liberion.tailscaleExpose "/bin/tailscale" "web" {
+        funnel = true;
+        port = 443;
+        target = "http://localhost:8080/app";
+      };
+      expected = {
+        description = "Tailscale Funnel mapping web";
+        start = "/bin/tailscale funnel --bg --https=443 http://localhost:8080/app";
+        stop = "/bin/tailscale funnel --https=443 off";
+      };
+    };
     testDarwinHomebrewApps = {
       expr = lib.liberion.darwin.homebrewApps [ "firefox" "brave" ] {
         inputs.self.darwinModules.homebrew = "homebrew-module";
       };
       expected = {
         imports = [ "homebrew-module" ];
-        liberion.homebrew.apps = [
+        liberion.darwin.homebrew.apps = [
           "firefox"
           "brave"
         ];

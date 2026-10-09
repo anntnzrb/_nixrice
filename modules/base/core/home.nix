@@ -1,6 +1,6 @@
 {
-  lib,
   config,
+  lib,
   pkgs,
   ...
 }:
@@ -8,10 +8,10 @@ let
   inherit (lib.liberion.module) mkOpt';
   inherit (lib.types) str ints;
 
-  cfg = config.liberion.home;
+  cfg = config.liberion.core;
 in
 {
-  options.liberion.home.keyboard = {
+  options.liberion.core.keyboard = {
     layout = mkOpt' str "us";
     variant = mkOpt' str "altgr-intl";
     autoRepeatDelay = mkOpt' ints.unsigned 220;

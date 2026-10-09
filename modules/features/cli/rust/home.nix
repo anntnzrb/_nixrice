@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }: {
+{ inputs, pkgs, ... }: {
   home.packages = [
     (
       inputs.fenix.packages.${pkgs.stdenv.hostPlatform.system}.complete.withComponents

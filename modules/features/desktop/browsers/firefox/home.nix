@@ -1,19 +1,19 @@
 {
-  lib,
-  pkgs,
   config,
   inputs,
+  lib,
+  pkgs,
   ...
 }:
 let
   inherit (lib.liberion.module) mkOpt' mkOptEnabled' mkOptDisabled';
   inherit (lib) types;
   inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
+  inherit (shared) privacyToSettings uiToSettings;
 
   cfg = config.liberion.desktop.browsers.firefox;
 
   shared = import ./settings.nix { inherit lib; };
-  inherit (shared) privacyToSettings uiToSettings;
 
   buttonsToCss =
     buttons:

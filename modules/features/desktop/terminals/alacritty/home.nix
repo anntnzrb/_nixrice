@@ -1,11 +1,11 @@
-{ lib, config, ... }:
+{ config, lib, ... }:
 let
   inherit (lib.liberion.module) mkOpt';
 
-  cfg = config.liberion.desktop.terminal-emulators.alacritty;
+  cfg = config.liberion.desktop.terminals.alacritty;
 in
 {
-  options.liberion.desktop.terminal-emulators.alacritty = {
+  options.liberion.desktop.terminals.alacritty = {
     font.size = mkOpt' lib.types.float 10.0;
   };
 

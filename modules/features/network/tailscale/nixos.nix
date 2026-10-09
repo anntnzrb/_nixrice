@@ -2,36 +2,36 @@
 let
   cfg = config.liberion.network.tailscale;
   tailscale = lib.getExe config.services.tailscale.package;
-  mappings = lib.mapAttrsToList (name: mapping: {
-    name = "tailscale-expose-${name}";
-    value = {
-      description = "Tailscale ${
-        if mapping.funnel then "Funnel" else "Serve"
-      } mapping ${name}";
-      after = [
-        "tailscaled.service"
-        "network-online.target"
-      ];
-      wants = [ "network-online.target" ];
-      requires = [ "tailscaled.service" ];
-      wantedBy = [ "multi-user.target" ];
-      restartTriggers = [ (builtins.toJSON mapping) ];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        ExecStart = "${tailscale} ${
-          if mapping.funnel then "funnel" else "serve"
-        } --bg --https=${toString mapping.port} ${mapping.target}";
-        ExecStop = "${tailscale} ${
-          if mapping.funnel then "funnel" else "serve"
-        } --https=${toString mapping.port} off";
-        TimeoutStartSec = 60;
-        TimeoutStopSec = 30;
-        Restart = "on-failure";
-        RestartSec = 30;
+  mappings = lib.mapAttrsToList (
+    name: mapping:
+    let
+      expose = lib.liberion.tailscaleExpose tailscale name mapping;
+    in
+    {
+      name = "tailscale-expose-${name}";
+      value = {
+        inherit (expose) description;
+        after = [
+          "tailscaled.service"
+          "network-online.target"
+        ];
+        wants = [ "network-online.target" ];
+        requires = [ "tailscaled.service" ];
+        wantedBy = [ "multi-user.target" ];
+        restartTriggers = [ (builtins.toJSON mapping) ];
+        serviceConfig = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          ExecStart = expose.start;
+          ExecStop = expose.stop;
+          TimeoutStartSec = 60;
+          TimeoutStopSec = 30;
+          Restart = "on-failure";
+          RestartSec = 30;
+        };
       };
-    };
-  }) cfg.expose;
+    }
+  ) cfg.expose;
 in
 {
   services.tailscale = {

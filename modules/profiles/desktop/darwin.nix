@@ -1,4 +1,4 @@
-{ lib, inputs, ... }: {
+{ inputs, lib, ... }: {
   imports = with inputs.self.darwinModules; [
     dock
     finder

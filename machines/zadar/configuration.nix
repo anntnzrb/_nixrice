@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }: {
+{ inputs, pkgs, ... }: {
   imports = with inputs.self.nixosModules; [
     ./hardware
     networkmanager

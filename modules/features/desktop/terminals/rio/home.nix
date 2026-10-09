@@ -1,14 +1,14 @@
 {
-  lib,
-  pkgs,
   config,
   inputs,
+  lib,
+  pkgs,
   ...
 }:
 let
   inherit (lib.liberion.module) mkOpt';
 
-  cfg = config.liberion.desktop.terminal-emulators.rio;
+  cfg = config.liberion.desktop.terminals.rio;
 
   family = "Iosevka Comfy Motion";
   face = style: weight: { inherit family style weight; };
@@ -24,7 +24,7 @@ let
   };
 in
 {
-  options.liberion.desktop.terminal-emulators.rio = {
+  options.liberion.desktop.terminals.rio = {
     font.size = mkOpt' lib.types.int 15;
   };
 

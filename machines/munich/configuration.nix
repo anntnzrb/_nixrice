@@ -1,4 +1,4 @@
-{ inputs, config, ... }: {
+{ config, inputs, ... }: {
   imports = with inputs.self.nixosModules; [
     ./hardware
     disko-xfs

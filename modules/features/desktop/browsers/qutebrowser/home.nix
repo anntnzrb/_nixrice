@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ config, pkgs, ... }:
 let
   inherit (pkgs.stdenvNoCC.hostPlatform) isDarwin;
 in

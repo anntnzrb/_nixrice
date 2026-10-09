@@ -1,6 +1,6 @@
-{ lib, config, ... }:
+{ config, lib, ... }:
 let
-  cfg = config.liberion.network.ssh;
+  cfg = config.liberion.network.sshd;
 in
 {
   config.services.openssh = {

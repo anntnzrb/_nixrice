@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ config, lib, ... }:
 let
   user = config.system.primaryUser;
   container = "${config.system.primaryUserHome}/Library/Containers/com.apple.Safari";

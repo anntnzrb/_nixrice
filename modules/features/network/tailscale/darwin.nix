@@ -34,9 +34,7 @@ let
   mappings = lib.mapAttrs' (
     name: mapping:
     lib.nameValuePair "tailscale-expose-${name}" {
-      command = "${tailscale} ${
-        if mapping.funnel then "funnel" else "serve"
-      } --bg --https=${toString mapping.port} ${mapping.target}";
+      command = (lib.liberion.tailscaleExpose tailscale name mapping).start;
       # Rerun until tailscaled accepts the mapping, then stay done.
       serviceConfig = {
         RunAtLoad = true;

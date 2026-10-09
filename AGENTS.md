@@ -52,7 +52,7 @@ sops/, vars/                 Clan secrets and generated vars; never print values
   `inventory.instances`; in-repo ones in `modules/services/`
 - User, git identity, SSH keys, SSH port: `identity.nix`
 - Binary caches: `liberion.nix.caches` (`modules/base/nix/`)
-- darwin GUI apps as Homebrew casks: `liberion.homebrew.apps`
+- darwin GUI apps as Homebrew casks: `liberion.darwin.homebrew.apps`
 - CI: `.github/workflows/`, `scripts/ci/`
 
 ### Tags
@@ -103,10 +103,15 @@ Then `imports = with inputs.self.homeModules; [ btop ];` wherever it is
 wanted. A feature with both a system file and `home.nix` also hands the home
 part to the owner's Home Manager configuration when a machine imports it.
 
-Knobs a machine may tune are ordinary options under `liberion.<category>.<name>`:
+Knobs a machine may tune are ordinary options whose namespace matches the
+module directory: features use `liberion.<category>.<...>.<name>` (each nested
+directory becomes one attribute); base modules use `liberion.<name>`. The
+platform-scoped `liberion.darwin` reconciliation API is the deliberate exception.
+
+For example:
 
 ```nix
-{ lib, config, ... }:
+{ config, lib, ... }:
 let
   cfg = config.liberion.cli.ssh;
 in
@@ -115,6 +120,17 @@ in
   config.programs.ssh.settings."*".IdentityFile = cfg.identityFile;
 }
 ```
+
+Module layout, so every file reads the same:
+- Head: a bare attrset when no argument is used (never `_:`); otherwise the
+  arguments in alphabetical order with `...` last
+- Top-level keys in the order `_class`, `key`, `imports`, `disabledModules`,
+  `options`, `config`; a module that declares `options` puts everything else
+  under `config`. Clan services: `_class`, `manifest`, `roles`, `perMachine`
+- `let`: `inherit` lines first, then `cfg = config.liberion.<path>;` (always
+  named `cfg`), then the rest
+- Helper and data files a module imports explicitly follow the head rule only
+- `checks.style` (`scripts/style/`) enforces these in `just check`
 
 Helpers live in `lib/default.nix` (`lib.liberion`); read it before writing a
 module, its exports are the list, not this file. Prefer precise types (`enum`,
@@ -239,7 +255,7 @@ tool several modules share becomes its own package.
   (`tccutil reset`); the owner grants them once per machine
 - Stock sshd socket activation is fixed to port 22, so `network/sshd` runs its
   own launchd daemon for other ports
-- GUI apps come from Homebrew casks (`liberion.homebrew.apps`) or a nixpkgs
+- GUI apps come from Homebrew casks (`liberion.darwin.homebrew.apps`) or a nixpkgs
   `-bin` package that ships the vendor's `.app`, never a nixpkgs source build.
   TCC binds a grant to the code signature: a vendor-signed app keeps it across
   updates, an ad-hoc signed store build loses it on every rebuild. Check with

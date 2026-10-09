@@ -1,4 +1,4 @@
-{ lib, inputs, ... }: {
+{ inputs, lib, ... }: {
   imports = [ inputs.self.darwinModules.sshd ];
 
   documentation.enable = false;

@@ -1,15 +1,15 @@
 {
-  pkgs,
-  lib,
   config,
   inputs,
+  lib,
+  pkgs,
   ...
 }:
 let
   inherit (lib.liberion.module) mkOpt' mkOptDisabled';
   inherit (lib.types) listOf str;
 
-  cfg = config.liberion.desktop.window-managers.xorg.awesomewm;
+  cfg = config.liberion.desktop.wm.awesomewm;
 in
 {
   imports = with inputs.self.homeModules; [
@@ -17,7 +17,7 @@ in
     xsession
   ];
 
-  options.liberion.desktop.window-managers.xorg.awesomewm = {
+  options.liberion.desktop.wm.awesomewm = {
     compositor = {
       picom = {
         enable = mkOptDisabled';
@@ -29,7 +29,9 @@ in
   };
 
   config = {
-    liberion.shared.xorg.picom = { inherit (cfg.compositor.picom) enable vSync; };
+    liberion.desktop.xsession.picom = {
+      inherit (cfg.compositor.picom) enable vSync;
+    };
 
     xsession = {
       windowManager.awesome.enable = true;

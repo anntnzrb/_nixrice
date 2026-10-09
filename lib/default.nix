@@ -406,6 +406,20 @@ in
 
   isArchived = machine: builtins.elem "archived" machine.tags;
 
+  tailscaleExpose =
+    tailscale: name: mapping:
+    let
+      mode = if mapping.funnel then "funnel" else "serve";
+      command = "${tailscale} ${mode}";
+    in
+    {
+      description = "Tailscale ${
+        if mapping.funnel then "Funnel" else "Serve"
+      } mapping ${name}";
+      start = "${command} --bg --https=${toString mapping.port} ${mapping.target}";
+      stop = "${command} --https=${toString mapping.port} off";
+    };
+
   module = {
     inherit mkOpt';
     mkOptEnabled' = mkOpt' lib.types.bool true;
@@ -452,7 +466,7 @@ in
 
     homebrewApps = apps: { inputs, ... }: {
       imports = [ inputs.self.darwinModules.homebrew ];
-      liberion.homebrew.apps = apps;
+      liberion.darwin.homebrew.apps = apps;
     };
 
     wmHandoff = { pkgs, user }: import ./wm-handoff.nix { inherit lib pkgs user; };

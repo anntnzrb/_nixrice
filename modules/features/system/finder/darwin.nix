@@ -1,4 +1,3 @@
-_:
 let
 
   searchScope = {
@@ -9,7 +8,7 @@ let
   viewStyle = {
     icon = "icnv";
     list = "clmv";
-    galery = "Flwv";
+    gallery = "Flwv";
   };
 in
 {

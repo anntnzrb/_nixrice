@@ -1,18 +1,18 @@
-{ lib, config, ... }:
+{ config, lib, ... }:
 let
+  cfg = config.liberion.darwin.launcher-hotkey.owners;
   asUser = lib.liberion.darwin.asUser config.system.primaryUser;
-  owners = config.liberion.darwin.launcherHotkey.owners;
 in
 {
-  options.liberion.darwin.launcherHotkey.owners =
+  options.liberion.darwin.launcher-hotkey.owners =
     lib.liberion.module.mkOpt' (lib.types.listOf lib.types.str)
       [ ];
 
-  config = lib.mkIf (owners != [ ]) {
+  config = lib.mkIf (cfg != [ ]) {
     assertions = [
       {
-        assertion = lib.length owners == 1;
-        message = "Cmd+Space is claimed by several launchers (${lib.concatStringsSep ", " owners}); give it to exactly one.";
+        assertion = lib.length cfg == 1;
+        message = "Cmd+Space is claimed by several launchers (${lib.concatStringsSep ", " cfg}); give it to exactly one.";
       }
     ];
 

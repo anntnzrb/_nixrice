@@ -1,10 +1,11 @@
 {
-  lib,
   config,
   inputs,
+  lib,
   ...
 }:
 let
+  cfg = config.liberion.darwin.homebrew;
   casks = {
     aerospace = "nikitabobko/tap/aerospace";
     aldente = "aldente";
@@ -24,7 +25,7 @@ let
     whatsapp."WhatsApp Messenger" = 310633997;
   };
 
-  apps = lib.unique config.liberion.homebrew.apps;
+  apps = lib.unique cfg.apps;
   pick =
     table: map (app: table.${app}) (builtins.filter (app: table ? ${app}) apps);
   tapOf = cask: lib.concatStringsSep "/" (lib.take 2 (lib.splitString "/" cask));
@@ -42,9 +43,10 @@ in
 {
   imports = [ inputs.nix-homebrew.darwinModules.nix-homebrew ];
 
-  options.liberion.homebrew.apps = lib.liberion.module.mkOpt' (lib.types.listOf (
-    lib.types.enum (lib.attrNames (casks // masApps))
-  )) [ ];
+  options.liberion.darwin.homebrew.apps = lib.liberion.module.mkOpt' (
+    lib.types.listOf
+      (lib.types.enum (lib.attrNames (casks // masApps)))
+  ) [ ];
 
   config = {
     home-manager.users.${lib.liberion.identity.user}.home.sessionPath =

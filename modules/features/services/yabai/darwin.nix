@@ -1,4 +1,4 @@
-{ lib, inputs, ... }:
+{ inputs, lib, ... }:
 let
   mkRule =
     pattern:

@@ -1,4 +1,4 @@
-{ lib, inputs, ... }:
+{ inputs, lib, ... }:
 let
   defaultLocale = "en_US.UTF-8";
 in

@@ -1,17 +1,17 @@
 {
-  pkgs,
-  lib,
   config,
+  lib,
+  pkgs,
   ...
 }:
 let
   inherit (lib.liberion.module) mkOpt';
   inherit (lib.types) str ints;
 
-  cfg = config.liberion.desktop.ui.themes;
+  cfg = config.liberion.desktop.themes;
 in
 {
-  options.liberion.desktop.ui.themes = {
+  options.liberion.desktop.themes = {
     cursor = {
       theme = mkOpt' str "macOS-BigSur";
       size = mkOpt' ints.u8 28;

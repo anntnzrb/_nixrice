@@ -1,8 +1,8 @@
 {
-  pkgs,
-  lib,
   config,
   inputs,
+  lib,
+  pkgs,
   ...
 }:
 let
@@ -14,15 +14,15 @@ let
     attrsOf
     enum
     ;
-  inherit (config.liberion.home) keyboard;
+  inherit (config.liberion.core) keyboard;
 
-  cfg = config.liberion.desktop.window-managers.wayland.sway;
+  cfg = config.liberion.desktop.wm.sway;
 in
 
 {
   imports = [ inputs.self.homeModules.session ];
 
-  options.liberion.desktop.window-managers.wayland.sway = {
+  options.liberion.desktop.wm.sway = {
     autoStart = mkOpt' (listOf str) [ ];
 
     modifier = mkOpt' (enum [
@@ -275,41 +275,5 @@ in
       };
     };
 
-    programs.i3status-rust = {
-      enable = false;
-
-      bars = {
-        default = {
-          icons = "material-nf";
-          theme = "srcery";
-
-          blocks = [
-            {
-              block = "battery";
-              missing_format = "";
-            }
-            {
-              block = "backlight";
-              missing_format = "";
-            }
-            {
-              block = "cpu";
-              interval = 10;
-              format = " $icon $utilization ";
-            }
-            {
-              block = "memory";
-              format = " $icon $mem_used_percents ";
-              interval = 10;
-            }
-            {
-              block = "time";
-              format = " $timestamp.datetime(f:'%a, %d/%m @ %R') ";
-              interval = 60;
-            }
-          ];
-        };
-      };
-    };
   };
 }

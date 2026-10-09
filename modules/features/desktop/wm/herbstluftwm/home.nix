@@ -1,8 +1,8 @@
 {
-  lib,
-  pkgs,
   config,
   inputs,
+  lib,
+  pkgs,
   ...
 }:
 let
@@ -16,12 +16,12 @@ let
     range
     ;
 
-  cfg = config.liberion.desktop.window-managers.xorg.herbstluftwm;
+  cfg = config.liberion.desktop.wm.herbstluftwm;
 in
 {
   imports = [ inputs.self.homeModules.xsession ];
 
-  options.liberion.desktop.window-managers.xorg.herbstluftwm = {
+  options.liberion.desktop.wm.herbstluftwm = {
     compositor.picom.enable = mkOptDisabled';
 
     autoStart = mkOpt' (attrsOf str) { };
@@ -32,7 +32,7 @@ in
   };
 
   config = {
-    liberion.shared.xorg.picom.enable = cfg.compositor.picom.enable;
+    liberion.desktop.xsession.picom.enable = cfg.compositor.picom.enable;
 
     xsession.windowManager.herbstluftwm =
       let
