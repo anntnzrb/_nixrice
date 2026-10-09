@@ -52,6 +52,8 @@ in
       service = "amp-runner";
       kind = "amp";
       inherit wrapper;
+      schedule = 3600;
+      startup = 300;
       extraArgs = [
         "--log-file"
         log

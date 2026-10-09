@@ -300,12 +300,14 @@ let
       kind,
       wrapper,
       extraArgs ? [ ],
+      schedule ? "nightly",
+      startup ? null,
     }:
     { pkgs, ... }@args:
     userJob {
       name = "${service}-update";
       description = "Restart ${service} onto its newest release when idle";
-      schedule = "nightly";
+      inherit schedule startup;
       timeout = 900;
       command = [
         (lib.getExe (
