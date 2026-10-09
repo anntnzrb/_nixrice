@@ -39,10 +39,6 @@ let
   ];
 in
 {
-  options.liberion.ai.t3.settings = lib.liberion.module.mkOpt' json.type { };
-
-  config.liberion.ai.t3.settings = import ./settings.nix;
-
   imports = [
     inputs.self.homeModules.ai-agents
     # T3 writes and supervises its own t3code service; these jobs install it on
@@ -64,4 +60,8 @@ in
       command = t3ctl ++ [ "sync" ] ++ flags;
     })
   ];
+
+  options.liberion.ai.t3.settings = lib.liberion.module.mkOpt' json.type { };
+
+  config.liberion.ai.t3.settings = import ./settings.nix;
 }

@@ -1,11 +1,11 @@
-{ lib, inputs, ... }: {
+{ inputs, lib, ... }: {
   imports = [
     (lib.liberion.darwin.homebrewApps [ "tinycast" ])
     inputs.self.darwinModules.launcher-hotkey
   ];
 
   config = {
-    liberion.darwin.launcherHotkey.owners = [ "tinycast" ];
+    liberion.darwin.launcher-hotkey.owners = [ "tinycast" ];
 
     system.defaults.CustomUserPreferences."com.tinycast.app" = {
       "hotkey.togglePalette" = builtins.toJSON {

@@ -1,7 +1,7 @@
 {
   lib,
-  options,
   nixpkgsArgs,
+  options,
   ...
 }:
 {

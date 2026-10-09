@@ -12,16 +12,6 @@ let
   log = "${home}/.cache/amp/logs/runner-agents.log";
 in
 {
-  options.liberion.ai.amp-runner.desktop =
-    lib.liberion.module.mkOpt' lib.types.bool pkgs.stdenv.hostPlatform.isLinux;
-
-  # Amp refuses to start when a --discover-dirs directory is missing.
-  config.home.activation.ampRunnerRepos =
-    lib.hm.dag.entryAfter [ "writeBoundary" ]
-      ''
-        run mkdir -p ${lib.escapeShellArg "${home}/repos"}
-      '';
-
   imports = [
     inputs.self.homeModules.ai-agents
     # Serves ~/repos checkouts and the agents checkout from a neutral cwd. Only
@@ -60,4 +50,14 @@ in
       ];
     })
   ];
+
+  options.liberion.ai.amp-runner.desktop =
+    lib.liberion.module.mkOpt' lib.types.bool pkgs.stdenv.hostPlatform.isLinux;
+
+  # Amp refuses to start when a --discover-dirs directory is missing.
+  config.home.activation.ampRunnerRepos =
+    lib.hm.dag.entryAfter [ "writeBoundary" ]
+      ''
+        run mkdir -p ${lib.escapeShellArg "${home}/repos"}
+      '';
 }

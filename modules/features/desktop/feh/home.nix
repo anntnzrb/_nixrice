@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }: {
+{ lib, pkgs, ... }: {
   programs.feh.enable = true;
 
   xdg.desktopEntries.feh = {

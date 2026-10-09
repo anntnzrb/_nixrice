@@ -1,19 +1,19 @@
 {
   config,
-  lib,
   inputs,
+  lib,
   ...
 }:
 let
   inherit (lib.liberion.module) mkOpt' mkOptDisabled';
   inherit (lib.types) listOf str;
 
-  cfg = config.liberion.desktop.window-managers.wayland.hyprland;
+  cfg = config.liberion.desktop.wm.hyprland;
 in
 {
   imports = [ inputs.self.homeModules.session ];
 
-  options.liberion.desktop.window-managers.wayland.hyprland = {
+  options.liberion.desktop.wm.hyprland = {
     monitor = mkOpt' (listOf str) [ ",preferred,auto,1" ];
     autoStartApps = mkOpt' (listOf str) [ ];
     waybar.enable = mkOptDisabled';

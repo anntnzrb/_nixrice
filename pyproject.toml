@@ -29,7 +29,7 @@ failOnWarnings = true
 include = ["modules", "lib", "scripts", "tests"]
 
 [tool.pytest.ini_options]
-testpaths = ["modules"]
+testpaths = ["modules", "scripts/style/tests"]
 addopts = [
   "-p", "no:cacheprovider",
   "--import-mode=importlib",
@@ -45,7 +45,7 @@ timeout = 60
 branch = true
 patch = ["subprocess"]
 sigterm = true
-source_dirs = ["modules"]
+source_dirs = ["modules", "scripts/style"]
 
 [tool.coverage.report]
 fail_under = 100

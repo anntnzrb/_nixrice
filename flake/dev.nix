@@ -7,14 +7,27 @@
       ...
     }:
     let
-      python = pkgs.python3.withPackages (ps: [
-        ps.coverage
-        ps.hypothesis
-        ps.pytest
-        ps.pytest-timeout
-        ps.pyyaml
-        ps.types-pyyaml
-      ]);
+      styleLibraries = ps: [
+        ps.tree-sitter
+        ps.tree-sitter-grammars.tree-sitter-nix
+      ];
+      moduleStyle = lib.liberion.pythonScript pkgs {
+        name = "module-style";
+        script = self + "/scripts/style/check.py";
+        libraries = styleLibraries;
+      };
+      python = pkgs.python3.withPackages (
+        ps:
+        [
+          ps.coverage
+          ps.hypothesis
+          ps.pytest
+          ps.pytest-timeout
+          ps.pyyaml
+          ps.types-pyyaml
+        ]
+        ++ styleLibraries ps
+      );
       pythonCheck =
         pkgs.runCommand "liberion-python"
           {
@@ -108,6 +121,10 @@
       };
 
       checks = {
+        style = pkgs.runCommand "liberion-module-style" { } ''
+          ${lib.getExe moduleStyle} ${self}
+          touch $out
+        '';
         tests =
           let
             failures = import "${self}/tests" { inherit lib self; };

@@ -1,4 +1,4 @@
-{ lib, inputs, ... }: {
+{ inputs, lib, ... }: {
   imports = [ inputs.nixos-wsl.nixosModules.default ];
 
   wsl = {

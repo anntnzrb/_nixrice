@@ -1,7 +1,7 @@
 {
+  inputs,
   lib,
   pkgs,
-  inputs,
   ...
 }:
 {
@@ -11,21 +11,21 @@
     enable = true;
 
     darwinDefaultsId = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin "app.zen-browser.zen";
-    policies = {
-      DisableAppUpdate = true;
-      DisableTelemetry = true;
-      DisablePocket = true;
-      DisableFeedbackCommands = true;
-      DisableFirefoxStudies = true;
-      DontCheckDefaultBrowser = true;
-      NoDefaultBookmarks = true;
-      EnableTrackingProtection = {
-        Value = true;
-        Locked = true;
-        Cryptomining = true;
-        Fingerprinting = true;
+    policies =
+      removeAttrs
+        (import (
+          inputs.self + "/modules/features/desktop/browsers/firefox/settings.nix"
+        ) { inherit lib; }).policies
+        [ "3rdparty" ]
+      // {
+        DisableAppUpdate = true;
+        EnableTrackingProtection = {
+          Value = true;
+          Locked = true;
+          Cryptomining = true;
+          Fingerprinting = true;
+        };
       };
-    };
     profiles.default = {
       id = 0;
       name = "default";

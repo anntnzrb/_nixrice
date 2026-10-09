@@ -1,15 +1,15 @@
 {
-  pkgs,
-  lib,
   config,
   inputs,
+  lib,
+  pkgs,
   ...
 }:
 let
   inherit (lib.liberion.module) mkOpt' mkOptDisabled';
   inherit (lib.types) listOf str;
 
-  cfg = config.liberion.desktop.window-managers.xorg.xmonad;
+  cfg = config.liberion.desktop.wm.xmonad;
 in
 {
   imports = [
@@ -17,13 +17,13 @@ in
     inputs.self.homeModules.session
   ];
 
-  options.liberion.desktop.window-managers.xorg.xmonad = {
+  options.liberion.desktop.wm.xmonad = {
     compositor.picom.enable = mkOptDisabled';
     autoStart = mkOpt' (listOf str) [ ];
   };
 
   config = {
-    liberion.shared.xorg.picom.enable = cfg.compositor.picom.enable;
+    liberion.desktop.xsession.picom.enable = cfg.compositor.picom.enable;
 
     xsession = {
       initExtra = lib.liberion.xorg.mkAutostartScript cfg.autoStart;

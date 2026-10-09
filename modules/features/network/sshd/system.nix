@@ -1,15 +1,15 @@
 {
-  lib,
   config,
   inputs,
+  lib,
   ...
 }:
 let
   inherit (lib.liberion.module) mkOpt';
-
-  cfg = config.liberion.network.ssh;
-  userName = lib.liberion.identity.user;
   inherit (inputs.self.clan) inventory;
+
+  cfg = config.liberion.network.sshd;
+  userName = lib.liberion.identity.user;
 
   adminKeys = lib.liberion.adminValues inventory.machines "user-ssh/id_ed25519.pub";
 
@@ -32,7 +32,7 @@ let
   );
 in
 {
-  options.liberion.network.ssh = with lib.types; {
+  options.liberion.network.sshd = with lib.types; {
     extraConfig = mkOpt' str "";
     port = mkOpt' port lib.liberion.identity.sshPort;
     authorizedKeys = mkOpt' (listOf singleLineStr) (

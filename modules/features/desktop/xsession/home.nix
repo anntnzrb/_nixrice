@@ -1,7 +1,7 @@
 {
+  config,
   lib,
   pkgs,
-  config,
   ...
 }:
 {
@@ -12,7 +12,7 @@
     profilePath = ".config/xorg/xprofile-hm";
     scriptPath = ".config/xorg/xsession-hm";
 
-    initExtra = with config.liberion.home.keyboard; ''
+    initExtra = with config.liberion.core.keyboard; ''
       ${lib.getExe pkgs.xset} r rate ${toString autoRepeatDelay} ${toString autoRepeatInterval}
     '';
   };

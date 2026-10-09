@@ -1,6 +1,6 @@
 { config, ... }:
 let
-  shellsCfg = config.liberion.shells;
+  cfg = config.liberion.shells;
 in
 {
   programs.zsh = {
@@ -35,7 +35,7 @@ in
       path = "${config.xdg.dataHome}/zsh_history";
       extended = true;
       size = 5000;
-      ignorePatterns = shellsCfg.historyIgnore;
+      ignorePatterns = cfg.historyIgnore;
     };
   };
 }

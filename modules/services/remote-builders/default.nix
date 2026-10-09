@@ -23,13 +23,13 @@
     };
     perInstance = { roles, settings, ... }: {
       darwinModule =
-        { lib, config, ... }:
+        { config, lib, ... }:
         let
+          inherit (config.clan.core.vars) generators;
           builders = lib.mapAttrs (_: m: m.settings.maxJobs) roles.builder.machines;
           userName = lib.liberion.identity.user;
           host = name: "${name}.${config.clan.core.settings.domain}";
           port = lib.liberion.identity.sshPort;
-          inherit (config.clan.core.vars) generators;
           sshKey = generators.user-ssh.files.id_ed25519.path;
           features = [
             "benchmark"

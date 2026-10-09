@@ -1,6 +1,6 @@
 { config, ... }:
 let
-  shellsCfg = config.liberion.shells;
+  cfg = config.liberion.shells;
 in
 {
   programs.bash = {
@@ -21,6 +21,6 @@ in
     historyFile = "${config.xdg.dataHome}/bash_history";
     historyFileSize = 1000 * 1000;
     historySize = 100 * 100;
-    inherit (shellsCfg) historyIgnore;
+    inherit (cfg) historyIgnore;
   };
 }

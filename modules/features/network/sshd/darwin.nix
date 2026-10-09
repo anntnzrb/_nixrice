@@ -1,6 +1,6 @@
-{ lib, config, ... }:
+{ config, lib, ... }:
 let
-  cfg = config.liberion.network.ssh;
+  cfg = config.liberion.network.sshd;
   caKey = lib.liberion.varValue "shared/openssh-ca/id_ed25519.pub";
   certDomains = [
     config.clan.core.settings.domain

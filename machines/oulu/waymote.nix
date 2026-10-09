@@ -1,8 +1,8 @@
 {
-  stdenvNoCC,
-  fetchurl,
   autoPatchelfHook,
+  fetchurl,
   libxkbcommon,
+  stdenvNoCC,
   wayland,
 }:
 stdenvNoCC.mkDerivation (finalAttrs: {

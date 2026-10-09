@@ -1,4 +1,4 @@
-{ lib, config, ... }:
+{ config, lib, ... }:
 let
   inherit (lib.liberion.module) mkOpt' mkOptEnabled';
 

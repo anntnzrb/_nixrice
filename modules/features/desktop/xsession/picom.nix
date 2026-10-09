@@ -2,10 +2,10 @@
 let
   inherit (lib.liberion.module) mkOpt' mkOptDisabled';
 
-  cfg = config.liberion.shared.xorg.picom;
+  cfg = config.liberion.desktop.xsession.picom;
 in
 {
-  options.liberion.shared.xorg.picom = {
+  options.liberion.desktop.xsession.picom = {
     enable = mkOptDisabled';
     backend = mkOpt' lib.types.str "glx";
     vSync = mkOptDisabled';

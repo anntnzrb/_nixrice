@@ -1,18 +1,19 @@
 {
+  config,
   lib,
   pkgs,
-  config,
   ...
 }:
 let
   inherit (lib.liberion.module) mkOpt';
   inherit (lib.types) ints str;
+
+  cfg = config.liberion.desktop.whatsapp;
   dir = lib.types.pathWith {
     absolute = true;
     inStore = false;
   };
 
-  cfg = config.liberion.desktop.whatsapp;
   homeDir = config.home.homeDirectory;
 
   idleGuard = pkgs.writeShellApplication {

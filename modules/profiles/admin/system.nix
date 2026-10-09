@@ -1,12 +1,12 @@
 {
+  config,
   lib,
   pkgs,
-  config,
   ...
 }:
 let
-  userName = lib.liberion.identity.user;
   inherit (config.clan.core.vars) generators;
+  userName = lib.liberion.identity.user;
 in
 {
   clan.core.vars.generators = {

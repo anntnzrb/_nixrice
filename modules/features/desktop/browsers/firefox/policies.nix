@@ -1,9 +1,9 @@
 {
-  lib,
   cfg,
-  policies,
   extensions,
   inputs,
+  lib,
+  policies,
 }:
 let
   shared = import ./settings.nix { inherit lib; };

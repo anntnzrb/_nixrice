@@ -1,1 +1,1 @@
-_: { networking.useDHCP = true; }
+{ networking.useDHCP = true; }

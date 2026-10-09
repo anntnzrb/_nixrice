@@ -1,4 +1,4 @@
-{ lib, inputs, ... }:
+{ inputs, lib, ... }:
 let
   inherit (inputs) yazi-flavors yazi-timu-macos;
 

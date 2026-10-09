@@ -1,17 +1,17 @@
 {
-  pkgs,
-  lib,
   config,
+  lib,
+  pkgs,
   ...
 }:
 let
   inherit (lib.liberion.module) mkOpt';
   inherit (lib.types) attrsOf anything;
 
-  cfg = config.liberion.desktop.file-managers.pcmanfm;
+  cfg = config.liberion.desktop.pcmanfm;
 in
 {
-  options.liberion.desktop.file-managers.pcmanfm = {
+  options.liberion.desktop.pcmanfm = {
     settings = mkOpt' (attrsOf anything) {
       config = {
         bm_open_method = 0;
