@@ -29,6 +29,6 @@ in
   home.activation.vendoredDirectories =
     lib.hm.dag.entryAfter [ "writeBoundary" ]
       ''
-        run mkdir -p ${lib.escapeShellArg root} ${lib.optionalString pkgs.stdenv.hostPlatform.isDarwin (lib.escapeShellArg "${home}/Library/Logs")}
+        run mkdir -p ${lib.escapeShellArg root}
       '';
 }

@@ -37,8 +37,7 @@ in
   programs.zsh.initContent = lib.mkOrder 910 ''
     if [[ $options[zle] = on ]]; then
       source ${
-        lib.liberion.zshInit pkgs "fzf"
-          "HOME=$TMPDIR ${getExe config.programs.fzf.package} --zsh"
+        lib.liberion.zshInit pkgs "fzf" "${getExe config.programs.fzf.package} --zsh"
       }
     fi
   '';

@@ -12,7 +12,8 @@ identity.nix                 owner: user name, git identity, fleet SSH keys and 
 clan.nix                     inventory: machines + tags, service instances
 flake.nix                    inputs; flake-parts: systems, shared pkgs, Clan, exported modules
 flake/                       flake-parts modules: dev.nix = formatter, hooks, checks, dev shell
-lib/default.nix              lib.liberion: discovery, machineModule, module helpers, identity
+lib/                         lib.liberion: default.nix (identity, module helpers) re-exports
+                             discovery.nix, services.nix (user jobs), fleet.nix, darwin.nix
 modules/
 ├── base/<name>/             always imported (every machine of the class / every home)
 ├── features/<category>/<name>/   opt-in, imported by machines, profiles or other features
@@ -79,7 +80,7 @@ meaning outside their profile:
 
 ### Writing modules
 Class files: `nixos.nix`, `darwin.nix`, `home.nix`, `system.nix` (NixOS and
-nix-darwin alike). `lib/default.nix` discovers them and exports every feature
+nix-darwin alike). `lib/discovery.nix` discovers them and exports every feature
 by directory name as `self.{nixos,darwin,home}Modules.<name>`. Other files in
 a directory are helpers, imported explicitly; paths containing `/_` are
 ignored. Directory names are unique across features and profiles.
@@ -157,14 +158,14 @@ Module layout, so every file reads the same:
 - Helper and data files a module imports explicitly follow the head rule only
 - `checks.style` (`scripts/style/`) enforces these in `just check`
 
-Helpers live in `lib/default.nix` (`lib.liberion`); read it before writing a
+Helpers live in `lib/` (`lib.liberion`, assembled in `lib/default.nix`); read it before writing a
 module, its exports are the list, not this file. Prefer precise types (`enum`,
 `package`, `port`) over `str`.
 
 Shared code goes in `lib.liberion`, not in copies. Before writing a block, grep
 `modules/` for the same shape: launchd agent, activation snippet, `defaults`
 write, `launchctl asuser`, option boilerplate. A shape already in a second
-module becomes a helper in `lib/default.nix` (pure functions get a case in
+module becomes a helper in the matching `lib/` file (pure functions get a case in
 `tests/default.nix` `libFailures`) and every copy moves to it in the same
 change. Shell scripts read from a file take the helper's output as an argument
 instead of re-typing it. Values that come from `identity.nix`, another option

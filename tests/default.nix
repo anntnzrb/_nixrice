@@ -18,6 +18,10 @@ let
   };
 
   libFailures = lib.runTests {
+    testRouteHome = {
+      expr = lib.liberion.routeHome [ tool ];
+      expected = routed tool;
+    };
     testMkReq = {
       expr =
         let

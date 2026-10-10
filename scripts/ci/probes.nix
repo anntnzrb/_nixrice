@@ -7,6 +7,13 @@ let
   f = builtins.getFlake flake;
   inherit (f.inputs.nixpkgs) lib;
   inherit (import "${f}/identity.nix") user;
+  inherit
+    (import "${f}/lib" {
+      inherit lib;
+      root = f;
+    })
+    routeHome
+    ;
 
   probeClan = f.inputs.clan-core.lib.clan {
     self = f;
@@ -16,7 +23,7 @@ let
     machines.probe = {
       imports = [
         f.nixosModules.default
-        { home-manager.users.${user}.imports = [ f.homeModules.default ]; }
+        (routeHome [ f.homeModules.default ])
       ];
       nixpkgs.hostPlatform = "x86_64-linux";
       users.users.${user}.isNormalUser = true;
@@ -30,7 +37,7 @@ let
     machines.darwin-probe = {
       imports = [
         f.darwinModules.default
-        { home-manager.users.${user}.imports = [ f.homeModules.default ]; }
+        (routeHome [ f.homeModules.default ])
       ];
       nixpkgs.hostPlatform = "aarch64-darwin";
     };
@@ -41,7 +48,7 @@ let
   home = sys: {
     inherit sys;
     modules = f.homeModules;
-    wrap = m: { home-manager.users.${user}.imports = [ m ]; };
+    wrap = m: routeHome [ m ];
   };
   system = sys: modules: {
     inherit sys modules;
