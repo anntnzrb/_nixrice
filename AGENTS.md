@@ -102,6 +102,8 @@ enforces the layout:
   `configuration.nix`
 - A block two machines share moves to the profile of a tag both carry (or a
   feature) in the same change
+- `home.stateVersion` and `system.stateVersion` come from base modules and
+  the generated state-version var; machine files never set them
 - Before adding a setting, `nix eval` it: no NixOS defaults, no values a
   profile or `mkForce` already overrides, no imports nothing reaches
 - `readme.md` says what the machine is (a hardware table), its role, and

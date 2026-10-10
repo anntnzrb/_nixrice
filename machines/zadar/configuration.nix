@@ -11,7 +11,6 @@
   ];
 
   environment.localBinInPath = true;
-  programs.nix-ld.enable = true;
 
   home-manager.users.${lib.liberion.identity.user}.liberion.ai.amp-runner.desktop =
     false;
