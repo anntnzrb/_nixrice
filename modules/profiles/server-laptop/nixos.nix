@@ -4,6 +4,8 @@
     tailscale
   ];
 
+  environment.localBinInPath = true;
+
   hardware.facter.detected = {
     bluetooth.enable = false;
     dhcp.enable = false;
@@ -26,5 +28,8 @@
     useNetworkd = false;
   };
 
-  systemd.network.enable = false;
+  systemd = {
+    network.enable = false;
+    oomd.enableUserSlices = true;
+  };
 }
