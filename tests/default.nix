@@ -308,6 +308,8 @@ let
           {
             "sshd listens on ${toString port}" =
               config.launchd.daemons ? "sshd-${toString port}";
+            "password login is off" =
+              lib.hasInfix "PasswordAuthentication no" ssh.extraConfig;
           }
         else
           {
