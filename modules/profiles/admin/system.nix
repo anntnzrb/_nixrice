@@ -7,6 +7,7 @@
 let
   inherit (config.clan.core.vars) generators;
   userName = lib.liberion.identity.user;
+  ageKeyFile = generators.admin-age.files.key.path;
 in
 {
   clan.core.vars.generators = {
@@ -32,6 +33,9 @@ in
 
   home-manager.users.${userName} = {
     liberion.cli.ssh.identityFile = generators.user-ssh.files.id_ed25519.path;
-    home.sessionVariables.SOPS_AGE_KEY_FILE = generators.admin-age.files.key.path;
+    home.sessionVariables.SOPS_AGE_KEY_FILE = ageKeyFile;
+    systemd.user.sessionVariables = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+      SOPS_AGE_KEY_FILE = ageKeyFile;
+    };
   };
 }
