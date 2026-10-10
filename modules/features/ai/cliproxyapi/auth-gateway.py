@@ -58,9 +58,12 @@ def _load_secret_key() -> bytes:
 
 
 SECRET_KEY = _load_secret_key()
-UPSTREAM = os.environ.get("CLIPROXY_UPSTREAM", "http://127.0.0.1:18317")
-# The Funnel mapping proxies to 127.0.0.1:8318; the override exists for tests.
-LISTEN = ("127.0.0.1", int(os.environ.get("GATEWAY_PORT", "8318")))
+try:
+    UPSTREAM = os.environ["CLIPROXY_UPSTREAM"]
+    LISTEN = ("127.0.0.1", int(os.environ["GATEWAY_PORT"]))
+except KeyError as err:
+    _ = sys.stderr.write(f"auth-gateway: missing required environment variable {err}\n")
+    sys.exit(1)
 # CLIProxyAPI's management surface (its server_middleware.go).
 MANAGEMENT_PREFIXES = ("/v0/management", "/v8/management", "/v0/resource/plugins")
 
