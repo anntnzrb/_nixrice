@@ -1,8 +1,18 @@
-{ lib, pkgs, ... }:
+{
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
 let
   userName = lib.liberion.identity.user;
 in
 {
+  imports = with inputs.self.nixosModules; [
+    essentials
+    user
+  ];
+
   clan.core.enableRecommendedDefaults = true;
 
   boot = {
@@ -92,8 +102,5 @@ in
     allowPing = true;
   };
 
-  users.users.${userName} = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ];
-  };
+  users.users.${userName}.extraGroups = [ "wheel" ];
 }

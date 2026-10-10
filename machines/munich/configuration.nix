@@ -3,7 +3,6 @@
     ./hardware.nix
     disko-xfs
     docker
-    essentials
     fish
     intel-cpu
     nvidia

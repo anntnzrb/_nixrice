@@ -3,9 +3,7 @@
     ./disk.nix
     bash
     cliproxyapi
-    essentials
     systemd-boot
-    t3
   ];
 
   home-manager.users.${lib.liberion.identity.user}.liberion.ai.t3.settings.backgroundActivity =

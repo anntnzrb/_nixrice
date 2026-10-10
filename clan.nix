@@ -28,8 +28,10 @@ in
       description = "Lenovo V15 G4 IRU - Intel Core i7-1355U - Build Server";
       tags = [
         "admin"
+        "agents"
         "headless"
         "physical"
+        "runner"
         "server"
         "server-laptop"
         "workstation"
@@ -50,6 +52,7 @@ in
       description = "HP 15-dw0083wm - Intel Pentium Silver N5000 - Headless Server";
       tags = [
         "admin"
+        "agents"
         "headless"
         "laptop"
         "physical"
@@ -69,9 +72,11 @@ in
       description = "ASUS GL502VMK - Intel Core i7-7700HQ - Headless Development Server";
       tags = [
         "admin"
+        "agents"
         "headless"
         "laptop"
         "physical"
+        "runner"
         "server"
         "server-laptop"
       ];
