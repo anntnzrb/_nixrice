@@ -53,6 +53,16 @@ let
         stop = "/bin/tailscale funnel --https=443 off";
       };
     };
+    testFleetPeers = {
+      expr = lib.attrNames (
+        lib.liberion.fleetPeers {
+          self.tags = [ ];
+          peer.tags = [ "server" ];
+          retired.tags = [ "archived" ];
+        } "self"
+      );
+      expected = [ "peer" ];
+    };
     testDarwinHomebrewApps = {
       expr = lib.liberion.darwin.homebrewApps [ "firefox" "brave" ] {
         inputs.self.darwinModules.homebrew = "homebrew-module";

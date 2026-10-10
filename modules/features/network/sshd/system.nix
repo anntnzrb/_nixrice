@@ -25,9 +25,7 @@ let
           ) "Port ${toString cfg.port}\n"}
       '')
       (
-        lib.filterAttrs (_: machine: !(lib.liberion.isArchived machine)) (
-          removeAttrs inventory.machines [ config.clan.core.settings.machine.name ]
-        )
+        lib.liberion.fleetPeers inventory.machines config.clan.core.settings.machine.name
       )
   );
 in
