@@ -1,0 +1,18 @@
+! name: liberion
+! description: Boost documentation and wikis, discard content farms
+! public: false
+! author: anntnzrb
+
+$boost=3,site=nixos.org
+$boost=3,site=wiki.nixos.org
+$boost=3,site=search.nixos.org
+$boost=3,site=nix.dev
+$boost=3,site=noogle.dev
+$boost=3,site=wiki.archlinux.org
+$boost=2,site=github.com
+$boost=2,site=docs.rs
+$boost=2,site=developer.mozilla.org
+$boost=2,site=man7.org
+
+$discard,site=pinterest.com
+$discard,site=quora.com

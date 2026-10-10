@@ -16,6 +16,15 @@ let
 
   q = "{searchTerms}";
   nixIcon = "https://nixos.wiki/favicon.png";
+  braveIcon = "https://brave.com/favicon.ico";
+  braveSearch = "https://search.brave.com/search";
+  goggle = "https://raw.githubusercontent.com/anntnzrb/_nixrice/dev/modules/features/desktop/browsers/firefox/brave.goggle";
+  brave = engine "Brave Search" [ "@b" "@brave" ] braveIcon braveSearch [
+    [
+      "q"
+      q
+    ]
+  ];
   githubCode = query: [
     [
       "q"
@@ -28,6 +37,48 @@ let
   ];
 in
 {
+  brave = brave // {
+    urls = brave.urls ++ [
+      {
+        template = "https://search.brave.com/api/suggest";
+        type = "application/x-suggestions+json";
+        params = [
+          {
+            name = "q";
+            value = q;
+          }
+        ];
+      }
+    ];
+  };
+  brave-ask =
+    engine "Ask Brave" [ "@a" "@ask" ] braveIcon "https://search.brave.com/ask"
+      [
+        [
+          "q"
+          q
+        ]
+      ];
+  brave-goggle = engine "Brave Search: Goggle" [ "@bg" ] braveIcon braveSearch [
+    [
+      "q"
+      q
+    ]
+    [
+      "goggles_id"
+      goggle
+    ]
+  ];
+  startpage =
+    engine "Startpage" [ "@sp" "@startpage" ]
+      "https://www.startpage.com/favicon.ico"
+      "https://www.startpage.com/sp/search"
+      [
+        [
+          "query"
+          q
+        ]
+      ];
   perplexity =
     engine "Perplexity" [ "@p" "@perplexity" ]
       "https://www.perplexity.ai/favicon.ico"
