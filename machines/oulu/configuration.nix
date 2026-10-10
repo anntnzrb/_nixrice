@@ -16,8 +16,6 @@
     t3
   ];
 
-  system.stateVersion = "26.05";
-
   environment.localBinInPath = true;
   programs.nix-ld.enable = true;
 
