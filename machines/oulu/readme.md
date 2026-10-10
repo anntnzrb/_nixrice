@@ -1,10 +1,11 @@
-# Machine Architecture: `oulu`
+# oulu
 
 `oulu` is a 24/7 headless home server and remote build box running on repurposed Lenovo V15 G4 IRU laptop hardware.
+It is work-owned; deployment requires explicit owner authorization.
 
 ---
 
-## 1. Hardware & Platform
+## Hardware & Platform
 
 | Component | Specification | Operational Role |
 |---|---|---|
@@ -16,7 +17,7 @@
 
 ---
 
-## 2. Kernel Selection & Tuning
+## Kernel Selection & Tuning
 
 ### Why Mainline (`pkgs.linuxPackages_latest`)?
 * **Intel Thread Director (ITD)**: Hybrid P/E core architectures require modern kernel scheduler support. Mainline Linux provides proper task placement so Nix compilations leverage P-cores while background services utilize E-cores.
@@ -32,15 +33,15 @@ Rather than maintaining a custom forked kernel, the following sysctls are applie
 
 ---
 
-## 3. Storage & Filesystem (`disko-xfs` feature, `modules/features/hardware/disko-xfs`)
+## Storage & Filesystem (`disko-xfs` feature, `modules/features/hardware/disko-xfs`)
 
 * **Partition 1 (1 GB FAT32 ESP)**: Mounted at `/boot` (`systemd-boot`, EFI variables enabled).
-* **Partition 2 (100% Remaining XFS)**: Mounted at `/` with `crc=1,reflink=1`.
+* **Partition 2 (remaining space, XFS)**: Mounted at `/` with `crc=1,reflink=1`.
   * **Why XFS Reflinks?**: Enables instant zero-copy file cloning for Nix builds, container layers, and state manipulation without the heavy RAM and CPU overhead of ZFS/Btrfs copy-on-write trees.
 
 ---
 
-## 4. Memory & Swap Architecture (`server` profile, `modules/profiles/server`)
+## Memory & Swap Architecture (`server` profile, `modules/profiles/server`)
 
 * **ZRAM Swap (`zstd`)**: Allocates 50% of RAM (12 GB) as compressed swap with priority 100, yielding ~36+ GB effective memory.
 * `vm.swappiness = 100`: Aggressively pages idle anonymous memory into fast Zstd compressed RAM, freeing physical RAM pages for the Linux page cache and active Nix builds.
@@ -48,7 +49,7 @@ Rather than maintaining a custom forked kernel, the following sysctls are applie
 
 ---
 
-## 5. Networking & Remote Access
+## Networking & Remote Access
 
 * **Tailscale**: Enabled with `--ssh=false`, `--hostname=oulu`, and route acceptance (`useRoutingFeatures = "client"`). Tailnet SSH uses OpenSSH and fleet keys.
 * **Dual-Interface Failover**:
@@ -64,19 +65,10 @@ Rather than maintaining a custom forked kernel, the following sysctls are applie
 
 ---
 
-## 6. Secrets & Fleet Management
+## Secrets & Fleet Management
 
 * **Clan 26.05 Vars**: Secrets (root password, host SSH keys, Age encryption keys) are generated deterministically and encrypted with SOPS/Age under `vars/per-machine/oulu/`.
 * **Modular Flake Composition**: `server` supplies power and memory policy,
   `headless` disables the graphical session, and `server-laptop` supplies the
   shared laptop network policy. Machine-specific services and build limits
   stay in `configuration.nix`; Amp's desktop mode is disabled.
-
-## Commissioning audit
-
-The read-only audit on 2026-10-09 found no Wi-Fi profile and both NetworkManager
-and systemd-networkd active before the shared-profile change. The target above
-corrects those findings. Oulu is a work-owned machine: deployment requires
-explicit owner authorization. Closed-lid continuity,
-physical cable-loss recovery, and power-on after battery exhaustion remain
-unverified.

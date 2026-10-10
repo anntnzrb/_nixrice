@@ -5,8 +5,8 @@ Store apps picked per machine through `liberion.darwin.homebrew.apps`.
 
 ## zsh environment
 
-nix-homebrew's zsh integration (`eval "$(brew shellenv)"`, ~24 ms per shell) is
-off. `programs.zsh.interactiveShellInit` exports the same variables as static
+nix-homebrew's zsh integration (`eval "$(brew shellenv)"`) is off to avoid
+running `brew shellenv` per shell. `programs.zsh.interactiveShellInit` exports the same variables as static
 text built from `homebrew.prefix` and `nix-homebrew.prefixes.<prefix>.library`.
 
 After a Homebrew upgrade, compare with the live output; the static block must
