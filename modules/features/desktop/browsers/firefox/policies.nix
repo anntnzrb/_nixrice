@@ -61,24 +61,34 @@ let
     || name == "identity.fxaccounts.enabled"
   ) (lib.attrNames preferences);
 
-  searchEngine =
-    engine:
+  urlTemplate =
+    url:
     let
-      url = lib.head engine.urls;
       params = lib.concatMapStringsSep "&" (
         param: "${param.name}=${param.value}"
       ) url.params;
     in
+    url.template
+    + lib.optionalString (params != "") (
+      (if lib.hasInfix "?" url.template then "&" else "?") + params
+    );
+
+  searchEngine =
+    engine:
+    let
+      suggest = lib.findFirst (
+        url: url.type or null == "application/x-suggestions+json"
+      ) null engine.urls;
+    in
     {
       Name = engine.name;
-      URLTemplate =
-        url.template
-        + lib.optionalString (params != "") (
-          (if lib.hasInfix "?" url.template then "&" else "?") + params
-        );
+      URLTemplate = urlTemplate (lib.head engine.urls);
       Method = "GET";
       IconURL = engine.icon;
       Alias = lib.head engine.definedAliases;
+    }
+    // lib.optionalAttrs (suggest != null) {
+      SuggestURLTemplate = urlTemplate suggest;
     };
 in
 policies
