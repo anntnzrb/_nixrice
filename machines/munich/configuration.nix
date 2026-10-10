@@ -1,6 +1,6 @@
 { config, inputs, ... }: {
   imports = with inputs.self.nixosModules; [
-    ./hardware
+    ./hardware.nix
     disko-xfs
     docker
     essentials
