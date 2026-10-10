@@ -18,7 +18,7 @@ modules/
 ├── features/<category>/<name>/   opt-in, imported by machines, profiles or other features
 ├── profiles/<tag>/          imported into machines carrying Clan tag <tag>
 └── services/<name>/         in-repo Clan services (_class = "clan.service")
-machines/<name>/             configuration.nix, optional home.nix, facter.json or hardware/, optional disk.nix (disko), readme.md
+machines/<name>/             flat: configuration.nix, readme.md, optional home.nix, facter.json or hardware.nix, disk.nix, machine-only package files
 homes/                       standalone Home Manager configs (hosts without a managed system)
 overlays/                    the flake overlay
 tests/                       `just test`; probe-errors.txt for `just probes`
@@ -86,6 +86,29 @@ ignored. Directory names are unique across features and profiles.
 
 Keep retired modules as reusable history; disconnect their imports instead of
 deleting them. Unimported modules add no packages or services to a machine.
+This applies to `modules/` only: a file under `machines/` that nothing
+imports is dead and is deleted; git keeps the history.
+
+### Machine directories
+A machine directory holds only what is unique to that machine; `tests/`
+enforces the layout:
+- Flat, lowercase names: `configuration.nix`, `readme.md`, optional
+  `home.nix`, `disk.nix` (when no disko feature fits) and package files
+  only this machine uses. darwin machines have no hardware files
+- Hardware: `facter.json` detects it; without facter, one `hardware.nix`.
+  Drivers and other hardware policy are features under
+  `modules/features/hardware/` imported in `configuration.nix`; never copy a
+  feature's body into a machine. A part only this box needs stays in
+  `configuration.nix`
+- A block two machines share moves to the profile of a tag both carry (or a
+  feature) in the same change
+- Before adding a setting, `nix eval` it: no NixOS defaults, no values a
+  profile or `mkForce` already overrides, no imports nothing reaches
+- `readme.md` says what the machine is (a hardware table), its role, and
+  where the hardware differs from its target state today. No dated logs,
+  audits, benchmarks, research sources, IP addresses, `/tmp` paths or to-do
+  lists: that evidence goes in the PR that produced it. Every readme in the
+  repo except the root one is `readme.md`
 
 **Importing a feature is enabling it** - there are no `enable` toggles:
 
