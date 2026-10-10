@@ -14,24 +14,6 @@ let
     script = ./scratch.py;
   };
 
-  uvPrune = pkgs.writeShellScript "maintenance-uv" ''
-    if ! command -v uv >/dev/null 2>&1; then
-      exit 0
-    fi
-    cache_dir="$(uv cache dir 2>/dev/null || true)"
-    if [ -n "$cache_dir" ] && [ -d "$cache_dir" ]; then
-      exec uv cache prune
-    fi
-  '';
-
-  bunClean = pkgs.writeShellScript "maintenance-bun" ''
-    for cache_dir in "$HOME/.bun/install/cache" "''${XDG_CACHE_HOME:-$HOME/.cache}/.bun/install/cache"; do
-      if [ -d "$cache_dir" ]; then
-        find "$cache_dir" -mindepth 1 -delete 2>/dev/null || true
-      fi
-    done
-  '';
-
   runner = pkgs.writeShellScript "maintenance-runner" ''
     set -u
     failed=0
@@ -50,6 +32,16 @@ let
   '';
 in
 {
+  imports = [
+    (lib.liberion.userJob {
+      name = "maintenance";
+      description = "Reclaim package caches and stale scratch";
+      command = [ "${runner}" ];
+      schedule = "nightly";
+      timeout = 1800;
+    })
+  ];
+
   options.liberion.maintenance.tasks = lib.liberion.module.mkOpt' (
     lib.types.attrsOf
       (
@@ -61,20 +53,5 @@ in
       )
   ) { };
 
-  config = lib.mkMerge [
-    {
-      liberion.maintenance.tasks = {
-        uv.command = [ "${uvPrune}" ];
-        bun.command = [ "${bunClean}" ];
-        scratch.command = [ (lib.getExe scratch) ];
-      };
-    }
-    (lib.liberion.userJob {
-      name = "maintenance";
-      description = "Reclaim package caches and stale scratch";
-      command = [ "${runner}" ];
-      schedule = "nightly";
-      timeout = 1800;
-    } { inherit config pkgs; })
-  ];
+  config.liberion.maintenance.tasks.scratch.command = [ (lib.getExe scratch) ];
 }
