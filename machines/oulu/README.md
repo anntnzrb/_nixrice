@@ -50,11 +50,16 @@ Rather than maintaining a custom forked kernel, the following sysctls are applie
 
 ## 5. Networking & Remote Access
 
-* **Tailscale**: Enabled with `--ssh`, `--hostname=oulu`, and subnet routing support (`useRoutingFeatures = "client"`). Accessible securely anywhere on the tailnet without public port forwards.
+* **Tailscale**: Enabled with `--ssh=false`, `--hostname=oulu`, and route acceptance (`useRoutingFeatures = "client"`). Tailnet SSH uses OpenSSH and fleet keys.
 * **Dual-Interface Failover**:
   * Physical Gigabit Ethernet (`enp3s0`): Primary route (metric `100`).
   * Wi-Fi (`wlp2s0`): Automatic fallback route (metric `600`).
   * `nmtui` / `nmcli`: Available for headless emergency wireless configuration.
+  * The `server-laptop` profile supplies NetworkManager-only management and
+    route metrics by device type for IPv4 and IPv6. Clan assigns the shared
+    home Wi-Fi credentials to that tag. Both links can stay connected;
+    Ethernet is preferred. This covers cable/link loss, not an upstream outage
+    while the Ethernet link stays up.
 * **OpenSSH**: Strict ED25519 public key authentication for the admin user only; root login and password authentication are disabled. Clan deploys connect as the admin user and escalate with `sudo`.
 
 ---
@@ -62,4 +67,16 @@ Rather than maintaining a custom forked kernel, the following sysctls are applie
 ## 6. Secrets & Fleet Management
 
 * **Clan 26.05 Vars**: Secrets (root password, host SSH keys, Age encryption keys) are generated deterministically and encrypted with SOPS/Age under `vars/per-machine/oulu/`.
-* **Modular Flake Composition**: its `server` and `headless` Clan tags pull in `modules/profiles/{server,headless}`; `machines/oulu/configuration.nix` imports only what is oulu-specific.
+* **Modular Flake Composition**: `server` supplies power and memory policy,
+  `headless` disables the graphical session, and `server-laptop` supplies the
+  shared laptop network policy. Machine-specific services and build limits
+  stay in `configuration.nix`; Amp's desktop mode is disabled.
+
+## Commissioning audit
+
+The read-only audit on 2026-10-09 found no Wi-Fi profile and both NetworkManager
+and systemd-networkd active before the shared-profile change. The target above
+corrects those findings. Oulu is a work-owned machine: deployment requires
+explicit owner authorization. Closed-lid continuity,
+physical cable-loss recovery, and power-on after battery exhaustion remain
+unverified.

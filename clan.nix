@@ -32,6 +32,7 @@ in
         "workstation"
         "headless"
         "server"
+        "server-laptop"
       ];
     };
     munich = {
@@ -54,6 +55,7 @@ in
         "workstation"
         "server"
         "headless"
+        "server-laptop"
       ];
     };
     tampa = {
@@ -98,7 +100,10 @@ in
 
   inventory.instances = {
     wifi = {
-      roles.default.machines.solna.settings.networks.home = { };
+      roles.default = {
+        tags = [ "server-laptop" ];
+        settings.networks.home = { };
+      };
     };
 
     remote-builders = {
