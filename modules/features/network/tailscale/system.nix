@@ -3,29 +3,20 @@ let
   cfg = config.liberion.network.tailscale;
 in
 {
-  options.liberion.network.tailscale.expose = lib.mkOption {
-    default = { };
-    description = "Owned HTTPS Serve/Funnel mappings; requires existing tailnet enrollment and policy grants.";
-    type = lib.types.attrsOf (
-      lib.types.submodule {
-        options = {
-          port = lib.mkOption {
-            type = lib.types.port;
-            description = "HTTPS listener port.";
+  options.liberion.network.tailscale.expose = lib.liberion.module.mkOpt' (
+    lib.types.attrsOf
+      (
+        lib.types.submodule {
+          options = {
+            port = lib.liberion.module.mkReq' lib.types.port;
+            target = lib.liberion.module.mkReq' (
+              lib.types.strMatching "https?://(127[.]0[.]0[.]1|localhost|[[]::1[]]):[0-9]+(/.*)?"
+            );
+            funnel = lib.liberion.module.mkOptDisabled';
           };
-          target = lib.mkOption {
-            type = lib.types.strMatching "https?://(127[.]0[.]0[.]1|localhost|[[]::1[]]):[0-9]+(/.*)?";
-            description = "Loopback HTTP upstream.";
-          };
-          funnel = lib.mkOption {
-            type = lib.types.bool;
-            default = false;
-            description = "Publish publicly through Funnel instead of private Serve.";
-          };
-        };
-      }
-    );
-  };
+        }
+      )
+  ) { };
 
   config.assertions = [
     {

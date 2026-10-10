@@ -18,6 +18,17 @@ let
   };
 
   libFailures = lib.runTests {
+    testMkReq = {
+      expr =
+        let
+          option = lib.liberion.module.mkReq' lib.types.str;
+        in
+        option ? type
+        && option.type.name == "str"
+        && !(option ? default)
+        && !(option ? description);
+      expected = true;
+    };
     testTailscaleExposeServe = {
       expr = lib.liberion.tailscaleExpose "/bin/tailscale" "paseo" {
         funnel = false;

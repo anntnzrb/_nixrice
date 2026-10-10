@@ -6,7 +6,7 @@
 }:
 let
   inherit (lib) types;
-  inherit (lib.liberion.module) mkOpt';
+  inherit (lib.liberion.module) mkOpt' mkReq';
 
   cfg = config.liberion.darwin;
   defaults = config.system.defaults;
@@ -192,8 +192,8 @@ let
 
   ownedDefault = types.submodule {
     options = {
-      domain = lib.mkOption { type = types.str; };
-      key = lib.mkOption { type = types.str; };
+      domain = mkReq' types.str;
+      key = mkReq' types.str;
       path = mkOpt' (types.listOf types.str) [ ];
       scope = mkOpt' (types.enum [
         "user"
@@ -206,8 +206,8 @@ let
 
   ownedPrivacy = types.submodule {
     options = {
-      service = lib.mkOption {
-        type = types.enum [
+      service = mkReq' (
+        types.enum [
           "Accessibility"
           "AppleEvents"
           "Calendar"
@@ -223,9 +223,9 @@ let
           "SystemPolicyDesktopFolder"
           "SystemPolicyDocumentsFolder"
           "SystemPolicyDownloadsFolder"
-        ];
-      };
-      bundleId = lib.mkOption { type = types.str; };
+        ]
+      );
+      bundleId = mkReq' types.str;
     };
   };
 in
