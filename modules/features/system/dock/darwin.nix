@@ -14,13 +14,10 @@
       tilesize = 40;
     };
 
-    CustomUserPreferences.NSGlobalDomain."com.apple.dock" = {
+    CustomUserPreferences."com.apple.dock" = {
       showAppExposeGestureEnabled = 0;
-
       showMissionControlGestureEnabled = 1;
-
       showLaunchpadGestureEnabled = 0;
-
       showDesktopGestureEnabled = 0;
     };
   };
