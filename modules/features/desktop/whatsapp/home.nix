@@ -24,14 +24,25 @@ let
     ];
     text = builtins.readFile ./whatsapp-idle-guard.sh;
   };
-
-  ensureDirs = pkgs.writeShellApplication {
-    name = "ensure-whatsapp-idle-guard-dirs";
-    runtimeInputs = with pkgs; [ coreutils ];
-    text = builtins.readFile ./ensure-whatsapp-idle-guard-dirs.sh;
-  };
 in
 {
+  imports = [
+    (lib.liberion.userJob {
+      name = "whatsapp-idle-guard";
+      description = "Quit WhatsApp after it has been idle";
+      command = [
+        (lib.getExe idleGuard)
+        cfg.bundleId
+        cfg.stateDir
+        (toString (cfg.timeoutMinutes * 60))
+        (toString (cfg.sleepBlockMinutes * 60))
+        (toString cfg.killGraceSeconds)
+      ];
+      schedule = cfg.pollSeconds;
+      startup = 0;
+    })
+  ];
+
   options.liberion.desktop.whatsapp = {
     bundleId = mkOpt' str "net.whatsapp.WhatsApp";
     timeoutMinutes = mkOpt' ints.positive 60;
@@ -39,7 +50,6 @@ in
     pollSeconds = mkOpt' ints.positive 60;
     killGraceSeconds = mkOpt' ints.positive 10;
     stateDir = mkOpt' dir "${homeDir}/Library/Application Support/rice/whatsapp-idle-guard";
-    logDir = mkOpt' dir "${homeDir}/Library/Logs/rice";
   };
 
   config = {
@@ -51,31 +61,9 @@ in
     ];
 
     home.activation.whatsappIdleGuardDirs =
-      config.lib.dag.entryAfter [ "writeBoundary" ]
+      lib.hm.dag.entryAfter [ "writeBoundary" ]
         ''
-          run ${lib.getExe ensureDirs} \
-            ${lib.escapeShellArg cfg.stateDir} \
-            ${lib.escapeShellArg cfg.logDir}
+          run mkdir -p ${lib.escapeShellArg cfg.stateDir}
         '';
-
-    launchd.agents.whatsapp-idle-guard = {
-      enable = true;
-      config = {
-        ProgramArguments = [
-          (lib.getExe idleGuard)
-          cfg.bundleId
-          cfg.stateDir
-          (toString (cfg.timeoutMinutes * 60))
-          (toString (cfg.sleepBlockMinutes * 60))
-          (toString cfg.killGraceSeconds)
-        ];
-        RunAtLoad = true;
-        StartInterval = cfg.pollSeconds;
-        ProcessType = "Background";
-        LimitLoadToSessionType = [ "Aqua" ];
-        StandardOutPath = "${cfg.logDir}/whatsapp-idle-guard.log";
-        StandardErrorPath = "${cfg.logDir}/whatsapp-idle-guard.error.log";
-      };
-    };
   };
 }
