@@ -22,6 +22,7 @@
         "ipv6.route-metric" = 600;
       };
     };
+    # clan.core.enableRecommendedDefaults (server profile) turns networkd on
     useNetworkd = false;
   };
 
