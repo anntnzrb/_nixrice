@@ -5,23 +5,24 @@ set -eu
 state=${1}
 manifest=${2}
 user=${3}
+as_user=${4}
+activate_settings=${5}
+plist_buddy=${6}
 
-uid=$(id -u -- "${user}")
 work=$(mktemp -d)
 trap 'rm -rf "${work}"' EXIT
 : >"${work}/carried"
 : >"${work}/restart"
 refresh=0
 
-# Prefixes for one entry: who runs `defaults`, and whether it targets ByHost.
-set_runner() {
-    runner=""
-    if [ "${scope}" = user ]; then
-        runner="launchctl asuser ${uid} sudo --user=${user} --"
-    fi
-    host=""
+run_defaults() {
     if [ "${current_host}" = true ]; then
-        host="-currentHost"
+        set -- -currentHost "$@"
+    fi
+    if [ "${scope}" = user ]; then
+        "${as_user}" defaults "$@"
+    else
+        defaults "$@"
     fi
 }
 
@@ -46,8 +47,7 @@ remove_file() {
 }
 
 remove_privacy() {
-    if ! launchctl asuser "${uid}" sudo --user="${user}" -- \
-        tccutil reset "${service}" "${bundle_id}" >"${work}/tcc.log" 2>&1; then
+    if ! "${as_user}" tccutil reset "${service}" "${bundle_id}" >"${work}/tcc.log" 2>&1; then
         echo "reconcile: could not revoke ${service} for ${bundle_id}" >&2
         carry
         return 0
@@ -70,35 +70,34 @@ remove_shell() {
 }
 
 remove_default() {
-    set_runner
-    # shellcheck disable=SC2086,SC2248 # runner and host are word lists by design
+    # shellcheck disable=SC2310 # run_defaults returns the external command's status for retry handling.
     {
         # An unreadable domain (missing, or behind TCC) cannot be checked: keep owning it.
-        if ! ${runner} defaults ${host} read "${domain}" >/dev/null 2>&1; then
+        if ! run_defaults read "${domain}" >/dev/null 2>&1; then
             carry
             return 0
         fi
 
         if [ -z "${nested}" ]; then
-            if ! ${runner} defaults ${host} read "${domain}" "${key}" >/dev/null 2>&1; then
+            if ! run_defaults read "${domain}" "${key}" >/dev/null 2>&1; then
                 return 0
             fi
             echo "reconcile: removing ${domain} ${key}" >&2
-            if ! ${runner} defaults ${host} delete "${domain}" "${key}"; then
+            if ! run_defaults delete "${domain}" "${key}"; then
                 carry
                 return 0
             fi
         else
-            if ! ${runner} defaults ${host} export "${domain}" - >"${work}/domain.plist"; then
+            if ! run_defaults export "${domain}" - >"${work}/domain.plist"; then
                 carry
                 return 0
             fi
-            if ! /usr/libexec/PlistBuddy -c "Print :${key}${nested}" "${work}/domain.plist" >/dev/null 2>&1; then
+            if ! "${plist_buddy}" -c "Print :${key}${nested}" "${work}/domain.plist" >/dev/null 2>&1; then
                 return 0
             fi
             echo "reconcile: removing ${domain} ${key}${nested}" >&2
-            if ! /usr/libexec/PlistBuddy -c "Delete :${key}${nested}" "${work}/domain.plist" \
-                || ! ${runner} defaults ${host} import "${domain}" - <"${work}/domain.plist"; then
+            if ! "${plist_buddy}" -c "Delete :${key}${nested}" "${work}/domain.plist" \
+                || ! run_defaults import "${domain}" - <"${work}/domain.plist"; then
                 carry
                 return 0
             fi
@@ -139,8 +138,7 @@ if [ -f "${state}" ]; then
 fi
 
 if [ "${refresh}" = 1 ]; then
-    launchctl asuser "${uid}" sudo --user="${user}" -- \
-        /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u || true
+    "${as_user}" "${activate_settings}" || true
 fi
 sort -u "${work}/restart" >"${work}/restart.sorted"
 while IFS= read -r name; do

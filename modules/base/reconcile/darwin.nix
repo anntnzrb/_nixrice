@@ -161,7 +161,19 @@ let
       pkgs.jq
       pkgs.coreutils
     ];
-    text = builtins.readFile ./reconcile.sh;
+    text =
+      let
+        asUser = pkgs.writeShellScript "reconcile-as-user" ''
+          exec ${lib.liberion.darwin.asUser user} "$@"
+        '';
+        activateSettings = pkgs.writeShellScript "reconcile-activate-settings" ''
+          exec ${lib.liberion.darwin.activateSettings}
+        '';
+      in
+      ''
+        set -- "$@" ${asUser} ${activateSettings} /usr/libexec/PlistBuddy
+      ''
+      + builtins.readFile ./reconcile.sh;
   };
 
   hostWrites = lib.concatLists (

@@ -3,9 +3,11 @@
   inputs,
   lib,
   osConfig,
+  pkgs,
   ...
 }:
 let
+  cfg = config.liberion.ai.amp-runner;
   home = config.home.homeDirectory;
   wrapper = "${home}/.local/bin/amp";
   log = "${home}/.cache/amp/logs/runner-agents.log";
@@ -31,7 +33,7 @@ in
         "--dir"
         "${home}/src/agents"
       ]
-      ++ lib.optional config.liberion.ai.amp-runner.desktop "--desktop"
+      ++ lib.optional cfg.desktop "--desktop"
       ++ [
         "--log-file"
         log
@@ -52,10 +54,19 @@ in
 
   options.liberion.ai.amp-runner.desktop = lib.liberion.module.mkOptDisabled';
 
-  # Amp refuses to start when a --discover-dirs directory is missing.
-  config.home.activation.ampRunnerRepos =
-    lib.hm.dag.entryAfter [ "writeBoundary" ]
-      ''
-        run mkdir -p ${lib.escapeShellArg "${home}/repos"}
-      '';
+  config = {
+    home.packages = lib.optionals cfg.desktop (
+      with pkgs;
+      [
+        ffmpeg
+        labwc
+        wlr-randr
+      ]
+    );
+
+    # Amp refuses to start when a --discover-dirs directory is missing.
+    home.activation.ampRunnerRepos = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      run mkdir -p ${lib.escapeShellArg "${home}/repos"}
+    '';
+  };
 }

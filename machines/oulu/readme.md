@@ -24,12 +24,8 @@ It is work-owned; deployment requires explicit owner authorization.
 * **Driver Maturity**: Contains current upstream drivers for the `rtw89_8852be` Wi-Fi chip and Raptor Lake Iris Xe graphics.
 * **Hydra Binary Cache**: Zero local kernel compilation overhead and instant updates.
 
-### Native XanMod-Grade Sysctl Tuning (`server` profile, `modules/profiles/server`)
-Rather than maintaining a custom forked kernel, the following sysctls are applied:
-* `net.ipv4.tcp_congestion_control = "bbr"` & `net.core.default_qdisc = "cake"`: High throughput, minimal bufferbloat for Tailscale gateway traffic and WAN transfers.
-* `net.ipv4.tcp_fastopen = 3`: Lowers TCP handshake latency for incoming and outgoing connections.
-* `kernel.nmi_watchdog = 0`: Disables the hardware timer interrupt watchdog to prevent unnecessary CPU wakeups and reduce laptop thermal overhead.
-* `vm.dirty_background_ratio = 5` & `vm.dirty_ratio = 10`: Flushes dirty pages to NVMe storage early and incrementally, preventing writeback stalls during heavy disk I/O.
+### Sysctl Tuning (`server` profile, `modules/profiles/server/nixos.nix`)
+Rather than maintaining a custom forked kernel, the sysctls (BBR/CAKE, TCP Fast Open, NMI watchdog, dirty ratios) come from `modules/profiles/server/nixos.nix`.
 
 ---
 
@@ -43,9 +39,7 @@ Rather than maintaining a custom forked kernel, the following sysctls are applie
 
 ## Memory & Swap Architecture (`server` profile, `modules/profiles/server`)
 
-* **ZRAM Swap (`zstd`)**: Allocates 50% of RAM (12 GB) as compressed swap with priority 100, yielding ~36+ GB effective memory.
-* `vm.swappiness = 100`: Aggressively pages idle anonymous memory into fast Zstd compressed RAM, freeing physical RAM pages for the Linux page cache and active Nix builds.
-* `vm.page-cluster = 0`: Enables single-page compressed I/O without multi-page readahead penalties.
+ZRAM swap, swappiness, and page-cluster come from `modules/profiles/server/nixos.nix`.
 
 ---
 

@@ -31,14 +31,16 @@ in
       ];
       keybindings = {
         "super + Return ; {Return}" = "${lib.getExe apps.terminal} {_}";
+        "super + Return ; i" =
+          lib.mkIf config.programs.btop.enable "${lib.getExe apps.terminal} -e btop";
 
         "super + w ; {f,w}" =
           "{${lib.getExe apps.fileManager},${lib.getExe apps.browser}}";
 
-        "XF86AudioMute" = "pamixer -t";
-        "XF86Audio{Lower,Raise}Volume" = "pamixer -{d,i} 5";
+        "XF86AudioMute" = "${lib.getExe pkgs.pamixer} -t";
+        "XF86Audio{Lower,Raise}Volume" = "${lib.getExe pkgs.pamixer} -{d,i} 5";
 
-        "XF86MonBrightness{Down,Up}" = "brightnessctl set {2%-,+2%}";
+        "XF86MonBrightness{Down,Up}" = "${lib.getExe pkgs.brightnessctl} set {2%-,+2%}";
 
         "super + Escape ; {x}" = "{pkill -15 'X'}";
       };

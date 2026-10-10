@@ -40,7 +40,7 @@ out="$(eval_jobs \
     --impure \
     --expr "${expr}")"
 
-printf '%s\n' "${out}" \
+rows="$(printf '%s\n' "${out}" \
     | jq -r '
         if has("error") then
             "probe.\(.attr) eval-error"
@@ -49,5 +49,5 @@ printf '%s\n' "${out}" \
         else
             empty
         end
-    ' \
-    | sort
+    ')"
+printf '%s\n' "${rows}" | sort

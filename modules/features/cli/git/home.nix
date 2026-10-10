@@ -95,7 +95,7 @@ in
 
             nuke = "!git reset --hard && git clean -fdx";
             qc = "!git commit -m \"$(date '+%F :: %T (%Z)')\"";
-            srp = "!git diff --quiet && git diff --cached --quiet || git stash push -m 'local' && git rebase --merge && git stash pop";
+            srp = "rebase --merge";
           };
         };
       };

@@ -18,6 +18,10 @@ let
   };
 
   libFailures = lib.runTests {
+    testRouteHome = {
+      expr = lib.liberion.routeHome [ tool ];
+      expected = routed tool;
+    };
     testMkReq = {
       expr =
         let
@@ -308,6 +312,8 @@ let
           {
             "sshd listens on ${toString port}" =
               config.launchd.daemons ? "sshd-${toString port}";
+            "password login is off" =
+              lib.hasInfix "PasswordAuthentication no" ssh.extraConfig;
           }
         else
           {
@@ -328,6 +334,7 @@ map (
 ) libFailures
 ++ admins
 ++ layout
+++ import ./fingerprint.nix { inherit lib self; }
 ++ lib.concatLists (
   lib.mapAttrsToList (name: c: access name c.config) (
     self.nixosConfigurations // self.darwinConfigurations

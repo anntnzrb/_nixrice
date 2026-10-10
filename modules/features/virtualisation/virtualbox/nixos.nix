@@ -25,6 +25,6 @@ in
       };
     };
 
-    liberion.user.extraGroups = [ "vboxusers" ];
+    users.users.${lib.liberion.identity.user}.extraGroups = [ "vboxusers" ];
   };
 }

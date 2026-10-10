@@ -25,7 +25,12 @@ MISSING_MESSAGE = (
     "auth-gateway: missing GATEWAY_SECRET or CREDENTIALS_DIRECTORY/secrets.json\n"
 )
 CHALLENGE = 'Bearer realm="cliproxyapi"'
-OWN_ENV = ("GATEWAY_SECRET", "CREDENTIALS_DIRECTORY", "CLIPROXY_UPSTREAM")
+OWN_ENV = (
+    "GATEWAY_SECRET",
+    "CREDENTIALS_DIRECTORY",
+    "CLIPROXY_UPSTREAM",
+    "GATEWAY_PORT",
+)
 
 type Seen = queue.Queue[tuple[str, str, dict[str, str], bytes]]
 
@@ -381,6 +386,22 @@ def invalid_json_message() -> str:
     with pytest.raises(json.JSONDecodeError) as caught:
         json.loads("{not json")
     return f"auth-gateway: failed to read credentials: {caught.value}\n"
+
+
+@pytest.mark.parametrize("missing", ["CLIPROXY_UPSTREAM", "GATEWAY_PORT"])
+def test_missing_configuration_fails_clearly(missing: str) -> None:
+    env = {
+        "GATEWAY_SECRET": TOKEN,
+        "CLIPROXY_UPSTREAM": "http://127.0.0.1:8317",
+        "GATEWAY_PORT": "8318",
+    }
+    del env[missing]
+    done = run_failing(env)
+    assert (done.returncode, done.stdout, done.stderr) == (
+        1,
+        "",
+        f"auth-gateway: missing required environment variable '{missing}'\n",
+    )
 
 
 @pytest.mark.parametrize(

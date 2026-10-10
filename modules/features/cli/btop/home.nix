@@ -1,4 +1,4 @@
-{ config, lib, ... }: {
+{
   programs.btop = {
     enable = true;
 
@@ -16,12 +16,6 @@
       net_sync = false;
       net_download = 100;
       net_upload = 100;
-    };
-  };
-
-  services.sxhkd = lib.mkIf config.services.sxhkd.enable {
-    keybindings = {
-      "super + Return ; i" = "${config.home.sessionVariables.TERMINAL} -e btop";
     };
   };
 }

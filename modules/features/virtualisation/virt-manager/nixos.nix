@@ -1,4 +1,4 @@
-{ inputs, ... }: {
+{ inputs, lib, ... }: {
   imports = [ inputs.self.nixosModules.user ];
 
   virtualisation.libvirtd = {
@@ -8,5 +8,5 @@
 
   programs.virt-manager.enable = true;
 
-  liberion.user.extraGroups = [ "libvirtd" ];
+  users.users.${lib.liberion.identity.user}.extraGroups = [ "libvirtd" ];
 }

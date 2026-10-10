@@ -2,10 +2,10 @@
 
 Every home runs one nightly `maintenance` job (03:00–05:00, idle priority; a systemd user timer on Linux, a launchd agent on Darwin). It runs each `liberion.maintenance.tasks.<name>.command` in name order, logs one line per task, keeps going past a failed task, and exits nonzero if any failed.
 
-The base tasks trim re-downloadable caches and scratch:
+Every home registers these tasks, which trim re-downloadable caches and scratch:
 
-- `uv`: `uv cache prune`, which keeps entries in use and skips a locked cache.
-- `bun`: empties `~/.bun/install/cache` and `$XDG_CACHE_HOME/.bun/install/cache`. Bun moved its default cache, and `bun pm cache rm` clears only the current one.
+- `uv` (from `cli/uv`): `uv cache prune`, which keeps entries in use and skips a locked cache.
+- `bun` (from `cli/bun`): empties `~/.bun/install/cache` and `$XDG_CACHE_HOME/.bun/install/cache`. Bun moved its default cache, and `bun pm cache rm` clears only the current one.
 - `scratch`: `scratch.py` removes top-level `/tmp` entries this user owns that nothing touched for 7 days. Sockets, `*.lock` flock targets, and runtime prefixes such as `tmux-`, `systemd-private-` and `nix-` are kept.
 
 A feature that leaves its own cache adds a task beside its configuration:

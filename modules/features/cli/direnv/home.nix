@@ -23,6 +23,6 @@ in
   home.shellAliases.dirrr = "${exe} allow && ${exe} reload";
 
   programs.zsh.initContent = ''
-    source ${lib.liberion.zshInit pkgs "direnv" "HOME=$TMPDIR ${exe} hook zsh"}
+    source ${lib.liberion.zshInit pkgs "direnv" "${exe} hook zsh"}
   '';
 }

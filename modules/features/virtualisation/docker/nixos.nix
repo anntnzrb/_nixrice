@@ -28,6 +28,6 @@ in
       };
     };
 
-    liberion.user.extraGroups = [ "docker" ];
+    users.users.${lib.liberion.identity.user}.extraGroups = [ "docker" ];
   };
 }

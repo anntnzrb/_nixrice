@@ -143,7 +143,9 @@
               }
               ''
                 bash ${self}/tests/reconcile.sh ${self}/modules/base/reconcile/reconcile.sh
+                bash ${self}/tests/reconcile-darwin.sh ${self}/modules/base/reconcile/reconcile.sh
                 bash ${self}/tests/vendored.sh ${lib.getExe vendoredUpdater}
+                bash ${self}/modules/features/network/tailscale/tests/reconcile.sh ${self}/modules/features/network/tailscale/reconcile.sh
                 touch $out
               ''
           else

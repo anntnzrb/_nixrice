@@ -139,7 +139,10 @@ in
           User = account;
           Group = account;
           LoadCredential = "secrets.json:${secretsFile}";
-          Environment = "CLIPROXY_UPSTREAM=http://127.0.0.1:${toString settings.port}";
+          Environment = [
+            "CLIPROXY_UPSTREAM=http://127.0.0.1:${toString settings.port}"
+            "GATEWAY_PORT=${toString authPort}"
+          ];
           ExecStart = authGateway;
           Restart = "always";
           NoNewPrivileges = true;

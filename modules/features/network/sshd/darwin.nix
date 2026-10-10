@@ -11,7 +11,13 @@ in
   config = {
     services.openssh = {
       enable = true;
-      extraConfig = "AuthorizedKeysFile none";
+      extraConfig = lib.concatLines (
+        [ "AuthorizedKeysFile none" ]
+        ++ lib.mapAttrsToList (
+          key: value:
+          "${key} ${if lib.isBool value then lib.boolToYesNo value else value}"
+        ) (import ./hardening.nix)
+      );
     };
 
     programs.ssh.knownHosts.ssh-ca = lib.mkIf (caKey != null) {
