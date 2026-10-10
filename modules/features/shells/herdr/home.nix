@@ -25,6 +25,11 @@ let
   };
 in
 {
+  xdg.configFile."herdr/config.toml" = {
+    source = ./config.toml;
+    onChange = "${lib.getExe pkgs.unstable.herdr} server reload-config || true";
+  };
+
   home = {
     packages = [ pkgs.unstable.herdr ];
 

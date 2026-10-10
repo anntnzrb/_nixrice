@@ -13,7 +13,11 @@ Terminal workspace manager for coding agents, imported in every home by
   every switch: machines added with `herdr machine add` do not survive it.
   Profile IDs are an MD5 of target and session, so the selected machine
   stays valid across rebuilds.
-- `config.toml` is left to herdr, which writes settings back to it.
+- Theme: Home Manager owns `config.toml` with `theme.name = "terminal"`,
+  so the UI uses the host terminal's ANSI palette. The file is immutable;
+  settings changes belong in `config.toml` beside this module instead of
+  Herdr's Settings UI. Activation reloads the running server when the file
+  changes; a stopped server does not fail activation.
 
 Home Manager 26.11 ships `programs.herdr` (with `mutableSettings`); once the
 flake follows that release, replace the package line with
