@@ -39,8 +39,7 @@ The separate 256 GB SSD moved to Munich is outside this installation.
 
 The target uses the shared XFS layout from Oulu: a 1 GiB EFI partition and the
 remaining space for XFS with reflinks. It has no disk encryption or HDD swap;
-the server profile supplies zram. Legacy files under `hardware/` are retained
-as history and are no longer imported.
+the server profile supplies zram.
 
 ## Storage measurements and workload limits
 
