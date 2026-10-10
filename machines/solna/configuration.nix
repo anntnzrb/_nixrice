@@ -18,8 +18,6 @@
       };
     };
 
-  hardware.facter.detected.bluetooth.enable = false;
-
   services.fstrim.enable = true;
 
   nix.settings = {

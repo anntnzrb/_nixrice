@@ -32,6 +32,4 @@
   };
 
   systemd.oomd.enableUserSlices = true;
-
-  hardware.facter.detected.bluetooth.enable = false;
 }

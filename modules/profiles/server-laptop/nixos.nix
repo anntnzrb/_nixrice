@@ -4,7 +4,10 @@
     tailscale
   ];
 
-  hardware.facter.detected.dhcp.enable = false;
+  hardware.facter.detected = {
+    bluetooth.enable = false;
+    dhcp.enable = false;
+  };
 
   networking = {
     networkmanager.settings = {

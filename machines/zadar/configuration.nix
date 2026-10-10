@@ -26,6 +26,4 @@
   powerManagement.cpuFreqGovernor = lib.mkForce "powersave";
 
   systemd.oomd.enableUserSlices = true;
-
-  hardware.facter.detected.bluetooth.enable = false;
 }
