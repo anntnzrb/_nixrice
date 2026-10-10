@@ -379,7 +379,14 @@ let
       timeout = 1200;
     } args;
   isAdmin = machine: builtins.elem "admin" machine.tags;
+  isArchived = machine: builtins.elem "archived" machine.tags;
   mdnsDomain = "local";
+
+  fleetPeers =
+    machines: self:
+    lib.filterAttrs (_: machine: !(isArchived machine)) (
+      removeAttrs machines [ self ]
+    );
 
   varValue =
     path:
@@ -406,8 +413,6 @@ in
 
   authorizedKeys = [ identity.keys.admin ] ++ identity.keys.devices;
 
-  isArchived = machine: builtins.elem "archived" machine.tags;
-
   tailscaleExpose =
     tailscale: name: mapping:
     let
@@ -430,6 +435,8 @@ in
 
   inherit
     isAdmin
+    isArchived
+    fleetPeers
     mdnsDomain
     varValue
     adminValues
