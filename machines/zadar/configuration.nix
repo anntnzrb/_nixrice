@@ -1,11 +1,31 @@
-{ inputs, pkgs, ... }: {
+{ inputs, lib, ... }: {
   imports = with inputs.self.nixosModules; [
-    ./hardware
-    networkmanager
+    amp-runner
+    bash
+    disko-xfs
+    essentials
+    kernel-latest
+    podman
     systemd-boot
+    t3
   ];
 
-  nixpkgs.hostPlatform = "x86_64-linux";
+  environment.localBinInPath = true;
+  programs.nix-ld.enable = true;
 
-  console.font = "${pkgs.terminus_font}/share/fonts/consolefonts/ter-v8n.psf.gz";
+  home-manager.users.${lib.liberion.identity.user}.liberion.ai.amp-runner.desktop =
+    false;
+
+  liberion.hardware.disko-xfs.device = "/dev/disk/by-id/ata-HGST_HTS721010A9E630_JR1000D30WN62E";
+
+  nix.settings = {
+    max-jobs = 2;
+    cores = 2;
+  };
+
+  powerManagement.cpuFreqGovernor = lib.mkForce "powersave";
+
+  systemd.oomd.enableUserSlices = true;
+
+  hardware.facter.detected.bluetooth.enable = false;
 }

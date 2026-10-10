@@ -32,6 +32,7 @@ in
         "workstation"
         "headless"
         "server"
+        "server-laptop"
       ];
     };
     munich = {
@@ -54,6 +55,7 @@ in
         "workstation"
         "server"
         "headless"
+        "server-laptop"
       ];
     };
     tampa = {
@@ -64,11 +66,14 @@ in
       ];
     };
     zadar = {
-      description = "Laptop Server (HDD / Headless)";
+      description = "ASUS GL502VMK - Intel i7-7700HQ Headless Development Server";
       tags = [
-        "archived"
+        "admin"
         "physical"
         "laptop"
+        "headless"
+        "server"
+        "server-laptop"
       ];
     };
     beirut = {
@@ -98,7 +103,10 @@ in
 
   inventory.instances = {
     wifi = {
-      roles.default.machines.solna.settings.networks.home = { };
+      roles.default = {
+        tags = [ "server-laptop" ];
+        settings.networks.home = { };
+      };
     };
 
     remote-builders = {
