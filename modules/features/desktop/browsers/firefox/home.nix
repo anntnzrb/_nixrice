@@ -172,7 +172,7 @@ in
       )) "sharpen-scrolling";
     };
 
-    search.default = mkOpt' types.str "ddg";
+    search.default = mkOpt' types.str "brave";
   };
 
   config = {
@@ -208,7 +208,9 @@ in
         search = {
           inherit (cfg.search) default;
           force = true;
-          engines = import ./engines.nix;
+          engines =
+            import ./engines.nix
+            // lib.mapAttrs (_: _: { metaData.hidden = true; }) shared.hiddenSearchEngines;
         };
 
         extensions.packages = map (extension: extension.package) (

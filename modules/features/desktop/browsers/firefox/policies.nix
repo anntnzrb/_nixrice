@@ -122,10 +122,7 @@ policies
   );
   SearchEngines = {
     Add = map searchEngine (lib.attrValues engines);
-    Default =
-      if cfg.search.default == "ddg" then
-        "DuckDuckGo"
-      else
-        engines.${cfg.search.default}.name or cfg.search.default;
+    Default = engines.${cfg.search.default}.name or cfg.search.default;
+    Remove = lib.attrValues shared.hiddenSearchEngines;
   };
 }

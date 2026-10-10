@@ -88,6 +88,11 @@
     "signon.privateBrowsingCapture.enabled"
   ];
 
+  hiddenSearchEngines = {
+    bing = "Bing";
+    ebay = "eBay";
+  };
+
   betterfoxProfile = cfg: {
     enableAllSections = true;
     settings = lib.optionalAttrs (cfg.smoothfox != null) {
