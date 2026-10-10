@@ -3,7 +3,6 @@
   inputs,
   lib,
   osConfig,
-  pkgs,
   ...
 }:
 let
@@ -14,8 +13,8 @@ in
 {
   imports = [
     inputs.self.homeModules.ai-agents
-    # Serves ~/repos checkouts and the agents checkout from a neutral cwd. Only
-    # Linux gets a private headless desktop; on macOS --desktop would share
+    # Serves ~/repos checkouts and the agents checkout from a neutral cwd.
+    # --desktop gives Linux a private headless desktop; on macOS it would share
     # the Mac's real screen.
     (lib.liberion.userService {
       name = "amp-runner";
@@ -51,8 +50,7 @@ in
     })
   ];
 
-  options.liberion.ai.amp-runner.desktop =
-    lib.liberion.module.mkOpt' lib.types.bool pkgs.stdenv.hostPlatform.isLinux;
+  options.liberion.ai.amp-runner.desktop = lib.liberion.module.mkOptDisabled';
 
   # Amp refuses to start when a --discover-dirs directory is missing.
   config.home.activation.ampRunnerRepos =
