@@ -33,18 +33,5 @@ in
         '';
       })
     ];
-
-    xdg.configFile =
-      let
-        configFile = "settings.json";
-      in
-      {
-        zed = {
-          enable = false;
-          source = ./${configFile};
-          target = "zed/${configFile}";
-          recursive = true;
-        };
-      };
   };
 }
