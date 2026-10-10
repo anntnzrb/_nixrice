@@ -22,7 +22,7 @@
 
     neovim
     starship
-    tmux
+    herdr
   ]);
 
   programs = {
