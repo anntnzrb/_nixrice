@@ -1,6 +1,6 @@
 { flake }:
 let
-  f = builtins.getFlake flake;
+  f = flake;
   inherit (f.inputs.nixpkgs) lib;
 
   norm =
@@ -44,6 +44,12 @@ let
     sessionPath = map norm u.home.sessionPath;
     aliases = lib.mapAttrs (_: norm) u.home.shellAliases;
     activation = lib.mapAttrs (_: a: norm a.data) u.home.activation;
+    systemd = lib.genAttrs [ "services" "timers" ] (
+      kind:
+      lib.mapAttrs (_: unit: try (norm (builtins.toJSON unit))) (
+        u.systemd.user.${kind} or { }
+      )
+    );
     programs = lib.attrNames (
       lib.filterAttrs (
         _: p: (builtins.tryEval (p.enable or false)).value == true

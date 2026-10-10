@@ -334,6 +334,7 @@ map (
 ) libFailures
 ++ admins
 ++ layout
+++ import ./fingerprint.nix { inherit lib self; }
 ++ lib.concatLists (
   lib.mapAttrsToList (name: c: access name c.config) (
     self.nixosConfigurations // self.darwinConfigurations

@@ -7,22 +7,23 @@ set -eu
 
 flat() {
     nix eval --impure --json \
-        --expr "import ${here}/fingerprint.nix { flake = \"path:$1\"; }" \
+        --expr "import ${here}/fingerprint.nix { flake = builtins.getFlake \"path:$1\"; }" \
         >"${tmp}/fp.json" 2>"${tmp}/fp.err" || {
         cat "${tmp}/fp.err" >&2
         exit 1
     }
-    jq -r 'paths(scalars) as $p
+    rows="$(jq -r 'paths(scalars) as $p
         | [$p[0], ($p[1:] | map(if type == "number" then "[]" else tostring end) | join(".")),
            (getpath($p) | tostring | gsub("\n"; "\\n"))]
-        | "\(.[0]) \(.[1]) = \(.[2])"' "${tmp}/fp.json" | sort -u
+        | "\(.[0]) \(.[1]) = \(.[2])"' "${tmp}/fp.json")"
+    printf '%s\n' "${rows}" | sort -u
 }
 
 flat "${tmp}/base" >"${tmp}/before"
 flat "${PWD}" >"${tmp}/after"
 
-diff "${tmp}/before" "${tmp}/after" \
-    | sed -n 's/^< /- /p; s/^> /+ /p' \
+diff "${tmp}/before" "${tmp}/after" >"${tmp}/diff" || test "$?" -eq 1
+sed -n 's/^< /- /p; s/^> /+ /p' "${tmp}/diff" \
     | awk '{ print $2, NR, $0 }' \
     | sort -k1,1 -k2,2n \
     | cut -d ' ' -f 3- \

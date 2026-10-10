@@ -7,8 +7,8 @@ here="$(cd "$(dirname "$0")" && pwd)"
 targets="$(nix eval --impure --json \
     --expr "import ${here}/targets.nix { flake = \"path:${PWD}\"; }" 2>/dev/null)"
 
-printf '%s\n' "${targets}" \
-    | "${here}/uncached.sh" \
+missing="$(printf '%s\n' "${targets}" | "${here}/uncached.sh")"
+printf '%s\n' "${missing}" \
     | jq -cs 'map({
         name, attr,
         os: {
