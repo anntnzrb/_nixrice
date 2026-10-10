@@ -1,10 +1,4 @@
-{
-  inputs,
-  lib,
-  pkgs,
-  ...
-}:
-{
+{ inputs, pkgs, ... }: {
   imports = with inputs.self.nixosModules; [
     amp-runner
     bash
@@ -16,17 +10,10 @@
     t3
   ];
 
-  environment.localBinInPath = true;
-
-  home-manager.users.${lib.liberion.identity.user}.liberion.ai.amp-runner.desktop =
-    false;
-
   environment.systemPackages = [ (pkgs.callPackage ./waymote.nix { }) ];
 
   nix.settings = {
     max-jobs = 6;
     cores = 4;
   };
-
-  systemd.oomd.enableUserSlices = true;
 }

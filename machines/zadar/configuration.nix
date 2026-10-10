@@ -10,11 +10,6 @@
     t3
   ];
 
-  environment.localBinInPath = true;
-
-  home-manager.users.${lib.liberion.identity.user}.liberion.ai.amp-runner.desktop =
-    false;
-
   liberion.hardware.disko-xfs.device = "/dev/disk/by-id/ata-HGST_HTS721010A9E630_JR1000D30WN62E";
 
   nix.settings = {
@@ -23,6 +18,4 @@
   };
 
   powerManagement.cpuFreqGovernor = lib.mkForce "powersave";
-
-  systemd.oomd.enableUserSlices = true;
 }
