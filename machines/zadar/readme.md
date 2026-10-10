@@ -28,8 +28,7 @@ The shared XFS layout has a 1 GiB FAT32 EFI partition and the rest is XFS with
 supplies zstd zram.
 
 The disk is a 7200 RPM, 512e/4K-sector, SATA 6 Gb/s Travelstar 7K1000 with a
-32 MB buffer. The manufacturer's 24/7 Enhanced Availability specification
-applies to HTE models, not this HTS model.
+32 MB buffer.
 
 Use Zadar for agent sessions and moderate development workloads. Concurrent
 dependency installs, checkouts, and builds contend for HDD seeks. XFS reflinks
@@ -44,7 +43,7 @@ metric 600 for IPv4 and IPv6. The shared home Wi-Fi profile autoconnects.
 This covers loss of the Ethernet link, not an upstream outage while the link
 stays up. Both connections depend on the same router.
 
-Fleet SSH uses port 2222 over Ethernet, Wi-Fi, and Tailscale. Avahi supplies
+Fleet SSH uses the fleet SSH port (`sshPort` in `identity.nix`) over Ethernet, Wi-Fi, and Tailscale. Avahi supplies
 `zadar.local`; Tailscale supplies `zadar`. T3 is available through
 `https://zadar.trex-gamut.ts.net:8443/` on the tailnet.
 
