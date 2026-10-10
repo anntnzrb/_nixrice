@@ -387,11 +387,8 @@ Deploys are supervised: the owner agrees, agents may execute.
   state define `cleanup()` then source `scripts/ci/cleanup.sh` (traps EXIT and
   re-raises HUP/INT/TERM, which dash would skip)
 - Waiting on a PR: one blocking `gh pr checks <N> --watch --interval 60`
-  with a 30 min shell timeout, never sleep loops. Measured baseline (Oct 2026,
-  PR #315): CI 531s from creation, probes job 525s, probe step 504s; latest
-  `dev` push probes job 523s. After-change Actions timing is pending; no
-  speedup is claimed before measurement. Right after `gh pr create`, checks
-  take ~20 s to register. Still running past ~25 min: inspect
+  with a 30 min shell timeout, never sleep loops. Right after `gh pr create`,
+  checks take ~20 s to register. Still running past ~25 min: inspect
   `gh run view <id> --json jobs` instead of waiting longer
 
 ### Upstream references
@@ -414,7 +411,8 @@ the version pinned in `flake.lock` first
   stays only where removing the line it guards would silently break something
   (upstream bug refs, opaque IDs, magic values)
 - This file holds no state. If an edit here would need updating when a machine,
-  tag, import, version or count changes, point to the source file instead
+  tag, import, version or count changes, point to the source file instead.
+  No dates, PR numbers, timings or measurements either: they go in the PR
 - `flake.nix` is flake-parts: Clan, treefmt-nix and git-hooks come in as
   their flake modules and are configured, not wired by hand. One `pkgs`
   per system (`perSystem._module.args.pkgs`, overlays + `allowUnfree`) feeds
