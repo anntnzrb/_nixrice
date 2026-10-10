@@ -25,75 +25,75 @@ in
 
   inventory.machines = {
     oulu = {
-      description = "Lenovo V15 G4 IRU - Intel i7-1355U Build Server";
+      description = "Lenovo V15 G4 IRU - Intel Core i7-1355U - Build Server";
       tags = [
         "admin"
-        "physical"
-        "workstation"
         "headless"
+        "physical"
         "server"
         "server-laptop"
+        "workstation"
       ];
     };
     munich = {
-      description = "ASUS PRIME B660-PLUS D4 - Intel i5-12400 & NVIDIA GTX 1080 Pascal";
+      description = "ASUS PRIME B660-PLUS D4 - Intel Core i5-12400 & NVIDIA GTX 1080 Pascal - Headless Server";
       tags = [
         "admin"
-        "physical"
-        "workstation"
-        "server"
         "headless"
         "nvidia"
+        "physical"
+        "server"
+        "workstation"
       ];
     };
     solna = {
-      description = "HP 15-dw0083wm - Pentium N5000 Headless Server";
+      description = "HP 15-dw0083wm - Intel Pentium Silver N5000 - Headless Server";
       tags = [
         "admin"
-        "physical"
-        "laptop"
-        "workstation"
-        "server"
         "headless"
+        "laptop"
+        "physical"
+        "server"
         "server-laptop"
+        "workstation"
       ];
     };
     tampa = {
-      description = "NixOS-WSL";
+      description = "ASUS PRIME B660-PLUS D4 - Intel Core i5-12400 - NixOS-WSL";
       tags = [
         "archived"
         "wsl"
       ];
     };
     zadar = {
-      description = "ASUS GL502VMK - Intel i7-7700HQ Headless Development Server";
+      description = "ASUS GL502VMK - Intel Core i7-7700HQ - Headless Development Server";
       tags = [
         "admin"
-        "physical"
-        "laptop"
         "headless"
+        "laptop"
+        "physical"
         "server"
         "server-laptop"
       ];
     };
     beirut = {
-      description = "Apple M4 MacBook (Primary Mac)";
+      description = "Apple MacBook Air 13-inch - Apple M4 - Primary Mac";
       machineClass = "darwin";
       tags = [
         "admin"
         "desktop"
-        "physical"
         "laptop"
+        "physical"
         "workstation"
       ];
     };
     incheon = {
-      description = "Apple M1 MacBook (Secondary Mac)";
+      description = "Apple MacBook - Apple M1 - Secondary Mac";
       machineClass = "darwin";
       tags = [
         "archived"
-        "physical"
         "laptop"
+        "physical"
       ];
     };
   };

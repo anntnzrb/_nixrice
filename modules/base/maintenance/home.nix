@@ -50,20 +50,16 @@ let
   '';
 in
 {
-  options.liberion.maintenance.tasks = lib.mkOption {
-    type = lib.types.attrsOf (
-      lib.types.submodule {
-        options = {
-          command = lib.mkOption {
-            type = lib.types.listOf lib.types.str;
-            description = "Argv list for the maintenance task.";
+  options.liberion.maintenance.tasks = lib.liberion.module.mkOpt' (
+    lib.types.attrsOf
+      (
+        lib.types.submodule {
+          options = {
+            command = lib.liberion.module.mkReq' (lib.types.listOf lib.types.str);
           };
-        };
-      }
-    );
-    default = { };
-    description = "Maintenance tasks executed by the nightly maintenance runner.";
-  };
+        }
+      )
+  ) { };
 
   config = lib.mkMerge [
     {

@@ -16,13 +16,12 @@
 
 ## Role
 
-Always-on NixOS server (tags `server`, `headless`, `nvidia`), whole-disk XFS via disko, `systemd-boot`, and remote builder for the Macs. The PCPartPicker list predates the RAM upgrade.
+Always-on NixOS server (tags `server`, `headless`, `nvidia`), whole-disk XFS via disko, `systemd-boot`, and remote builder for the Macs.
 
-Today it still runs Debian: this directory is its NixOS target state, so it is not deployable yet. Its `~/.ssh/authorized_keys` is maintained by hand until the migration.
-
-Not installed yet: the hardware still runs Debian (CLIProxyAPI gateway,
-Hermes), so `clan machines update` and `just deploy` must not target it until
-it is installed with this configuration.
+The hardware runs Debian with the CLIProxyAPI gateway and Hermes. This directory
+is its NixOS target state: `clan machines update` and `just deploy` must not
+target it until it is installed with this configuration. Its
+`~/.ssh/authorized_keys` is maintained by hand until the migration.
 
 - [PCPartPicker build](https://pcpartpicker.com/list/hP82TY)
 

@@ -14,14 +14,9 @@ Check what Brave actually applied: `brave://policy` (every key should show
 - Home Manager wraps only `$out/bin/brave`. Dock, Finder, Spotlight and Raycast
   launch `Brave Browser.app/Contents/MacOS/Brave Browser` through LaunchServices,
   so `commandLineArgs` never apply on macOS. Policies apply to every launch
-- nixpkgs Brave on darwin has broken twice in 2026:
-  - NixOS/nixpkgs#541861: stripping damaged the code signature, macOS 27 denied
-    profile access. Fixed by #560971 (2026-09-07): signed `.dmg` + `dontStrip`
-  - NixOS/nixpkgs#563147: the `.dmg` ships a `" "` symlink to `/Applications`
-    that broke `unpackPhase`. Fixed by #563748 (2026-09-16)
-- Even when it evaluates, nixpkgs lags the cask (`pkgs.brave` 1.95.104 vs cask
-  1.96.59 on 2026-09-28). The cask is signed, auto-updates, and matches what
-  Brave ships
+- The cask preserves Brave's vendor signature, auto-updates, and matches what
+  Brave ships. Stripping a signed app can damage its signature and prevent
+  profile access
 - No Nix flake tracks Brave releases for darwin. The community ones
   (`drishal/brave-browser-flake`, `Daniel-42-z/brave-origin-flake`) are Linux
   only. Brave publishes APT/RPM repos and `.dmg`s, nothing Nix-specific
@@ -37,7 +32,7 @@ in brave/brave-core.
 | `HighEfficiencyModeEnabled` | `true` | Memory Saver on (Chrome 108+) |
 | `MemorySaverModeSavings` | `2` | Maximum: discard inactive tabs aggressively (Chrome 126+) |
 | `BatterySaverModeAvailability` | `1` | Battery Saver below the low-battery threshold; `2` is deprecated since M121 |
-| `BackgroundTabFreezingEnabled` | `true` | Freeze background tab timers. Chrome 155+: ignored on Brave 1.96 (Chromium 154) until the next rebase |
+| `BackgroundTabFreezingEnabled` | `true` | Freeze background tab timers (Chrome 155+) |
 | `BackgroundModeEnabled` | `false` | Nothing keeps running after Cmd+Q |
 | `NetworkPredictionOptions` | `2` | No speculative preconnect/prefetch; first loads may be slightly slower |
 | `BraveAIChatEnabled` | `false` | Leo off |
@@ -56,18 +51,9 @@ in brave/brave-core.
 - `--disable-background-networking`: kills the component updater (Shields
   lists, CRLSet, extension updates)
 - `--renderer-process-limit`: forces process sharing, more jank and crash blast radius
-- `BraveLocalAIEnabled`: not verified against brave-core
 
 ## Long uptime
 
-No setting fixes PartitionAlloc/V8 heap fragmentation over 30-60 days.
+No setting fixes PartitionAlloc/V8 heap fragmentation during long uptime.
 Quit and reopen weekly; session restore brings tabs back lazily.
 `brave://discards` shows what Memory Saver has discarded.
-
-## Upstream
-
-- Chromium policy list: https://chromeenterprise.google/policies/
-- brave-core: https://github.com/brave/brave-core (`browser/policy/`)
-- Brave group policy docs: https://support.brave.com/hc/en-us/articles/360039248271-Group-Policy
-- Home Manager module: `modules/programs/chromium.nix` in nix-community/home-manager
-- nixpkgs package: `pkgs/applications/networking/browsers/brave/`

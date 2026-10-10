@@ -4,7 +4,12 @@
     tailscale
   ];
 
-  hardware.facter.detected.dhcp.enable = false;
+  environment.localBinInPath = true;
+
+  hardware.facter.detected = {
+    bluetooth.enable = false;
+    dhcp.enable = false;
+  };
 
   networking = {
     networkmanager.settings = {
@@ -19,8 +24,12 @@
         "ipv6.route-metric" = 600;
       };
     };
+    # clan.core.enableRecommendedDefaults (server profile) turns networkd on
     useNetworkd = false;
   };
 
-  systemd.network.enable = false;
+  systemd = {
+    network.enable = false;
+    oomd.enableUserSlices = true;
+  };
 }

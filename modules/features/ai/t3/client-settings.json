@@ -1,6 +1,6 @@
 {
   "followUpBehavior": "steer",
-  "sendShortcut": "mod-enter",
+  "sendShortcut": "enter",
   "composerRichTextEnabled": true,
   "confirmThreadArchive": false,
   "confirmThreadDelete": true,

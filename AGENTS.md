@@ -18,7 +18,7 @@ modules/
 ├── features/<category>/<name>/   opt-in, imported by machines, profiles or other features
 ├── profiles/<tag>/          imported into machines carrying Clan tag <tag>
 └── services/<name>/         in-repo Clan services (_class = "clan.service")
-machines/<name>/             configuration.nix, optional home.nix, facter.json or hardware/, optional disk.nix (disko), readme.md
+machines/<name>/             flat: configuration.nix, readme.md, optional home.nix, facter.json or hardware.nix, disk.nix, machine-only package files
 homes/                       standalone Home Manager configs (hosts without a managed system)
 overlays/                    the flake overlay
 tests/                       `just test`; probe-errors.txt for `just probes`
@@ -86,6 +86,31 @@ ignored. Directory names are unique across features and profiles.
 
 Keep retired modules as reusable history; disconnect their imports instead of
 deleting them. Unimported modules add no packages or services to a machine.
+This applies to `modules/` only: a file under `machines/` that nothing
+imports is dead and is deleted; git keeps the history.
+
+### Machine directories
+A machine directory holds only what is unique to that machine; `tests/`
+enforces the layout:
+- Flat, lowercase names: `configuration.nix`, `readme.md`, optional
+  `home.nix`, `disk.nix` (when no disko feature fits) and package files
+  only this machine uses. darwin machines have no hardware files
+- Hardware: `facter.json` detects it; without facter, one `hardware.nix`.
+  Drivers and other hardware policy are features under
+  `modules/features/hardware/` imported in `configuration.nix`; never copy a
+  feature's body into a machine. A part only this box needs stays in
+  `configuration.nix`
+- A block two machines share moves to the profile of a tag both carry (or a
+  feature) in the same change
+- `home.stateVersion` and `system.stateVersion` come from base modules and
+  the generated state-version var; machine files never set them
+- Before adding a setting, `nix eval` it: no NixOS defaults, no values a
+  profile or `mkForce` already overrides, no imports nothing reaches
+- `readme.md` says what the machine is (a hardware table), its role, and
+  where the hardware differs from its target state today. No dated logs,
+  audits, benchmarks, research sources, IP addresses, `/tmp` paths or to-do
+  lists: that evidence goes in the PR that produced it. Every readme in the
+  repo except the root one is `readme.md`
 
 **Importing a feature is enabling it** - there are no `enable` toggles:
 
@@ -387,11 +412,8 @@ Deploys are supervised: the owner agrees, agents may execute.
   state define `cleanup()` then source `scripts/ci/cleanup.sh` (traps EXIT and
   re-raises HUP/INT/TERM, which dash would skip)
 - Waiting on a PR: one blocking `gh pr checks <N> --watch --interval 60`
-  with a 30 min shell timeout, never sleep loops. Measured baseline (Oct 2026,
-  PR #315): CI 531s from creation, probes job 525s, probe step 504s; latest
-  `dev` push probes job 523s. After-change Actions timing is pending; no
-  speedup is claimed before measurement. Right after `gh pr create`, checks
-  take ~20 s to register. Still running past ~25 min: inspect
+  with a 30 min shell timeout, never sleep loops. Right after `gh pr create`,
+  checks take ~20 s to register. Still running past ~25 min: inspect
   `gh run view <id> --json jobs` instead of waiting longer
 
 ### Upstream references
@@ -414,7 +436,8 @@ the version pinned in `flake.lock` first
   stays only where removing the line it guards would silently break something
   (upstream bug refs, opaque IDs, magic values)
 - This file holds no state. If an edit here would need updating when a machine,
-  tag, import, version or count changes, point to the source file instead
+  tag, import, version or count changes, point to the source file instead.
+  No dates, PR numbers, timings or measurements either: they go in the PR
 - `flake.nix` is flake-parts: Clan, treefmt-nix and git-hooks come in as
   their flake modules and are configured, not wired by hand. One `pkgs`
   per system (`perSystem._module.args.pkgs`, overlays + `allowUnfree`) feeds

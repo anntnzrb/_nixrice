@@ -18,6 +18,17 @@ let
   };
 
   libFailures = lib.runTests {
+    testMkReq = {
+      expr =
+        let
+          option = lib.liberion.module.mkReq' lib.types.str;
+        in
+        option ? type
+        && option.type.name == "str"
+        && !(option ? default)
+        && !(option ? description);
+      expected = true;
+    };
     testTailscaleExposeServe = {
       expr = lib.liberion.tailscaleExpose "/bin/tailscale" "paseo" {
         funnel = false;
@@ -238,6 +249,39 @@ let
     lib.optional (lib.sort lib.lessThan expected != lib.sort lib.lessThan actual)
       "admins: sops/users/${identity.user} keys are not identity.keys.adminAge plus every admin machine's admin-age key; run `just admins`";
 
+  layout = lib.concatLists (
+    lib.mapAttrsToList (
+      name: machine:
+      let
+        entries = builtins.readDir (self + "/machines/${name}");
+        has = file: entries ? ${file};
+        darwin = (machine.machineClass or "nixos") == "darwin";
+        problems = {
+          "has no configuration.nix" = !has "configuration.nix";
+          "has no readme.md" = !has "readme.md";
+          "has a subdirectory" = lib.any (type: type == "directory") (
+            lib.attrValues entries
+          );
+          "has a file name with uppercase letters" = lib.any (
+            file: lib.toLower file != file
+          ) (lib.attrNames entries);
+          "has both facter.json and hardware.nix" =
+            has "facter.json" && has "hardware.nix";
+          "is darwin but has facter.json, hardware.nix or disk.nix" =
+            darwin
+            && lib.any has [
+              "facter.json"
+              "hardware.nix"
+              "disk.nix"
+            ];
+        };
+      in
+      lib.mapAttrsToList (what: _: "layout: machines/${name} ${what}") (
+        lib.filterAttrs (_: bad: bad) problems
+      )
+    ) self.clan.inventory.machines
+  );
+
   access =
     name: config:
     let
@@ -273,6 +317,7 @@ map (
   "lib: ${t.name}: expected ${builtins.toJSON t.expected}, got ${builtins.toJSON t.result}"
 ) libFailures
 ++ admins
+++ layout
 ++ lib.concatLists (
   lib.mapAttrsToList (name: c: access name c.config) (
     self.nixosConfigurations // self.darwinConfigurations

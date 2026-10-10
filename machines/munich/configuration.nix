@@ -1,6 +1,6 @@
 { config, inputs, ... }: {
   imports = with inputs.self.nixosModules; [
-    ./hardware
+    ./hardware.nix
     disko-xfs
     docker
     essentials
@@ -13,8 +13,6 @@
   ];
 
   nixpkgs.hostPlatform = "x86_64-linux";
-
-  system.stateVersion = "26.05";
 
   # GTX 1080 (Pascal): dropped by the default driver branch
   hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.legacy_580;

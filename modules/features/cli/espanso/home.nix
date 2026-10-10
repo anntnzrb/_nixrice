@@ -6,14 +6,7 @@ in
   imports = [ ./matches/personal.nix ];
 
   options.liberion.cli.espanso = {
-    extraMatchDir = lib.mkOption {
-      type = lib.types.str;
-      default = "${config.xdg.configHome}/espanso/match/local";
-      description = ''
-        Directory containing non-reproducible Espanso match files.
-        Files in this directory are loaded alongside the Nix-managed matches.
-      '';
-    };
+    extraMatchDir = lib.liberion.module.mkOpt' lib.types.str "${config.xdg.configHome}/espanso/match/local";
   };
 
   config.services.espanso = {

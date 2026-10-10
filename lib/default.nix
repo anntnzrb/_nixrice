@@ -9,6 +9,8 @@ let
       description = null;
     };
 
+  mkReq' = type: lib.mkOption { inherit type; };
+
   classes = [
     "nixos"
     "darwin"
@@ -421,7 +423,7 @@ in
     };
 
   module = {
-    inherit mkOpt';
+    inherit mkOpt' mkReq';
     mkOptEnabled' = mkOpt' lib.types.bool true;
     mkOptDisabled' = mkOpt' lib.types.bool false;
   };
