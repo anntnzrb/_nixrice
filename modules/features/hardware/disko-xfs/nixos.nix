@@ -3,8 +3,9 @@ let
   cfg = config.liberion.hardware.disko-xfs;
 in
 {
-  options.liberion.hardware.disko-xfs.device =
-    lib.liberion.module.mkOpt' lib.types.str "/dev/nvme0n1";
+  options.liberion.hardware.disko-xfs.device = lib.liberion.module.mkReq' (
+    lib.types.strMatching "/dev/disk/by-id/.+"
+  );
 
   config.disko.devices.disk.main = {
     type = "disk";

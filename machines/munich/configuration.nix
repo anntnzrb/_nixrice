@@ -12,6 +12,8 @@
     virt-manager
   ];
 
+  liberion.hardware.disko-xfs.device = "/dev/disk/by-id/nvme-XPG_GAMMIX_S11_Pro_2L05292E58EC";
+
   nixpkgs.hostPlatform = "x86_64-linux";
 
   # GTX 1080 (Pascal): dropped by the default driver branch
