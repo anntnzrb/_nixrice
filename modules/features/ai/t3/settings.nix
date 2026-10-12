@@ -80,7 +80,10 @@ in
     };
     cursor = disabled "cursor";
     grok = disabled "grok";
-    opencode = disabled "opencode";
+    opencode = {
+      driver = "opencode";
+      enabled = true;
+    };
     antigravity = disabled "antigravity";
   };
 }
