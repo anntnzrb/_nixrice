@@ -11,6 +11,7 @@ idle one updates.
 
 - `t3-sync`, every 15 minutes, never restarts anything: merges server and desktop client settings and replaces the Claude instance's custom models with the non-Anthropic models the gateway lists. A deploy that changes settings reaches the host on the next run. Does nothing before T3 is installed.
 - `t3-update`, hourly: installs T3 with `npx t3@<channel> service install` on a host without it. Otherwise it applies settings like `t3-sync`, then runs the installed `t3 update --yes --channel <channel>`, which exits without a restart when the service already runs the channel head; otherwise it verifies the release checksums, checks that the new runtime starts, and restarts the service. While any thread has an unsettled run in `userdata/statev2.sqlite`, it postpones the update; an unreadable database aborts it.
+- `t3`, a nightly `maintenance` task: keeps the active runtime, runtimes the service unit or `t3` launcher still use, and the newest other completed runtime for rollback, deleting the rest of `~/.t3/runtime/versions`. Ignores incomplete installs and symlinks. Makes no change while a thread runs or an update is pending.
 
 T3 has no unattended updater of its own: `t3 update` restarts the service without checking for running turns.
 

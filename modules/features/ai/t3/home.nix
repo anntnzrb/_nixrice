@@ -63,5 +63,8 @@ in
 
   options.liberion.ai.t3.settings = lib.liberion.module.mkOpt' json.type { };
 
-  config.liberion.ai.t3.settings = import ./settings.nix;
+  config = {
+    liberion.ai.t3.settings = import ./settings.nix;
+    liberion.maintenance.tasks.t3.command = t3ctl ++ [ "prune" ] ++ flags;
+  };
 }

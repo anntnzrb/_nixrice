@@ -1,8 +1,9 @@
-"""Install, update, configure, and refresh the T3 Code user service.
+"""Install, update, configure, refresh, and prune the T3 Code user service.
 
 T3 writes and supervises its own service unit. This script decides when it is
 safe to update, applies the declared server and desktop client settings, and
-keeps Claude's model list in step with the model gateway.
+keeps Claude's model list in step with the model gateway. It removes superseded
+runtimes while preserving runtimes still in use and one rollback runtime.
 """
 
 from __future__ import annotations
@@ -10,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -313,6 +315,106 @@ def sync(ctx: Context) -> int:
     return 0
 
 
+def runtime_marker(path: Path) -> str:
+    """Read runtime metadata or a launcher shim when present.
+
+    Returns:
+        The text, or an empty string for a missing or non-text file.
+    """
+    try:
+        return path.read_text(encoding="utf-8")
+    except (FileNotFoundError, UnicodeDecodeError):
+        return ""
+
+
+def runtime_references() -> str:
+    """Collect service unit and CLI launcher runtime references.
+
+    Returns:
+        Unit and launcher paths/text that may still name an installed runtime.
+    """
+    home = Path.home()
+    units = (
+        home / "Library/LaunchAgents/com.t3tools.t3code.service.plist",
+        home / ".config/systemd/user/t3code.service",
+    )
+    launchers = {
+        home / ".local/bin/t3",
+        Path(os.environ.get("T3CODE_INSTALL_BIN_DIR", home / ".local/bin")) / "t3",
+    }
+    if launcher := shutil.which("t3"):
+        launchers.add(Path(launcher))
+    references = [runtime_marker(unit) for unit in units]
+    references.extend(
+        f"{launcher.resolve()}\n{runtime_marker(launcher)}"
+        for launcher in sorted(launchers)
+    )
+    return "\n".join(references)
+
+
+def runtime_complete(path: Path) -> bool:
+    """Check for a regular, readable completion marker matching the runtime.
+
+    Returns:
+        Whether the runtime has a valid completion marker.
+    """
+    marker = path / ".install-complete"
+    try:
+        return marker.is_file() and runtime_marker(marker).strip() == path.name
+    except OSError:
+        return False
+
+
+def prune(ctx: Context) -> int:
+    """Remove superseded runtimes when idle, keeping one for rollback.
+
+    Returns:
+        The exit status.
+    """
+    state = load_object(ctx.runtime / "service-state.json") or {}
+    version = state.get("activeVersion")
+    if not isinstance(version, str) or not version:
+        say("no active runtime; nothing to prune")
+        return 0
+    pending = state.get("update")
+    if isinstance(pending, dict) and pending.get("status") == "pending":
+        say("an update is pending; postponing runtime pruning")
+        return 0
+    try:
+        busy = busy_threads(ctx)
+    except sqlite3.Error as error:
+        say(f"cannot tell whether threads run ({error}); not pruning")
+        return 1
+    if busy:
+        say(f"{busy} thread(s) running; postponing runtime pruning")
+    versions = ctx.runtime / "versions"
+    if busy or not versions.is_dir():
+        return 0
+    try:
+        references = runtime_references()
+    except OSError as error:
+        say(f"cannot read runtime references ({error}); not pruning")
+        return 1
+    others = sorted(
+        (
+            path
+            for path in versions.iterdir()
+            if not path.name.startswith(".")
+            and not path.is_symlink()
+            and path.is_dir()
+            and runtime_complete(path)
+            and path.name != version
+            and f"versions/{path.name}/" not in references
+        ),
+        key=lambda path: (path.stat().st_mtime, path.name),
+        reverse=True,
+    )
+    for path in others[1:]:
+        shutil.rmtree(path)
+        say(f"removed runtime {path.name}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     """Run the command line.
 
@@ -320,7 +422,7 @@ def main(argv: list[str] | None = None) -> int:
         The exit status.
     """
     parser = argparse.ArgumentParser(prog="t3ctl")
-    _ = parser.add_argument("command", choices=("update", "sync"))
+    _ = parser.add_argument("command", choices=("update", "sync", "prune"))
     _ = parser.add_argument("--channel", required=True, choices=("stable", "nightly"))
     _ = parser.add_argument("--settings", required=True, type=Path)
     _ = parser.add_argument("--gateway", required=True)
@@ -331,7 +433,7 @@ def main(argv: list[str] | None = None) -> int:
         settings=args.settings,
         gateway=args.gateway,
     )
-    return update(ctx) if args.command == "update" else sync(ctx)
+    return {"update": update, "sync": sync, "prune": prune}[args.command](ctx)
 
 
 if __name__ == "__main__":

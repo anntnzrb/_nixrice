@@ -69,6 +69,7 @@ def install_runtime(home: Path, log: Path) -> None:
     # A runtime whose `t3` records its arguments in `log`.
     version_dir = home / "runtime" / "versions" / VERSION
     version_dir.mkdir(parents=True)
+    _ = (version_dir / ".install-complete").write_text(VERSION, encoding="utf-8")
     binary = version_dir / "t3"
     _ = binary.write_text(f'#!/bin/sh\necho "$@" >> {log}\n', encoding="utf-8")
     binary.chmod(0o755)
@@ -147,7 +148,12 @@ def run(
             "--gateway",
             gateway,
         ],
-        env={**os.environ, "T3CODE_HOME": str(home), "PATH": path},
+        env={
+            **os.environ,
+            "HOME": str(home.parent),
+            "T3CODE_HOME": str(home),
+            "PATH": path,
+        },
         capture_output=True,
         text=True,
         check=False,
@@ -187,6 +193,355 @@ def at(data: Json, *path: str) -> Json:
 
 def claude_config(home: Path) -> dict[str, Json]:
     return obj(at(live_settings(home), "providerInstances", "claudeAgent", "config"))
+
+
+def completed_runtime(versions: Path, name: str, modified: int = 0) -> Path:
+    runtime = versions / name
+    runtime.mkdir()
+    _ = (runtime / ".install-complete").write_text(f"{name}\n", encoding="utf-8")
+    os.utime(runtime, (modified, modified))
+    return runtime
+
+
+@pytest.mark.parametrize("update", [None, "pending", {}, {"status": "completed"}])
+def test_prune_keeps_active_and_newest_other_runtime(
+    tmp_path: Path, declared: Path, update: Json
+) -> None:
+    home = make_home(tmp_path, busy_status=None)
+    versions = home / "runtime" / "versions"
+    for name, modified in (("newest", 300), ("old", 100), ("middle", 200)):
+        runtime = versions / name
+        runtime.mkdir()
+        _ = (runtime / ".install-complete").write_text(name, encoding="utf-8")
+        _ = (runtime / "t3").write_text("runtime", encoding="utf-8")
+        os.utime(runtime, (modified, modified))
+    os.utime(versions / VERSION, (0, 0))
+    note = versions / "note.txt"
+    _ = note.write_text("keep", encoding="utf-8")
+    _ = (home / "runtime" / "service-state.json").write_text(
+        json.dumps({"activeVersion": VERSION, "update": update}), encoding="utf-8"
+    )
+    settings = (home / "userdata" / "settings.json").read_bytes()
+    result = run(home, UNREACHABLE, "prune", declared)
+    assert result.returncode == 0, result.stderr
+    assert {path.name for path in versions.iterdir()} == {VERSION, "newest", "note.txt"}
+    assert "removed runtime old" in result.stdout
+    assert "removed runtime middle" in result.stdout
+    assert (versions / "newest" / "t3").read_text(encoding="utf-8") == "runtime"
+    assert note.read_text(encoding="utf-8") == "keep"
+    assert (home / "userdata" / "settings.json").read_bytes() == settings
+    assert not (tmp_path / "t3.log").exists()
+    again = run(home, UNREACHABLE, "prune", declared)
+    assert again.returncode == 0, again.stderr
+    assert not again.stdout
+
+
+@pytest.mark.parametrize(
+    "state",
+    [None, "not json", "[]", "{}", '{"activeVersion":7}', '{"activeVersion":""}'],
+)
+def test_prune_leaves_runtimes_without_a_valid_active_version(
+    tmp_path: Path, declared: Path, state: str | None
+) -> None:
+    home = make_home(tmp_path, busy_status=None)
+    versions = home / "runtime" / "versions"
+    _ = completed_runtime(versions, "old")
+    _ = completed_runtime(versions, "newest")
+    state_path = home / "runtime" / "service-state.json"
+    if state is None:
+        state_path.unlink()
+    else:
+        _ = state_path.write_text(state, encoding="utf-8")
+    (home / "userdata" / "statev2.sqlite").unlink()
+    result = run(home, UNREACHABLE, "prune", declared)
+    assert result.returncode == 0, result.stderr
+    assert "no active runtime" in result.stdout
+    assert {path.name for path in versions.iterdir()} == {VERSION, "old", "newest"}
+
+
+def test_prune_leaves_runtimes_while_an_update_is_pending(
+    tmp_path: Path, declared: Path
+) -> None:
+    home = make_home(tmp_path, busy_status=None)
+    versions = home / "runtime" / "versions"
+    _ = completed_runtime(versions, "old")
+    _ = completed_runtime(versions, "target")
+    _ = (home / "runtime" / "service-state.json").write_text(
+        json.dumps({
+            "activeVersion": VERSION,
+            "update": {"status": "pending", "targetVersion": "target"},
+        }),
+        encoding="utf-8",
+    )
+    (home / "userdata" / "statev2.sqlite").unlink()
+    result = run(home, UNREACHABLE, "prune", declared)
+    assert result.returncode == 0, result.stderr
+    assert "update is pending" in result.stdout
+    assert {path.name for path in versions.iterdir()} == {VERSION, "old", "target"}
+
+
+@pytest.mark.parametrize(
+    "status", ["queued", "preparing", "starting", "running", "waiting"]
+)
+def test_prune_postpones_while_a_thread_runs(
+    tmp_path: Path, declared: Path, status: str
+) -> None:
+    home = make_home(tmp_path, busy_status=status)
+    versions = home / "runtime" / "versions"
+    _ = completed_runtime(versions, "old")
+    _ = completed_runtime(versions, "newest")
+    result = run(home, UNREACHABLE, "prune", declared)
+    assert result.returncode == 0, result.stderr
+    assert "postponing" in result.stdout
+    assert {path.name for path in versions.iterdir()} == {VERSION, "old", "newest"}
+
+
+def test_prune_refuses_when_busy_state_is_unreadable(
+    tmp_path: Path, declared: Path
+) -> None:
+    home = make_home(tmp_path, busy_status=None)
+    versions = home / "runtime" / "versions"
+    _ = completed_runtime(versions, "old")
+    _ = completed_runtime(versions, "newest")
+    (home / "userdata" / "statev2.sqlite").unlink()
+    result = run(home, UNREACHABLE, "prune", declared)
+    assert result.returncode == 1
+    assert "cannot tell whether threads run" in result.stdout
+    assert {path.name for path in versions.iterdir()} == {VERSION, "old", "newest"}
+
+
+@pytest.mark.parametrize("layout", ["missing", "empty", "active-only"])
+def test_prune_handles_versions_without_a_rollback_runtime(
+    tmp_path: Path, declared: Path, layout: str
+) -> None:
+    home = make_home(tmp_path, busy_status=None)
+    versions = home / "runtime" / "versions"
+    if layout != "active-only":
+        (versions / VERSION / "t3").unlink()
+        (versions / VERSION / ".install-complete").unlink()
+        (versions / VERSION).rmdir()
+    if layout == "missing":
+        versions.rmdir()
+    result = run(home, UNREACHABLE, "prune", declared)
+    assert result.returncode == 0, result.stderr
+    assert not result.stdout
+    if layout == "missing":
+        assert not versions.exists()
+    else:
+        assert {path.name for path in versions.iterdir()} == (
+            {VERSION} if layout == "active-only" else set()
+        )
+
+
+@pytest.mark.parametrize(
+    "unit_name",
+    [
+        "Library/LaunchAgents/com.t3tools.t3code.service.plist",
+        ".config/systemd/user/t3code.service",
+    ],
+)
+def test_prune_protects_all_service_unit_runtimes(
+    tmp_path: Path, declared: Path, unit_name: str
+) -> None:
+    home = make_home(tmp_path, busy_status=None)
+    versions = home / "runtime" / "versions"
+    for name, modified in (
+        ("installed", 500),
+        ("referenced", 400),
+        ("rollback", 300),
+        ("obsolete", 200),
+    ):
+        _ = completed_runtime(versions, name, modified)
+    unit = tmp_path / unit_name
+    unit.parent.mkdir(parents=True)
+    _ = unit.write_text(
+        "\n".join([
+            f"<string>{versions}/installed/t3</string>",
+            f'ExecStart="{versions}/referenced/t3" __service-launcher',
+        ]),
+        encoding="utf-8",
+    )
+    result = run(home, UNREACHABLE, "prune", declared)
+    assert result.returncode == 0, result.stderr
+    assert {path.name for path in versions.iterdir()} == {
+        VERSION,
+        "installed",
+        "referenced",
+        "rollback",
+    }
+
+
+@pytest.mark.parametrize(
+    "kind",
+    [
+        "symlink",
+        "relative",
+        "shim",
+        "path",
+        "custom",
+        "outside",
+        "binary",
+        "dangling",
+        "runtime-binary",
+    ],
+)
+def test_prune_protects_launcher_runtime(
+    tmp_path: Path, declared: Path, monkeypatch: pytest.MonkeyPatch, kind: str
+) -> None:
+    home = make_home(tmp_path, busy_status=None)
+    versions = home / "runtime" / "versions"
+    for name, modified in (("launcher", 300), ("rollback", 200), ("obsolete", 100)):
+        runtime = completed_runtime(versions, name, modified)
+        _ = (runtime / "t3").write_text("runtime", encoding="utf-8")
+        (runtime / "t3").chmod(0o755)
+        os.utime(runtime, (modified, modified))
+    bin_dir = tmp_path / ("bin" if kind in {"path", "custom"} else ".local/bin")
+    bin_dir.mkdir(parents=True)
+    launcher = bin_dir / "t3"
+    target = versions / "launcher/t3"
+    if kind == "runtime-binary":
+        _ = target.write_bytes(b"\xff")
+    elif kind == "shim":
+        _ = launcher.write_text(f'#!/bin/sh\nexec "{target}" "$@"\n', encoding="utf-8")
+    elif kind == "binary":
+        _ = launcher.write_bytes(b"\xff")
+    else:
+        if kind == "relative":
+            target = Path(os.path.relpath(target, bin_dir))
+        elif kind == "outside":
+            target = tmp_path / "other-runtime/t3"
+        elif kind == "dangling":
+            target = versions / "missing/t3"
+        launcher.symlink_to(target)
+    if kind == "custom":
+        monkeypatch.setenv("T3CODE_INSTALL_BIN_DIR", str(bin_dir))
+    search_dir = (
+        target.parent
+        if kind == "runtime-binary"
+        else bin_dir
+        if kind == "path"
+        else None
+    )
+    result = run(
+        home,
+        UNREACHABLE,
+        "prune",
+        declared,
+        search_dir,
+    )
+    assert result.returncode == 0, result.stderr
+    expected = (
+        {VERSION, "launcher", "rollback"}
+        if kind in {"symlink", "relative", "shim", "path", "custom", "runtime-binary"}
+        else {VERSION, "launcher"}
+    )
+    assert {path.name for path in versions.iterdir()} == expected
+
+
+@pytest.mark.parametrize("kind", ["directory", "unreadable", "fifo"])
+def test_prune_skips_invalid_completion_markers(
+    tmp_path: Path, declared: Path, kind: str
+) -> None:
+    home = make_home(tmp_path, busy_status=None)
+    versions = home / "runtime" / "versions"
+    _ = completed_runtime(versions, "rollback", 200)
+    _ = completed_runtime(versions, "obsolete", 100)
+    runtime = completed_runtime(versions, "invalid", 300)
+    marker = runtime / ".install-complete"
+    if kind == "unreadable":
+        marker.chmod(0o000)
+    else:
+        marker.unlink()
+        if kind == "directory":
+            marker.mkdir()
+        else:
+            os.mkfifo(marker)
+    try:
+        result = run(home, UNREACHABLE, "prune", declared)
+    finally:
+        marker.chmod(0o700)
+    assert result.returncode == 0, result.stderr
+    assert {path.name for path in versions.iterdir()} == {
+        VERSION,
+        "rollback",
+        "invalid",
+    }
+
+
+@pytest.mark.parametrize(
+    "reference_name",
+    [
+        "Library/LaunchAgents/com.t3tools.t3code.service.plist",
+        ".config/systemd/user/t3code.service",
+        ".local/bin/t3",
+    ],
+)
+@pytest.mark.parametrize("kind", ["directory", "unreadable"])
+def test_prune_refuses_when_runtime_references_are_unreadable(
+    tmp_path: Path, declared: Path, reference_name: str, kind: str
+) -> None:
+    home = make_home(tmp_path, busy_status=None)
+    versions = home / "runtime" / "versions"
+    _ = completed_runtime(versions, "rollback", 200)
+    _ = completed_runtime(versions, "obsolete", 100)
+    reference = tmp_path / reference_name
+    reference.parent.mkdir(parents=True)
+    if kind == "directory":
+        reference.mkdir()
+    else:
+        _ = reference.write_text(f"{versions}/obsolete/t3", encoding="utf-8")
+        reference.chmod(0o000)
+    try:
+        result = run(home, UNREACHABLE, "prune", declared)
+    finally:
+        reference.chmod(0o700)
+    assert result.returncode == 1
+    assert "cannot read runtime references" in result.stdout
+    assert "not pruning" in result.stdout
+    assert {path.name for path in versions.iterdir()} == {
+        VERSION,
+        "rollback",
+        "obsolete",
+    }
+
+
+def test_prune_ignores_incomplete_hidden_and_symlink_entries(
+    tmp_path: Path, declared: Path
+) -> None:
+    home = make_home(tmp_path, busy_status=None)
+    versions = home / "runtime" / "versions"
+    _ = completed_runtime(versions, "rollback", 200)
+    _ = completed_runtime(versions, "obsolete", 100)
+    _ = completed_runtime(versions, ".staging-complete", 900)
+    for name in (".staging-pending", "incomplete", "mismatch", "non-text"):
+        runtime = versions / name
+        runtime.mkdir()
+        if name == "mismatch":
+            _ = (runtime / ".install-complete").write_text("other", encoding="utf-8")
+        elif name == "non-text":
+            _ = (runtime / ".install-complete").write_bytes(b"\xff")
+        os.utime(runtime, (800, 800))
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    _ = (outside / ".install-complete").write_text("linked", encoding="utf-8")
+    (versions / "linked").symlink_to(outside, target_is_directory=True)
+    (versions / "dangling").symlink_to(tmp_path / "missing", target_is_directory=True)
+    result = run(home, UNREACHABLE, "prune", declared)
+    assert result.returncode == 0, result.stderr
+    assert {path.name for path in versions.iterdir()} == {
+        VERSION,
+        "rollback",
+        ".staging-complete",
+        ".staging-pending",
+        "incomplete",
+        "mismatch",
+        "non-text",
+        "linked",
+        "dangling",
+    }
+    assert (outside / ".install-complete").read_text(encoding="utf-8") == "linked"
+    assert (versions / "linked").is_symlink()
+    assert (versions / "dangling").is_symlink()
 
 
 def test_update_merges_settings_and_restarts_through_t3_when_idle(
