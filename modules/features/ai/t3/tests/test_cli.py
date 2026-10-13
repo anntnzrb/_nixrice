@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import http.server
+import importlib.util
 import json
 import os
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -877,3 +879,519 @@ def test_sync_keeps_claude_models_when_the_gateway_is_down(
     assert result.returncode == 0, result.stderr
     assert "gateway catalog unreachable; Claude models unchanged" in result.stdout
     assert claude_config(home) == KEPT_CONFIG
+
+
+class DarwinService:
+    def __init__(self, home: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        self.home: Path = home
+        self.domain: str = f"gui/{os.getuid()}"
+        self.upstream: str = f"{self.domain}/com.t3tools.t3code.service"
+        self.ours: str = f"{self.domain}/org.nix-community.home.t3-service"
+        self.loaded: set[str] = {self.upstream, self.ours}
+        self.disabled: set[str] = set()
+        self.running: set[str] = {self.upstream}
+        self.commands: list[list[str]] = []
+        self.failures: set[str] = set()
+        self.interruptions: set[str] = set()
+        self.timeouts: set[str] = set()
+        self.update_status: int = 0
+        self.stdin: int | None = None
+        self.plist: Path = (
+            home.parent / "Library/LaunchAgents/com.t3tools.t3code.service.plist"
+        )
+        self.plist.parent.mkdir(parents=True)
+        _ = self.plist.write_text(
+            f"<string>{home}/runtime/versions/{VERSION}/t3</string>", encoding="utf-8"
+        )
+        self.ours_plist: Path = self.plist.with_name(
+            "org.nix-community.home.t3-service.plist"
+        )
+        self.ours_plist.touch()
+        spec = importlib.util.spec_from_file_location("t3_cli_test", SCRIPT)
+        assert spec is not None
+        assert spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = module
+        spec.loader.exec_module(module)
+        self.main: Callable[[list[str]], int] = cast(
+            "Callable[[list[str]], int]", cast("object", module.main)
+        )
+        monkeypatch.setenv("HOME", str(home.parent))
+        monkeypatch.setenv("T3CODE_HOME", str(home))
+        monkeypatch.setattr(sys, "platform", "darwin")
+        monkeypatch.setattr(subprocess, "run", self.external)
+        monkeypatch.setattr(subprocess, "call", self.update)
+
+    def external(
+        self,
+        argv: list[str],
+        *,
+        check: bool,
+        capture_output: bool = False,
+        timeout: int | None = None,
+    ) -> subprocess.CompletedProcess[bytes]:
+        del capture_output
+        self.reconcile()
+        self.commands.append(argv)
+        status = 0
+        output = b""
+        action = argv[1]
+        target = argv[-1]
+        if f"{action}:{target}" in self.interruptions:
+            self.interruptions.remove(f"{action}:{target}")
+            raise KeyboardInterrupt
+        if f"{action}:{target}" in self.timeouts:
+            raise subprocess.TimeoutExpired(argv, timeout or 150)
+        if action in self.failures or f"{action}:{target}" in self.failures:
+            status = 1
+        else:
+            status, output = self.execute(argv, timeout)
+        self.reconcile()
+        assert len(self.running) <= 1
+        if check and status:
+            raise subprocess.CalledProcessError(status, argv)
+        return subprocess.CompletedProcess(argv, status, output, b"")
+
+    def reconcile(self) -> None:
+        if (
+            self.ours in self.loaded
+            and self.ours not in self.running
+            and (self.home / "runtime/stable.enabled").exists()
+        ):
+            self.start()
+
+    def start(self) -> None:
+        self.running.add(self.ours)
+        runtime = self.home / "runtime"
+        pending = runtime / ".restart-pending"
+        state = cast(
+            "dict[str, str]",
+            json.loads((runtime / "service-state.json").read_text(encoding="utf-8")),
+        )
+        if (
+            pending.exists()
+            and pending.read_text(encoding="utf-8").strip() == state["activeVersion"]
+        ):
+            pending.unlink()
+
+    def execute(self, argv: list[str], timeout: int | None) -> tuple[int, bytes]:
+        action = argv[1]
+        target = argv[-1]
+        status = 0
+        output = b""
+        if argv[0] == "/bin/cp":
+            _ = shutil.copytree(argv[2], argv[3])
+        elif action == "print":
+            status = 0 if target in self.loaded else 1
+            output = b"pid = 123" if target in self.running else b"state = waiting"
+        elif action == "bootout":
+            assert argv[2] == "--wait"
+            assert timeout is not None
+            assert timeout > 90
+            self.loaded.remove(target)
+            self.running.discard(target)
+        elif action == "disable":
+            self.disabled.add(target)
+        elif action == "enable":
+            self.disabled.discard(target)
+        elif action == "bootstrap":
+            label = self.ours if Path(target) == self.ours_plist else self.upstream
+            if label in self.loaded or not Path(target).exists():
+                status = 1
+            else:
+                self.loaded.add(label)
+                if label == self.upstream and label not in self.disabled:
+                    self.running.add(label)
+        else:
+            assert action == "kickstart"
+            assert target in self.loaded
+            assert target == self.ours
+            self.start()
+        return status, output
+
+    def update(self, argv: list[str], *, stdin: int | None) -> int:
+        self.commands.append(argv)
+        self.stdin = stdin
+        return self.update_status
+
+    def invoke(self, declared: Path, command: str = "stabilize") -> int:
+        _ = declared.with_name("client-settings.json").write_bytes(
+            SCRIPT.with_name("client-settings.json").read_bytes()
+        )
+        return self.main([
+            command,
+            "--channel",
+            "nightly",
+            "--settings",
+            str(declared),
+            "--gateway",
+            UNREACHABLE,
+        ])
+
+    def actions(self) -> list[str]:
+        return [argv[1] for argv in self.commands]
+
+
+@pytest.fixture
+def darwin(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> DarwinService:
+    return DarwinService(
+        make_home(tmp_path, busy_status=None, providers={}), monkeypatch
+    )
+
+
+def test_darwin_takes_over_and_clones_whole_runtime(
+    darwin: DarwinService, declared: Path
+) -> None:
+    original = darwin.plist.read_bytes()
+    source = darwin.home / "runtime" / "versions" / VERSION
+    (source / "node_modules").mkdir()
+    _ = (source / "node_modules" / "dependency").write_text("sdk", encoding="utf-8")
+    assert darwin.invoke(declared) == 0
+    stable = darwin.home / "runtime" / "stable"
+    assert (stable / "node_modules" / "dependency").read_text(encoding="utf-8") == "sdk"
+    assert (stable / ".version").read_text(encoding="utf-8") == VERSION
+    assert darwin.actions() == [
+        "print",
+        "bootout",
+        "disable",
+        "-cR",
+        "print",
+    ]
+    assert darwin.loaded == {darwin.ours}
+    assert darwin.plist.read_bytes() == original
+    darwin.commands.clear()
+    assert darwin.invoke(declared) == 0
+    assert darwin.actions() == ["print", "disable", "print"]
+
+
+@pytest.mark.parametrize("pending", [False, True])
+def test_darwin_restarts_only_for_a_refresh_or_pending_update(
+    darwin: DarwinService, declared: Path, *, pending: bool
+) -> None:
+    assert darwin.invoke(declared) == 0
+    assert darwin.invoke(declared) == 0
+    if pending:
+        _ = (darwin.home / "runtime" / ".restart-pending").write_text(
+            VERSION, encoding="utf-8"
+        )
+    darwin.commands.clear()
+    assert darwin.invoke(declared) == 0
+    assert ("kickstart" in darwin.actions()) == pending
+
+
+def test_darwin_preserves_mismatched_pending_marker_without_restarting(
+    darwin: DarwinService, declared: Path
+) -> None:
+    assert darwin.invoke(declared) == 0
+    marker = darwin.home / "runtime/.restart-pending"
+    _ = marker.write_text("next-version\n", encoding="utf-8")
+    darwin.commands.clear()
+    assert darwin.invoke(declared) == 0
+    assert darwin.invoke(declared) == 0
+    assert "kickstart" not in darwin.actions()
+    assert marker.read_text(encoding="utf-8") == "next-version\n"
+    assert darwin.running == {darwin.ours}
+
+
+@pytest.mark.parametrize("loaded", [False, True])
+@pytest.mark.parametrize("pending", [VERSION, "next-version"])
+def test_darwin_fresh_start_discharges_restart_debt(
+    darwin: DarwinService, declared: Path, pending: str, *, loaded: bool
+) -> None:
+    if not loaded:
+        darwin.loaded.remove(darwin.ours)
+    marker = darwin.home / "runtime/.restart-pending"
+    _ = marker.write_text(f"{pending}\n", encoding="utf-8")
+    assert darwin.invoke(declared) == 0
+    darwin.reconcile()
+    assert darwin.running == {darwin.ours}
+    assert not (darwin.home / "runtime/stable.restart").exists()
+    assert marker.exists() == (pending != VERSION)
+    darwin.commands.clear()
+    assert darwin.invoke(declared) == 0
+    assert "kickstart" not in darwin.actions()
+
+
+@pytest.mark.parametrize("failure", ["bootstrap", "gate", "kickstart"])
+def test_darwin_failed_start_retains_restart_debt(
+    darwin: DarwinService,
+    declared: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    failure: str,
+) -> None:
+    if failure == "kickstart":
+        assert darwin.invoke(declared) == 0
+        (darwin.home / "runtime/stable.restart").touch()
+        darwin.failures.add("kickstart")
+    elif failure == "bootstrap":
+        darwin.loaded.remove(darwin.ours)
+        darwin.failures.add(f"bootstrap:{darwin.ours_plist}")
+    else:
+        touch = Path.touch
+
+        def fail_gate(path: Path, mode: int = 0o666, *, exist_ok: bool = True) -> None:
+            if path.name == "stable.enabled":
+                msg = "gate unavailable"
+                raise OSError(msg)
+            touch(path, mode, exist_ok=exist_ok)
+
+        monkeypatch.setattr(Path, "touch", fail_gate)
+    assert darwin.invoke(declared) == 1
+    assert (darwin.home / "runtime/stable.restart").exists()
+    assert darwin.running == {darwin.upstream}
+    assert not (darwin.home / "runtime/stable.enabled").exists()
+
+
+@pytest.mark.parametrize("phase", ["staging", "renamed-old", "installed-new"])
+def test_darwin_recovers_interrupted_swaps(
+    darwin: DarwinService, declared: Path, phase: str
+) -> None:
+    assert darwin.invoke(declared) == 0
+    runtime = darwin.home / "runtime"
+    stable = runtime / "stable"
+    _ = (stable / ".version").write_text("old", encoding="utf-8")
+    _ = shutil.copytree(stable, runtime / "stable.new")
+    if phase != "staging":
+        _ = stable.rename(runtime / "stable.old")
+    if phase == "installed-new":
+        _ = (runtime / "stable.new").rename(stable)
+    assert darwin.invoke(declared) == 0
+    assert (stable / ".version").read_text(encoding="utf-8") == VERSION
+    assert not (runtime / "stable.old").exists()
+    assert not (runtime / "stable.new").exists()
+
+
+def test_darwin_bootstraps_unloaded_rice_agent(
+    darwin: DarwinService, declared: Path
+) -> None:
+    darwin.loaded.remove(darwin.ours)
+    assert darwin.invoke(declared) == 0
+    assert "kickstart" not in darwin.actions()
+    darwin.reconcile()
+    assert darwin.running == {darwin.ours}
+
+
+@pytest.mark.parametrize(
+    "failure", ["bootout", "disable", "-cR", "kickstart", "incomplete", "missing"]
+)
+def test_darwin_falls_back_without_loading_both_services(
+    darwin: DarwinService,
+    declared: Path,
+    failure: str,
+) -> None:
+    if failure == "kickstart":
+        assert darwin.invoke(declared) == 0
+        (darwin.home / "runtime/stable.restart").touch()
+    if failure == "incomplete":
+        (darwin.home / "runtime" / "versions" / VERSION / ".install-complete").unlink()
+    elif failure == "missing":
+        (darwin.home / "runtime" / "service-state.json").unlink()
+    elif failure == "bootout":
+        darwin.failures.add(f"bootout:{darwin.upstream}")
+    else:
+        darwin.failures.add(failure)
+    assert darwin.invoke(declared) == 1
+    assert darwin.loaded == {darwin.upstream, darwin.ours}
+    assert darwin.running == {darwin.upstream}
+    assert darwin.upstream not in darwin.disabled
+    assert not (darwin.home / "runtime/stable.enabled").exists()
+
+
+def test_darwin_refuses_fallback_bootstrap_when_rice_cannot_be_unloaded(
+    darwin: DarwinService, declared: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    darwin.failures.update({"disable", f"bootout:{darwin.ours}"})
+    assert darwin.invoke(declared) == 1
+    assert darwin.loaded == {darwin.ours}
+    assert "bootstrap" not in darwin.actions()
+    assert "cannot restore" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("loaded", [False, True])
+def test_darwin_fallback_handles_existing_or_missing_upstream_job(
+    darwin: DarwinService, declared: Path, *, loaded: bool
+) -> None:
+    darwin.failures.add("disable")
+    darwin.loaded.remove(darwin.ours)
+    if loaded:
+        darwin.failures.add("bootout")
+    else:
+        darwin.plist.unlink()
+    assert darwin.invoke(declared) == 1
+    assert not any(
+        argv[1] == "bootstrap" and argv[-1] == str(darwin.plist)
+        for argv in darwin.commands
+    )
+
+
+@pytest.mark.parametrize("busy", [True, False])
+def test_darwin_stabilize_checks_busy_state(
+    darwin: DarwinService, declared: Path, *, busy: bool
+) -> None:
+    database = darwin.home / "userdata" / "statev2.sqlite"
+    if busy:
+        with closing(sqlite3.connect(database)) as conn, conn:
+            _ = conn.execute(
+                "INSERT INTO orchestration_v2_projection_runs VALUES (?, ?)",
+                ("busy", "running"),
+            )
+    else:
+        database.unlink()
+    assert darwin.invoke(declared) == (0 if busy else 1)
+    assert not darwin.commands
+
+
+def test_stabilize_is_a_noop_on_linux(
+    darwin: DarwinService, declared: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(sys, "platform", "linux")
+    assert darwin.invoke(declared) == 0
+    assert not darwin.commands
+
+
+def test_linux_update_preserves_yes_and_inherited_stdin(
+    darwin: DarwinService, declared: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(sys, "platform", "linux")
+    assert darwin.invoke(declared, "update") == 0
+    binary = darwin.home / "runtime" / "versions" / VERSION / "t3"
+    assert darwin.commands == [[str(binary), "update", "--yes", "--channel", "nightly"]]
+    assert darwin.stdin is None
+
+
+@pytest.mark.parametrize("status", [0, 7])
+def test_darwin_update_closes_stdin_and_never_passes_yes(
+    darwin: DarwinService, declared: Path, status: int
+) -> None:
+    darwin.update_status = status
+    assert darwin.invoke(declared, "update") == status
+    binary = darwin.home / "runtime" / "versions" / VERSION / "t3"
+    assert darwin.commands[0] == [str(binary), "update", "--channel", "nightly"]
+    assert darwin.stdin == subprocess.DEVNULL
+    assert darwin.loaded == {darwin.ours}
+
+
+def test_darwin_update_stabilizes_after_bootstrap(
+    darwin: DarwinService, declared: Path
+) -> None:
+    (darwin.home / "runtime" / "service-state.json").unlink()
+    original_update = darwin.update
+
+    def install(argv: list[str], *, stdin: int | None) -> int:
+        _ = (darwin.home / "runtime" / "service-state.json").write_text(
+            json.dumps({"activeVersion": VERSION}), encoding="utf-8"
+        )
+        return original_update(argv, stdin=stdin)
+
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr(subprocess, "call", install)
+        assert darwin.invoke(declared, "update") == 0
+    assert darwin.commands[0] == ["npx", "-y", "t3@nightly", "service", "install"]
+    assert darwin.loaded == {darwin.ours}
+
+
+def test_darwin_prune_still_protects_upstream_plist_runtime(
+    darwin: DarwinService, declared: Path
+) -> None:
+    assert darwin.invoke(declared) == 0
+    versions = darwin.home / "runtime" / "versions"
+    _ = completed_runtime(versions, "old")
+    _ = completed_runtime(versions, "newest", 100)
+    _ = darwin.plist.write_text(f"{versions}/old/t3", encoding="utf-8")
+    assert darwin.invoke(declared, "prune") == 0
+    assert (versions / "old").exists()
+    assert (darwin.home / "runtime" / "stable" / "t3").exists()
+
+
+@pytest.mark.parametrize("action", ["print", "kickstart"])
+def test_darwin_interrupted_swap_still_owes_restart(
+    darwin: DarwinService, declared: Path, action: str
+) -> None:
+    if action == "kickstart":
+        darwin.running = {darwin.ours}
+    darwin.interruptions.add(f"{action}:{darwin.ours}")
+    with pytest.raises(KeyboardInterrupt):
+        _ = darwin.invoke(declared)
+    runtime = darwin.home / "runtime"
+    assert (runtime / "stable/.version").read_text(encoding="utf-8") == VERSION
+    assert (runtime / "stable.restart").exists()
+    assert darwin.invoke(declared) == 0
+    assert darwin.invoke(declared) == 0
+    assert ("kickstart" in darwin.actions()) == (action == "kickstart")
+    assert not (runtime / "stable.restart").exists()
+    assert darwin.running == {darwin.ours}
+
+
+def test_darwin_success_fallback_success_and_login(
+    darwin: DarwinService, declared: Path
+) -> None:
+    assert darwin.invoke(declared) == 0
+    darwin.failures.add("disable")
+    assert darwin.invoke(declared) == 1
+    assert darwin.loaded == {darwin.ours, darwin.upstream}
+    assert darwin.running == {darwin.upstream}
+    assert not (darwin.home / "runtime/stable.enabled").exists()
+    darwin.running.clear()
+    darwin.reconcile()
+    assert not darwin.running
+    darwin.running.add(darwin.upstream)
+    darwin.failures.clear()
+    assert darwin.invoke(declared) == 0
+    darwin.reconcile()
+    assert darwin.running == {darwin.ours}
+    assert darwin.upstream in darwin.disabled
+
+
+@pytest.mark.parametrize("timeout", [False, True])
+def test_darwin_fallback_reloads_rice_best_effort(
+    darwin: DarwinService, declared: Path, *, timeout: bool
+) -> None:
+    darwin.failures.add("disable")
+    key = f"bootstrap:{darwin.ours_plist}"
+    if timeout:
+        darwin.timeouts.add(key)
+    else:
+        darwin.failures.add(key)
+    assert darwin.invoke(declared) == 1
+    assert darwin.running == {darwin.upstream}
+    assert darwin.upstream not in darwin.disabled
+    assert not (darwin.home / "runtime/stable.enabled").exists()
+
+
+def test_darwin_bootout_timeout_does_not_start_replacement(
+    darwin: DarwinService, declared: Path
+) -> None:
+    darwin.timeouts.add(f"bootout:{darwin.upstream}")
+    assert darwin.invoke(declared) == 1
+    assert darwin.running == {darwin.upstream}
+    assert not (darwin.home / "runtime/stable.enabled").exists()
+
+
+def test_darwin_login_respects_persistent_gate_and_disable(
+    darwin: DarwinService, declared: Path
+) -> None:
+    assert darwin.invoke(declared) == 0
+    darwin.loaded.clear()
+    darwin.running.clear()
+    for plist in (darwin.ours_plist, darwin.plist):
+        result = darwin.external(
+            ["/bin/launchctl", "bootstrap", darwin.domain, str(plist)], check=True
+        )
+        assert result.returncode == 0
+        repeated = darwin.external(
+            ["/bin/launchctl", "bootstrap", darwin.domain, str(plist)], check=False
+        )
+        assert repeated.returncode != 0
+    assert darwin.running == {darwin.ours}
+    assert darwin.upstream in darwin.disabled
+
+
+def test_darwin_missing_rice_plist_restores_upstream(
+    darwin: DarwinService, declared: Path
+) -> None:
+    darwin.loaded.remove(darwin.ours)
+    darwin.ours_plist.unlink()
+    assert darwin.invoke(declared) == 1
+    assert darwin.running == {darwin.upstream}
+    assert darwin.loaded == {darwin.upstream}
+    assert not (darwin.home / "runtime/stable.enabled").exists()
