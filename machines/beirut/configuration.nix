@@ -7,6 +7,7 @@
     firefox
     ghostty
     safari
+    stremio
     t3
     tailscale
     tinycast

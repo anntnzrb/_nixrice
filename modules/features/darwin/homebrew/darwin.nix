@@ -15,6 +15,7 @@ let
     obs = "obs";
     orbstack = "orbstack";
     rustdesk = "rustdesk";
+    stremio = "stremio";
     tinycast = "abue-ammar/tinycast/tinycast";
     vlc = "vlc";
     vscode = "visual-studio-code";
