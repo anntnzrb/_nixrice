@@ -51,7 +51,10 @@ in
   config = {
     home-manager.users.${lib.liberion.identity.user}.home.sessionPath =
       lib.mkAfter
-        [ "${brewPrefix}/bin" ];
+        [
+          "${brewPrefix}/bin"
+          "${brewPrefix}/sbin"
+        ];
 
     nix-homebrew = {
       enable = true;
@@ -82,7 +85,6 @@ in
       export HOMEBREW_REPOSITORY="${brewRepo}";
       fpath[1,0]="${brewPrefix}/share/zsh/site-functions";
       export FPATH;
-      export PATH="${brewPrefix}/bin:${brewPrefix}/sbin''${PATH+:$PATH}";
       [ -z "''${MANPATH-}" ] || { export MANPATH="''${MANPATH%"''${MANPATH##*[!:]}"}"; export MANPATH=":''${MANPATH#"''${MANPATH%%[!:]*}"}"; };
       export INFOPATH="${brewPrefix}/share/info:''${INFOPATH:-}";
     '';
