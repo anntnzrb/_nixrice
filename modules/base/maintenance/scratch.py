@@ -113,11 +113,17 @@ def clean_scratch(
     stale = stale_scratch(root, os.getuid(), cutoff)
     freed = 0
     for entry in stale:
-        freed += size_mb(entry) if entry.is_dir() else 0
+        is_directory = entry.is_dir() and not entry.is_symlink()
+        with contextlib.suppress(OSError):
+            freed += (
+                size_mb(entry)
+                if is_directory
+                else entry.lstat().st_blocks * 512 // (1024 * 1024)
+            )
         if dry_run:
             say(f"would remove {entry}")
             continue
-        if entry.is_dir() and not entry.is_symlink():
+        if is_directory:
             shutil.rmtree(entry, ignore_errors=True)
         else:
             with contextlib.suppress(OSError):
