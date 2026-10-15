@@ -40,6 +40,13 @@ let
   brewRepo = "${
     config.nix-homebrew.prefixes.${brewPrefix}.library
   }/.homebrew-is-managed-by-nix";
+  shellInit = ''
+    export HOMEBREW_PREFIX="${brewPrefix}";
+    export HOMEBREW_CELLAR="${brewPrefix}/Cellar";
+    export HOMEBREW_REPOSITORY="${brewRepo}";
+    [ -z "''${MANPATH-}" ] || { export MANPATH="''${MANPATH%"''${MANPATH##*[!:]}"}"; export MANPATH=":''${MANPATH#"''${MANPATH%%[!:]*}"}"; };
+    export INFOPATH="${brewPrefix}/share/info:''${INFOPATH:-}";
+  '';
 in
 {
   imports = [ inputs.nix-homebrew.darwinModules.nix-homebrew ];
@@ -50,17 +57,16 @@ in
   ) [ ];
 
   config = {
-    home-manager.users.${lib.liberion.identity.user}.home.sessionPath =
-      lib.mkAfter
-        [
-          "${brewPrefix}/bin"
-          "${brewPrefix}/sbin"
-        ];
+    environment.systemPath = lib.mkOrder 1100 [
+      "${brewPrefix}/bin"
+      "${brewPrefix}/sbin"
+    ];
 
     nix-homebrew = {
       enable = true;
       user = lib.liberion.identity.user;
       autoMigrate = true;
+      enableBashIntegration = false;
       enableZshIntegration = false;
     };
 
@@ -80,14 +86,11 @@ in
       masApps = lib.mergeAttrsList (pick masApps);
     };
 
-    programs.zsh.interactiveShellInit = ''
-      export HOMEBREW_PREFIX="${brewPrefix}";
-      export HOMEBREW_CELLAR="${brewPrefix}/Cellar";
-      export HOMEBREW_REPOSITORY="${brewRepo}";
+    programs.bash.interactiveShellInit = shellInit;
+
+    programs.zsh.interactiveShellInit = shellInit + ''
       fpath[1,0]="${brewPrefix}/share/zsh/site-functions";
       export FPATH;
-      [ -z "''${MANPATH-}" ] || { export MANPATH="''${MANPATH%"''${MANPATH##*[!:]}"}"; export MANPATH=":''${MANPATH#"''${MANPATH%%[!:]*}"}"; };
-      export INFOPATH="${brewPrefix}/share/info:''${INFOPATH:-}";
     '';
 
     environment.variables = {
