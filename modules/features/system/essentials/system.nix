@@ -27,7 +27,7 @@
       nh
     ]
     ++ lib.optionals stdenv.hostPlatform.isLinux [
-      binutils
+      gcc
       psmisc
     ];
 }
