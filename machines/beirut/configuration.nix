@@ -20,8 +20,4 @@
     max-jobs = 5;
     cores = 4;
   };
-
-  liberion = {
-    system.ui.menuBar.hide = false;
-  };
 }

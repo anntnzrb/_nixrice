@@ -69,14 +69,15 @@ MANAGEMENT_PREFIXES = ("/v0/management", "/v8/management", "/v0/resource/plugins
 
 
 def management_route(raw_path: str) -> bool:
-    """Match on the decoded path so encoded or doubled slashes cannot hide a route.
+    """Refuse decoded management routes and all paths with dot segments.
 
     Returns:
-        Whether the request path addresses CLIProxyAPI's management surface.
+        Whether the path is a management route or could hide one upstream.
     """
-    path = "/" + "/".join(
-        part for part in unquote(urlsplit(raw_path).path).split("/") if part
-    )
+    parts = unquote(urlsplit(raw_path).path).split("/")
+    if any(part in {".", ".."} for part in parts):
+        return True
+    path = "/" + "/".join(part for part in parts if part)
     return path.startswith("/management") or any(
         path == prefix or path.startswith(prefix + "/")
         for prefix in MANAGEMENT_PREFIXES

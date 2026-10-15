@@ -273,8 +273,20 @@ def test_bad_credentials_get_a_challenge_and_never_reach_upstream(
     assert gate.seen.empty()
 
 
-def test_management_is_refused_before_authentication(gate: Gate) -> None:
-    reply = request(gate.port, "GET", "/v0/management/config", headers={})
+@pytest.mark.parametrize(
+    "path",
+    [
+        "/v0/management/config",
+        "/v1/../v0/management/config",
+        "/v1/..%2fmanagement.html",
+        "/./management",
+    ],
+)
+@pytest.mark.parametrize("headers", [{}, bearer(TOKEN)])
+def test_management_is_refused_before_authentication(
+    gate: Gate, path: str, headers: dict[str, str]
+) -> None:
+    reply = request(gate.port, "GET", path, headers=headers)
     assert (reply.status, reply.body) == (404, b"")
     assert gate.seen.empty()
 

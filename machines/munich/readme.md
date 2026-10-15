@@ -16,7 +16,7 @@
 
 ## Role
 
-Always-on NixOS server (tags `server`, `headless`, `nvidia`), whole-disk XFS via disko, `systemd-boot`, and remote builder for the Macs.
+Always-on NixOS server with whole-disk XFS via disko and `systemd-boot`.
 
 The hardware runs Debian with the CLIProxyAPI gateway and Hermes. This directory
 is its NixOS target state: `clan machines update` and `just deploy` must not

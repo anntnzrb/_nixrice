@@ -165,6 +165,38 @@ def test_cli_missing_root_reports_nothing_to_clean(tmp_path: Path) -> None:
     assert "0 entries idle >7d, ~0M" in result.stdout
 
 
+def test_cli_reports_only_the_unlinked_symlinks_size(tmp_path: Path) -> None:
+    root = tmp_path / "scratch"
+    root.mkdir()
+    target = tmp_path / "target"
+    target.mkdir()
+    _ = (target / "big").write_bytes(b"x" * (3 * 1024 * 1024))
+    link = root / "link"
+    link.symlink_to(target)
+    _age(link)
+    expected_mb = link.lstat().st_blocks * 512 // (1024 * 1024)
+
+    result = _run_cli("--root", str(root))
+
+    assert result.returncode == 0
+    assert f"1 entries idle >7d, ~{expected_mb}M" in result.stdout
+    assert not link.is_symlink()
+    assert (target / "big").stat().st_size == 3 * 1024 * 1024
+
+
+def test_cli_reports_removed_regular_files_size(tmp_path: Path) -> None:
+    big = tmp_path / "big"
+    _ = big.write_bytes(b"x" * (3 * 1024 * 1024))
+    _age(big)
+    expected_mb = big.lstat().st_blocks * 512 // (1024 * 1024)
+
+    result = _run_cli("--root", str(tmp_path))
+
+    assert result.returncode == 0
+    assert f"1 entries idle >7d, ~{expected_mb}M" in result.stdout
+    assert not big.exists()
+
+
 def test_unreadable_entries_are_skipped_without_failing(tmp_path: Path) -> None:
     """Entries that cannot be inspected are never candidates and never crash."""
     locked = tmp_path / "locked"
