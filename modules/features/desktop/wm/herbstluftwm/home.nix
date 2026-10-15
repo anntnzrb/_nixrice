@@ -104,7 +104,7 @@ in
       activation = {
         reloadHerbstluftwm = config.lib.dag.entryAfter [
           "writeBoundary"
-        ] "${pkgs.herbstluftwm}/bin/herbstluftwm reload || :";
+        ] "${pkgs.herbstluftwm}/bin/herbstclient reload || :";
       };
     };
   };

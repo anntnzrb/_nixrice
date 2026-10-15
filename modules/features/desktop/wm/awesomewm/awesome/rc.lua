@@ -105,6 +105,7 @@ do
 
     awscreen.connect_for_each_screen(function(s)
         awtag({ "𝛼", "ϐ", "ℽ", "𝛿", "ε", "ϝ", "ͷ", "ϛ", "𝜁" }, s, awful.layout.layouts[1])
+        s.mypromptbox = awwidget.prompt()
 
         local layoutbox = awwidget.layoutbox(s)
         layoutbox:buttons(gears.table.join(
@@ -154,7 +155,7 @@ do
 
                 launcher_main,
                 taglist,
-                awwidget.prompt(),
+                s.mypromptbox,
             },
             {
                 layout = wilayout.fixed.horizontal,
@@ -371,7 +372,7 @@ do
                     "qutebrowser",
                 },
             },
-            properties = { tag = "1" },
+            properties = { tag = "𝛼" },
         },
 
         {

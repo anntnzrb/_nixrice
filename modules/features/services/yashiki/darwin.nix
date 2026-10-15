@@ -137,6 +137,16 @@ in
       }
     ];
 
+    liberion.darwin.owned = {
+      files."/var/lib/wm-handoff/org.nixos.yashiki.init" = { };
+      privacy = [
+        {
+          service = "Accessibility";
+          bundleId = "dev.typester.yashiki";
+        }
+      ];
+    };
+
     system.activationScripts.preActivation.text = lib.mkAfter (
       wm.stop {
         label = "org.nixos.aerospace";

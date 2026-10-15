@@ -42,7 +42,7 @@ in
     xdg.configFile = {
       "pcmanfm" = {
         enable = true;
-        target = "pcmanfm/pcmanfm.conf";
+        target = "pcmanfm/default/pcmanfm.conf";
         text = lib.generators.toINI { } cfg.settings;
       };
     };
