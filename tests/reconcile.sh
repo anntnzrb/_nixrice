@@ -6,6 +6,7 @@ reconcile=${1}
 work=$(mktemp -d)
 trap 'rm -rf "${work}"' EXIT
 user=$(id -un)
+uid=$(id -u)
 mkdir "${work}/bin"
 # shellcheck disable=SC2016 # Expanded by the generated command, not the test.
 printf '%s\n' '#!/bin/sh' 'exec "$@"' >"${work}/bin/as-user"
@@ -62,6 +63,32 @@ printf '%s\n' /run/current-system/sw/bin/bash >"${DSCL_SHELL}"
 bash "${reconcile}" "${work}/shell.json" "${work}/manifest.json" "${user}" "${work}/bin/as-user" /usr/bin/true /usr/libexec/PlistBuddy
 test "$(<"${DSCL_SHELL}")" = /bin/zsh
 jq -e '. == []' "${work}/shell.json"
+
+export LAUNCHCTL_RESULT="${work}/launchctl-result"
+export LAUNCHCTL_ARGS="${work}/launchctl-args"
+# shellcheck disable=SC2016 # Expanded by the generated command, not the test.
+printf '%s\n' '#!/bin/sh' 'printf "%s\n" "$@" >"${LAUNCHCTL_ARGS}"' '[ "$(cat "${LAUNCHCTL_RESULT}")" = success ]' >"${work}/bin/launchctl"
+chmod +x "${work}/bin/launchctl"
+launchd_entry='[{"kind":"launchdDisabled","id":"launchd","label":"com.example.Removed","restart":[]}]'
+printf '%s\n' "${launchd_entry}" >"${work}/launchd.json"
+printf '%s\n' failure >"${LAUNCHCTL_RESULT}"
+bash "${reconcile}" "${work}/launchd.json" "${work}/manifest.json" "${user}" "${work}/bin/as-user" /usr/bin/true /usr/libexec/PlistBuddy
+jq -e --argjson entry "${launchd_entry}" '. == $entry' "${work}/launchd.json"
+test "$(<"${LAUNCHCTL_ARGS}")" = "$(printf '%s\n' enable "gui/${uid}/com.example.Removed")"
+printf '%s\n' success >"${LAUNCHCTL_RESULT}"
+bash "${reconcile}" "${work}/launchd.json" "${work}/manifest.json" "${user}" "${work}/bin/as-user" /usr/bin/true /usr/libexec/PlistBuddy
+jq -e '. == []' "${work}/launchd.json"
+
+mkdir -p "${work}/stable/nested" "${work}/unclaimed-runtime"
+printf '%s\n' runtime >"${work}/stable/nested/t3"
+jq -n --arg file "${work}/stable" '[{kind:"file",id:"stable",file:$file,recursive:true,restart:[]}]' >"${work}/manifest.json"
+bash "${reconcile}" "${work}/runtime.json" "${work}/manifest.json" "${user}" "${work}/bin/as-user" /usr/bin/true /usr/libexec/PlistBuddy
+test -f "${work}/stable/nested/t3"
+printf '%s\n' '[]' >"${work}/manifest.json"
+bash "${reconcile}" "${work}/runtime.json" "${work}/manifest.json" "${user}" "${work}/bin/as-user" /usr/bin/true /usr/libexec/PlistBuddy
+test ! -e "${work}/stable"
+test -d "${work}/unclaimed-runtime"
+jq -e '. == []' "${work}/runtime.json"
 
 printf '%s\n' /opt/homebrew/bin/fish >"${DSCL_SHELL}"
 printf '%s\n' "${shell_entry}" >"${work}/shell.json"

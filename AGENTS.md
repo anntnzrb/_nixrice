@@ -268,7 +268,11 @@ tool several modules share becomes its own package.
   `liberion.darwin.defaults.currentHost` (ByHost), which are tracked
   automatically. Anything an activation script writes itself must be claimed
   in `liberion.darwin.owned.defaults` (a key, or a nested `path` inside one)
-  or `liberion.darwin.owned.files`. A login shell set through `users.knownUsers`
+  or `liberion.darwin.owned.files`. `liberion.darwin.owned.files` entries may set
+  `recursive = true` to remove a directory tree; a launchd label a feature
+  disables with `launchctl disable` is claimed in
+  `liberion.darwin.owned.launchdDisabled`, and removing the claim runs
+  `launchctl enable` for it. A login shell set through `users.knownUsers`
   is claimed in `liberion.darwin.owned.shell`; removing the claim resets it to
   `/bin/zsh` unless it was changed since. Unreadable domains are kept and retried.
   A new nix-darwin `system.defaults` scope fails evaluation until it is mapped.

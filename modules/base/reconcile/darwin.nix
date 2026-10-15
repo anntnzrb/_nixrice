@@ -134,12 +134,23 @@ let
     }
   ) cfg.owned.privacy;
 
+  launchdDisabledEntries = map (
+    label:
+    withId "launchdDisabled" {
+      inherit label;
+      restart = [ ];
+    }
+  ) cfg.owned.launchdDisabled;
+
   fileEntries = lib.mapAttrsToList (
     file: o:
-    withId "file" {
-      inherit file;
-      inherit (o) restart;
-    }
+    withId "file" (
+      {
+        inherit file;
+        inherit (o) restart;
+      }
+      // lib.optionalAttrs o.recursive { recursive = true; }
+    )
   ) cfg.owned.files;
 
   shellEntries = lib.optional (cfg.owned.shell != null) (
@@ -151,7 +162,13 @@ let
 
   manifest = pkgs.writeText "liberion-owned.json" (
     builtins.toJSON (
-      lib.unique (defaultsEntries ++ fileEntries ++ privacyEntries ++ shellEntries)
+      lib.unique (
+        defaultsEntries
+        ++ fileEntries
+        ++ privacyEntries
+        ++ launchdDisabledEntries
+        ++ shellEntries
+      )
     )
   );
 
@@ -247,8 +264,14 @@ in
     owned = {
       defaults = mkOpt' (types.listOf ownedDefault) [ ];
       privacy = mkOpt' (types.listOf ownedPrivacy) [ ];
+      launchdDisabled = mkOpt' (types.listOf types.str) [ ];
       files = mkOpt' (types.attrsOf (
-        types.submodule { options.restart = restartOpt; }
+        types.submodule {
+          options = {
+            restart = restartOpt;
+            recursive = mkOpt' types.bool false;
+          };
+        }
       )) { };
       shell = mkOpt' (types.nullOr types.path) null;
     };
