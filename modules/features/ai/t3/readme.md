@@ -66,7 +66,9 @@ obligation before the swap and is cleared only after a successful kickstart. T3 
 `service-state.json`; its own launchd job stays disabled, with its plist in
 `~/Library/LaunchAgents/com.t3tools.t3code.service.plist` untouched. That plist
 still protects the runtime it names from pruning. The stable clone lives outside
-`versions` and is never pruned.
+`versions` and is never pruned. `darwin.nix` claims the stable runtime paths
+and the disabled upstream label, so removing the feature deletes them and
+re-enables T3's own service on the next switch.
 
 In **System Settings → Privacy & Security**, grant **Full Disk Access** and
 **Accessibility** once to `~/.t3/runtime/stable/t3`. Use the file chooser's
