@@ -7,7 +7,7 @@ let
 
   viewStyle = {
     icon = "icnv";
-    list = "clmv";
+    column = "clmv";
     gallery = "Flwv";
   };
 in
@@ -19,7 +19,7 @@ in
       CreateDesktop = false;
       FXDefaultSearchScope = searchScope.currentFolder;
       FXEnableExtensionChangeWarning = false;
-      FXPreferredViewStyle = viewStyle.list;
+      FXPreferredViewStyle = viewStyle.column;
       QuitMenuItem = true;
       ShowPathbar = true;
       ShowStatusBar = true;
