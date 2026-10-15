@@ -16,6 +16,7 @@
 
     defaults = {
       SoftwareUpdate.AutomaticallyInstallMacOSUpdates = false;
+      CustomSystemPreferences."com.apple.SoftwareUpdate".AutomaticDownload = false;
       CustomUserPreferences."com.apple.AdLib".allowApplePersonalizedAdvertising =
         false;
 

@@ -39,7 +39,11 @@ remove_file() {
         return 0
     fi
     echo "reconcile: removing ${file}" >&2
-    if rm -f -- "${file}"; then
+    set -- -f
+    if [ "${recursive}" = true ]; then
+        set -- -rf
+    fi
+    if rm "$@" -- "${file}"; then
         removed
     else
         carry
@@ -53,6 +57,13 @@ remove_privacy() {
         return 0
     fi
     echo "reconcile: revoked ${service} for ${bundle_id}" >&2
+}
+
+remove_launchd_disabled() {
+    if ! uid=$(id -u "${user}") || ! "${as_user}" launchctl enable "gui/${uid}/${label}"; then
+        echo "reconcile: could not enable ${label}" >&2
+        carry
+    fi
 }
 
 remove_shell() {
@@ -113,7 +124,7 @@ if [ -f "${state}" ]; then
         "${state}" >"${work}/stale"
     while IFS= read -r entry; do
         printf '%s\n' "${entry}" | jq -r \
-            '.kind, (.file // ""), (.scope // ""), (.currentHost // false), (.domain // ""), (.key // ""), (.service // ""), (.bundleId // ""), (.shell // ""), ((.path // []) | map(":" + .) | join(""))' \
+            '.kind, (.file // ""), (.scope // ""), (.currentHost // false), (.domain // ""), (.key // ""), (.service // ""), (.bundleId // ""), (.shell // ""), (.recursive // false), (.label // ""), ((.path // []) | map(":" + .) | join(""))' \
             >"${work}/fields"
         {
             read -r kind
@@ -125,12 +136,15 @@ if [ -f "${state}" ]; then
             read -r service
             read -r bundle_id
             read -r shell
+            read -r recursive
+            read -r label
             read -r nested || nested=""
         } <"${work}/fields"
         case ${kind} in
             file) remove_file ;;
             defaults) remove_default ;;
             privacy) remove_privacy ;;
+            launchdDisabled) remove_launchd_disabled ;;
             shell) remove_shell ;;
             *) echo "reconcile: unknown kind ${kind}, keeping it" >&2 && carry ;;
         esac

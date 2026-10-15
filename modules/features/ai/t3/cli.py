@@ -1,8 +1,9 @@
-"""Install, update, configure, and refresh the T3 Code user service.
+"""Install, update, configure, refresh, and prune the T3 Code user service.
 
-T3 writes and supervises its own service unit. This script decides when it is
-safe to update, applies the declared server and desktop client settings, and
-keeps Claude's model list in step with the model gateway.
+T3 installs runtimes; Darwin uses a stable launcher supervised by Nix. This
+script decides when it is safe to update, applies the declared settings, and
+keeps Claude's model list in step with the model gateway. It removes superseded
+runtimes while preserving runtimes still in use and one rollback runtime.
 """
 
 from __future__ import annotations
@@ -10,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import sqlite3
 import subprocess
 import sys
@@ -253,14 +255,16 @@ def apply_settings(ctx: Context) -> bool:
     return changed
 
 
-def run(argv: list[str]) -> int:
+def run(argv: list[str], *, unattended: bool = False) -> int:
     """Echo and run a command.
 
     Returns:
-        The command's exit status.
+        The command's result.
     """
     say("+ " + " ".join(argv))
-    return subprocess.call(argv)  # noqa: S603 - argv built from fixed paths
+    return subprocess.call(  # noqa: S603 - argv built from fixed paths
+        argv, stdin=subprocess.DEVNULL if unattended else None
+    )
 
 
 def bootstrap(ctx: Context) -> int:
@@ -285,7 +289,8 @@ def update(ctx: Context) -> int:
     binary = installed_binary(ctx)
     if binary is None:
         say("not installed; bootstrapping")
-        return bootstrap(ctx)
+        result = bootstrap(ctx)
+        return stabilize(ctx) if sys.platform == "darwin" and result == 0 else result
     _ = apply_settings(ctx)
     try:
         busy = busy_threads(ctx)
@@ -295,9 +300,139 @@ def update(ctx: Context) -> int:
     if busy:
         say(f"{busy} thread(s) running; postponing the update")
         return 0
-    # `t3 update` verifies the release checksums and that the new runtime starts
-    # before it repoints the service; --yes restarts it without a prompt.
-    return run([str(binary), "update", "--yes", "--channel", ctx.channel])
+    if sys.platform != "darwin":
+        return run([str(binary), "update", "--yes", "--channel", ctx.channel])
+    result = run([str(binary), "update", "--channel", ctx.channel], unattended=True)
+    stabilized = stabilize(ctx)
+    return result or stabilized
+
+
+def launchctl(*args: str, check: bool = True) -> subprocess.CompletedProcess[bytes]:
+    """Run launchctl, requiring success except when inspecting a job.
+
+    Returns:
+        The command's result.
+    """
+    return subprocess.run(  # noqa: S603 - fixed launchctl commands
+        ["/bin/launchctl", *args], check=check, capture_output=True, timeout=150
+    )
+
+
+def refresh_stable(ctx: Context) -> bool:
+    """Clone the completed active runtime and recover interrupted swaps.
+
+    Returns:
+        Whether the stable runtime was replaced.
+
+    Raises:
+        ValueError: The active runtime is missing or incomplete.
+    """
+    binary = installed_binary(ctx)
+    if binary is None or not runtime_complete(binary.parent):
+        msg = "active runtime is missing or incomplete"
+        raise ValueError(msg)
+    stable = ctx.runtime / "stable"
+    old = ctx.runtime / "stable.old"
+    staging = ctx.runtime / "stable.new"
+    if old.exists():
+        if not stable.exists():
+            _ = old.rename(stable)
+        else:
+            shutil.rmtree(old)
+    if staging.exists():
+        shutil.rmtree(staging)
+    if runtime_marker(stable / ".version").strip() == binary.parent.name:
+        return False
+    _ = subprocess.run(  # noqa: S603 - absolute macOS cp for APFS clones
+        ["/bin/cp", "-cR", str(binary.parent), str(staging)], check=True
+    )
+    _ = (staging / ".version").write_text(binary.parent.name, encoding="utf-8")
+    (ctx.runtime / "stable.restart").touch()
+    if stable.exists():
+        _ = stable.rename(old)
+    _ = staging.rename(stable)
+    if old.exists():
+        shutil.rmtree(old)
+    return True
+
+
+def bootout_loaded(label: str) -> None:
+    """Unload a launchd job only when it is loaded."""
+    if launchctl("print", label, check=False).returncode == 0:
+        _ = launchctl("bootout", "--wait", label)
+
+
+def start_stable(ctx: Context, domain: str, label: str) -> None:
+    """Load the gated launcher and discharge its restart debt."""
+    job = launchctl("print", label, check=False)
+    running = any(
+        line.strip().startswith(b"pid = ") for line in job.stdout.splitlines()
+    )
+    plist = Path.home() / "Library/LaunchAgents/org.nix-community.home.t3-service.plist"
+    if job.returncode != 0:
+        _ = launchctl("bootstrap", domain, str(plist))
+    (ctx.runtime / "stable.enabled").touch()
+    restart = ctx.runtime / "stable.restart"
+    if running:
+        state = load_object(ctx.runtime / "service-state.json") or {}
+        pending = runtime_marker(ctx.runtime / ".restart-pending").strip()
+        if restart.exists() or pending == state.get("activeVersion"):
+            _ = launchctl("kickstart", "-k", label)
+    restart.unlink(missing_ok=True)
+
+
+def restore_upstream(ctx: Context, domain: str, ours: str, upstream: str) -> None:
+    """Stop the gated launcher before enabling T3, retaining an idle rice job."""
+    (ctx.runtime / "stable.enabled").unlink(missing_ok=True)
+    bootout_loaded(ours)
+    agents = Path.home() / "Library/LaunchAgents"
+    try:
+        _ = launchctl(
+            "bootstrap",
+            domain,
+            str(agents / "org.nix-community.home.t3-service.plist"),
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError) as error:
+        say(f"cannot reload gated service ({error})")
+    _ = launchctl("enable", upstream)
+    plist = agents / "com.t3tools.t3code.service.plist"
+    if plist.exists() and launchctl("print", upstream, check=False).returncode != 0:
+        _ = launchctl("bootstrap", domain, str(plist))
+
+
+def stabilize(ctx: Context) -> int:
+    """Take over the Darwin service when idle, restoring T3 on failure.
+
+    Returns:
+        Zero on success or postponement, one on failure.
+    """
+    if sys.platform != "darwin":
+        return 0
+    try:
+        busy = busy_threads(ctx)
+    except sqlite3.Error as error:
+        say(f"cannot tell whether threads run ({error}); not stabilizing")
+        return 1
+    if busy:
+        say(f"{busy} thread(s) running; postponing service stabilization")
+        return 0
+    domain = f"gui/{os.getuid()}"
+    upstream = f"{domain}/com.t3tools.t3code.service"
+    ours = f"{domain}/org.nix-community.home.t3-service"
+    try:
+        bootout_loaded(upstream)
+        _ = launchctl("disable", upstream)
+        _ = refresh_stable(ctx)
+        start_stable(ctx, domain, ours)
+    except (OSError, ValueError, subprocess.SubprocessError) as error:
+        say(f"cannot stabilize service ({error}); restoring T3's service")
+        try:
+            restore_upstream(ctx, domain, ours, upstream)
+        except (OSError, subprocess.SubprocessError) as fallback_error:
+            say(f"cannot restore T3's service ({fallback_error})")
+        return 1
+    return 0
 
 
 def sync(ctx: Context) -> int:
@@ -313,6 +448,106 @@ def sync(ctx: Context) -> int:
     return 0
 
 
+def runtime_marker(path: Path) -> str:
+    """Read runtime metadata or a launcher shim when present.
+
+    Returns:
+        The text, or an empty string for a missing or non-text file.
+    """
+    try:
+        return path.read_text(encoding="utf-8")
+    except (FileNotFoundError, UnicodeDecodeError):
+        return ""
+
+
+def runtime_references() -> str:
+    """Collect service unit and CLI launcher runtime references.
+
+    Returns:
+        Unit and launcher paths/text that may still name an installed runtime.
+    """
+    home = Path.home()
+    units = (
+        home / "Library/LaunchAgents/com.t3tools.t3code.service.plist",
+        home / ".config/systemd/user/t3code.service",
+    )
+    launchers = {
+        home / ".local/bin/t3",
+        Path(os.environ.get("T3CODE_INSTALL_BIN_DIR", home / ".local/bin")) / "t3",
+    }
+    if launcher := shutil.which("t3"):
+        launchers.add(Path(launcher))
+    references = [runtime_marker(unit) for unit in units]
+    references.extend(
+        f"{launcher.resolve()}\n{runtime_marker(launcher)}"
+        for launcher in sorted(launchers)
+    )
+    return "\n".join(references)
+
+
+def runtime_complete(path: Path) -> bool:
+    """Check for a regular, readable completion marker matching the runtime.
+
+    Returns:
+        Whether the runtime has a valid completion marker.
+    """
+    marker = path / ".install-complete"
+    try:
+        return marker.is_file() and runtime_marker(marker).strip() == path.name
+    except OSError:
+        return False
+
+
+def prune(ctx: Context) -> int:
+    """Remove superseded runtimes when idle, keeping one for rollback.
+
+    Returns:
+        The exit status.
+    """
+    state = load_object(ctx.runtime / "service-state.json") or {}
+    version = state.get("activeVersion")
+    if not isinstance(version, str) or not version:
+        say("no active runtime; nothing to prune")
+        return 0
+    pending = state.get("update")
+    if isinstance(pending, dict) and pending.get("status") == "pending":
+        say("an update is pending; postponing runtime pruning")
+        return 0
+    try:
+        busy = busy_threads(ctx)
+    except sqlite3.Error as error:
+        say(f"cannot tell whether threads run ({error}); not pruning")
+        return 1
+    if busy:
+        say(f"{busy} thread(s) running; postponing runtime pruning")
+    versions = ctx.runtime / "versions"
+    if busy or not versions.is_dir():
+        return 0
+    try:
+        references = runtime_references()
+    except OSError as error:
+        say(f"cannot read runtime references ({error}); not pruning")
+        return 1
+    others = sorted(
+        (
+            path
+            for path in versions.iterdir()
+            if not path.name.startswith(".")
+            and not path.is_symlink()
+            and path.is_dir()
+            and runtime_complete(path)
+            and path.name != version
+            and f"versions/{path.name}/" not in references
+        ),
+        key=lambda path: (path.stat().st_mtime, path.name),
+        reverse=True,
+    )
+    for path in others[1:]:
+        shutil.rmtree(path)
+        say(f"removed runtime {path.name}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     """Run the command line.
 
@@ -320,7 +555,7 @@ def main(argv: list[str] | None = None) -> int:
         The exit status.
     """
     parser = argparse.ArgumentParser(prog="t3ctl")
-    _ = parser.add_argument("command", choices=("update", "sync"))
+    _ = parser.add_argument("command", choices=("update", "sync", "prune", "stabilize"))
     _ = parser.add_argument("--channel", required=True, choices=("stable", "nightly"))
     _ = parser.add_argument("--settings", required=True, type=Path)
     _ = parser.add_argument("--gateway", required=True)
@@ -331,7 +566,9 @@ def main(argv: list[str] | None = None) -> int:
         settings=args.settings,
         gateway=args.gateway,
     )
-    return update(ctx) if args.command == "update" else sync(ctx)
+    return {"update": update, "sync": sync, "prune": prune, "stabilize": stabilize}[
+        args.command
+    ](ctx)
 
 
 if __name__ == "__main__":

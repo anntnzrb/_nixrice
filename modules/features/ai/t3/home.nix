@@ -37,13 +37,11 @@ let
     "--gateway"
     gateway
   ];
+  stable = "${config.home.homeDirectory}/.t3/runtime/stable/t3";
 in
 {
   imports = [
     inputs.self.homeModules.ai-agents
-    # T3 writes and supervises its own t3code service; these jobs install it on
-    # a fresh host, keep it on the release channel, and keep its settings and
-    # Claude models current.
     (lib.liberion.userJob {
       name = "t3-update";
       description = "Install or update T3 Code when no thread runs";
@@ -59,9 +57,42 @@ in
       startup = 300;
       command = t3ctl ++ [ "sync" ] ++ flags;
     })
+    (
+      { pkgs, ... }@args:
+      let
+        service = lib.liberion.userService {
+          name = "t3-service";
+          description = "T3 Code service launcher";
+          command = [
+            stable
+            "__service-launcher"
+          ];
+          environment.T3CODE_HOME = "${config.home.homeDirectory}/.t3";
+        } args;
+      in
+      {
+        inherit (service) imports;
+        config = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin (
+          removeAttrs service [ "imports" ]
+        );
+      }
+    )
   ];
 
   options.liberion.ai.t3.settings = lib.liberion.module.mkOpt' json.type { };
 
-  config.liberion.ai.t3.settings = import ./settings.nix;
+  config = {
+    liberion.ai.t3.settings = import ./settings.nix;
+    liberion.maintenance.tasks.t3.command = t3ctl ++ [ "prune" ] ++ flags;
+    launchd.agents = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+      t3-service.config = {
+        ExitTimeOut = 90;
+        ProcessType = "Interactive";
+        RunAtLoad = lib.mkForce false;
+        KeepAlive = lib.mkForce {
+          PathState."${config.home.homeDirectory}/.t3/runtime/stable.enabled" = true;
+        };
+      };
+    };
+  };
 }
