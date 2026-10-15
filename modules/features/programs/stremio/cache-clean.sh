@@ -11,4 +11,4 @@ if [[ ! -d "${cache}" ]]; then
     exit 0
 fi
 
-find "${cache}" -mindepth 1 -maxdepth 1 -mtime +7 -exec rm -rf {} +
+find "${cache}" -mindepth 1 -maxdepth 1 -mmin +10080 -exec rm -rf {} +
