@@ -31,7 +31,7 @@ let
   ];
   flags = [
     "--channel"
-    "nightly"
+    "stable"
     "--settings"
     "${settings}/settings.json"
     "--gateway"
