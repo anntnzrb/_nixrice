@@ -14,11 +14,8 @@ printf '%s\n' '#!/bin/sh' 'touch "${REFRESHED}"' >"${work}/bin/activate-settings
 chmod +x "${work}/bin/as-user" "${work}/bin/activate-settings"
 export AS_USER_LOG="${work}/as-user.log"
 export REFRESHED="${work}/refreshed"
-plist_buddy=/usr/libexec/PlistBuddy
-platform=$(uname -s)
-if [[ "${platform}" != Darwin ]]; then
-    plist_buddy="${work}/bin/PlistBuddy"
-    cat >"${work}/bin/defaults" <<'DEFAULTS'
+plist_buddy="${work}/bin/PlistBuddy"
+cat >"${work}/bin/defaults" <<'DEFAULTS'
 #!/bin/sh
 set -eu
 if [ "$1" = -currentHost ]; then shift; fi
@@ -55,7 +52,7 @@ case $command in
     *) exit 1 ;;
 esac
 DEFAULTS
-    cat >"${plist_buddy}" <<'PLIST_BUDDY'
+cat >"${plist_buddy}" <<'PLIST_BUDDY'
 #!/bin/sh
 set -eu
 command=${2%% *}
@@ -70,8 +67,7 @@ case $command in
     *) exit 1 ;;
 esac
 PLIST_BUDDY
-    chmod +x "${work}/bin/defaults" "${plist_buddy}"
-fi
+chmod +x "${work}/bin/defaults" "${plist_buddy}"
 export PATH="${work}/bin:${PATH}"
 domain="${work}/preferences"
 
