@@ -60,7 +60,7 @@ The system module publishes port 3773 to the tailnet with Tailscale Serve on HTT
 
 Run `t3` as the installed runtime: `~/.t3/runtime/versions/<activeVersion>/t3`, with `activeVersion` from `~/.t3/runtime/service-state.json`.
 
-On a Darwin host with the T3 desktop app, turn off **Settings → Connections → Local environment** so the app stops starting its own server in `~/.t3`, then add each host as an environment.
+`liberion.ai.t3.desktop = true` installs the desktop app on a Darwin host as the `t3-code` Homebrew cask, which updates itself on the stable channel. On that host, turn off **Settings → Connections → Local environment** so the app stops starting its own server in `~/.t3`, then add each host as an environment.
 
 ## Darwin service and privacy grants
 

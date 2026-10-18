@@ -14,6 +14,8 @@
     ui
   ];
 
+  liberion.ai.t3.desktop = true;
+
   nixpkgs.hostPlatform = "aarch64-darwin";
 
   determinateNix.customSettings = {
