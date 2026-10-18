@@ -31,6 +31,11 @@ sync to load it. Steer interrupts the active tool call;
 Queue waits for the whole turn to finish. Use Stop to request session
 cancellation; do not rely on Steer to stop background Bash jobs.
 
+Product telemetry is off: `T3CODE_TELEMETRY_ENABLED=false` reaches the service
+through a `t3code.service.d` drop-in on Linux and the rice launchd agent on
+Darwin, and the login environment for the CLI and desktop app. The service
+reads it at start, so it applies after the next restart.
+
 Nix packages both declarations together. `t3ctl` takes the server declaration
 through `--settings` and reads `client-settings.json` from the same directory.
 The release channel, gateway, and job schedules are configured in `home.nix`.

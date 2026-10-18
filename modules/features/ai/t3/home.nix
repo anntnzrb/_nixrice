@@ -38,6 +38,7 @@ let
     gateway
   ];
   stable = "${config.home.homeDirectory}/.t3/runtime/stable/t3";
+  telemetry.T3CODE_TELEMETRY_ENABLED = "false";
 in
 {
   imports = [
@@ -67,7 +68,9 @@ in
             stable
             "__service-launcher"
           ];
-          environment.T3CODE_HOME = "${config.home.homeDirectory}/.t3";
+          environment = telemetry // {
+            T3CODE_HOME = "${config.home.homeDirectory}/.t3";
+          };
         } args;
       in
       {
@@ -83,6 +86,16 @@ in
 
   config = {
     liberion.ai.t3.settings = import ./settings.nix;
+    home.sessionVariables = telemetry;
+    xdg.configFile."systemd/user/t3code.service.d/telemetry.conf" =
+      lib.mkIf pkgs.stdenv.hostPlatform.isLinux
+        {
+          text = lib.generators.toINI { listsAsDuplicateKeys = true; } {
+            Service.Environment = lib.mapAttrsToList (
+              name: value: "${name}=${value}"
+            ) telemetry;
+          };
+        };
     liberion.maintenance.tasks.t3.command = t3ctl ++ [ "prune" ] ++ flags;
     launchd.agents = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
       t3-service.config = {
