@@ -6,15 +6,13 @@
 }:
 let
   inherit (lib.liberion.module) mkOpt';
-  inherit (lib.types) ints str;
+  inherit (lib.types) ints;
 
   cfg = config.liberion.desktop.whatsapp;
-  dir = lib.types.pathWith {
+  app = lib.types.pathWith {
     absolute = true;
     inStore = false;
   };
-
-  homeDir = config.home.homeDirectory;
 
   idleGuard = pkgs.writeShellApplication {
     name = "whatsapp-idle-guard";
@@ -29,12 +27,10 @@ in
   imports = [
     (lib.liberion.userJob {
       name = "whatsapp-idle-guard";
-      description = "Quit WhatsApp after it has been idle";
+      description = "Quit WhatsApp while it blocks sleep";
       command = [
         (lib.getExe idleGuard)
-        cfg.bundleId
-        cfg.stateDir
-        (toString (cfg.timeoutMinutes * 60))
+        cfg.appPath
         (toString (cfg.sleepBlockMinutes * 60))
         (toString cfg.killGraceSeconds)
       ];
@@ -44,26 +40,16 @@ in
   ];
 
   options.liberion.desktop.whatsapp = {
-    bundleId = mkOpt' str "net.whatsapp.WhatsApp";
-    timeoutMinutes = mkOpt' ints.positive 60;
+    appPath = mkOpt' app "/Applications/WhatsApp.app";
     sleepBlockMinutes = mkOpt' ints.positive 10;
     pollSeconds = mkOpt' ints.positive 60;
     killGraceSeconds = mkOpt' ints.positive 10;
-    stateDir = mkOpt' dir "${homeDir}/Library/Application Support/rice/whatsapp-idle-guard";
   };
 
-  config = {
-    assertions = [
-      {
-        assertion = pkgs.stdenv.hostPlatform.isDarwin;
-        message = "liberion.desktop.whatsapp is only supported on Darwin.";
-      }
-    ];
-
-    home.activation.whatsappIdleGuardDirs =
-      lib.hm.dag.entryAfter [ "writeBoundary" ]
-        ''
-          run mkdir -p ${lib.escapeShellArg cfg.stateDir}
-        '';
-  };
+  config.assertions = [
+    {
+      assertion = pkgs.stdenv.hostPlatform.isDarwin;
+      message = "liberion.desktop.whatsapp is only supported on Darwin.";
+    }
+  ];
 }

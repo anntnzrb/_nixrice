@@ -31,6 +31,11 @@ sync to load it. Steer interrupts the active tool call;
 Queue waits for the whole turn to finish. Use Stop to request session
 cancellation; do not rely on Steer to stop background Bash jobs.
 
+Product telemetry is off: `T3CODE_TELEMETRY_ENABLED=false` reaches the service
+through a `t3code.service.d` drop-in on Linux and the rice launchd agent on
+Darwin, and the login environment for the CLI and desktop app. The service
+reads it at start, so it applies after the next restart.
+
 Nix packages both declarations together. `t3ctl` takes the server declaration
 through `--settings` and reads `client-settings.json` from the same directory.
 The release channel, gateway, and job schedules are configured in `home.nix`.
@@ -55,7 +60,7 @@ The system module publishes port 3773 to the tailnet with Tailscale Serve on HTT
 
 Run `t3` as the installed runtime: `~/.t3/runtime/versions/<activeVersion>/t3`, with `activeVersion` from `~/.t3/runtime/service-state.json`.
 
-On a Darwin host with the T3 desktop app, turn off **Settings → Connections → Local environment** so the app stops starting its own server in `~/.t3`, then add each host as an environment.
+`liberion.ai.t3.desktop = true` installs the desktop app on a Darwin host as the `t3-code` Homebrew cask, which updates itself on the stable channel. On that host, turn off **Settings → Connections → Local environment** so the app stops starting its own server in `~/.t3`, then add each host as an environment.
 
 ## Darwin service and privacy grants
 

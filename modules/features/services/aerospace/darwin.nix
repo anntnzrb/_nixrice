@@ -25,11 +25,12 @@ let
     inherit run;
     check-further-callbacks = true;
   };
+  app = appId: "test %{app-bundle-id} = ${appId}";
   toWorkspace =
-    n: appId: rule { app-id = appId; } [ "move-node-to-workspace ${toString n}" ];
+    n: appId: rule (app appId) [ "move-node-to-workspace ${toString n}" ];
   tile =
     n: appId:
-    rule { app-id = appId; } [
+    rule (app appId) [
       "move-node-to-workspace ${toString n}"
       "layout tiling"
     ]
@@ -38,18 +39,9 @@ let
     };
 
   settings = {
-    start-at-login = false;
-    after-login-command = [ ];
-    after-startup-command = [ ];
-    default-root-container-layout = "tiles";
-    default-root-container-orientation = "auto";
-    enable-normalization-flatten-containers = true;
-    enable-normalization-opposite-orientation-for-nested-containers = true;
-    exec-on-workspace-change = [ ];
-    key-mapping.preset = "qwerty";
-    on-focus-changed = [ ];
+    config-version = 2;
+    persistent-workspaces = lib.attrNames workspaces;
     on-focused-monitor-changed = [ "move-mouse monitor-lazy-center" ];
-    workspace-to-monitor-force-assignment = { };
     accordion-padding = 0;
     gaps = {
       inner = {
@@ -74,9 +66,9 @@ let
       (toWorkspace 1 "org.mozilla.firefox")
       (tile 1 "com.brave.Browser")
       (toWorkspace 2 "org.alacritty")
-      (tile 2 "com.mitchellh.ghostty")
+      (toWorkspace 2 "com.mitchellh.ghostty")
       (toWorkspace 2 "com.raphaelamorim.rio")
-      (rule { } [ "layout floating" ])
+      (rule "true" [ "layout floating" ])
     ];
   };
 
