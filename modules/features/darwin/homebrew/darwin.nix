@@ -14,6 +14,7 @@ let
     ghostty = "ghostty";
     obs = "obs";
     orbstack = "orbstack";
+    paseo = "paseo";
     rustdesk = "rustdesk";
     stremio = "stremio";
     t3-code = "t3-code";
