@@ -26,7 +26,19 @@ let
 in
 {
   xdg.configFile."herdr/config.toml" = {
-    source = ./config.toml;
+    source = (pkgs.formats.toml { }).generate "config.toml" {
+      onboarding = false;
+      theme.name = "terminal";
+      update = {
+        version_check = false;
+        manifest_check = false;
+      };
+      ui = {
+        prompt_new_tab_name = false;
+        hide_tab_bar_when_single_tab = true;
+        mouse_capture = true;
+      };
+    };
     onChange = "${lib.getExe pkgs.unstable.herdr} server reload-config || true";
   };
 
