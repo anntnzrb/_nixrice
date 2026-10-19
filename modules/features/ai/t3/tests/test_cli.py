@@ -34,6 +34,12 @@ CATALOG: Json = {
 GPT_ONLY: Json = [{"slug": "gpt-x", "name": "GPT X"}]
 ENABLED_CLAUDE: Json = {"claudeAgent": {"driver": "claudeAgent", "enabled": True}}
 CLIENT_SETTINGS: dict[str, Json] = {"followUpBehavior": "steer", "wordWrap": True}
+# The darwin paths drive the real /bin/launchctl; DarwinHost covers them in process.
+# shutil is imported first so its copy strategy matches the real platform.
+AS_LINUX = (
+    "import runpy, shutil, sys; sys.platform = 'linux'; sys.argv.pop(0); "
+    "runpy.run_path(sys.argv[0], run_name='__main__')"
+)
 
 
 @pytest.fixture
@@ -140,6 +146,8 @@ def run(
     return subprocess.run(  # noqa: S603 - argv built from fixed paths
         [
             sys.executable,
+            "-c",
+            AS_LINUX,
             str(SCRIPT),
             command,
             "--channel",
