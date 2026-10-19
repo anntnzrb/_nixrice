@@ -31,8 +31,6 @@ in
       enable = true;
       xwayland.enable = true;
 
-      extraConfig = lib.readFile ./hyprland.conf;
-
       settings = {
         "$mod" = "SUPER";
         "$TERMINAL" = lib.getExe config.liberion.desktop.session.apps.terminal;
@@ -41,10 +39,69 @@ in
 
         exec-once = cfg.autoStartApps ++ (lib.optional cfg.waybar.enable "waybar");
 
-        bind = lib.concatMap (ws: [
-          "$mod, ${ws}, workspace, ${ws}"
-          "$mod SHIFT, ${ws}, movetoworkspace, ${ws}"
-        ]) (map toString (lib.range 1 9));
+        input = {
+          follow_mouse = 1;
+          sensitivity = 0;
+        };
+
+        general = {
+          layout = "master";
+          gaps_in = 5;
+          gaps_out = 20;
+          border_size = 2;
+          "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
+          "col.inactive_border" = "rgba(595959aa)";
+        };
+
+        decoration = {
+          rounding = 6;
+          blur = {
+            enabled = true;
+            size = 3;
+            passes = 1;
+            vibrancy = 0.15;
+          };
+          shadow = {
+            enabled = true;
+            range = 4;
+            render_power = 3;
+            color = "rgba(1a1a1aee)";
+          };
+        };
+
+        animations.enabled = true;
+
+        gesture = "3, horizontal, workspace";
+
+        misc = {
+          disable_hyprland_logo = 0;
+          disable_splash_rendering = 0;
+          force_default_wallpaper = 0;
+        };
+
+        master = {
+          new_status = "slave";
+          mfact = 0.5;
+          orientation = "left";
+        };
+
+        bind =
+          lib.concatMap (ws: [
+            "$mod, ${ws}, workspace, ${ws}"
+            "$mod SHIFT, ${ws}, movetoworkspace, ${ws}"
+          ]) (map toString (lib.range 1 9))
+          ++ [
+            "$mod SHIFT, Q, killactive,"
+            "$mod ALT, Q, exit,"
+            "$mod SHIFT, SPACE, togglefloating,"
+            "$mod, D, exec, wofi --show run"
+            "$mod, Return, exec, $TERMINAL"
+          ];
+
+        bindm = [
+          "$mod, mouse:272, movewindow"
+          "$mod, mouse:273, resizewindow"
+        ];
       };
     };
 
