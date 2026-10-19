@@ -10,4 +10,4 @@ manifest_check = false
 [ui]
 prompt_new_tab_name = false
 hide_tab_bar_when_single_tab = true
-mouse_capture = false
+mouse_capture = true
