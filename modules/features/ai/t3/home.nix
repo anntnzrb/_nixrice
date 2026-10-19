@@ -18,7 +18,18 @@ let
     }
     {
       name = "client-settings.json";
-      path = ./client-settings.json;
+      path = json.generate "client-settings.json" {
+        followUpBehavior = "steer";
+        sendShortcut = "enter";
+        composerRichTextEnabled = true;
+        confirmThreadArchive = false;
+        confirmThreadDelete = true;
+        confirmThreadUnpin = false;
+        wordWrap = true;
+        diffLayout = "stacked";
+        timestampFormat = "24-hour";
+        browserLinkTarget = "app";
+      };
     }
   ];
   t3ctl = [
