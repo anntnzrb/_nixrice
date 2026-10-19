@@ -112,6 +112,8 @@ in
         lib.liberion.zshInit pkgs "starship"
           "${lib.getExe config.programs.starship.package} init zsh --print-full-init"
       }
+      # starship's init sets RPROMPT to a second `starship prompt --right` process
+      # even without right_format; drop this line if a right_format is added.
       RPROMPT=
     fi
   '';
