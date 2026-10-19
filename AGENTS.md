@@ -440,6 +440,11 @@ the version pinned in `flake.lock` first
 - Comments: none by default. Structural knowledge goes in this file; a comment
   stays only where removing the line it guards would silently break something
   (upstream bug refs, opaque IDs, magic values)
+- Module `readme.md`: optional, a bullet list of rules the code cannot show and
+  that cause a real mistake when ignored (manual one-time steps, commands never
+  to run by hand, safety invariants). Never a restatement of the code, history,
+  rejected options, measurements or to-dos. A rule tied to one line is a
+  comment on that line instead; a module without such rules has no readme
 - This file holds no state. If an edit here would need updating when a machine,
   tag, import, version or count changes, point to the source file instead.
   No dates, PR numbers, timings or measurements either: they go in the PR

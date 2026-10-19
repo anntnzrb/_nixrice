@@ -14,6 +14,7 @@ let
     ghostty = "ghostty";
     obs = "obs";
     orbstack = "orbstack";
+    paseo = "paseo";
     rustdesk = "rustdesk";
     stremio = "stremio";
     t3-code = "t3-code";
@@ -41,6 +42,7 @@ let
   brewRepo = "${
     config.nix-homebrew.prefixes.${brewPrefix}.library
   }/.homebrew-is-managed-by-nix";
+  # Must match `brew shellenv zsh` line for line; recheck after a Homebrew upgrade.
   shellInit = ''
     export HOMEBREW_PREFIX="${brewPrefix}";
     export HOMEBREW_CELLAR="${brewPrefix}/Cellar";

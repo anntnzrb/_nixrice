@@ -8,6 +8,7 @@ in
     dotDir = "${config.xdg.configHome}/zsh";
 
     autosuggestion.enable = true;
+    # Widgets defined after startup stay unwrapped until _zsh_autosuggest_bind_widgets runs.
     localVariables.ZSH_AUTOSUGGEST_MANUAL_REBIND = 1;
     syntaxHighlighting.enable = true;
 

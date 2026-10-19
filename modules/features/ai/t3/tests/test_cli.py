@@ -33,6 +33,7 @@ CATALOG: Json = {
 }
 GPT_ONLY: Json = [{"slug": "gpt-x", "name": "GPT X"}]
 ENABLED_CLAUDE: Json = {"claudeAgent": {"driver": "claudeAgent", "enabled": True}}
+CLIENT_SETTINGS: dict[str, Json] = {"followUpBehavior": "steer", "wordWrap": True}
 
 
 @pytest.fixture
@@ -132,9 +133,7 @@ def run(
 ) -> subprocess.CompletedProcess[str]:
     client_settings = settings.with_name("client-settings.json")
     if not client_settings.exists():
-        _ = client_settings.write_bytes(
-            SCRIPT.with_name("client-settings.json").read_bytes()
-        )
+        _ = client_settings.write_text(json.dumps(CLIENT_SETTINGS), encoding="utf-8")
     path = os.environ["PATH"]
     if bin_dir is not None:
         path = f"{bin_dir}{os.pathsep}{path}"
@@ -678,15 +677,7 @@ def test_sync_applies_desktop_settings_and_preserves_device_preferences(
     assert result.returncode == 0, result.stderr
     saved = obj(cast("Json", json.loads(target.read_text(encoding="utf-8"))))
     client = obj(saved["settings"]) if wrapped else saved
-    expected = obj(
-        cast(
-            "Json",
-            json.loads(
-                SCRIPT.with_name("client-settings.json").read_text(encoding="utf-8")
-            ),
-        )
-    )
-    assert client == expected | {"fontSizePrompt": 18}
+    assert client == CLIENT_SETTINGS | {"sendShortcut": "enter", "fontSizePrompt": 18}
     if wrapped:
         assert saved["version"] == 1
     assert "followUpBehavior" not in obj(live_settings(home))
@@ -701,9 +692,7 @@ def test_commands_create_desktop_preferences_when_missing(
     result = run(home, gateway, command, declared)
     assert result.returncode == 0, result.stderr
     target = home / "userdata" / "client-settings.json"
-    assert json.loads(target.read_text(encoding="utf-8")) == json.loads(
-        SCRIPT.with_name("client-settings.json").read_text(encoding="utf-8")
-    )
+    assert json.loads(target.read_text(encoding="utf-8")) == CLIENT_SETTINGS
 
 
 @pytest.mark.parametrize("content", ["not json", "[]", '{"settings":null}'])
@@ -1015,8 +1004,8 @@ class DarwinService:
         return self.update_status
 
     def invoke(self, declared: Path, command: str = "stabilize") -> int:
-        _ = declared.with_name("client-settings.json").write_bytes(
-            SCRIPT.with_name("client-settings.json").read_bytes()
+        _ = declared.with_name("client-settings.json").write_text(
+            json.dumps(CLIENT_SETTINGS), encoding="utf-8"
         )
         return self.main([
             command,
