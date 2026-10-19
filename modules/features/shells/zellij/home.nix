@@ -10,12 +10,6 @@ let
   cfg = config.liberion.shells.zellij;
 in
 {
-  imports = [
-    ./layouts.nix
-    ./plugins.nix
-    ./themes.nix
-  ];
-
   options.liberion.shells.zellij = {
     enableBashIntegration = mkOptDisabled';
     enableZshIntegration = mkOptDisabled';
@@ -23,13 +17,13 @@ in
   };
 
   config = {
-    xdg.configFile."zellij/config.kdl".text = import ./keybinds.nix;
-
     programs.zellij = {
       enable = true;
       inherit (cfg) enableBashIntegration enableZshIntegration enableFishIntegration;
 
       settings = {
+        theme = "catppuccin-frappe";
+        plugins = { };
         default_mode = "locked";
         simplified_ui = false;
         default_cwd = "${config.home.homeDirectory}";
@@ -41,6 +35,8 @@ in
         copy_on_select = true;
         attach_to_session = true;
       };
+
+      extraConfig = import ./keybinds.nix;
     };
 
     home.shellAliases = {
