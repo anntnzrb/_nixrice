@@ -6,7 +6,6 @@
     essentials
     firefox
     ghostty
-    paseo
     safari
     stremio
     t3
@@ -15,10 +14,7 @@
     ui
   ];
 
-  liberion.ai = {
-    paseo.desktop = true;
-    t3.desktop = true;
-  };
+  liberion.ai.t3.desktop = true;
 
   nixpkgs.hostPlatform = "aarch64-darwin";
 
