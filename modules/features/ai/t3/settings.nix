@@ -53,7 +53,7 @@ in
 
   backgroundActivity = {
     profile = "custom";
-    baseProfile = "performance";
+    baseProfile = "balanced";
     overrides.pauseWhenHostLocked = false;
   };
 
