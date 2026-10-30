@@ -12,9 +12,11 @@ update_repo() {
         exit 1
     fi
     cd "${repo}" || exit
+    rm -f .git/*.lock .git/objects/pack/tmp_*
     git remote get-url origin >/dev/null
-    git fetch --quiet --depth=1 --no-tags --no-filter --refmap= \
-        --no-recurse-submodules --no-auto-maintenance origin HEAD
+    git -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=120 fetch --quiet --depth=1 \
+        --no-tags --no-filter --refmap= --no-recurse-submodules --no-auto-maintenance \
+        origin HEAD
     git checkout --quiet --detach --force FETCH_HEAD
     if sparse=$(git config --bool --get core.sparseCheckout); then
         if test "${sparse}" = true; then
@@ -53,7 +55,7 @@ case ${1:-} in
         exit
         ;;
     --repo)
-        if timeout --kill-after=30s 300 "${self}" --worker "${2}"; then
+        if "${self}" --worker "${2}"; then
             exit 0
         else
             status=$?
@@ -74,7 +76,7 @@ if ! flock -n 9; then
 fi
 
 export GIT_TERMINAL_PROMPT=0 GIT_LFS_SKIP_SMUDGE=1
-export GIT_SSH_COMMAND='ssh -o BatchMode=yes -o ConnectTimeout=15'
+export GIT_SSH_COMMAND='ssh -o BatchMode=yes -o ConnectTimeout=15 -o ServerAliveInterval=15 -o ServerAliveCountMax=8'
 export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=pack.threads GIT_CONFIG_VALUE_0=1
 
 work=$(mktemp -d)
