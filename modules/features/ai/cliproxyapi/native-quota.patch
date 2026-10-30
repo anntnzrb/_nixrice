@@ -1,0 +1,590 @@
+--- a/main.go
++++ b/main.go
+@@ -103,0 +104 @@
++	QuotaProvider bool `json:"quota_provider"`
+@@ -200 +200,0 @@
+-					{Name: "accounts_path", Type: "string", Description: "Writable plaintext OpenCode account registry path."},
+@@ -204 +203,0 @@
+-					{Name: "auto_pool", Type: "boolean", Description: "Skip recently quota-exhausted credentials at request time."},
+@@ -207 +206 @@
+-			Capabilities: registrationCapabilities{Scheduler: true, UsagePlugin: true, ManagementAPI: true},
++			Capabilities: registrationCapabilities{QuotaProvider: true},
+@@ -228,0 +228,9 @@
++	case "quota.identifier":
++		return okEnvelope(quotaIdentifierResponse{Identifier: quotaProviderID})
++	case "quota.describe":
++		return okEnvelope(quotaDescribeResponse{
++			SupportedProviders: []string{quotaProviderID},
++			DisplayName:        "OpenCode Go",
++		})
++	case "quota.fetch":
++		return handleQuotaFetch(request)
+--- a/plugin_test.go
++++ b/plugin_test.go
+@@ -19 +19 @@
+-func TestPluginRegistrationDeclaresManagementAPI(t *testing.T) {
++func TestPluginRegistrationDeclaresNativeQuotaProvider(t *testing.T) {
+@@ -36,0 +37,2 @@
++			Scheduler     bool `json:"scheduler"`
++			UsagePlugin   bool `json:"usage_plugin"`
+@@ -37,0 +40 @@
++			QuotaProvider bool `json:"quota_provider"`
+@@ -43 +46,3 @@
+-	if registration.SchemaVersion != 3 || registration.Metadata.Name != pluginName || !registration.Capabilities.ManagementAPI {
++	if registration.SchemaVersion != 3 || registration.Metadata.Name != pluginName ||
++		!registration.Capabilities.QuotaProvider || registration.Capabilities.Scheduler ||
++		registration.Capabilities.UsagePlugin || registration.Capabilities.ManagementAPI {
+--- a/internal/opencode/usage.go
++++ b/internal/opencode/usage.go
+@@ -25,0 +26,19 @@
++}
++
++func (w *Window) UnmarshalJSON(data []byte) error {
++	var value struct {
++		Status   string    `json:"status"`
++		Percent  *float64  `json:"percent"`
++		ResetsAt time.Time `json:"resetsAt"`
++	}
++	if err := json.Unmarshal(data, &value); err != nil {
++		return err
++	}
++	if value.Percent == nil {
++		return errors.New("usage window is missing percent")
++	}
++	if *value.Percent < 0 || *value.Percent > 100 {
++		return errors.New("usage window percent must be between 0 and 100")
++	}
++	*w = Window{Status: value.Status, Percent: *value.Percent, ResetsAt: value.ResetsAt}
++	return nil
+--- /dev/null
++++ b/quota_provider.go
+@@ -0,0 +1,156 @@
++package main
++
++import (
++	"context"
++	"encoding/json"
++	"errors"
++	"fmt"
++	"net/http"
++	"strings"
++	"time"
++
++	"github.com/duu261/opencode-go-pool/internal/cliproxyconfig"
++	"github.com/duu261/opencode-go-pool/internal/opencode"
++	"github.com/duu261/opencode-go-pool/internal/pool"
++)
++
++const quotaProviderID = "opencode-go"
++
++type quotaIdentifierResponse struct {
++	Identifier string `json:"identifier"`
++}
++
++type quotaDescribeResponse struct {
++	SupportedProviders []string `json:"supported_providers"`
++	DisplayName        string   `json:"display_name"`
++	SupportsReset      bool     `json:"supports_reset,omitempty"`
++}
++
++type quotaFetchRequest struct {
++	Provider string `json:"provider"`
++}
++
++type quotaFetchResponse struct {
++	Subscription quotaSubscription `json:"subscription"`
++	Summary      []quotaMetric     `json:"summary,omitempty"`
++	Groups       []quotaGroup      `json:"groups"`
++}
++
++type quotaMetric struct {
++	Key    string `json:"key"`
++	Label  string `json:"label"`
++	Value  int    `json:"value"`
++	Format string `json:"format"`
++}
++
++type quotaSubscription struct {
++	Plan string `json:"plan"`
++}
++
++type quotaGroup struct {
++	DisplayName string        `json:"displayName"`
++	Buckets     []quotaBucket `json:"buckets"`
++}
++
++type quotaBucket struct {
++	Window            string  `json:"window"`
++	RemainingFraction float64 `json:"remainingFraction"`
++	ResetTime         string  `json:"resetTime"`
++	Description       string  `json:"description"`
++}
++
++func handleQuotaFetch(raw []byte) ([]byte, error) {
++	var request quotaFetchRequest
++	if err := json.Unmarshal(raw, &request); err != nil {
++		return nil, fmt.Errorf("decode quota fetch request: %w", err)
++	}
++	if request.Provider != quotaProviderID {
++		return nil, fmt.Errorf("unsupported quota provider %q", request.Provider)
++	}
++
++	config := currentPluginConfig()
++	credentials, err := cliproxyconfig.Discover(config.ConfigPath, config.ProviderNames)
++	if err != nil {
++		return nil, fmt.Errorf("discover OpenCode Go credentials: %w", err)
++	}
++	if len(credentials) == 0 {
++		return nil, errors.New("no OpenCode Go credentials configured")
++	}
++
++	timeout := time.Duration(config.TimeoutSeconds) * time.Second
++	ctx, cancel := context.WithTimeout(context.Background(), timeout)
++	defer cancel()
++	results := pool.Collect(ctx, credentials, &http.Client{Timeout: timeout}, config.MaxConcurrency)
++	groups := make([]quotaGroup, 0, len(results))
++	unavailable := 0
++	var firstError error
++	for index, result := range results {
++		if result.Status == pool.StatusDisabled {
++			continue
++		}
++		if result.Status != pool.StatusHealthy || result.Usage == nil {
++			unavailable++
++			if firstError == nil {
++				firstError = errors.New("OpenCode Go quota is unavailable for a configured key")
++			}
++			continue
++		}
++		buckets, err := quotaBuckets(*result.Usage)
++		if err != nil {
++			unavailable++
++			if firstError == nil {
++				firstError = err
++			}
++			continue
++		}
++		displayName := "OpenCode Go"
++		if len(results) > 1 {
++			displayName = fmt.Sprintf("Account %d", index+1)
++		}
++		groups = append(groups, quotaGroup{DisplayName: displayName, Buckets: buckets})
++	}
++	if len(groups) == 0 {
++		if firstError != nil {
++			return nil, firstError
++		}
++		return nil, errors.New("no active OpenCode Go credentials configured")
++	}
++	var summary []quotaMetric
++	if unavailable > 0 {
++		summary = []quotaMetric{{Key: "unavailable_accounts", Label: "Unavailable accounts", Value: unavailable, Format: "number"}}
++	}
++
++	return okEnvelope(quotaFetchResponse{
++		Subscription: quotaSubscription{Plan: "Go"},
++		Summary:      summary,
++		Groups:       groups,
++	})
++}
++
++func quotaBuckets(usage opencode.Usage) ([]quotaBucket, error) {
++	windows := []struct {
++		name        string
++		description string
++		value       opencode.Window
++	}{
++		{name: "5h", description: "5-hour", value: usage.Rolling},
++		{name: "weekly", description: "Weekly", value: usage.Weekly},
++		{name: "monthly", description: "Monthly", value: usage.Monthly},
++	}
++	buckets := make([]quotaBucket, 0, len(windows))
++	for _, window := range windows {
++		if strings.TrimSpace(window.value.Status) == "" {
++			return nil, fmt.Errorf("%s quota window is missing status", window.name)
++		}
++		if window.value.ResetsAt.IsZero() {
++			return nil, fmt.Errorf("%s quota window is missing reset time", window.name)
++		}
++		buckets = append(buckets, quotaBucket{
++			Window:            window.name,
++			RemainingFraction: 1 - window.value.Percent/100,
++			ResetTime:         window.value.ResetsAt.Format(time.RFC3339Nano),
++			Description:       window.description,
++		})
++	}
++	return buckets, nil
++}
+--- /dev/null
++++ b/quota_provider_test.go
+@@ -0,0 +1,370 @@
++package main
++
++import (
++	"bytes"
++	"encoding/json"
++	"fmt"
++	"math"
++	"net/http"
++	"net/http/httptest"
++	"os"
++	"path/filepath"
++	"strings"
++	"sync"
++	"testing"
++)
++
++const validQuotaUsage = `{"usage":{"rolling":{"status":"ok","percent":8,"resetsAt":"2026-08-16T19:50:55Z"},"weekly":{"status":"ok","percent":29,"resetsAt":"2026-08-17T00:00:00Z"},"monthly":{"status":"ok","percent":14,"resetsAt":"2026-09-13T21:51:50.700Z"}}}`
++
++func TestQuotaIdentityAndDescription(t *testing.T) {
++	identifier, err := handleMethod("quota.identifier", nil)
++	if err != nil {
++		t.Fatalf("quota.identifier error = %v", err)
++	}
++	var identifierEnvelope testEnvelope
++	if err := json.Unmarshal(identifier, &identifierEnvelope); err != nil {
++		t.Fatalf("decode identifier envelope: %v", err)
++	}
++	var identifierResponse quotaIdentifierResponse
++	if err := json.Unmarshal(identifierEnvelope.Result, &identifierResponse); err != nil {
++		t.Fatalf("decode identifier: %v", err)
++	}
++	if !identifierEnvelope.OK || identifierResponse.Identifier != quotaProviderID {
++		t.Fatalf("unexpected identifier: %#v", identifierResponse)
++	}
++
++	description, err := handleMethod("quota.describe", nil)
++	if err != nil {
++		t.Fatalf("quota.describe error = %v", err)
++	}
++	var descriptionEnvelope testEnvelope
++	if err := json.Unmarshal(description, &descriptionEnvelope); err != nil {
++		t.Fatalf("decode description envelope: %v", err)
++	}
++	var descriptionResponse quotaDescribeResponse
++	if err := json.Unmarshal(descriptionEnvelope.Result, &descriptionResponse); err != nil {
++		t.Fatalf("decode description: %v", err)
++	}
++	if !descriptionEnvelope.OK || descriptionResponse.DisplayName != "OpenCode Go" ||
++		len(descriptionResponse.SupportedProviders) != 1 ||
++		descriptionResponse.SupportedProviders[0] != quotaProviderID || descriptionResponse.SupportsReset {
++		t.Fatalf("unexpected description: %#v", descriptionResponse)
++	}
++}
++
++func TestQuotaFetchUsesFreshConfigAndReturnsSecretFreeGroups(t *testing.T) {
++	const (
++		firstKey   = "go-key-first-secret"
++		secondKey  = "go-key-second-secret"
++		rotatedKey = "go-key-rotated-secret"
++	)
++	var (
++		mu   sync.Mutex
++		seen []string
++	)
++	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		if r.URL.Path != "/v1/usage" {
++			http.NotFound(w, r)
++			return
++		}
++		key := strings.TrimPrefix(r.Header.Get("Authorization"), "Bearer ")
++		mu.Lock()
++		seen = append(seen, key)
++		mu.Unlock()
++		switch key {
++		case firstKey, secondKey, rotatedKey:
++			w.Header().Set("Content-Type", "application/json")
++			_, _ = w.Write([]byte(validQuotaUsage))
++		default:
++			http.Error(w, "unauthorized", http.StatusUnauthorized)
++		}
++	}))
++	defer server.Close()
++
++	configPath := filepath.Join(t.TempDir(), "config.yaml")
++	setQuotaProviderConfig(t, configPath)
++	writeQuotaConfig(t, configPath, server.URL, firstKey, secondKey)
++
++	firstRaw, err := callQuotaFetch(t, quotaProviderID)
++	if err != nil {
++		t.Fatalf("first quota.fetch error = %v", err)
++	}
++	first := decodeQuotaFetchResponse(t, firstRaw)
++	if first.Subscription.Plan != "Go" || len(first.Groups) != 2 {
++		t.Fatalf("unexpected first quota response: %#v", first)
++	}
++	assertQuotaGroup(t, first.Groups[0], "Account 1")
++	assertQuotaGroup(t, first.Groups[1], "Account 2")
++	assertNoConfiguredKeys(t, firstRaw, firstKey, secondKey, rotatedKey)
++
++	writeQuotaConfig(t, configPath, server.URL, rotatedKey)
++	secondRaw, err := callQuotaFetch(t, quotaProviderID)
++	if err != nil {
++		t.Fatalf("rotated quota.fetch error = %v", err)
++	}
++	second := decodeQuotaFetchResponse(t, secondRaw)
++	if second.Subscription.Plan != "Go" || len(second.Groups) != 1 {
++		t.Fatalf("unexpected rotated quota response: %#v", second)
++	}
++	assertQuotaGroup(t, second.Groups[0], "OpenCode Go")
++	assertNoConfiguredKeys(t, secondRaw, firstKey, secondKey, rotatedKey)
++
++	mu.Lock()
++	defer mu.Unlock()
++	counts := make(map[string]int, len(seen))
++	for _, key := range seen {
++		counts[key]++
++	}
++	if len(seen) != 3 || counts[firstKey] != 1 || counts[secondKey] != 1 || counts[rotatedKey] != 1 {
++		t.Fatalf("usage requests did not follow the current config: %#v", seen)
++	}
++}
++
++func TestQuotaFetchRejectsWrongProviderBeforeReadingConfig(t *testing.T) {
++	_, err := callQuotaFetch(t, "opencode-zen")
++	if err == nil || !strings.Contains(err.Error(), "unsupported quota provider") {
++		t.Fatalf("quota.fetch error = %v, want unsupported provider", err)
++	}
++}
++
++func TestQuotaFetchRejectsMissingConfiguredKeys(t *testing.T) {
++	configPath := filepath.Join(t.TempDir(), "config.yaml")
++	setQuotaProviderConfig(t, configPath)
++	writeQuotaConfig(t, configPath, "https://opencode.ai/zen/go/v1")
++
++	_, err := callQuotaFetch(t, quotaProviderID)
++	if err == nil || !strings.Contains(err.Error(), "no OpenCode Go credentials configured") {
++		t.Fatalf("quota.fetch error = %v, want missing credentials", err)
++	}
++}
++
++func TestQuotaFetchRejectsUnhealthyUpstreamWithoutLeakingKey(t *testing.T) {
++	const secret = "go-key-unhealthy-secret"
++	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
++		http.Error(w, "unauthorized", http.StatusUnauthorized)
++	}))
++	defer server.Close()
++
++	configPath := filepath.Join(t.TempDir(), "config.yaml")
++	setQuotaProviderConfig(t, configPath)
++	writeQuotaConfig(t, configPath, server.URL, secret)
++
++	raw, err := callQuotaFetch(t, quotaProviderID)
++	if err == nil || !strings.Contains(err.Error(), "quota is unavailable") {
++		t.Fatalf("quota.fetch error = %v, want unavailable quota", err)
++	}
++	if strings.Contains(err.Error(), secret) || bytes.Contains(raw, []byte(secret)) {
++		t.Fatalf("quota.fetch failure leaks API key: error=%v result=%s", err, raw)
++	}
++}
++
++func TestQuotaFetchRejectsInvalidOrMissingUsageWindows(t *testing.T) {
++	const secret = "go-key-invalid-window-secret"
++	validWeekly := `"weekly":{"status":"ok","percent":29,"resetsAt":"2026-08-17T00:00:00Z"}`
++	validMonthly := `"monthly":{"status":"ok","percent":14,"resetsAt":"2026-09-13T21:51:50Z"}`
++	cases := []struct {
++		name string
++		body string
++	}{
++		{
++			name: "missing-window",
++			body: `{"usage":{"rolling":{"status":"ok","percent":8,"resetsAt":"2026-08-16T19:50:55Z"},"weekly":{"status":"ok","percent":29,"resetsAt":"2026-08-17T00:00:00Z"}}}`,
++		},
++		{
++			name: "missing-status",
++			body: `{"usage":{"rolling":{"percent":8,"resetsAt":"2026-08-16T19:50:55Z"},` + validWeekly + `,` + validMonthly + `}}`,
++		},
++		{
++			name: "missing-percent",
++			body: `{"usage":{"rolling":{"status":"ok","resetsAt":"2026-08-16T19:50:55Z"},` + validWeekly + `,` + validMonthly + `}}`,
++		},
++		{
++			name: "negative-percent",
++			body: `{"usage":{"rolling":{"status":"ok","percent":-1,"resetsAt":"2026-08-16T19:50:55Z"},` + validWeekly + `,` + validMonthly + `}}`,
++		},
++		{
++			name: "overfull-percent",
++			body: `{"usage":{"rolling":{"status":"ok","percent":101,"resetsAt":"2026-08-16T19:50:55Z"},` + validWeekly + `,` + validMonthly + `}}`,
++		},
++		{
++			name: "missing-reset",
++			body: `{"usage":{"rolling":{"status":"ok","percent":8},` + validWeekly + `,` + validMonthly + `}}`,
++		},
++		{
++			name: "invalid-reset",
++			body: `{"usage":{"rolling":{"status":"ok","percent":8,"resetsAt":"tomorrow"},` + validWeekly + `,` + validMonthly + `}}`,
++		},
++	}
++
++	for _, testCase := range cases {
++		t.Run(testCase.name, func(t *testing.T) {
++			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
++				w.Header().Set("Content-Type", "application/json")
++				_, _ = w.Write([]byte(testCase.body))
++			}))
++			defer server.Close()
++
++			configPath := filepath.Join(t.TempDir(), "config.yaml")
++			setQuotaProviderConfig(t, configPath)
++			writeQuotaConfig(t, configPath, server.URL, secret)
++
++			raw, err := callQuotaFetch(t, quotaProviderID)
++			if err == nil {
++				t.Fatalf("quota.fetch result = %s, want invalid usage error", raw)
++			}
++			if strings.Contains(err.Error(), secret) || bytes.Contains(raw, []byte(secret)) {
++				t.Fatalf("quota.fetch failure leaks API key: error=%v result=%s", err, raw)
++			}
++		})
++	}
++}
++
++func callQuotaFetch(t *testing.T, provider string) ([]byte, error) {
++	t.Helper()
++	request, err := json.Marshal(quotaFetchRequest{
++		Provider: provider,
++	})
++	if err != nil {
++		t.Fatalf("encode quota.fetch request: %v", err)
++	}
++	return handleMethod("quota.fetch", request)
++}
++
++func decodeQuotaFetchResponse(t *testing.T, raw []byte) quotaFetchResponse {
++	t.Helper()
++	var envelope testEnvelope
++	if err := json.Unmarshal(raw, &envelope); err != nil {
++		t.Fatalf("decode quota.fetch envelope: %v", err)
++	}
++	if !envelope.OK {
++		t.Fatalf("quota.fetch envelope is not ok: %s", raw)
++	}
++	var response quotaFetchResponse
++	if err := json.Unmarshal(envelope.Result, &response); err != nil {
++		t.Fatalf("decode quota.fetch result: %v", err)
++	}
++	return response
++}
++
++func setQuotaProviderConfig(t *testing.T, configPath string) {
++	t.Helper()
++	previous := currentPluginConfig()
++	setPluginConfig(pluginConfig{
++		ConfigPath:     configPath,
++		ProviderNames:  []string{"quota-test"},
++		MaxConcurrency: 2,
++		TimeoutSeconds: 5,
++	})
++	t.Cleanup(func() { setPluginConfig(previous) })
++}
++
++func writeQuotaConfig(t *testing.T, path, baseURL string, keys ...string) {
++	t.Helper()
++	lines := []string{
++		"openai-compatibility:",
++		"  - name: quota-test",
++		"    base-url: " + baseURL,
++		"    api-key-entries:",
++	}
++	for _, key := range keys {
++		lines = append(lines, fmt.Sprintf("      - api-key: %q", key))
++	}
++	if err := os.WriteFile(path, []byte(strings.Join(lines, "\n")+"\n"), 0o600); err != nil {
++		t.Fatalf("write CLIProxy config: %v", err)
++	}
++}
++
++func assertQuotaGroup(t *testing.T, group quotaGroup, displayName string) {
++	t.Helper()
++	if group.DisplayName != displayName || len(group.Buckets) != 3 {
++		t.Fatalf("unexpected quota group: %#v", group)
++	}
++	windows := []string{"5h", "weekly", "monthly"}
++	descriptions := []string{"5-hour", "Weekly", "Monthly"}
++	remaining := []float64{0.92, 0.71, 0.86}
++	resets := []string{"2026-08-16T19:50:55Z", "2026-08-17T00:00:00Z", "2026-09-13T21:51:50.7Z"}
++	for index, bucket := range group.Buckets {
++		if bucket.Window != windows[index] || bucket.Description != descriptions[index] ||
++			math.Abs(bucket.RemainingFraction-remaining[index]) > 1e-9 || bucket.ResetTime != resets[index] {
++			t.Fatalf("unexpected %s quota bucket: %#v", windows[index], bucket)
++		}
++	}
++}
++
++func assertNoConfiguredKeys(t *testing.T, raw []byte, keys ...string) {
++	t.Helper()
++	for _, key := range keys {
++		if bytes.Contains(raw, []byte(key)) {
++			t.Fatalf("quota response leaks API key %q: %s", key, raw)
++		}
++	}
++}
++
++func TestQuotaFetchRetainsHealthyAccountsWhenAnotherIsUnavailableOrDisabled(t *testing.T) {
++	for _, disabled := range []bool{false, true} {
++		t.Run(fmt.Sprintf("disabled=%t", disabled), func(t *testing.T) {
++			const healthyKey, otherKey = "healthy-go-secret", "other-go-secret"
++			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++				if r.Header.Get("Authorization") != "Bearer "+healthyKey {
++					if disabled {
++						t.Error("disabled credential was queried")
++					}
++					http.Error(w, "unavailable", http.StatusUnauthorized)
++					return
++				}
++				_, _ = w.Write([]byte(validQuotaUsage))
++			}))
++			defer server.Close()
++			path := filepath.Join(t.TempDir(), "config.yaml")
++			setQuotaProviderConfig(t, path)
++			writeQuotaConfig(t, path, server.URL, healthyKey, otherKey)
++			if disabled {
++				file, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0o600)
++				if err != nil {
++					t.Fatal(err)
++				}
++				if _, err := file.WriteString("        weight: 0\n"); err != nil {
++					t.Fatal(err)
++				}
++				if err := file.Close(); err != nil {
++					t.Fatal(err)
++				}
++			}
++			raw, err := callQuotaFetch(t, quotaProviderID)
++			if err != nil {
++				t.Fatal(err)
++			}
++			response := decodeQuotaFetchResponse(t, raw)
++			if len(response.Groups) != 1 {
++				t.Fatalf("healthy account missing: %#v", response)
++			}
++			assertQuotaGroup(t, response.Groups[0], "Account 1")
++			if disabled {
++				if len(response.Summary) != 0 {
++					t.Fatalf("disabled account reported as failed: %#v", response.Summary)
++				}
++			} else if len(response.Summary) != 1 || response.Summary[0].Key != "unavailable_accounts" || response.Summary[0].Value != 1 {
++				t.Fatalf("unavailable account is not visible: %#v", response.Summary)
++			}
++			assertNoConfiguredKeys(t, raw, healthyKey, otherKey)
++		})
++	}
++}
++
++func TestQuotaFetchPreservesZeroRemainingForExhaustedWindow(t *testing.T) {
++	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
++		_, _ = w.Write([]byte(strings.Replace(validQuotaUsage, `"percent":8`, `"percent":100`, 1)))
++	}))
++	defer server.Close()
++	path := filepath.Join(t.TempDir(), "config.yaml")
++	setQuotaProviderConfig(t, path)
++	writeQuotaConfig(t, path, server.URL, "exhausted-go-secret")
++	raw, err := callQuotaFetch(t, quotaProviderID)
++	if err != nil {
++		t.Fatal(err)
++	}
++	response := decodeQuotaFetchResponse(t, raw)
++	if response.Groups[0].Buckets[0].RemainingFraction != 0 || !bytes.Contains(raw, []byte(`"remainingFraction":0`)) {
++		t.Fatalf("exhausted window lost its zero remaining reading: %s", raw)
++	}
++}

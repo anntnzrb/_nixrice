@@ -13,7 +13,20 @@ let
   runtimeConfig = "/run/${account}/config.yaml";
   authPort = 8318;
 
-  settings = import ./settings.nix { inherit stateDir; };
+  quotaCredential = pkgs.writeText "opencode-go-quota.json" (
+    builtins.toJSON { type = "opencode-go"; }
+  );
+  opencodeGo = pkgs.callPackage ./opencode-go.nix { };
+  settings = lib.recursiveUpdate (import ./settings.nix { inherit stateDir; }) {
+    plugins = {
+      enabled = true;
+      dir = "${opencodeGo}/lib";
+      configs.opencode-go-quota = {
+        enabled = true;
+        config_path = runtimeConfig;
+      };
+    };
+  };
   baseConfig = (pkgs.formats.yaml { }).generate "cliproxyapi-base.yaml" settings;
   release = lib.getExe (
     lib.liberion.pythonScript pkgs {
@@ -94,6 +107,13 @@ in
           LoadCredential = "secrets.json:${secretsFile}";
           ExecStartPre = [
             installIfMissing
+            (lib.escapeShellArgs [
+              "${pkgs.coreutils}/bin/install"
+              "-m"
+              "0600"
+              quotaCredential
+              "${stateDir}/auth/opencode-go-quota.json"
+            ])
             "${configure} --secrets %d/secrets.json --out ${runtimeConfig}"
           ];
           ExecStart = "${release} run --state ${releases} --config ${runtimeConfig}";
