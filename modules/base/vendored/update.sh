@@ -12,6 +12,7 @@ update_repo() {
         exit 1
     fi
     cd "${repo}" || exit
+    rm -f .git/*.lock .git/objects/pack/tmp_*
     git remote get-url origin >/dev/null
     git fetch --quiet --depth=1 --no-tags --no-filter --refmap= \
         --no-recurse-submodules --no-auto-maintenance origin HEAD

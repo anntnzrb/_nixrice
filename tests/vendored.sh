@@ -122,6 +122,21 @@ test "${content}" = dirty
 flock -u 8
 exec 8>&-
 
+stale="${root}/stale"
+git clone --quiet --depth=1 --no-tags "file://${remote}" "${stale}"
+printf '%s\n' stale >"${source_repo}/stale.txt"
+git -C "${source_repo}" add stale.txt
+git -C "${source_repo}" commit --quiet -m stale
+git -C "${source_repo}" push --quiet origin replacement
+current_commit=$(git -C "${source_repo}" rev-parse HEAD)
+: >"${stale}/.git/shallow.lock"
+: >"${stale}/.git/objects/pack/tmp_pack_partial"
+"${updater}" "${root}"
+test ! -e "${stale}/.git/shallow.lock"
+test ! -e "${stale}/.git/objects/pack/tmp_pack_partial"
+assert_current "${stale}"
+assert_current "${normal}"
+
 broken="${root}/a-broken"
 git clone --quiet "file://${remote}" "${broken}"
 git -C "${broken}" remote set-url origin "file://${work}/missing.git"
