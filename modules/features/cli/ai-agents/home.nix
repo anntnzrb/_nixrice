@@ -14,13 +14,13 @@ in
         { pkgs, ... }:
         pkgs.writeShellApplication {
           name = "sync-ai-agents";
-          runtimeInputs = [ pkgs.uv ];
+          runtimeInputs = [ pkgs.bun ];
           text = ''
             export PATH="$PATH:${lib.liberion.userPath config}"
             if [ -x ${lib.head sync} ]; then
               exec ${lib.escapeShellArgs sync} update
             fi
-            exec uv run --quiet --project "$1/sync" sync update
+            exec bun run --cwd "$1/sync" sync update
           '';
         };
     })

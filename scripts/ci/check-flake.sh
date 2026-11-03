@@ -3,7 +3,8 @@
 
 set -eu
 
-nix run --option eval-cache false --no-write-lock-file --inputs-from path:. nixpkgs#flake-checker -- \
+NIX_FLAKE_CHECKER_CHECK_OUTDATED=false \
+    nix run --option eval-cache false --no-write-lock-file --inputs-from path:. nixpkgs#flake-checker -- \
     --check-owner --check-supported --fail-mode --no-telemetry \
     --nixpkgs-keys nixpkgs,nixpkgs-unstable
 
