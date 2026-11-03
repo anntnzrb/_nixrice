@@ -22,9 +22,7 @@ let
 
   # The agents sync CLI from its installed runtime, never from the checkout.
   agentsSync = config: [
-    "${config.home.homeDirectory}/.local/share/agents/sync-current/.venv/bin/python"
-    "-m"
-    "sync.cli"
+    "${config.home.homeDirectory}/.local/share/agents/sync-current/sync"
   ];
 
   nightlyHours = [
