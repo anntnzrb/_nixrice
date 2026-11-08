@@ -61,12 +61,9 @@ in
         "workstation"
       ];
     };
-    tampa = {
-      description = "ASUS PRIME B660-PLUS D4 - Intel Core i5-12400 - NixOS-WSL";
-      tags = [
-        "archived"
-        "wsl"
-      ];
+    accra = {
+      description = "NixOS-WSL - Development environment and Windows control plane";
+      tags = [ "wsl" ];
     };
     zadar = {
       description = "ASUS GL502VMK - Intel Core i7-7700HQ - Headless Development Server";
