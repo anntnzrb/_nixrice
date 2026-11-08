@@ -33,7 +33,14 @@
     sessionVariables.BROWSER = lib.getExe pkgs.wsl-open;
   };
 
-  nix.channel.enable = false;
+  nix = {
+    channel.enable = false;
+    # bare nixos-rebuild resolves <nixos-config>; point it at the shipped guard
+    nixPath = [
+      "nixpkgs=flake:nixpkgs"
+      "nixos-config=/etc/nixos/configuration.nix"
+    ];
+  };
 
   clan.core.settings.state-version.enable = true;
 
