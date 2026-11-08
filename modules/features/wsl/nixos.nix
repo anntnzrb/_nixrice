@@ -18,6 +18,12 @@
   # WSL init runs /bin/mount and /bin/sh before systemd; envfs only mounts over /bin once systemd is up
   services.envfs.enable = lib.mkForce false;
 
+  # WSL links /etc/localtime to /usr/share/zoneinfo/<Windows zone> at boot
+  time.timeZone = lib.mkForce null;
+  systemd.tmpfiles.rules = [
+    "L+ /usr/share/zoneinfo - - - - ${pkgs.tzdata}/share/zoneinfo"
+  ];
+
   # NixOS-WSL forces graphics on; Windows supplies the GPU driver (wsl.wslLib), mesa adds ~800 MiB for nothing
   hardware.graphics.package = pkgs.emptyDirectory;
 
