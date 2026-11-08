@@ -5,13 +5,13 @@
   ...
 }:
 let
-  inherit (lib) getExe getExe';
+  inherit (lib) getExe;
 in
 {
   programs.fzf =
     let
-      catCmd = getExe' pkgs.coreutils "cat";
-      treeCmd = "${getExe pkgs.tree} -C";
+      catCmd = "${getExe pkgs.bat} --color=auto -P";
+      treeCmd = "${getExe pkgs.eza} --color=automatic --icons -T";
       defaultCommand = "${getExe pkgs.fd} --type f";
     in
     {

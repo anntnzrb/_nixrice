@@ -1,0 +1,60 @@
+name: WSL image
+
+on:
+  workflow_dispatch:
+    inputs:
+      machine:
+        description: NixOS-WSL machine to package
+        default: accra
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wsl-image-${{ inputs.machine }}
+  cancel-in-progress: true
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h /
+
+      - uses: DeterminateSystems/nix-installer-action@v23
+
+      - uses: cachix/cachix-action@v17
+        with:
+          name: anntnzrb
+          skipPush: true
+
+      - name: Build image
+        env:
+          MACHINE: ${{ inputs.machine }}
+        run: scripts/ci/wsl-image.sh "$MACHINE" "$MACHINE.wsl"
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MACHINE: ${{ inputs.machine }}
+          SHA: ${{ github.sha }}
+        run: |
+          tag="$MACHINE-latest"
+          sha256sum "$MACHINE.wsl" > "$MACHINE.wsl.sha256"
+          notes="NixOS-WSL image of \`$MACHINE\` built from $SHA. Install: \`wsl --install --from-file $MACHINE.wsl --name $MACHINE\`."
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            gh release edit "$tag" --repo "$GITHUB_REPOSITORY" --notes "$notes"
+          else
+            gh release create "$tag" --repo "$GITHUB_REPOSITORY" --target "$SHA" --title "$MACHINE (NixOS-WSL)" --notes "$notes" --latest=false
+          fi
+          gh release upload "$tag" "$MACHINE.wsl" "$MACHINE.wsl.sha256" --repo "$GITHUB_REPOSITORY" --clobber

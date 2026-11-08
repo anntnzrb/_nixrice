@@ -1,6 +1,6 @@
 { lib, pkgs, ... }: {
   services.envfs = {
     enable = true;
-    extraFallbackPathCommands = "ln -s ${lib.getExe pkgs.bashInteractive} $out/bash";
+    extraFallbackPathCommands = "ln -sf ${lib.getExe pkgs.bashInteractive} $out/bash";
   };
 }
