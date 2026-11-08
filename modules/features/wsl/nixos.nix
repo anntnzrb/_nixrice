@@ -13,6 +13,7 @@
     docker-desktop.enable = true;
     useWindowsDriver = true;
     ssh-agent.enable = true;
+    tarball.configPath = ./_etc-nixos;
   };
 
   # WSL init runs /bin/mount and /bin/sh before systemd; envfs only mounts over /bin once systemd is up
