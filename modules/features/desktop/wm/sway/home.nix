@@ -17,6 +17,9 @@ let
   inherit (config.liberion.core) keyboard;
 
   cfg = config.liberion.desktop.wm.sway;
+  bemenuRun = lib.getExe' pkgs.bemenu "bemenu-run";
+  sway = lib.getExe config.wayland.windowManager.sway.package;
+  waybar = lib.getExe config.programs.waybar.package;
 in
 
 {
@@ -37,7 +40,7 @@ in
     home = {
       shellAliases = {
         sway = "printf 'Do not use this command. To launch sway use the 'wm-exec-sway' wrapper.\n' >&2";
-        wm-exec-sway = "command sway";
+        wm-exec-sway = "${sway}";
       };
 
       packages = [ pkgs.iosevka-comfy.comfy ];
@@ -123,7 +126,7 @@ in
             {
               inherit fonts;
 
-              command = "waybar";
+              command = waybar;
               position = "top";
               trayOutput = "*";
 
@@ -171,7 +174,7 @@ in
             {
               "${mod}+Return" =
                 "exec ${lib.getExe config.liberion.desktop.session.apps.terminal}";
-              "${mod}+d" = "exec bemenu-run";
+              "${mod}+d" = "exec ${bemenuRun}";
 
               "${modShift}+q" = "kill";
               "${modAlt}+r" = "reload";
