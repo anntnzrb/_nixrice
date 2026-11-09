@@ -5,7 +5,9 @@
   ...
 }:
 let
-  cmd = args: "yashiki ${args}";
+  yashiki = lib.getExe pkgs.yashiki;
+  awk = lib.getExe pkgs.gawk;
+  cmd = args: "${yashiki} ${args}";
   bind = key: action: cmd "bind ${key} ${action}";
   ruleWith =
     matchers: actions:
@@ -52,8 +54,8 @@ let
   ];
 
   mainDisplay = [
-    ''main="$(yashiki list-outputs | ${lib.getExe pkgs.gawk} 'index($0, "(main)") { sub(":", "", $1); print $1 }')"''
-    ''[ -z "$main" ] || yashiki rule-add --app-name '*' output "$main"''
+    ''main="$(${yashiki} list-outputs | ${awk} 'index($0, "(main)") { sub(":", "", $1); print $1 }')"''
+    ''[ -z "$main" ] || ${yashiki} rule-add --app-name '*' output "$main"''
   ];
 
   bindings = tagBindings ++ [
@@ -74,7 +76,7 @@ let
     (bind "alt-shift-space" "window-toggle-float")
     (bind "alt-shift-t" "layout-set tatami")
     (bind "alt-shift-b" "layout-set byobu")
-    (bind "alt-shift-r" ''exec "yashiki quit"'')
+    (bind "alt-shift-r" ''exec "${yashiki} quit"'')
   ];
 
   rules = lib.concatLists [
