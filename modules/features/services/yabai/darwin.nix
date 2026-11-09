@@ -1,8 +1,14 @@
-{ inputs, lib, ... }:
+{
+  config,
+  inputs,
+  lib,
+  ...
+}:
 let
+  yabai = lib.getExe config.services.yabai.package;
   mkRule =
     pattern:
-    "yabai -m rule --add ${
+    "${yabai} -m rule --add ${
       lib.concatStringsSep " " (lib.mapAttrsToList (k: v: "${k}=${v}") pattern)
     } manage=off";
 in
@@ -56,9 +62,9 @@ in
   };
 
   liberion.services.skhd.keybindings = {
-    "alt - k" = "yabai -m window --focus north";
-    "alt - l" = "yabai -m window --focus east";
-    "alt - j" = "yabai -m window --focus south";
-    "alt - h" = "yabai -m window --focus west";
+    "alt - k" = "${yabai} -m window --focus north";
+    "alt - l" = "${yabai} -m window --focus east";
+    "alt - j" = "${yabai} -m window --focus south";
+    "alt - h" = "${yabai} -m window --focus west";
   };
 }
