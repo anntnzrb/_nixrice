@@ -5,7 +5,15 @@
   ];
 
   config = {
-    liberion.darwin.launcher-hotkey.owners = [ "tinycast" ];
+    liberion.darwin = {
+      launcher-hotkey.owners = [ "tinycast" ];
+      owned.privacy = [
+        {
+          service = "Accessibility";
+          bundleId = "com.tinycast.app";
+        }
+      ];
+    };
 
     system.defaults.CustomUserPreferences."com.tinycast.app" = {
       "hotkey.togglePalette" = builtins.toJSON {
