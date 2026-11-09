@@ -22,7 +22,7 @@
 
     neovim
     starship
-    herdr
+    herdr-core
   ]);
 
   programs = {

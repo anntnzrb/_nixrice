@@ -3,7 +3,10 @@ let
   defaultLocale = "en_US.UTF-8";
 in
 {
-  imports = [ inputs.self.nixosModules.sshd ];
+  imports = with inputs.self.nixosModules; [
+    herdr-core
+    sshd
+  ];
 
   time.timeZone = "America/Guayaquil";
 

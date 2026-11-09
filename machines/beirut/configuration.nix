@@ -6,6 +6,7 @@
     essentials
     firefox
     ghostty
+    herdr-core
     safari
     stremio
     t3
@@ -15,6 +16,7 @@
   ];
 
   liberion.ai.t3.desktop = true;
+  liberion.shells.herdr-core.desktop = true;
 
   nixpkgs.hostPlatform = "aarch64-darwin";
 

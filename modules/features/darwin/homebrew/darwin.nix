@@ -12,6 +12,7 @@ let
     brave = "brave-browser";
     firefox = "firefox";
     ghostty = "ghostty";
+    herdr-app = "herdr-app";
     obs = "obs";
     orbstack = "orbstack";
     paseo = "paseo";
