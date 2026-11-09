@@ -14,9 +14,20 @@ update_repo() {
     cd "${repo}" || exit
     rm -f .git/*.lock .git/objects/pack/tmp_*
     git remote get-url origin >/dev/null
-    git -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=120 fetch --quiet --depth=1 \
-        --no-tags --no-filter --refmap= --no-recurse-submodules --no-auto-maintenance \
-        origin HEAD
+    for attempt in 1 2; do
+        if timeout --kill-after=10s 5m git -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=120 fetch --quiet --depth=1 \
+            --no-tags --no-filter --refmap= --no-recurse-submodules --no-auto-maintenance \
+            origin HEAD; then
+            break
+        else
+            status=$?
+            if test "${attempt}" -eq 2; then
+                return "${status}"
+            fi
+            printf 'vendored-update: fetch failed for %s (exit %s); retrying in 10 seconds\n' "${repo}" "${status}" >&2
+            sleep 10
+        fi
+    done
     git checkout --quiet --detach --force FETCH_HEAD
     if sparse=$(git config --bool --get core.sparseCheckout); then
         if test "${sparse}" = true; then

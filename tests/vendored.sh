@@ -157,6 +157,61 @@ test "${content}" = newer
 content=$(cat "${partial}/source.txt")
 test "${content}" = newer
 
+git -C "${broken}" remote set-url origin "file://${remote}"
+transport="${work}/upload-pack"
+cat >"${transport}" <<'TRANSPORT'
+#!/bin/sh
+if test ! -f "$0.attempted"; then
+    touch "$0.attempted"
+    exit 1
+fi
+exec git-upload-pack "$@"
+TRANSPORT
+chmod +x "${transport}"
+git -C "${broken}" config remote.origin.uploadpack "${transport}"
+"${updater}" "${root}" >"${work}/retry.log" 2>&1
+content=$(cat "${broken}/source.txt")
+summary=$(cat "${work}/retry.log")
+case "${summary}" in
+    *'summary: 5 updated, 0 failed') ;;
+    *)
+        printf '%s\n' "${summary}" >&2
+        exit 1
+        ;;
+esac
+test "${content}" = newer
+test -f "${transport}.attempted"
+
+cat >"${transport}" <<'TRANSPORT'
+#!/bin/sh
+sleep 300
+TRANSPORT
+# shellcheck disable=SC2329 # Exported to the updater's child Bash processes.
+timeout() {
+    shift 2
+    command timeout --kill-after=1s 0.2s "$@"
+}
+export -f timeout
+printf '%s\n' preserve >"${broken}/untracked"
+if "${updater}" "${root}" >"${work}/timeout.log" 2>&1; then
+    printf '%s\n' 'stalled remote reported success' >&2
+    exit 1
+fi
+summary=$(cat "${work}/timeout.log")
+case "${summary}" in
+    *'summary: 4 updated, 1 failed') ;;
+    *)
+        printf '%s\n' "${summary}" >&2
+        exit 1
+        ;;
+esac
+unset -f timeout
+content=$(cat "${broken}/untracked")
+test "${content}" = preserve
+content=$(cat "${broken}/source.txt")
+test "${content}" = newer
+git -C "${broken}" config --unset remote.origin.uploadpack
+
 external="${work}/external"
 git clone --quiet "file://${remote}" "${external}"
 mkdir "${root}/external-link"
