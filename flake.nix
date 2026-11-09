@@ -163,7 +163,13 @@
     determinate = {
       url = "github:DeterminateSystems/determinate/main";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.nix.follows = "";
+      inputs.nix.inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-parts.follows = "flake-parts";
+        git-hooks-nix.follows = "git-hooks";
+        nixpkgs-23-11.follows = "";
+        nixpkgs-regression.follows = "";
+      };
     };
 
     nix-homebrew = {
