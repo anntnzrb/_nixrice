@@ -31,6 +31,9 @@ Neovim is installed system-wide and in the owner's Home Manager environment.
 Both `EDITOR` and `VISUAL` point to its executable, including in SSH sessions.
 Existing processes retain their environment until a new session is started.
 
+Other repositories continue independently; the final log summary counts updated
+and failed repositories, and partial failure returns a nonzero exit status.
+
 ## 🙏 Acknowledgments
 
 ### 👥 People

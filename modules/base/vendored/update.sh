@@ -55,11 +55,14 @@ case ${1:-} in
         exit
         ;;
     --repo)
-        if "${self}" --worker "${2}"; then
+        result=$(mktemp "${2}/result.XXXXXXXX")
+        if "${self}" --worker "${3}"; then
+            printf 'updated\n' >"${result}"
             exit 0
         else
             status=$?
-            printf 'vendored-update: failed %s (exit %s)\n' "${2}" "${status}" >&2
+            printf 'failed\n' >"${result}"
+            printf 'vendored-update: failed %s (exit %s)\n' "${3}" "${status}" >&2
             exit 1
         fi
         ;;
@@ -83,4 +86,18 @@ work=$(mktemp -d)
 trap 'rm -rf "${work}"' EXIT
 trap 'exit 1' HUP INT TERM
 find "${root}" -type d -exec test -d '{}/.git' \; -prune -print0 >"${work}/repos"
-xargs -0 -r -P 2 -n 1 "${self}" --repo <"${work}/repos"
+status=0
+xargs -0 -r -P 2 -n 1 "${self}" --repo "${work}" <"${work}/repos" || status=$?
+updated=0
+failed=0
+for result in "${work}"/result.*; do
+    test -f "${result}" || continue
+    outcome=$(cat "${result}")
+    if test "${outcome}" = updated; then
+        updated=$((updated + 1))
+    else
+        failed=$((failed + 1))
+    fi
+done
+printf 'vendored-update: summary: %s updated, %s failed\n' "${updated}" "${failed}"
+exit "${status}"
