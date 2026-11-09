@@ -24,11 +24,6 @@ let
     vscode = "visual-studio-code";
   };
 
-  masApps = {
-    bitwarden.Bitwarden = 1352778147;
-    whatsapp."WhatsApp Messenger" = 310633997;
-  };
-
   apps = lib.unique cfg.apps;
   pick =
     table: map (app: table.${app}) (builtins.filter (app: table ? ${app}) apps);
@@ -55,10 +50,10 @@ in
 {
   imports = [ inputs.nix-homebrew.darwinModules.nix-homebrew ];
 
-  options.liberion.darwin.homebrew.apps = lib.liberion.module.mkOpt' (
-    lib.types.listOf
-      (lib.types.enum (lib.attrNames (casks // masApps)))
-  ) [ ];
+  options.liberion.darwin.homebrew.apps =
+    lib.liberion.module.mkOpt'
+      (lib.types.listOf (lib.types.enum (lib.attrNames casks)))
+      [ ];
 
   config = {
     environment.systemPath = lib.mkOrder 1100 [
@@ -87,7 +82,6 @@ in
         trusted = true;
       }) taps;
       casks = pick casks;
-      masApps = lib.mergeAttrsList (pick masApps);
     };
 
     programs.bash.interactiveShellInit = shellInit;
