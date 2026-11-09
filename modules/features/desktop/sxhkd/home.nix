@@ -11,6 +11,7 @@ let
   inherit (config.liberion.desktop.session) apps;
 
   cfg = config.liberion.desktop.sxhkd;
+  btop = lib.getExe config.programs.btop.package;
 in
 {
   imports = [ inputs.self.homeModules.session ];
@@ -32,7 +33,7 @@ in
       keybindings = {
         "super + Return ; {Return}" = "${lib.getExe apps.terminal} {_}";
         "super + Return ; i" =
-          lib.mkIf config.programs.btop.enable "${lib.getExe apps.terminal} -e btop";
+          lib.mkIf config.programs.btop.enable "${lib.getExe apps.terminal} -e ${btop}";
 
         "super + w ; {f,w}" =
           "{${lib.getExe apps.fileManager},${lib.getExe apps.browser}}";
