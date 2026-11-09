@@ -12,6 +12,10 @@ in
 {
   home = {
     packages = [ package ];
+    sessionVariables = {
+      EDITOR = lib.getExe package;
+      VISUAL = lib.getExe package;
+    };
     shellAliases.v = lib.getExe package;
   };
 }
