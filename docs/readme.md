@@ -25,6 +25,12 @@ at any _libre-whatever_ platform. More on this on the
 
 **NOTE**: Consider reading the [🧪 Disclaimer](#disclaimer) section.
 
+## Default editor
+
+Neovim is installed system-wide and in the owner's Home Manager environment.
+Both `EDITOR` and `VISUAL` point to its executable, including in SSH sessions.
+Existing processes retain their environment until a new session is started.
+
 ## 🙏 Acknowledgments
 
 ### 👥 People

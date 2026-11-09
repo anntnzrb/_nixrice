@@ -34,6 +34,4 @@
     };
     nix-index-database.comma.enable = true;
   };
-
-  home.sessionVariables.EDITOR = "nvim";
 }
