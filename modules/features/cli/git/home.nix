@@ -3,6 +3,7 @@ let
   inherit (lib.liberion.module) mkOptEnabled' mkOptDisabled';
 
   cfg = config.liberion.cli.git;
+  difft = lib.getExe config.programs.difftastic.package;
 in
 {
   options.liberion.cli.git = {
@@ -131,7 +132,7 @@ in
             }
             (
               lib.optionalAttrs cfg.diff.difftastic.enable {
-                git.paging.externalDiffCommand = "difft --color=always --display=inline --background dark";
+                git.paging.externalDiffCommand = "${difft} --color=always --display=inline --background dark";
               }
             );
       };
