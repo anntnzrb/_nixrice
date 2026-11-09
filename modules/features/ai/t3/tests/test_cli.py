@@ -156,6 +156,8 @@ def run(
             str(settings),
             "--gateway",
             gateway,
+            "--npx",
+            str(bin_dir / "npx") if bin_dir is not None else "/unused/npx",
         ],
         env={
             **os.environ,
@@ -1023,6 +1025,8 @@ class DarwinService:
             str(declared),
             "--gateway",
             UNREACHABLE,
+            "--npx",
+            "/test/npx",
         ])
 
     def actions(self) -> list[str]:
@@ -1283,7 +1287,7 @@ def test_darwin_update_stabilizes_after_bootstrap(
     with pytest.MonkeyPatch.context() as patch:
         patch.setattr(subprocess, "call", install)
         assert darwin.invoke(declared, "update") == 0
-    assert darwin.commands[0] == ["npx", "-y", "t3@nightly", "service", "install"]
+    assert darwin.commands[0] == ["/test/npx", "-y", "t3@nightly", "service", "install"]
     assert darwin.loaded == {darwin.ours}
 
 

@@ -40,6 +40,7 @@ class Context:
     channel: str
     settings: Path
     gateway: str
+    npx: str
 
     @property
     def runtime(self) -> Path:
@@ -67,6 +68,7 @@ class Args(argparse.Namespace):
     channel: str = ""
     settings: Path = Path()
     gateway: str = ""
+    npx: str = ""
 
 
 def say(message: str) -> None:
@@ -273,7 +275,7 @@ def bootstrap(ctx: Context) -> int:
     Returns:
         The exit status.
     """
-    if run(["npx", "-y", f"t3@{ctx.channel}", "service", "install"]) != 0:
+    if run([ctx.npx, "-y", f"t3@{ctx.channel}", "service", "install"]) != 0:
         return 1
     _ = apply_settings(ctx)
     binary = installed_binary(ctx)
@@ -559,12 +561,14 @@ def main(argv: list[str] | None = None) -> int:
     _ = parser.add_argument("--channel", required=True, choices=("stable", "nightly"))
     _ = parser.add_argument("--settings", required=True, type=Path)
     _ = parser.add_argument("--gateway", required=True)
+    _ = parser.add_argument("--npx", required=True)
     args = parser.parse_args(argv, namespace=Args())
     ctx = Context(
         home=Path(os.environ.get("T3CODE_HOME") or Path.home() / ".t3"),
         channel=args.channel,
         settings=args.settings,
         gateway=args.gateway,
+        npx=args.npx,
     )
     return {"update": update, "sync": sync, "prune": prune, "stabilize": stabilize}[
         args.command

@@ -8,6 +8,7 @@
 }:
 let
   json = pkgs.formats.json { };
+  npx = lib.getExe' pkgs.nodejs "npx";
   gateway = import (
     inputs.self + "/modules/features/ai/cliproxyapi/endpoint.nix"
   ) osConfig.clan.core.settings.domain;
@@ -47,6 +48,8 @@ let
     "${settings}/settings.json"
     "--gateway"
     gateway
+    "--npx"
+    npx
   ];
   stable = "${config.home.homeDirectory}/.t3/runtime/stable/t3";
   telemetry.T3CODE_TELEMETRY_ENABLED = "false";
