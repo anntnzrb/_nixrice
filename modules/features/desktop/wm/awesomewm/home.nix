@@ -10,6 +10,7 @@ let
   inherit (lib.types) listOf str;
 
   cfg = config.liberion.desktop.wm.awesomewm;
+  startx = lib.getExe' pkgs.xorg.xinit "startx";
 in
 {
   imports = with inputs.self.homeModules; [
@@ -49,7 +50,7 @@ in
 
     home = {
       shellAliases = {
-        wm-exec-awesome = "command startx ~/${config.xsession.scriptPath}";
+        wm-exec-awesome = "${startx} ~/${config.xsession.scriptPath}";
       };
 
       packages = with pkgs; [
