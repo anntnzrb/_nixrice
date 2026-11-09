@@ -10,6 +10,16 @@ let
   inherit (lib.types) listOf str;
 
   cfg = config.liberion.desktop.wm.xmonad;
+  bemenuRun = lib.getExe' pkgs.bemenu "bemenu-run";
+  startx = lib.getExe' pkgs.xorg.xinit "startx";
+  xmonad = config.xsession.windowManager.command;
+  xmonadConfig = pkgs.runCommand "xmonad-config" { } ''
+    cp -R ${./xmonad} "$out"
+    chmod u+w "$out/xmonad.hs"
+    substituteInPlace "$out/xmonad.hs" \
+      --replace-fail '@bemenuRun@' '${bemenuRun}' \
+      --replace-fail '@xmonad@' '${xmonad}'
+  '';
 in
 {
   imports = [
@@ -33,18 +43,16 @@ in
       };
     };
 
-    xdg.configFile = {
-      xmonad = {
-        enable = true;
-        source = ./xmonad;
-        target = "xmonad";
-        recursive = true;
-      };
+    xdg.configFile.xmonad = {
+      enable = true;
+      source = xmonadConfig;
+      target = "xmonad";
+      recursive = true;
     };
 
     home = {
       shellAliases = {
-        wm-exec-xmonad = "command startx ~/${config.xsession.scriptPath}";
+        wm-exec-xmonad = "${startx} ~/${config.xsession.scriptPath}";
       };
 
       packages = with pkgs; [

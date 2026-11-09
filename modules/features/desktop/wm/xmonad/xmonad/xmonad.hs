@@ -20,8 +20,8 @@ layout = Tall nmaster delta ratio
 keys :: [(String, X ())]
 keys =
   [ ("M-<Return>", spawn "${TERMINAL}"),
-    ("M-d", spawn "bemenu-run"),
-    ("M-M1-r", spawn "xmonad --recompile && xmonad --restart"),
+    ("M-d", spawn "@bemenuRun@"),
+    ("M-M1-r", spawn "@xmonad@ --recompile && @xmonad@ --restart"),
     ("M-S-q", kill),
     ("M-M1-q", io exitSuccess)
   ]
