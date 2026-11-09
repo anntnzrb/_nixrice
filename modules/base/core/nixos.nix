@@ -4,7 +4,7 @@ let
 in
 {
   imports = with inputs.self.nixosModules; [
-    herdr-core
+    herdr
     sshd
   ];
 
