@@ -17,6 +17,7 @@ let
     ;
 
   cfg = config.liberion.desktop.wm.herbstluftwm;
+  startx = lib.getExe' pkgs.xorg.xinit "startx";
 in
 {
   imports = [ inputs.self.homeModules.xsession ];
@@ -98,7 +99,7 @@ in
 
     home = {
       shellAliases = {
-        wm-exec-herbstluftwm = "command startx ~/${config.xsession.scriptPath}";
+        wm-exec-herbstluftwm = "${startx} ~/${config.xsession.scriptPath}";
       };
 
       activation = {
