@@ -14,9 +14,20 @@ update_repo() {
     cd "${repo}" || exit
     rm -f .git/*.lock .git/objects/pack/tmp_*
     git remote get-url origin >/dev/null
-    git -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=120 fetch --quiet --depth=1 \
-        --no-tags --no-filter --refmap= --no-recurse-submodules --no-auto-maintenance \
-        origin HEAD
+    for attempt in 1 2; do
+        if timeout --kill-after=10s 5m git -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=120 fetch --quiet --depth=1 \
+            --no-tags --no-filter --refmap= --no-recurse-submodules --no-auto-maintenance \
+            origin HEAD; then
+            break
+        else
+            status=$?
+            if test "${attempt}" -eq 2; then
+                return "${status}"
+            fi
+            printf 'vendored-update: fetch failed for %s (exit %s); retrying in 10 seconds\n' "${repo}" "${status}" >&2
+            sleep 10
+        fi
+    done
     git checkout --quiet --detach --force FETCH_HEAD
     if sparse=$(git config --bool --get core.sparseCheckout); then
         if test "${sparse}" = true; then
@@ -55,11 +66,14 @@ case ${1:-} in
         exit
         ;;
     --repo)
-        if "${self}" --worker "${2}"; then
+        result=$(mktemp "${2}/result.XXXXXXXX")
+        if "${self}" --worker "${3}"; then
+            printf 'updated\n' >"${result}"
             exit 0
         else
             status=$?
-            printf 'vendored-update: failed %s (exit %s)\n' "${2}" "${status}" >&2
+            printf 'failed\n' >"${result}"
+            printf 'vendored-update: failed %s (exit %s)\n' "${3}" "${status}" >&2
             exit 1
         fi
         ;;
@@ -83,4 +97,18 @@ work=$(mktemp -d)
 trap 'rm -rf "${work}"' EXIT
 trap 'exit 1' HUP INT TERM
 find "${root}" -type d -exec test -d '{}/.git' \; -prune -print0 >"${work}/repos"
-xargs -0 -r -P 2 -n 1 "${self}" --repo <"${work}/repos"
+status=0
+xargs -0 -r -P 2 -n 1 "${self}" --repo "${work}" <"${work}/repos" || status=$?
+updated=0
+failed=0
+for result in "${work}"/result.*; do
+    test -f "${result}" || continue
+    outcome=$(cat "${result}")
+    if test "${outcome}" = updated; then
+        updated=$((updated + 1))
+    else
+        failed=$((failed + 1))
+    fi
+done
+printf 'vendored-update: summary: %s updated, %s failed\n' "${updated}" "${failed}"
+exit "${status}"
