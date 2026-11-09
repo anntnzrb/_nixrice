@@ -2,6 +2,7 @@
   config,
   inputs,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -9,6 +10,9 @@ let
   inherit (lib.types) listOf str;
 
   cfg = config.liberion.desktop.wm.hyprland;
+  hyprland = lib.getExe config.wayland.windowManager.hyprland.package;
+  waybar = lib.getExe config.programs.waybar.package;
+  wofi = lib.getExe pkgs.wofi;
 in
 {
   imports = [ inputs.self.homeModules.session ];
@@ -23,7 +27,7 @@ in
     home = {
       shellAliases = {
         Hyprland = "printf 'Do not use this command. To launch Hyprland use the 'wm-exec-hypr' wrapper.\n' >&2";
-        wm-exec-hypr = "\\Hyprland";
+        wm-exec-hypr = "${hyprland}";
       };
     };
 
@@ -37,7 +41,7 @@ in
 
         inherit (cfg) monitor;
 
-        exec-once = cfg.autoStartApps ++ (lib.optional cfg.waybar.enable "waybar");
+        exec-once = cfg.autoStartApps ++ (lib.optional cfg.waybar.enable waybar);
 
         input = {
           follow_mouse = 1;
@@ -94,7 +98,7 @@ in
             "$mod SHIFT, Q, killactive,"
             "$mod ALT, Q, exit,"
             "$mod SHIFT, SPACE, togglefloating,"
-            "$mod, D, exec, wofi --show run"
+            "$mod, D, exec, ${wofi} --show run"
             "$mod, Return, exec, $TERMINAL"
           ];
 
