@@ -1,0 +1,2 @@
+- Add machines once from the client with `hc machine add <host> --name <host>`; their IDs are learned when connecting and stored in mutable `machines.json`.
+- Do not run `hc update` or let the app install the core: Nix owns the core package.
