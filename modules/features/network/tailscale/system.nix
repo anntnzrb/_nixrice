@@ -1,6 +1,9 @@
 { config, lib, ... }:
 let
+  inherit (lib.liberion.module) mkReq';
+
   cfg = config.liberion.network.tailscale;
+  exposures = lib.attrValues cfg.expose;
 in
 {
   options.liberion.network.tailscale.expose = lib.liberion.module.mkOpt' (
@@ -8,8 +11,8 @@ in
       (
         lib.types.submodule {
           options = {
-            port = lib.liberion.module.mkReq' lib.types.port;
-            target = lib.liberion.module.mkReq' (
+            port = mkReq' lib.types.port;
+            target = mkReq' (
               lib.types.strMatching "https?://(127[.]0[.]0[.]1|localhost|[[]::1[]]):[0-9]+(/.*)?"
             );
             funnel = lib.liberion.module.mkOptDisabled';
@@ -21,8 +24,7 @@ in
   config.assertions = [
     {
       assertion =
-        lib.length (lib.unique (map (m: m.port) (lib.attrValues cfg.expose)))
-        == lib.length (lib.attrValues cfg.expose);
+        lib.length (lib.unique (map (m: m.port) exposures)) == lib.length exposures;
       message = "Tailscale exposure mappings must own distinct HTTPS ports.";
     }
     {
@@ -34,7 +36,7 @@ in
           8443
           10000
         ]
-      ) (lib.attrValues cfg.expose);
+      ) exposures;
       message = "Tailscale Funnel supports HTTPS ports 443, 8443 and 10000.";
     }
   ];

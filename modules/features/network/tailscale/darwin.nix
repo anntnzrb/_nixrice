@@ -6,6 +6,8 @@
 }:
 let
   cfg = config.liberion.network.tailscale;
+  tailscalePackage = config.services.tailscale.package;
+  stateFile = "/var/lib/liberion/tailscale-expose.json";
   routeGuard = pkgs.writeShellApplication {
     name = "tailscale-route-guard";
     runtimeInputs = [ pkgs.gawk ];
@@ -16,7 +18,7 @@ let
     runtimeInputs = [
       pkgs.coreutils
       pkgs.jq
-      config.services.tailscale.package
+      tailscalePackage
     ];
     text = builtins.readFile ./reconcile.sh;
   };
@@ -30,7 +32,7 @@ let
       }) cfg.expose
     )
   );
-  tailscale = lib.getExe config.services.tailscale.package;
+  tailscale = lib.getExe tailscalePackage;
   mappings = lib.mapAttrs' (
     name: mapping:
     lib.nameValuePair "tailscale-expose-${name}" {
@@ -52,10 +54,10 @@ in
   };
   environment.etc."resolver/ts.net".enable = lib.mkForce false;
 
-  liberion.darwin.owned.files."/var/lib/liberion/tailscale-expose.json" = { };
+  liberion.darwin.owned.files.${stateFile} = { };
 
   system.activationScripts.postActivation.text = lib.mkAfter ''
-    ${lib.getExe reconcile} /var/lib/liberion/tailscale-expose.json ${manifest} \
+    ${lib.getExe reconcile} ${stateFile} ${manifest} \
       || echo >&2 "tailscale: failed to reconcile listeners; keeping ownership to retry on the next switch"
   '';
 
