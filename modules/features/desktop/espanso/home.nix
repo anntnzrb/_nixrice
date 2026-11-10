@@ -1,11 +1,11 @@
 { config, lib, ... }:
 let
-  cfg = config.liberion.cli.espanso;
+  cfg = config.liberion.desktop.espanso;
 in
 {
   imports = [ ./matches/personal.nix ];
 
-  options.liberion.cli.espanso = {
+  options.liberion.desktop.espanso = {
     extraMatchDir = lib.liberion.module.mkOpt' lib.types.str "${config.xdg.configHome}/espanso/match/local";
   };
 
