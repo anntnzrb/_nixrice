@@ -2,14 +2,14 @@
 
 set -eu
 
-account=$1
-releases=$2
-release=$3
-configure=$4
-settings=$5
-models_cache=$6
-runtime_config=$7
-secrets=$8
+account=${CPA_ACCOUNT:?}
+releases=${CPA_RELEASES:?}
+release=${CPA_RELEASE:?}
+configure=${CPA_CONFIGURE:?}
+settings=${CPA_SETTINGS:?}
+models_cache=${CPA_MODELS_CACHE:?}
+runtime_config=${CPA_RUNTIME_CONFIG:?}
+secrets=${CPA_SECRETS:?}
 
 runuser -u "${account}" -- "${release}" install --state "${releases}" --version latest
 runtime_dir=$(dirname "${runtime_config}")

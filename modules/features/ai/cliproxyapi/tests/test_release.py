@@ -333,20 +333,20 @@ def test_update_retries_selected_release_until_running(
         "CPA_PID_FILE": str(pid_file),
         "CPA_RESTARTS": str(restarts),
         "CPA_RESTART_FAIL": str(restart_fail),
+        "CPA_ACCOUNT": "cliproxyapi",
+        "CPA_RELEASES": str(state),
+        "CPA_RELEASE": str(helpers / "release"),
+        "CPA_CONFIGURE": str(helpers / "configure"),
+        "CPA_SETTINGS": str(settings),
+        "CPA_MODELS_CACHE": str(tmp_path / "models.json"),
+        "CPA_RUNTIME_CONFIG": str(tmp_path / "runtime.yaml"),
+        "CPA_SECRETS": str(secrets),
     }
     command = [
         "bash",
         "-euo",
         "pipefail",
         str(SCRIPT.with_name("update.sh")),
-        "cliproxyapi",
-        str(state),
-        str(helpers / "release"),
-        str(helpers / "configure"),
-        str(settings),
-        str(tmp_path / "models.json"),
-        str(tmp_path / "runtime.yaml"),
-        str(secrets),
     ]
     with subprocess.Popen(  # noqa: S603 - real executable in the temporary release tree
         [str(old_binary), "-c", "import sys; sys.stdin.read()"], stdin=subprocess.PIPE

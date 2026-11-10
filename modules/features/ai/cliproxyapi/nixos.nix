@@ -62,6 +62,16 @@ let
       pkgs.systemd
       pkgs.util-linux
     ];
+    runtimeEnv = {
+      CPA_ACCOUNT = account;
+      CPA_RELEASES = releases;
+      CPA_RELEASE = release;
+      CPA_CONFIGURE = configureScript;
+      CPA_SETTINGS = baseConfig;
+      CPA_MODELS_CACHE = modelsCache;
+      CPA_RUNTIME_CONFIG = runtimeConfig;
+      CPA_SECRETS = secretsFile;
+    };
     text = builtins.readFile ./update.sh;
   };
 in
@@ -133,17 +143,7 @@ in
         wants = [ "network-online.target" ];
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = lib.escapeShellArgs [
-            (lib.getExe update)
-            account
-            releases
-            release
-            configureScript
-            baseConfig
-            modelsCache
-            runtimeConfig
-            secretsFile
-          ];
+          ExecStart = lib.getExe update;
           TimeoutStartSec = "10min";
           Nice = 19;
         };
