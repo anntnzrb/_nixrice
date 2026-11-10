@@ -32,6 +32,7 @@ let
         device = "/dev/disk/by-label/probe";
         fsType = "ext4";
       };
+      system.stateVersion = lib.mkDefault lib.trivial.release;
     };
     inventory.machines.darwin-probe.machineClass = "darwin";
     machines.darwin-probe = {
