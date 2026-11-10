@@ -8,14 +8,15 @@ let
 
   package =
     inputs.neovim-annt.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  exe = lib.getExe package;
 in
 {
   home = {
     packages = [ package ];
     sessionVariables = {
-      EDITOR = lib.getExe package;
-      VISUAL = lib.getExe package;
+      EDITOR = exe;
+      VISUAL = exe;
     };
-    shellAliases.v = lib.getExe package;
+    shellAliases.v = exe;
   };
 }
