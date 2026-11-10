@@ -7,7 +7,6 @@
 }:
 let
   inherit (lib.liberion.module) mkOpt';
-  inherit (lib) readFile;
   inherit (lib.types)
     str
     listOf
@@ -23,7 +22,10 @@ let
 in
 
 {
-  imports = [ inputs.self.homeModules.session ];
+  imports = [
+    inputs.self.homeModules.session
+    ./waybar.nix
+  ];
 
   options.liberion.desktop.wm.sway = {
     autoStart = mkOpt' (listOf str) [ ];
@@ -237,46 +239,5 @@ in
           workspaceAutoBackAndForth = false;
         };
     };
-
-    programs.waybar = {
-      enable = true;
-
-      style = readFile ./style.css;
-
-      settings = {
-        default = {
-          position = "top";
-
-          modules-left = [ "sway/workspaces" ];
-          modules-center = [ ];
-          modules-right = [
-            "cpu"
-            "memory"
-            "tray"
-            "clock"
-          ];
-
-          clock = {
-            format = "  {:%a, %d/%m %R}";
-            tooltip-format = "{:%Y-%m-%d}";
-          };
-
-          cpu = {
-            interval = 10;
-            format = "  {usage}%";
-          };
-
-          memory = {
-            interval = 10;
-            format = "  {percentage}%";
-          };
-
-          tray = {
-            spacing = 5;
-          };
-        };
-      };
-    };
-
   };
 }
