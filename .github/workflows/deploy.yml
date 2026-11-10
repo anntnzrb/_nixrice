@@ -16,11 +16,30 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  spec:
+  ci:
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (github.event.workflow_run.event == 'push' &&
        github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      actions: read
+    steps:
+      - name: Require Nix CI to pass for the deployed commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: |
+          run="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml --commit "$SHA" --event push --limit 1 --json databaseId --jq '.[0].databaseId // empty')"
+          if test -z "$run"; then
+            echo "no Nix CI push run for $SHA" >&2
+            exit 1
+          fi
+          gh run watch "$run" --repo "$GITHUB_REPOSITORY" --exit-status --interval 60 >/dev/null
+
+  spec:
+    needs: ci
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:

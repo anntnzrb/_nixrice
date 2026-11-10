@@ -456,7 +456,8 @@ Deploys are supervised: the owner agrees, agents may execute.
   own runner and is pushed. Nothing uncached = nothing built. Dev shells are
   targets too so sandboxes substitute `clan-cli`
 - `deploy.yml`: after a successful `build.yml` push run on `dev` (or a manual
-  dispatch), `scripts/ci/deploy-spec.sh` maps each machine in the
+  dispatch), the `ci` job waits for the `ci.yml` push run of the same commit
+  and stops the deploy unless it passed. `scripts/ci/deploy-spec.sh` maps each machine in the
   `cachix-deploy` `agent` role (`clan.nix`) to its target from
   `deploy-targets.nix` and fails if any is missing from the cache, so agents
   only ever substitute. The `activate` job waits for approval in the
