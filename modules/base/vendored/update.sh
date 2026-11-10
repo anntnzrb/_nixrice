@@ -24,8 +24,8 @@ update_repo() {
             if test "${attempt}" -eq 2; then
                 return "${status}"
             fi
-            printf 'vendored-update: fetch failed for %s (exit %s); retrying in 10 seconds\n' "${repo}" "${status}" >&2
-            sleep 10
+            printf 'vendored-update: fetch failed for %s (exit %s); retrying in %s seconds\n' "${repo}" "${status}" "${VENDORED_RETRY_DELAY:-10}" >&2
+            sleep "${VENDORED_RETRY_DELAY:-10}"
         fi
     done
     git checkout --quiet --detach --force FETCH_HEAD
