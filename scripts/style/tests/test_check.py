@@ -112,6 +112,11 @@ def test_accepts_layout(tmp_path: Path, source: str) -> None:
         "modules/features/example/_home.nix",
         "modules/features/example/tests/home.nix",
         "machines/example/waymote.nix",
+        "lib/home.nix",
+        "scripts/home.nix",
+        "tests/home.nix",
+        "overlays/home.nix",
+        "home.nix",
     ],
 )
 def test_helpers_only_check_arguments(tmp_path: Path, path: str) -> None:

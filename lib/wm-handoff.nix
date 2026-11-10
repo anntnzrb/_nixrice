@@ -23,8 +23,8 @@ in
 
   stop =
     {
-      label,
       evacuate,
+      label,
       leftovers ? [ ],
     }:
     ''
@@ -48,8 +48,8 @@ in
 
   reloadOnChange =
     {
-      label,
       init,
+      label,
       unpark,
     }:
     ''

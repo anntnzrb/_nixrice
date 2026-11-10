@@ -14,7 +14,16 @@ from tree_sitter import Language, Node, Parser
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
-ROOTS = ("modules", "machines", "homes", "flake")
+ROOTS = (
+    "modules",
+    "machines",
+    "homes",
+    "flake",
+    "lib",
+    "scripts",
+    "tests",
+    "overlays",
+)
 MODULE_ORDER = ("_class", "key", "imports", "disabledModules", "options", "config")
 SERVICE_ORDER = ("_class", "manifest", "roles", "perMachine")
 
@@ -116,8 +125,9 @@ def is_module(path: Path) -> bool:
         return path.name in {"configuration.nix", "home.nix", "disk.nix"} or (
             "hardware" in path.parts
         )
-    return path.name in {"nixos.nix", "darwin.nix", "home.nix", "system.nix"} or (
-        path.parts[:2] == ("modules", "services") and path.name == "default.nix"
+    return path.parts[0] == "modules" and (
+        path.name in {"nixos.nix", "darwin.nix", "home.nix", "system.nix"}
+        or (path.parts[:2] == ("modules", "services") and path.name == "default.nix")
     )
 
 
@@ -279,9 +289,10 @@ def main() -> int:
     parser = Parser(Language(capsule))
     errors: list[str] = []
     trees: dict[Path, Node] = {}
-    for path in sorted(
-        path for directory in ROOTS for path in (root / directory).rglob("*.nix")
-    ):
+    for path in sorted([
+        *(path for directory in ROOTS for path in (root / directory).rglob("*.nix")),
+        *root.glob("*.nix"),
+    ]):
         relative = path.relative_to(root)
         parsed = parser.parse(path.read_bytes()).root_node
         if parsed.has_error or parsed.child_by_field_name("expression") is None:

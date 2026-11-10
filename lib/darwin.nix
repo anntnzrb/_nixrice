@@ -35,10 +35,10 @@
 
   writeDefault =
     {
+      currentHost ? false,
       domain,
       key,
       value,
-      currentHost ? false,
     }:
     lib.concatStringsSep " " (
       [ "defaults" ]
@@ -54,9 +54,9 @@
   writeDefaults =
     user:
     {
+      currentHost ? false,
       domain,
       settings,
-      currentHost ? false,
     }:
     lib.mapAttrsToList (
       key: value:

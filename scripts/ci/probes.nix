@@ -1,7 +1,7 @@
 {
   flake,
-  target ? null,
   name ? null,
+  target ? null,
 }:
 let
   f = builtins.getFlake flake;

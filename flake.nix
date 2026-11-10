@@ -3,9 +3,9 @@
 
   outputs =
     inputs@{
-      self,
-      nixpkgs,
       flake-parts,
+      nixpkgs,
+      self,
       ...
     }:
     let
@@ -49,7 +49,7 @@
             "aarch64-darwin"
           ];
 
-          perSystem = { system, pkgs, ... }: {
+          perSystem = { pkgs, system, ... }: {
             _module.args.pkgs = import nixpkgs (nixpkgsArgs // { inherit system; });
             clan.pkgs = pkgs;
             treefmt.projectRoot = src;
