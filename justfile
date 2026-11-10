@@ -58,7 +58,7 @@ fmt:
     nix fmt
 
 update *inputs:
-    nix flake update --commit-lock-file --option commit-lockfile-summary "chore(flake): update lockfile" {{ inputs }}
+    nix flake update --commit-lock-file --option commit-lockfile-summary "flake: update lockfile" {{ inputs }}
 
 clean:
     nh clean all

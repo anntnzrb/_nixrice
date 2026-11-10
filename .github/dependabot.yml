@@ -15,7 +15,7 @@ updates:
       flake-inputs:
         patterns: ["*"]
     commit-message:
-      prefix: chore(flake)
+      prefix: flake
 
   - package-ecosystem: github-actions
     directory: /
