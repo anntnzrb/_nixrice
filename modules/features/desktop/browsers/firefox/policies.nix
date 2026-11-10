@@ -47,7 +47,7 @@ let
       preference (
         if builtins.elem name shared.lockedPreferences then "locked" else "user"
       ) value
-    ) (shared.privacyToSettings cfg.privacy)
+    ) privacy
     // {
       "extensions.autoDisableScopes" = preference "user" 0;
     };

@@ -186,6 +186,8 @@ in
     programs.firefox = {
       enable = true;
       package = if isDarwin then null else pkgs.firefox;
+      configPath =
+        if isDarwin then "Library/Application Support/Firefox" else ".mozilla/firefox";
       darwinDefaultsId = if isDarwin then null else "org.mozilla.firefox";
 
       inherit (shared) policies;

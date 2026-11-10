@@ -1,56 +1,64 @@
 { lib }: {
   uiToSettings =
     cfg:
-    lib.optionalAttrs cfg.sidebar.enable { "sidebar.revamp" = true; }
-    // lib.optionalAttrs cfg.sidebar.verticalTabs { "sidebar.verticalTabs" = true; }
+    let
+      inherit (cfg) sidebar;
+    in
+    lib.optionalAttrs sidebar.enable { "sidebar.revamp" = true; }
+    // lib.optionalAttrs sidebar.verticalTabs { "sidebar.verticalTabs" = true; }
     // {
-      "sidebar.expandOnHover" = cfg.sidebar.expandOnHover;
-      "sidebar.visibility" = cfg.sidebar.visibility;
-      "sidebar.position_start" = cfg.sidebar.position == "left";
-      "sidebar.main.tools" = lib.concatStringsSep "," cfg.sidebar.tools;
+      "sidebar.expandOnHover" = sidebar.expandOnHover;
+      "sidebar.visibility" = sidebar.visibility;
+      "sidebar.position_start" = sidebar.position == "left";
+      "sidebar.main.tools" = lib.concatStringsSep "," sidebar.tools;
     };
 
-  privacyToSettings = cfg: {
-    "privacy.sanitize.sanitizeOnShutdown" = cfg.sanitizeOnShutdown.enable;
-    "privacy.sanitize.timeSpan" = 0;
-    "privacy.sanitize.clearOnShutdown.hasMigratedToNewPrefs2" = true;
-    "privacy.sanitize.clearOnShutdown.hasMigratedToNewPrefs3" = true;
-    "privacy.clearOnShutdown.cache" = cfg.sanitizeOnShutdown.cache;
-    "privacy.clearOnShutdown.cookies" = cfg.sanitizeOnShutdown.cookies;
-    "privacy.clearOnShutdown.offlineApps" = cfg.sanitizeOnShutdown.cookies;
-    "privacy.clearOnShutdown.downloads" = cfg.sanitizeOnShutdown.history;
-    "privacy.clearOnShutdown.sessions" = false;
-    "privacy.clearOnShutdown.siteSettings" = false;
-    "privacy.clearOnShutdown.openWindows" = false;
-    "privacy.clearOnShutdown.browsingHistoryAndDownloads" = false;
-    "privacy.clearOnShutdown_v2.cache" = cfg.sanitizeOnShutdown.cache;
-    "privacy.clearOnShutdown_v2.cookiesAndStorage" = cfg.sanitizeOnShutdown.cookies;
-    "privacy.clearOnShutdown_v2.browsingHistoryAndDownloads" = false;
-    "privacy.clearOnShutdown_v2.formdata" = false;
-    "privacy.clearOnShutdown_v2.siteSettings" = false;
-    "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" =
-      cfg.sanitizeOnShutdown.history;
-    "privacy.clearOnShutdown.formdata" = false;
-    "privacy.clearOnShutdown.history" = cfg.sanitizeOnShutdown.history;
-    "places.history.enabled" = true;
-    "browser.formfill.enable" = true;
-    "browser.privatebrowsing.autostart" = false;
-    "browser.sessionstore.resume_from_crash" = true;
-    "signon.rememberSignons" = true;
-    "signon.formlessCapture.enabled" = true;
-    "signon.privateBrowsingCapture.enabled" = true;
-    "identity.fxaccounts.enabled" = !cfg.disableSync;
-    "browser.newtabpage.activity-stream.feeds.section.highlights" =
-      !cfg.disableNewTabHighlights;
-    "browser.newtabpage.activity-stream.section.highlights.includeBookmarks" =
-      !cfg.disableNewTabHighlights;
-    "browser.newtabpage.activity-stream.section.highlights.includeDownloads" =
-      !cfg.disableNewTabHighlights;
-    "browser.newtabpage.activity-stream.section.highlights.includePocket" =
-      !cfg.disableNewTabHighlights;
-    "browser.newtabpage.activity-stream.section.highlights.includeVisited" =
-      !cfg.disableNewTabHighlights;
-  };
+  privacyToSettings =
+    cfg:
+    let
+      inherit (cfg) sanitizeOnShutdown;
+    in
+    {
+      "privacy.sanitize.sanitizeOnShutdown" = sanitizeOnShutdown.enable;
+      "privacy.sanitize.timeSpan" = 0;
+      "privacy.sanitize.clearOnShutdown.hasMigratedToNewPrefs2" = true;
+      "privacy.sanitize.clearOnShutdown.hasMigratedToNewPrefs3" = true;
+      "privacy.clearOnShutdown.cache" = sanitizeOnShutdown.cache;
+      "privacy.clearOnShutdown.cookies" = sanitizeOnShutdown.cookies;
+      "privacy.clearOnShutdown.offlineApps" = sanitizeOnShutdown.cookies;
+      "privacy.clearOnShutdown.downloads" = sanitizeOnShutdown.history;
+      "privacy.clearOnShutdown.sessions" = false;
+      "privacy.clearOnShutdown.siteSettings" = false;
+      "privacy.clearOnShutdown.openWindows" = false;
+      "privacy.clearOnShutdown.browsingHistoryAndDownloads" = false;
+      "privacy.clearOnShutdown_v2.cache" = sanitizeOnShutdown.cache;
+      "privacy.clearOnShutdown_v2.cookiesAndStorage" = sanitizeOnShutdown.cookies;
+      "privacy.clearOnShutdown_v2.browsingHistoryAndDownloads" = false;
+      "privacy.clearOnShutdown_v2.formdata" = false;
+      "privacy.clearOnShutdown_v2.siteSettings" = false;
+      "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" =
+        sanitizeOnShutdown.history;
+      "privacy.clearOnShutdown.formdata" = false;
+      "privacy.clearOnShutdown.history" = sanitizeOnShutdown.history;
+      "places.history.enabled" = true;
+      "browser.formfill.enable" = true;
+      "browser.privatebrowsing.autostart" = false;
+      "browser.sessionstore.resume_from_crash" = true;
+      "signon.rememberSignons" = true;
+      "signon.formlessCapture.enabled" = true;
+      "signon.privateBrowsingCapture.enabled" = true;
+      "identity.fxaccounts.enabled" = !cfg.disableSync;
+      "browser.newtabpage.activity-stream.feeds.section.highlights" =
+        !cfg.disableNewTabHighlights;
+      "browser.newtabpage.activity-stream.section.highlights.includeBookmarks" =
+        !cfg.disableNewTabHighlights;
+      "browser.newtabpage.activity-stream.section.highlights.includeDownloads" =
+        !cfg.disableNewTabHighlights;
+      "browser.newtabpage.activity-stream.section.highlights.includePocket" =
+        !cfg.disableNewTabHighlights;
+      "browser.newtabpage.activity-stream.section.highlights.includeVisited" =
+        !cfg.disableNewTabHighlights;
+    };
 
   policies = {
     DisableTelemetry = true;
