@@ -129,6 +129,24 @@ Then `imports = with inputs.self.homeModules; [ btop ];` wherever it is
 wanted. A feature with both a system file and `home.nix` also hands the home
 part to the owner's Home Manager configuration when a machine imports it.
 
+Separate a headless core from its graphical client when machines may choose
+them independently. Keep the core feature's name; name the graphical feature
+`<name>-desktop` under `desktop/`. The desktop feature imports the core in each
+applicable module class; it must not rely on a base profile supplying it.
+Upstream package names, cask names and configuration paths stay unchanged.
+
+Companion tools belong to their parent feature, not separate feature toggles.
+Put substantial companion configuration in sibling modules (`./tool.nix`) and
+import them from the class entry point. Keep each concern together; do not
+turn every setting or dependency into a module. Independent choices remain
+separate features even when they are often installed together.
+
+A graphical application does not automatically depend on its CLI counterpart.
+Import the headless feature only when the GUI actually uses that runtime.
+Feature names and option namespaces describe ownership; upstream names remain
+data. Empty machine `home.nix` files can deliberately opt into the base home
+configuration through discovery and are not dead files.
+
 Knobs a machine may tune are ordinary options whose namespace matches the
 module directory: features use `liberion.<category>.<...>.<name>` (each nested
 directory becomes one attribute); base modules use `liberion.<name>`. The
@@ -155,8 +173,15 @@ Module layout, so every file reads the same:
   under `config`. Clan services: `_class`, `manifest`, `roles`, `perMachine`
 - `let`: `inherit` lines first, then `cfg = config.liberion.<path>;` (always
   named `cfg`), then the rest
+- Bind repeated long attribute paths and noisy compound expressions once in
+  the enclosing `let`; use descriptive intermediate values instead of nested
+  interpolation. Prefer `inherit (path) name;` when the leaf name is clear.
+  Module configuration bindings belong at module scope; helpers bind values
+  inside the function that owns them. Do not hoist module arguments out of
+  their scope or add aliases for short, single-use expressions.
 - Helper and data files a module imports explicitly follow the head rule only
-- `checks.style` (`scripts/style/`) enforces these in `just check`
+- `checks.style` (`scripts/style/`) enforces head and key ordering in `just check`;
+  feature boundaries and extraction choices require review
 
 Helpers live in `lib/` (`lib.liberion`, assembled in `lib/default.nix`); read it before writing a
 module, its exports are the list, not this file. Prefer precise types (`enum`,
@@ -164,12 +189,40 @@ module, its exports are the list, not this file. Prefer precise types (`enum`,
 
 Shared code goes in `lib.liberion`, not in copies. Before writing a block, grep
 `modules/` for the same shape: launchd agent, activation snippet, `defaults`
-write, `launchctl asuser`, option boilerplate. A shape already in a second
-module becomes a helper in the matching `lib/` file (pure functions get a case in
-`tests/default.nix` `libFailures`) and every copy moves to it in the same
-change. Shell scripts read from a file take the helper's output as an argument
-instead of re-typing it. Values that come from `identity.nix`, another option
-or a package are referenced, never hardcoded.
+write, `launchctl asuser`, option boilerplate. When a second module repeats the
+same policy, extract a helper into the matching `lib/` file and migrate every
+equivalent caller in the same change. Pure helpers get behavioral cases in
+`tests/default.nix` `libFailures`. Shell scripts read from a file take the
+helper's output as an argument instead of re-typing it. Values that come from
+`identity.nix`, another option or a package are referenced, never hardcoded.
+
+Resolve Nix-managed executables with `lib.getExe` (or `lib.getExe'` for another
+binary), bind the result in `let`, and interpolate that binding in commands.
+Prefer the configured program's `package` option to a second package choice.
+Shell builtins, documented OS binaries and `writeShellApplication` commands
+covered by `runtimeInputs` do not need redundant store-path wrappers. A command
+executed on another machine needs that machine's runtime contract, not a local
+store path.
+
+Promote shared policy, not merely similar syntax. Reuse a local helper within
+one feature; move it into `lib.liberion` when separate features share the same
+contract. Keep inputs explicit and migrate all equivalent callers together.
+Do not add a wrapper that only renames an existing Nix or library operation.
+
+Keep moves and their caller updates in one logical change. Do not split a
+rename-only commit from import or namespace updates when the intermediate tree
+would no longer evaluate. Verify refactors against a stable baseline captured
+before editing, not snapshots taken while other agents mutate the tree.
+
+Keep shared values authoritative across generated configuration and runtime
+code. Pass them through a supported data or props boundary instead of repeating
+constants in Nix and JavaScript. Do not template executable source to share data.
+
+For external assets and mods, prefer a pinned `flake = false` source input
+over copied upstream code. Keep customisation in supported configuration or
+props; a local patch is an explicit maintenance commitment. Generate derived
+JSON from Nix when bindings remove duplicated values, but keep executable
+JavaScript and artwork as source files.
 
 Paths never climb parent directories (the `no-parent-paths` hook rejects it in
 `.nix` and `.sh`). Siblings use `./x`. Anything else is anchored at the repo
@@ -205,6 +258,12 @@ tool several modules share becomes its own package.
 - Shell is a `writeShellApplication` (shellcheck and strict options at build
   time), with the body in a `.sh` file beside the module once it holds logic.
   `writeShellScript` only for a few lines without branching
+- Pass fixed wrapper configuration through named `writeShellApplication.runtimeEnv`
+  values rather than long positional argument lists. Keep command-line arguments
+  for inputs callers actually vary.
+- User services use `lib.liberion.userService`; scheduled one-shot jobs use
+  `userJob`. Express lifecycle policy through their supported inputs rather than
+  stripping generated module attributes. Keep service-specific conditions local.
 
 ### Gotchas
 - Import order is merge order for list options. Harmless for package lists,
