@@ -1,6 +1,7 @@
 # T3 server settings merged into ~/.t3/userdata/settings.json on every update
-# run. Keys not set here keep whatever a client chose. Schema and defaults:
-# packages/contracts/src/settings.ts upstream.
+# run. Keys not set here keep whatever a client chose. Check every new key
+# against packages/contracts/src/settings.ts upstream: T3 replaces an invalid
+# settings.json with its defaults.
 let
   disabled = driver: {
     inherit driver;
@@ -74,6 +75,8 @@ in
       driver = "codex";
       enabled = true;
     };
+    # Keep config.homePath unset: it moves CLAUDE_CONFIG_DIR off the
+    # agents-managed ~/.claude, dropping its hooks and Bash timeout cap.
     claudeAgent = {
       driver = "claudeAgent";
       enabled = true;

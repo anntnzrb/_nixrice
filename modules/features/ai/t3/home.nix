@@ -45,6 +45,7 @@ let
     ))
   ];
   flags = [
+    # Moving to an older channel head needs `t3 update --allow-downgrade` by hand.
     "--channel"
     "stable"
     "--settings"
