@@ -7,6 +7,7 @@
 let
   inherit (lib.liberion.module) mkOpt';
   inherit (lib.types) listOf str;
+  inherit (config.home) homeDirectory;
 
   ripgrep = pkgs.ripgrep.override { withPCRE2 = true; };
 in
@@ -31,7 +32,7 @@ in
 
   config = {
     home = {
-      sessionPath = [ "${config.home.homeDirectory}/.local/bin" ];
+      sessionPath = [ "${homeDirectory}/.local/bin" ];
 
       sessionVariables.NIX_SHELL_PRESERVE_PROMPT = "1";
 
@@ -53,6 +54,6 @@ in
     # 50-systemd-path.conf keeps its PATH assignment from discarding ours.
     xdg.configFile."environment.d/60-local-bin.conf" =
       lib.mkIf pkgs.stdenv.hostPlatform.isLinux
-        { text = "PATH=${config.home.homeDirectory}/.local/bin:\${PATH}\n"; };
+        { text = "PATH=${homeDirectory}/.local/bin:\${PATH}\n"; };
   };
 }
