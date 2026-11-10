@@ -6,6 +6,6 @@
       launchAtLogin = false;
     };
 
-    launchd.user.agents.aldente = lib.liberion.darwin.openAtLogin "AlDente" "modules/features/programs/aldente";
+    launchd.user.agents.aldente = lib.liberion.darwin.openAtLogin "AlDente" "modules/features/system/aldente";
   };
 }
