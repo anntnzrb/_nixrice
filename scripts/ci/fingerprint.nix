@@ -37,7 +37,7 @@ let
   );
   enabled = lib.filterAttrs (_: v: v.enable or true);
 
-  home = u: {
+  home = u: options: {
     packages = pkgs u.home.packages;
     files = files (enabled u.home.file);
     sessionVariables = lib.mapAttrs (_: norm) u.home.sessionVariables;
@@ -50,18 +50,26 @@ let
         u.systemd.user.${kind} or { }
       )
     );
-    programs = lib.attrNames (
-      lib.filterAttrs (
-        _: p: (builtins.tryEval (p.enable or false)).value == true
-      ) u.programs
-    );
+    programs = builtins.filter (
+      name:
+      let
+        option = options.programs.${name};
+        isAlias =
+          o:
+          (o.visible or true) == false
+          && lib.hasPrefix "Alias of {option}`" (o.description or "");
+      in
+      !isAlias option
+      && !isAlias (option.enable or { })
+      && (builtins.tryEval (u.programs.${name}.enable or false)).value == true
+    ) (lib.attrNames options.programs);
     launchd = lib.mapAttrs (_: a: try (norm (builtins.toJSON a.config))) (
       u.launchd.agents or { }
     );
     inherit (u.home) stateVersion;
   };
 
-  system = c: {
+  system = c: homeOptions: {
     packages = pkgs c.environment.systemPackages;
     etc = files (enabled c.environment.etc);
     users = lib.mapAttrs (
@@ -73,7 +81,9 @@ let
         home = u.home or null;
       }
     ) c.users.users;
-    home = lib.mapAttrs (_: u: try (home u)) (c.home-manager.users or { });
+    home = lib.mapAttrs (name: u: try (home u homeOptions.${name})) (
+      c.home-manager.users or { }
+    );
     services = try (
       lib.mapAttrs (
         _: s:
@@ -137,10 +147,15 @@ let
       v;
 in
 shorten (
-  lib.mapAttrs (_: c: system c.config) (
-    f.nixosConfigurations // f.darwinConfigurations
-  )
+  lib.mapAttrs (
+    _: c:
+    system c.config (
+      lib.mapAttrs (_: v: v.configuration.options) (
+        c.options.home-manager.users.valueMeta.attrs or { }
+      )
+    )
+  ) (f.nixosConfigurations // f.darwinConfigurations)
   // lib.mapAttrs' (
-    n: h: lib.nameValuePair "home:${n}" (home h.config)
+    n: h: lib.nameValuePair "home:${n}" (home h.config h.options)
   ) f.homeConfigurations
 )
