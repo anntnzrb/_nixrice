@@ -14,6 +14,7 @@
 
     devices = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHzBDSIjkAYW57NffyZkkKeFoA2YGqEKR7mzL5pgYYxV anntnzrb@munich"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDIwQwPmJj/G847WFjHOBCBt3fxzHWu88T9N/v37Fruo herdr-mobile"
     ];
   };
 }
