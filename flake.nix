@@ -178,6 +178,7 @@
       inputs = {
         nixpkgs.follows = "nixpkgs";
         treefmt-nix.follows = "clan-core/treefmt-nix";
+        nixvim.url = "github:nix-community/nixvim/nixos-26.05";
         nixvim.inputs = {
           flake-parts.follows = "clan-core/flake-parts";
           systems.follows = "clan-core/systems";
