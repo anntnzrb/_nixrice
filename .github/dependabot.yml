@@ -1,7 +1,14 @@
 version: 2
+registries:
+  clan:
+    type: git
+    url: https://git.clan.lol
+
 updates:
   - package-ecosystem: nix
     directory: /
+    registries:
+      - clan
     schedule:
       interval: weekly
     groups:

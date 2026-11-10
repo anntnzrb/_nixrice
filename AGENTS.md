@@ -469,6 +469,8 @@ Deploys are supervised: the owner agrees, agents may execute.
   agent's first activation is a `just deploy`/`switch`, since no agent runs yet
 - `dependabot.yml` + `auto-merge.yml`: grouped update PRs that merge themselves
   once the required checks pass, so updates land already built and cached.
+  Dependabot's proxy only reaches hosts declared under `registries`; a flake
+  input on a non-GitHub host needs a `type: git` registry entry there.
   `auto-merge.yml` runs on `pull_request_target` and never checks out PR code
   (write token + untrusted content)
 - `flake-checker` runs without `--check-outdated`: nixpkgs freshness belongs to
