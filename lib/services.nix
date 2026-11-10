@@ -89,6 +89,8 @@ let
     }:
     { config, pkgs, ... }:
     let
+      inherit (pkgs.stdenv.hostPlatform) isDarwin isLinux;
+
       nightly = schedule == "nightly";
       # launchd runs a stable path, so each run picks up the current generation
       # and launchd has no timeout of its own.
@@ -104,7 +106,7 @@ let
         }
       ];
 
-      home.file.${launcher} = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+      home.file.${launcher} = lib.mkIf isDarwin {
         source = pkgs.writeShellScript name "exec ${
           lib.optionalString (
             timeout != null
@@ -112,7 +114,7 @@ let
         }${lib.escapeShellArgs command}";
       };
 
-      systemd.user = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+      systemd.user = lib.mkIf isLinux {
         services.${name} = {
           Unit.Description = description;
           Service = {
@@ -142,7 +144,7 @@ let
         };
       };
 
-      launchd.agents.${name} = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+      launchd.agents.${name} = lib.mkIf isDarwin {
         enable = true;
         config = {
           ProgramArguments = [ "${config.home.homeDirectory}/${launcher}" ];
@@ -179,6 +181,8 @@ let
     }:
     { config, pkgs, ... }:
     let
+      inherit (pkgs.stdenv.hostPlatform) isDarwin isLinux;
+
       home = config.home.homeDirectory;
       env = environment // {
         PATH = userPath config;
@@ -187,7 +191,7 @@ let
     {
       imports = [ (launchdLog name) ];
 
-      systemd.user = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
+      systemd.user = lib.mkIf isLinux {
         services.${name} = {
           Unit = {
             Description = description;
@@ -204,7 +208,7 @@ let
         };
       };
 
-      launchd.agents.${name} = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+      launchd.agents.${name} = lib.mkIf isDarwin {
         enable = true;
         config = {
           ProgramArguments = command;
