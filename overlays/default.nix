@@ -9,14 +9,9 @@ in
     config.allowUnfree = true;
   };
 
-  bun = inputs.bun-overlay.packages.${system}.bun.overrideAttrs (old: {
-    meta = (old.meta or { }) // {
-      mainProgram = "bun";
-    };
-  });
-
   inherit (final.unstable)
     aerospace
+    bun
     lazygit
     vscode
     yashiki

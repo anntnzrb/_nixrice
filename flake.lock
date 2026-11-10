@@ -64,28 +64,6 @@
         "type": "github"
       }
     },
-    "bun-overlay": {
-      "inputs": {
-        "flake-compat": [],
-        "flake-utils": "flake-utils",
-        "nixpkgs": [
-          "nixpkgs-unstable"
-        ]
-      },
-      "locked": {
-        "lastModified": 1792729273,
-        "narHash": "sha256-Gnqj+bf3zWTxIaImJNunL/ACE4UGMVxcjGKMNTIE9dA=",
-        "owner": "alleneubank",
-        "repo": "bun-overlay",
-        "rev": "bb59df6dbca0747994dc2f1e9a0432da942fd41f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "alleneubank",
-        "repo": "bun-overlay",
-        "type": "github"
-      }
-    },
     "clan-core": {
       "inputs": {
         "data-mesher": "data-mesher",
@@ -301,27 +279,6 @@
       "original": {
         "owner": "hercules-ci",
         "repo": "flake-parts",
-        "type": "github"
-      }
-    },
-    "flake-utils": {
-      "inputs": {
-        "systems": [
-          "clan-core",
-          "systems"
-        ]
-      },
-      "locked": {
-        "lastModified": 1731533236,
-        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
         "type": "github"
       }
     },
@@ -668,7 +625,6 @@
     "root": {
       "inputs": {
         "betterfox-nix": "betterfox-nix",
-        "bun-overlay": "bun-overlay",
         "clan-core": "clan-core",
         "determinate": "determinate",
         "fenix": "fenix",

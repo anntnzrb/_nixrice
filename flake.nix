@@ -138,15 +138,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    bun-overlay = {
-      url = "github:alleneubank/bun-overlay";
-      inputs = {
-        nixpkgs.follows = "nixpkgs-unstable";
-        flake-compat.follows = "";
-        flake-utils.inputs.systems.follows = "clan-core/systems";
-      };
-    };
-
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware/master";
       inputs.nixpkgs.follows = "nixpkgs";
