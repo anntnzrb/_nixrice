@@ -8,10 +8,10 @@ let
   inherit (lib.liberion.module) mkOpt';
   inherit (lib.types) str ints;
 
-  cfg = config.liberion.desktop.themes;
+  cfg = config.liberion.desktop.gtk;
 in
 {
-  options.liberion.desktop.themes = {
+  options.liberion.desktop.gtk = {
     cursor = {
       theme = mkOpt' str "macOS-BigSur";
       size = mkOpt' ints.u8 28;
@@ -25,6 +25,7 @@ in
     gtk = {
       enable = true;
       gtk2.configLocation = "${config.xdg.configHome}/gtk-2.0/gtkrc";
+      gtk4.theme = config.gtk.theme;
 
       cursorTheme = {
         name = cfg.cursor.theme;
