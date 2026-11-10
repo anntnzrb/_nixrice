@@ -383,7 +383,7 @@ def test_update_retries_selected_release_until_running(
         assert done.returncode == 0, done.stderr
         assert restarts.read_text(encoding="utf-8").splitlines() == attempts
     _ = pid_file.write_text("0", encoding="utf-8")
-    command[-2] = str(tmp_path / "absent-runtime/config.yaml")
+    env["CPA_RUNTIME_CONFIG"] = str(tmp_path / "absent-runtime/config.yaml")
     done = subprocess.run(  # noqa: S603 - a stopped service stays stopped, with cache-only sync
         command, env=env, capture_output=True, text=True, check=False, timeout=60
     )
