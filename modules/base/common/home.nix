@@ -16,7 +16,6 @@
     zoxide
 
     bun
-    husky
     node
     uv
 
