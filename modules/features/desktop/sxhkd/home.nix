@@ -12,6 +12,8 @@ let
 
   cfg = config.liberion.desktop.sxhkd;
   btop = lib.getExe config.programs.btop.package;
+  terminal = lib.getExe apps.terminal;
+  pamixer = lib.getExe pkgs.pamixer;
 in
 {
   imports = [ inputs.self.homeModules.session ];
@@ -31,15 +33,15 @@ in
         "-a ${cfg.cancelKey}"
       ];
       keybindings = {
-        "super + Return ; {Return}" = "${lib.getExe apps.terminal} {_}";
+        "super + Return ; {Return}" = "${terminal} {_}";
         "super + Return ; i" =
-          lib.mkIf config.programs.btop.enable "${lib.getExe apps.terminal} -e ${btop}";
+          lib.mkIf config.programs.btop.enable "${terminal} -e ${btop}";
 
         "super + w ; {f,w}" =
           "{${lib.getExe apps.fileManager},${lib.getExe apps.browser}}";
 
-        "XF86AudioMute" = "${lib.getExe pkgs.pamixer} -t";
-        "XF86Audio{Lower,Raise}Volume" = "${lib.getExe pkgs.pamixer} -{d,i} 5";
+        "XF86AudioMute" = "${pamixer} -t";
+        "XF86Audio{Lower,Raise}Volume" = "${pamixer} -{d,i} 5";
 
         "XF86MonBrightness{Down,Up}" = "${lib.getExe pkgs.brightnessctl} set {2%-,+2%}";
 
