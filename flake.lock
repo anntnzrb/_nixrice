@@ -321,23 +321,6 @@
         "type": "github"
       }
     },
-    "herdr-reviewer": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1794222225,
-        "narHash": "sha256-sZxf0ZMU4AQeeN8epJqExlHgTDNBxXmj2LiQB25it7k=",
-        "owner": "vytasgavelis",
-        "repo": "herdr-reviewer",
-        "rev": "01e6d108a8fcc6aeaa07df5c068af59bdd642117",
-        "type": "github"
-      },
-      "original": {
-        "owner": "vytasgavelis",
-        "ref": "master",
-        "repo": "herdr-reviewer",
-        "type": "github"
-      }
-    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -652,7 +635,6 @@
         ],
         "ghostty-protesilaos": "ghostty-protesilaos",
         "git-hooks": "git-hooks",
-        "herdr-reviewer": "herdr-reviewer",
         "home-manager": "home-manager",
         "neovim-annt": "neovim-annt",
         "nix-homebrew": "nix-homebrew",

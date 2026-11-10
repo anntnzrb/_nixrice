@@ -118,13 +118,7 @@ in
                   type = "stack";
                   children = [
                     (mod "files" "files")
-                    (
-                      (mod "changes" "reviewer")
-                      // {
-                        content.props.palette = "theme";
-                        content.mod = "reviewer";
-                      }
-                    )
+                    (mod "changes" "changes")
                   ];
                   active = "files";
                 }

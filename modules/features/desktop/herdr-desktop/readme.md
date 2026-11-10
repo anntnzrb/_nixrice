@@ -2,4 +2,3 @@
 - After changing the desktop shell environment, reopen Herdr to inherit it; existing terminal processes retain their original shell and environment.
 - Edit `palettes.nix` for theme colors; `muted`, `dim` and `idle` share each variant's `secondary` color. The palette draws on Modus themes' contrast and legibility and ef-melissa-light/dark semantic seeds; it does not certify contrast in Herdr or terminal applications.
 - Mod directories are managed per file so Herdr can create its own declarations and `jsconfig.json` alongside them. Herdr's bundled files, pane and overlay mods remain runtime dependencies.
-- Reviewer comes from the pinned flake input, bumped by Dependabot; customise through block props (`palette`, `font_size`, `base`) and `keys.json`, never edit its files.

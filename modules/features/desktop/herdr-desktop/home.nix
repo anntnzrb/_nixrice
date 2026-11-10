@@ -31,7 +31,6 @@ in
 
   xdg.configFile =
     modDir "kindred" ./kindred
-    // modDir "reviewer" (inputs.herdr-reviewer + "/mods/reviewer")
     // {
       "herdr-app/layouts/kindred.json".source = json.generate "kindred-layout.json" (
         import ./layout.nix { inherit palettes; }
