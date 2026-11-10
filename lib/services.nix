@@ -36,9 +36,9 @@ let
   pythonScript =
     pkgs:
     {
+      libraries ? _: [ ],
       name,
       script,
-      libraries ? _: [ ],
     }:
     pkgs.runCommand name { meta.mainProgram = name; } ''
       mkdir -p $out/bin
@@ -80,9 +80,9 @@ let
   # in seconds; `startup` (seconds) also runs it shortly after login or boot.
   userJob =
     {
-      name,
-      description,
       command,
+      description,
+      name,
       schedule,
       startup ? null,
       timeout ? null,
@@ -95,6 +95,10 @@ let
       # launchd runs a stable path, so each run picks up the current generation
       # and launchd has no timeout of its own.
       launcher = ".local/libexec/${name}";
+      timeoutCommand = lib.optionalString (
+        timeout != null
+      ) "${lib.getExe' pkgs.coreutils "timeout"} ${toString timeout} ";
+      launcherCommand = "exec ${timeoutCommand}${lib.escapeShellArgs command}";
     in
     {
       imports = [ (launchdLog name) ];
@@ -107,11 +111,7 @@ let
       ];
 
       home.file.${launcher} = lib.mkIf isDarwin {
-        source = pkgs.writeShellScript name "exec ${
-          lib.optionalString (
-            timeout != null
-          ) "${lib.getExe' pkgs.coreutils "timeout"} ${toString timeout} "
-        }${lib.escapeShellArgs command}";
+        source = pkgs.writeShellScript name launcherCommand;
       };
 
       systemd.user = lib.mkIf isLinux {
@@ -170,14 +170,19 @@ let
       };
     };
 
-  # A long-running user service restarted whenever it exits: a systemd user
-  # service on Linux, a kept-alive launchd agent on Darwin.
+  # A long-running user service on Linux and/or Darwin. Autostart and
+  # keepalive are independent; launchd also accepts a PathState policy.
   userService =
     {
-      name,
-      description,
+      autostart ? true,
       command,
+      darwinOnly ? false,
+      description,
       environment ? { },
+      keepalive ? true,
+      launchdExitTimeout ? null,
+      launchdProcessType ? null,
+      name,
     }:
     { config, pkgs, ... }:
     let
@@ -191,7 +196,7 @@ let
     {
       imports = [ (launchdLog name) ];
 
-      systemd.user = lib.mkIf isLinux {
+      systemd.user = lib.mkIf (isLinux && !darwinOnly) {
         services.${name} = {
           Unit = {
             Description = description;
@@ -201,10 +206,10 @@ let
             ExecStart = lib.escapeShellArgs command;
             Environment = lib.mapAttrsToList (key: value: "${key}=${value}") env;
             WorkingDirectory = home;
-            Restart = "always";
+            Restart = if keepalive then "always" else "no";
             RestartSec = 5;
           };
-          Install.WantedBy = [ "default.target" ];
+          Install.WantedBy = if autostart then [ "default.target" ] else lib.mkForce [ ];
         };
       };
 
@@ -214,9 +219,15 @@ let
           ProgramArguments = command;
           EnvironmentVariables = env;
           WorkingDirectory = home;
-          RunAtLoad = true;
-          KeepAlive = true;
+          RunAtLoad = autostart;
+          KeepAlive = keepalive;
           ThrottleInterval = 5;
+        }
+        // lib.optionalAttrs (launchdProcessType != null) {
+          ProcessType = launchdProcessType;
+        }
+        // lib.optionalAttrs (launchdExitTimeout != null) {
+          ExitTimeOut = launchdExitTimeout;
         };
       };
     };
@@ -226,37 +237,40 @@ let
   # idle-restart.py) reports no work in flight.
   idleRestartJob =
     {
-      service,
-      kind,
-      wrapper,
       extraArgs ? [ ],
+      kind,
       schedule ? "nightly",
+      service,
       startup ? null,
+      wrapper,
     }:
     { pkgs, ... }@args:
+    let
+      idleRestart = lib.getExe (
+        pythonScript pkgs {
+          name = "idle-restart";
+          script = root + "/modules/features/ai/idle-restart.py";
+        }
+      );
+      serviceName =
+        if pkgs.stdenv.hostPlatform.isLinux then
+          "${service}.service"
+        else
+          "org.nix-community.home.${service}";
+    in
     userJob {
       name = "${service}-update";
       description = "Restart ${service} onto its newest release when idle";
       inherit schedule startup;
       timeout = 900;
       command = [
-        (lib.getExe (
-          pythonScript pkgs {
-            name = "idle-restart";
-            script = root + "/modules/features/ai/idle-restart.py";
-          }
-        ))
+        idleRestart
         "--kind"
         kind
         "--wrapper"
         wrapper
         "--service"
-        (
-          if pkgs.stdenv.hostPlatform.isLinux then
-            "${service}.service"
-          else
-            "org.nix-community.home.${service}"
-        )
+        serviceName
       ]
       ++ extraArgs;
     } args;
@@ -269,11 +283,11 @@ let
 
   gitCheckout =
     {
-      name,
-      description,
-      repository,
-      destination,
       branch,
+      description,
+      destination,
+      name,
+      repository,
       update ? null,
     }:
     { config, pkgs, ... }@args:

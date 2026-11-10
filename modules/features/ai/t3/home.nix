@@ -8,7 +8,7 @@
 }:
 let
   inherit (config.home) homeDirectory;
-  inherit (pkgs.stdenv.hostPlatform) isDarwin isLinux;
+  inherit (pkgs.stdenv.hostPlatform) isLinux;
 
   json = pkgs.formats.json { };
   npx = lib.getExe' pkgs.nodejs "npx";
@@ -75,25 +75,22 @@ in
       startup = 300;
       command = t3ctl ++ [ "sync" ] ++ flags;
     })
-    (
-      let
-        service = lib.liberion.userService {
-          name = "t3-service";
-          description = "T3 Code service launcher";
-          command = [
-            stable
-            "__service-launcher"
-          ];
-          environment = telemetry // {
-            T3CODE_HOME = "${homeDirectory}/.t3";
-          };
-        } { inherit config pkgs; };
-      in
-      {
-        inherit (service) imports;
-        config = lib.mkIf isDarwin (removeAttrs service [ "imports" ]);
-      }
-    )
+    (lib.liberion.userService {
+      name = "t3-service";
+      description = "T3 Code service launcher";
+      command = [
+        stable
+        "__service-launcher"
+      ];
+      environment = telemetry // {
+        T3CODE_HOME = "${homeDirectory}/.t3";
+      };
+      darwinOnly = true;
+      autostart = false;
+      keepalive.PathState."${homeDirectory}/.t3/runtime/stable.enabled" = true;
+      launchdProcessType = "Interactive";
+      launchdExitTimeout = 90;
+    })
   ];
 
   options.liberion.ai.t3.settings = lib.liberion.module.mkOpt' json.type { };
@@ -111,15 +108,5 @@ in
           };
         };
     liberion.maintenance.tasks.t3.command = t3ctl ++ [ "prune" ] ++ flags;
-    launchd.agents = lib.mkIf isDarwin {
-      t3-service.config = {
-        ExitTimeOut = 90;
-        ProcessType = "Interactive";
-        RunAtLoad = lib.mkForce false;
-        KeepAlive = lib.mkForce {
-          PathState."${homeDirectory}/.t3/runtime/stable.enabled" = true;
-        };
-      };
-    };
   };
 }

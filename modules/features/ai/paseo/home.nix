@@ -18,6 +18,7 @@ in
     (lib.liberion.userService {
       name = "paseo";
       description = "Paseo agent daemon";
+      inherit (cfg) autostart;
       command = [
         wrapper
         "daemon"
@@ -48,7 +49,6 @@ in
       }
     ];
     systemd.user.services = {
-      paseo.Install.WantedBy = lib.mkForce [ ];
       # `systemctl restart` would start a stopped daemon.
       paseo-update.Service.ExecCondition = "${pkgs.systemd}/bin/systemctl --user is-active --quiet paseo.service";
     };

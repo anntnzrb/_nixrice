@@ -16,8 +16,126 @@ let
     inherit lib;
     root = fixtures;
   };
+  serviceConfig =
+    platform: settings:
+    (lib.evalModules {
+      specialArgs.pkgs.stdenv.hostPlatform = {
+        isLinux = platform == "linux";
+        isDarwin = platform == "darwin";
+      };
+      modules = [
+        ({ lib, ... }: {
+          options = {
+            home = lib.mkOption { type = lib.types.attrsOf lib.types.anything; };
+            systemd = lib.mkOption {
+              type = lib.types.attrsOf lib.types.anything;
+              default = { };
+            };
+            launchd = lib.mkOption {
+              type = lib.types.attrsOf lib.types.anything;
+              default = { };
+            };
+          };
+          config.home = {
+            homeDirectory = "/home/test";
+            username = "test";
+          };
+        })
+        (lib.liberion.userService (
+          {
+            name = "example";
+            description = "Example";
+            command = [ "/bin/example" ];
+          }
+          // settings
+        ))
+      ];
+    }).config;
 
   libFailures = lib.runTests {
+    testUserServiceDefaults = {
+      expr =
+        let
+          linux = (serviceConfig "linux" { }).systemd.user.services.example;
+          darwin = (serviceConfig "darwin" { }).launchd.agents.example.config;
+        in
+        {
+          inherit (linux.Install) WantedBy;
+          inherit (linux.Service) Restart;
+          inherit (darwin) RunAtLoad KeepAlive;
+        };
+      expected = {
+        WantedBy = [ "default.target" ];
+        Restart = "always";
+        RunAtLoad = true;
+        KeepAlive = true;
+      };
+    };
+    testUserServiceAutostartWithoutKeepalive = {
+      expr =
+        let
+          linux =
+            (serviceConfig "linux" { keepalive = false; }).systemd.user.services.example;
+          darwin =
+            (serviceConfig "darwin" { keepalive = false; }).launchd.agents.example.config;
+        in
+        {
+          inherit (linux.Install) WantedBy;
+          inherit (linux.Service) Restart;
+          inherit (darwin) RunAtLoad KeepAlive;
+        };
+      expected = {
+        WantedBy = [ "default.target" ];
+        Restart = "no";
+        RunAtLoad = true;
+        KeepAlive = false;
+      };
+    };
+    testUserServiceLinuxAutostartIndependentOfRestart = {
+      expr =
+        let
+          service =
+            (serviceConfig "linux" { autostart = false; }).systemd.user.services.example;
+        in
+        {
+          inherit (service.Install) WantedBy;
+          inherit (service.Service) Restart;
+        };
+      expected = {
+        WantedBy = [ ];
+        Restart = "always";
+      };
+    };
+    testUserServiceDarwinPathState = {
+      expr =
+        let
+          service =
+            (serviceConfig "darwin" {
+              autostart = false;
+              keepalive.PathState."/home/test/enabled" = true;
+              launchdProcessType = "Interactive";
+              launchdExitTimeout = 90;
+            }).launchd.agents.example.config;
+        in
+        {
+          inherit (service)
+            RunAtLoad
+            KeepAlive
+            ProcessType
+            ExitTimeOut
+            ;
+        };
+      expected = {
+        RunAtLoad = false;
+        KeepAlive.PathState."/home/test/enabled" = true;
+        ProcessType = "Interactive";
+        ExitTimeOut = 90;
+      };
+    };
+    testUserServiceDarwinOnlyOnLinux = {
+      expr = (serviceConfig "linux" { darwinOnly = true; }).systemd;
+      expected = { };
+    };
     testRouteHome = {
       expr = lib.liberion.routeHome [ tool ];
       expected = routed tool;
