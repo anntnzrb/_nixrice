@@ -1,0 +1,25 @@
+name: Set up Nix and Cachix
+description: Install Nix and configure the anntnzrb cache
+inputs:
+  cachix-auth-token:
+    description: Token for pushing to Cachix
+    required: false
+  push:
+    description: Enable Cachix pushes
+    default: "false"
+runs:
+  using: composite
+  steps:
+    - uses: DeterminateSystems/nix-installer-action@v23
+    - if: inputs.push != 'true'
+      uses: cachix/cachix-action@v17
+      with:
+        name: anntnzrb
+        skipPush: true
+    - if: inputs.push == 'true'
+      uses: cachix/cachix-action@v17
+      with:
+        name: anntnzrb
+        authToken: ${{ inputs.cachix-auth-token }}
+        # Push at end; daemon drain timeout fails completed builds.
+        useDaemon: false
