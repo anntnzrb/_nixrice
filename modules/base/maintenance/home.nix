@@ -5,6 +5,8 @@
   ...
 }:
 let
+  inherit (lib.liberion.module) mkOpt' mkReq';
+
   cfg = config.liberion.maintenance;
 
   sortedTaskNames = lib.sort (a: b: a < b) (builtins.attrNames cfg.tasks);
@@ -42,16 +44,13 @@ in
     })
   ];
 
-  options.liberion.maintenance.tasks = lib.liberion.module.mkOpt' (
-    lib.types.attrsOf
-      (
-        lib.types.submodule {
-          options = {
-            command = lib.liberion.module.mkReq' (lib.types.listOf lib.types.str);
-          };
-        }
-      )
-  ) { };
+  options.liberion.maintenance.tasks = mkOpt' (lib.types.attrsOf (
+    lib.types.submodule {
+      options = {
+        command = mkReq' (lib.types.listOf lib.types.str);
+      };
+    }
+  )) { };
 
   config.liberion.maintenance.tasks.scratch.command = [ (lib.getExe scratch) ];
 }
