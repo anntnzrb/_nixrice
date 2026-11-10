@@ -118,6 +118,21 @@
           enable = true;
           args = [ "--no-exit-codes" ];
         };
+
+        eval = {
+          enable = true;
+          name = "eval";
+          description = "Run the lib tests and evaluate every machine and home before pushing";
+          stages = [ "pre-push" ];
+          pass_filenames = false;
+          always_run = true;
+          entry = toString (
+            pkgs.writeShellScript "pre-push-eval" ''
+              ${lib.getExe pkgs.just} test
+              ${lib.getExe pkgs.just} snap >/dev/null
+            ''
+          );
+        };
       };
 
       checks = {
