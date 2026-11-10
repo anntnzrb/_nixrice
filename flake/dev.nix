@@ -23,6 +23,7 @@
           ps.hypothesis
           ps.pytest
           ps.pytest-timeout
+          ps.pytest-xdist
           ps.pyyaml
           ps.types-pyyaml
         ]

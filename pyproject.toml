@@ -36,6 +36,7 @@ addopts = [
   "--strict-config",
   "--strict-markers",
   "-ra",
+  "-n", "auto",
 ]
 filterwarnings = ["error"]
 xfail_strict = true

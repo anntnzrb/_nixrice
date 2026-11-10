@@ -8,6 +8,7 @@ Host OS/arch detection and ``execv`` coverage hand-off need a tiny runner.
 """
 
 import fcntl
+import gzip
 import hashlib
 import io
 import json
@@ -103,7 +104,10 @@ class GitHub:
 
 def tarball(name: str, data: bytes = b"", kind: bytes = tarfile.REGTYPE) -> bytes:
     buffer = io.BytesIO()
-    with tarfile.open(fileobj=buffer, mode="w:gz") as tar:
+    with (
+        gzip.GzipFile(fileobj=buffer, mode="wb", mtime=0) as packed,
+        tarfile.open(fileobj=packed, mode="w") as tar,
+    ):
         info = tarfile.TarInfo(name)
         info.type = kind
         info.mode = 0o644
@@ -206,7 +210,9 @@ def github(tls_files: Tls) -> Iterator[GitHub]:
             pass
 
     with ThreadingHTTPServer(("127.0.0.1", 0), Proxy) as server:
-        thread = threading.Thread(target=server.serve_forever)
+        thread = threading.Thread(
+            target=server.serve_forever, kwargs={"poll_interval": 0.01}
+        )
         thread.start()
         proxy = f"http://127.0.0.1:{server.server_port}"
         env = {

@@ -247,7 +247,9 @@ def run_configure(tmp_path: Path, base_url: str) -> dict[str, object]:
 
 def test_discovery_lists_upstream_models_and_survives_an_outage(tmp_path: Path) -> None:
     server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), ModelListing)
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread = threading.Thread(
+        target=server.serve_forever, kwargs={"poll_interval": 0.01}, daemon=True
+    )
     thread.start()
     base_url = f"http://127.0.0.1:{server.server_address[1]}/v1"
     try:
@@ -301,7 +303,9 @@ openai-compatibility:
 
 def test_discovery_rejected_by_upstream_declares_no_models(tmp_path: Path) -> None:
     server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), ModelListing)
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread = threading.Thread(
+        target=server.serve_forever, kwargs={"poll_interval": 0.01}, daemon=True
+    )
     thread.start()
     try:
         profile = run_configure(

@@ -136,7 +136,9 @@ def upstream_server() -> Generator[Fake]:
     seen: Seen = queue.Queue()
     closed = threading.Event()
     with ThreadingHTTPServer(("127.0.0.1", 0), make_handler(seen, closed)) as server:
-        thread = threading.Thread(target=server.serve_forever)
+        thread = threading.Thread(
+            target=server.serve_forever, kwargs={"poll_interval": 0.01}
+        )
         thread.start()
         try:
             yield Fake(server.server_port, seen, closed)
