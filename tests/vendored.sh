@@ -4,7 +4,9 @@ set -euo pipefail
 
 updater=$1
 work=$(mktemp -d)
-trap 'rm -rf "${work}"' EXIT
+cleanup() { rm -rf "${work}"; }
+# shellcheck source=scripts/ci/cleanup.sh
+. "$(dirname "$(dirname "$0")")/scripts/ci/cleanup.sh"
 export HOME="${work}/home" XDG_CACHE_HOME="${work}/cache" GIT_CONFIG_NOSYSTEM=1
 unset GIT_CONFIG_GLOBAL
 root="${HOME}/src/vendored"

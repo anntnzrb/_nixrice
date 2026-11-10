@@ -4,7 +4,9 @@ set -euo pipefail
 
 reconcile=${1}
 work=$(mktemp -d)
-trap 'rm -rf "${work}"' EXIT
+cleanup() { rm -rf "${work}"; }
+# shellcheck source=scripts/ci/cleanup.sh
+. "$(dirname "$(dirname "$0")")/scripts/ci/cleanup.sh"
 user=$(id -un)
 mkdir "${work}/bin"
 # shellcheck disable=SC2016 # Expanded by the generated command, not the test.
