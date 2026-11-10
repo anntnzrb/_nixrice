@@ -6,13 +6,14 @@
 }:
 let
   inherit (lib) getExe;
+  fd = getExe pkgs.fd;
 in
 {
   programs.fzf =
     let
       catCmd = "${getExe pkgs.bat} --color=auto -P";
       treeCmd = "${getExe pkgs.eza} --color=automatic --icons -T";
-      defaultCommand = "${getExe pkgs.fd} --type f";
+      defaultCommand = "${fd} --type f";
     in
     {
       enable = true;
@@ -26,7 +27,7 @@ in
       fileWidgetCommand = defaultCommand;
       fileWidgetOptions = [ "--preview '${catCmd} {} 2>/dev/null || ${treeCmd} {}'" ];
 
-      changeDirWidgetCommand = "${getExe pkgs.fd} --type d";
+      changeDirWidgetCommand = "${fd} --type d";
       changeDirWidgetOptions = [ "--preview '${treeCmd} {}'" ];
     };
 
