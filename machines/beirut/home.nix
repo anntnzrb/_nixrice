@@ -1,6 +1,6 @@
 { inputs, ... }: {
   imports = with inputs.self.homeModules; [
-    amp-runner
+    amp
     whatsapp
   ];
 

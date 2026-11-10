@@ -3,11 +3,10 @@
   inputs,
   lib,
   osConfig,
-  pkgs,
   ...
 }:
 let
-  cfg = config.liberion.ai.amp-runner;
+  cfg = config.liberion.ai.amp;
   home = config.home.homeDirectory;
   wrapper = "${home}/.local/bin/amp";
   log = "${home}/.cache/amp/logs/runner-agents.log";
@@ -16,8 +15,6 @@ in
   imports = [
     inputs.self.homeModules.ai-agents
     # Serves ~/repos checkouts and the agents checkout from a neutral cwd.
-    # --desktop gives Linux a private headless desktop; on macOS it would share
-    # the Mac's real screen.
     (lib.liberion.userService {
       name = "amp-runner";
       description = "Amp runner";
@@ -33,7 +30,7 @@ in
         "--dir"
         "${home}/src/agents"
       ]
-      ++ lib.optional cfg.desktop "--desktop"
+      ++ cfg.extraArgs
       ++ [
         "--log-file"
         log
@@ -52,21 +49,14 @@ in
     })
   ];
 
-  options.liberion.ai.amp-runner.desktop = lib.liberion.module.mkOptDisabled';
+  options.liberion.ai.amp.extraArgs =
+    lib.liberion.module.mkOpt' (lib.types.listOf lib.types.str)
+      [ ];
 
-  config = {
-    home.packages = lib.optionals cfg.desktop (
-      with pkgs;
-      [
-        ffmpeg
-        labwc
-        wlr-randr
-      ]
-    );
-
-    # Amp refuses to start when a --discover-dirs directory is missing.
-    home.activation.ampRunnerRepos = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      run mkdir -p ${lib.escapeShellArg "${home}/repos"}
-    '';
-  };
+  # Amp refuses to start when a --discover-dirs directory is missing.
+  config.home.activation.ampRunnerRepos =
+    lib.hm.dag.entryAfter [ "writeBoundary" ]
+      ''
+        run mkdir -p ${lib.escapeShellArg "${home}/repos"}
+      '';
 }

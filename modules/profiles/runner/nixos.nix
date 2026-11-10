@@ -1,6 +1,6 @@
 { inputs, ... }: {
   imports = with inputs.self.nixosModules; [
-    amp-runner
+    amp
     podman
   ];
 }
