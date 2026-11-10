@@ -10,7 +10,7 @@ let
     ;
   inherit (lib) concatStringsSep;
 
-  cfg = config.liberion.services.skhd;
+  cfg = config.liberion.desktop.skhd;
 
   keybindingsStr = concatStringsSep "\n" (
     lib.mapAttrsToList (
@@ -24,7 +24,7 @@ let
   skhdConfig = concatStringsSep "\n" [ keybindingsStr ];
 in
 {
-  options.liberion.services.skhd = {
+  options.liberion.desktop.skhd = {
     keybindings = mkOpt' (attrsOf (
       nullOr (oneOf [
         str
