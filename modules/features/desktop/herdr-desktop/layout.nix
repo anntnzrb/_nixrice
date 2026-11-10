@@ -1,6 +1,14 @@
 { palettes }:
 let
   px = n: { px = n; };
+  geometry = {
+    defaultWidth = 320;
+    minWidth = 44;
+    macCollapsed = 76;
+    maxWidth = 480;
+    radius = 3;
+    gap = 10;
+  };
   mod = id: name: {
     inherit id;
     type = "block";
@@ -32,7 +40,7 @@ in
       type = "column";
       children = [
         (
-          (role "brand" "chrome" { })
+          (role "brand" "chrome" { inherit geometry; })
           // {
             size = px 46;
             window_drag = true;
@@ -60,9 +68,9 @@ in
         }
         ((role "sidebar-footer" "chrome" { footer = true; }) // { size = px 69; })
       ];
-      size = px 320;
-      min = 44;
-      max = 480;
+      size = px geometry.defaultWidth;
+      min = geometry.minWidth;
+      max = geometry.maxWidth;
       background = "chrome";
       resizable = false;
     }
@@ -96,8 +104,7 @@ in
                   background = "background";
                   border = line "border";
                   focus = line "accent";
-                  radius = 3;
-                  gap = 10;
+                  inherit (geometry) radius gap;
                   lone = true;
                 };
               };
@@ -128,8 +135,8 @@ in
               hidden = true;
             }
           ];
-          padding = 10;
-          gap = 10;
+          padding = geometry.gap;
+          inherit (geometry) gap;
         }
       ];
       resizable = false;

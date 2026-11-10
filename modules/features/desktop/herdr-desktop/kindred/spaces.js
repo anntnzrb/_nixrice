@@ -6,7 +6,7 @@
 import { View, div, svg } from "gpui-kit";
 import { v_flex, h_flex } from "gpui-base";
 import { spaces, machines, panes, run, openOverlay, exec, hc, theme, shared, setShared, watchFolder, window, layout } from "herdr";
-import { geometry } from "./kit.js";
+import { geometry, spinner } from "./kit.js";
 
 import { narrow } from "./layout.js";
 
@@ -453,7 +453,7 @@ export default class Spaces extends View {
       .on_click(() => run("space.select", { id: w.id }))
       .child(div().min_w(0).truncate().text_color(w.active ? t.foreground : t.muted).child(String(i + 1)))
       .child(div().flex_none().text_color(tone(t, w.status)).child(w.status === "working"
-        ? svg("mods/kindred/spinner.svg").size(10).flex_none().text_color(t.working).spin(900)
+        ? spinner(10, t.working)
         : glyph(w.status))));
   }
 
