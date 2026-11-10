@@ -6,21 +6,22 @@
   ...
 }:
 let
-  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.module) mkOpt';
   inherit (lib.types) listOf str;
 
   cfg = config.liberion.desktop.wm.hyprland;
   hyprland = lib.getExe config.wayland.windowManager.hyprland.package;
-  waybar = lib.getExe config.programs.waybar.package;
   wofi = lib.getExe pkgs.wofi;
 in
 {
-  imports = [ inputs.self.homeModules.session ];
+  imports = [
+    inputs.self.homeModules.session
+    ./waybar.nix
+  ];
 
   options.liberion.desktop.wm.hyprland = {
     monitor = mkOpt' (listOf str) [ ",preferred,auto,1" ];
     autoStartApps = mkOpt' (listOf str) [ ];
-    waybar.enable = mkOptDisabled';
   };
 
   config = {
@@ -33,6 +34,7 @@ in
 
     wayland.windowManager.hyprland = {
       enable = true;
+      configType = "hyprlang";
       xwayland.enable = true;
 
       settings = {
@@ -41,7 +43,7 @@ in
 
         inherit (cfg) monitor;
 
-        exec-once = cfg.autoStartApps ++ (lib.optional cfg.waybar.enable waybar);
+        exec-once = cfg.autoStartApps;
 
         input = {
           follow_mouse = 1;
@@ -109,36 +111,5 @@ in
       };
     };
 
-    programs.waybar = lib.mkIf cfg.waybar.enable {
-      inherit (cfg.waybar) enable;
-
-      settings = {
-        mainBar = {
-          layer = "top";
-          position = "top";
-          height = 30;
-
-          modules-left = [ "hyprland/workspaces" ];
-          modules-center = [ "hyprland/window" ];
-          modules-right = [
-            "tray"
-            "clock"
-          ];
-
-          "clock" = {
-            format = "{:%H:%M}  ";
-            format-alt = "{:%A; %B %d, %Y (%R)}  ";
-            actions = {
-              on-click-right = "mode";
-            };
-          };
-
-          "hyprland/workspaces" = {
-            active-only = false;
-            all-outputs = true;
-          };
-        };
-      };
-    };
   };
 }
