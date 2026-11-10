@@ -9,14 +9,11 @@
     herdr-desktop
     safari
     stremio
-    t3
+    t3-desktop
     tailscale
     tinycast
     ui
   ];
-
-  liberion.ai.t3.desktop = true;
-  liberion.shells.herdr.desktop = true;
 
   nixpkgs.hostPlatform = "aarch64-darwin";
 

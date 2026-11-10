@@ -7,6 +7,9 @@
   ...
 }:
 let
+  inherit (config.home) homeDirectory;
+  inherit (pkgs.stdenv.hostPlatform) isDarwin isLinux;
+
   json = pkgs.formats.json { };
   npx = lib.getExe' pkgs.nodejs "npx";
   gateway = import (
@@ -51,7 +54,7 @@ let
     "--npx"
     npx
   ];
-  stable = "${config.home.homeDirectory}/.t3/runtime/stable/t3";
+  stable = "${homeDirectory}/.t3/runtime/stable/t3";
   telemetry.T3CODE_TELEMETRY_ENABLED = "false";
 in
 {
@@ -73,7 +76,6 @@ in
       command = t3ctl ++ [ "sync" ] ++ flags;
     })
     (
-      { pkgs, ... }@args:
       let
         service = lib.liberion.userService {
           name = "t3-service";
@@ -83,15 +85,13 @@ in
             "__service-launcher"
           ];
           environment = telemetry // {
-            T3CODE_HOME = "${config.home.homeDirectory}/.t3";
+            T3CODE_HOME = "${homeDirectory}/.t3";
           };
-        } args;
+        } { inherit config pkgs; };
       in
       {
         inherit (service) imports;
-        config = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin (
-          removeAttrs service [ "imports" ]
-        );
+        config = lib.mkIf isDarwin (removeAttrs service [ "imports" ]);
       }
     )
   ];
@@ -102,7 +102,7 @@ in
     liberion.ai.t3.settings = import ./settings.nix;
     home.sessionVariables = telemetry;
     xdg.configFile."systemd/user/t3code.service.d/telemetry.conf" =
-      lib.mkIf pkgs.stdenv.hostPlatform.isLinux
+      lib.mkIf isLinux
         {
           text = lib.generators.toINI { listsAsDuplicateKeys = true; } {
             Service.Environment = lib.mapAttrsToList (
@@ -111,13 +111,13 @@ in
           };
         };
     liberion.maintenance.tasks.t3.command = t3ctl ++ [ "prune" ] ++ flags;
-    launchd.agents = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+    launchd.agents = lib.mkIf isDarwin {
       t3-service.config = {
         ExitTimeOut = 90;
         ProcessType = "Interactive";
         RunAtLoad = lib.mkForce false;
         KeepAlive = lib.mkForce {
-          PathState."${config.home.homeDirectory}/.t3/runtime/stable.enabled" = true;
+          PathState."${homeDirectory}/.t3/runtime/stable.enabled" = true;
         };
       };
     };
