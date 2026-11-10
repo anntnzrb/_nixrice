@@ -5,6 +5,8 @@
   ...
 }:
 let
+  inherit (config.system) primaryUser;
+
   yashiki = lib.getExe pkgs.yashiki;
   awk = lib.getExe pkgs.gawk;
   cmd = args: "${yashiki} ${args}";
@@ -113,7 +115,7 @@ let
 
   wm = lib.liberion.darwin.wmHandoff {
     inherit pkgs;
-    user = config.system.primaryUser;
+    user = primaryUser;
   };
 
   evacuateAerospace = pkgs.writeShellApplication {
@@ -159,23 +161,20 @@ in
     system.activationScripts.postActivation.text = lib.mkAfter (
       wm.reloadOnChange {
         label = "org.nixos.yashiki";
-        init = "${
-          config.users.users.${config.system.primaryUser}.home
-        }/.config/yashiki/init";
+        init = "${config.users.users.${primaryUser}.home}/.config/yashiki/init";
         unpark = lib.getExe wm.unparkYashiki;
       }
     );
 
     environment.systemPackages = [ pkgs.yashiki ];
 
-    home-manager.users.${config.system.primaryUser}.xdg.configFile."yashiki/init" =
-      {
-        source = initScript;
-        executable = true;
-      };
+    home-manager.users.${primaryUser}.xdg.configFile."yashiki/init" = {
+      source = initScript;
+      executable = true;
+    };
 
     launchd.user.agents.yashiki =
-      lib.liberion.darwin.aquaAgent "modules/features/services/yashiki"
+      lib.liberion.darwin.aquaAgent "modules/features/desktop/wm/yashiki"
         {
           command = "${lib.escapeShellArg "/Applications/Nix Apps/Yashiki.app/Contents/MacOS/yashiki"} start";
           serviceConfig = {

@@ -100,7 +100,7 @@ in
     };
 
     launchd.user.agents.aerospace =
-      lib.liberion.darwin.aquaAgent "modules/features/services/aerospace"
+      lib.liberion.darwin.aquaAgent "modules/features/desktop/wm/aerospace"
         {
           command = "/Applications/AeroSpace.app/Contents/MacOS/AeroSpace --config-path ${configFile}";
           serviceConfig.KeepAlive = true;

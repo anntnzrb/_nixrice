@@ -61,7 +61,7 @@ in
       '';
   };
 
-  liberion.services.skhd.keybindings = {
+  liberion.desktop.skhd.keybindings = {
     "alt - k" = "${yabai} -m window --focus north";
     "alt - l" = "${yabai} -m window --focus east";
     "alt - j" = "${yabai} -m window --focus south";
