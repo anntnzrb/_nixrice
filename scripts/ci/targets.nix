@@ -16,7 +16,7 @@ let
     out = drv.outPath;
   };
   live = lib.filterAttrs (n: _: !(isArchived f.clan.inventory.machines.${n}));
-  retiredHomes = [ "${user}@wsl" ];
+  excludedHomes = [ "${user}@wsl" ];
 in
 lib.mapAttrsToList (
   n: c:
@@ -29,7 +29,7 @@ lib.mapAttrsToList (
 ++ lib.mapAttrsToList (
   n: h:
   target n "homeConfigurations.\"${n}\".activationPackage" h.activationPackage
-) (removeAttrs f.homeConfigurations retiredHomes)
+) (removeAttrs f.homeConfigurations excludedHomes)
 ++ lib.mapAttrsToList (
   s: shells: target "devshell-${s}" "devShells.${s}.default" shells.default
 ) f.devShells
