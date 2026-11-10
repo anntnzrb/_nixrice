@@ -26,5 +26,8 @@
   services.gnome.gnome-keyring.enable = true;
   programs.dconf.enable = true;
   security.polkit.enable = true;
-  environment.systemPackages = [ pkgs.networkmanagerapplet ];
+  environment.systemPackages = with pkgs; [
+    networkmanagerapplet
+    pasystray
+  ];
 }
