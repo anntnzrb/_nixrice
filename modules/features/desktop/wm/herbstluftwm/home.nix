@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.module) mkOpt';
   inherit (lib.types) attrsOf enum str;
   inherit (lib)
     mkMerge
@@ -15,6 +15,7 @@ let
     length
     range
     ;
+  inherit (cfg.keys) super;
 
   cfg = config.liberion.desktop.wm.herbstluftwm;
   startx = lib.getExe' pkgs.xorg.xinit "startx";
@@ -23,8 +24,6 @@ in
   imports = [ inputs.self.homeModules.xsession ];
 
   options.liberion.desktop.wm.herbstluftwm = {
-    compositor.picom.enable = mkOptDisabled';
-
     autoStart = mkOpt' (attrsOf str) { };
     keys.super = mkOpt' (enum [
       "Mod1"
@@ -33,8 +32,6 @@ in
   };
 
   config = {
-    liberion.desktop.xsession.picom.enable = cfg.compositor.picom.enable;
-
     xsession.windowManager.herbstluftwm =
       let
         tags = map toString (range 1 9);
@@ -53,11 +50,11 @@ in
 
         keybinds = mkMerge [
           {
-            "${cfg.keys.super}-j" = "focus down";
-            "${cfg.keys.super}-k" = "focus up";
-            "${cfg.keys.super}-h" = "focus left";
-            "${cfg.keys.super}-l" = "focus right";
-            "${cfg.keys.super}-Shift-q" = "close";
+            "${super}-j" = "focus down";
+            "${super}-k" = "focus up";
+            "${super}-h" = "focus left";
+            "${super}-l" = "focus right";
+            "${super}-Shift-q" = "close";
           }
           (listToAttrs (
             map (
@@ -66,7 +63,7 @@ in
                 tag = elemAt tags (i - 1);
               in
               {
-                name = "${cfg.keys.super}-${toString i}";
+                name = "${super}-${toString i}";
                 value = "use ${tag}";
               }
             ) (range 1 (length tags))
@@ -78,7 +75,7 @@ in
                 tag = elemAt tags (i - 1);
               in
               {
-                name = "${cfg.keys.super}-Shift-${toString i}";
+                name = "${super}-Shift-${toString i}";
                 value = "move ${tag}";
               }
             ) (range 1 (length tags))
@@ -86,8 +83,8 @@ in
         ];
 
         mousebinds = {
-          "${cfg.keys.super}-B1" = "move";
-          "${cfg.keys.super}-B3" = "resize";
+          "${super}-B1" = "move";
+          "${super}-B3" = "resize";
         };
 
         rules = [

@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.module) mkOpt';
   inherit (lib.types) listOf str;
 
   cfg = config.liberion.desktop.wm.awesomewm;
@@ -19,21 +19,10 @@ in
   ];
 
   options.liberion.desktop.wm.awesomewm = {
-    compositor = {
-      picom = {
-        enable = mkOptDisabled';
-        vSync = mkOptDisabled';
-      };
-    };
-
     autoStart = mkOpt' (listOf str) [ ];
   };
 
   config = {
-    liberion.desktop.xsession.picom = {
-      inherit (cfg.compositor.picom) enable vSync;
-    };
-
     xsession = {
       windowManager.awesome.enable = true;
       initExtra = lib.liberion.xorg.mkAutostartScript cfg.autoStart;

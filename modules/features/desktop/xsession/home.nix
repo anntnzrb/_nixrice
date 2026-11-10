@@ -5,8 +5,6 @@
   ...
 }:
 {
-  imports = [ ./picom.nix ];
-
   xsession = {
     enable = true;
     profilePath = ".config/xorg/xprofile-hm";
@@ -28,7 +26,7 @@
     packages = with pkgs; [
       xclip
       arandr
-      xorg.xev
+      xev
       xprop
     ];
   };

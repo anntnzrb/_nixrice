@@ -6,7 +6,7 @@
   ...
 }:
 let
-  inherit (lib.liberion.module) mkOpt' mkOptDisabled';
+  inherit (lib.liberion.module) mkOpt';
   inherit (lib.types) listOf str;
 
   cfg = config.liberion.desktop.wm.xmonad;
@@ -28,13 +28,10 @@ in
   ];
 
   options.liberion.desktop.wm.xmonad = {
-    compositor.picom.enable = mkOptDisabled';
     autoStart = mkOpt' (listOf str) [ ];
   };
 
   config = {
-    liberion.desktop.xsession.picom.enable = cfg.compositor.picom.enable;
-
     xsession = {
       initExtra = lib.liberion.xorg.mkAutostartScript cfg.autoStart;
       windowManager.xmonad = {
