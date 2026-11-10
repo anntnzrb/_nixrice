@@ -6,7 +6,7 @@
     essentials
     firefox
     ghostty
-    herdr
+    herdr-desktop
     safari
     stremio
     t3

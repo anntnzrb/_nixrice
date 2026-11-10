@@ -191,6 +191,11 @@
       flake = false;
     };
 
+    herdr-reviewer = {
+      url = "github:vytasgavelis/herdr-reviewer/master";
+      flake = false;
+    };
+
     rio-catppuccin = {
       url = "github:catppuccin/rio/main";
       flake = false;
