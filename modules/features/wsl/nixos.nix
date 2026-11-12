@@ -33,8 +33,15 @@
     sessionVariables.BROWSER = lib.getExe pkgs.wsl-open;
   };
 
+  # systemd classifies WSL as a container, so the stock !container condition skips fstrim; the VHDX only shrinks when the guest discards
+  systemd = {
+    services.fstrim.unitConfig.ConditionVirtualization = "";
+    timers.fstrim.unitConfig.ConditionVirtualization = "";
+  };
+
   nix = {
     channel.enable = false;
+    settings.auto-optimise-store = true;
     # bare nixos-rebuild resolves <nixos-config>; point it at the shipped guard
     nixPath = [
       "nixpkgs=flake:nixpkgs"
