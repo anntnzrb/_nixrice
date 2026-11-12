@@ -36,3 +36,11 @@ the Windows machine it runs on.
   `mirrored` shares the Windows network stack (LAN and Tailscale addresses,
   `localhost` both ways); it needs Windows 11 22H2 or later. Apply with
   `wsl --shutdown`
+- `sparseVhd` only applies to newly created disks. An existing install
+  converts once with `wsl --shutdown` then `wsl --manage accra --set-sparse
+  true`; the weekly fstrim then hands freed space back to Windows
+- Defender scans every VHDX read: from an elevated PowerShell,
+  `Add-MpPreference -ExclusionPath "$env:LOCALAPPDATA\wsl"` and
+  `Add-MpPreference -ExclusionProcess vmmem,vmmemWSL`
+- Keep repos under the distro's ext4 (`~/src`), never `/mnt/c`: drvfs is a 9p
+  share and every stat crosses the VM boundary
