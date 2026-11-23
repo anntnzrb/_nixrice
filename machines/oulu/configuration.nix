@@ -2,6 +2,7 @@
   imports = with inputs.self.nixosModules; [
     bash
     disko-xfs
+    # Hybrid P/E-core scheduling (Thread Director) and the rtw89 Wi-Fi driver need mainline.
     kernel-latest
     systemd-boot
   ];
