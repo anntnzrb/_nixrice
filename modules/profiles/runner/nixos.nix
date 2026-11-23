@@ -1,6 +1,1 @@
-{ inputs, ... }: {
-  imports = with inputs.self.nixosModules; [
-    amp
-    podman
-  ];
-}
+{ inputs, ... }: { imports = with inputs.self.nixosModules; [ podman ]; }
