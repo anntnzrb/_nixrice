@@ -68,7 +68,7 @@ let
       expr =
         before != fingerprint (
           lib.recursiveUpdate home {
-            systemd.user.services.amp-runner.Service.RestartSec = 99;
+            systemd.user.services.t3-update.Service.RestartSec = 99;
           }
         );
       expected = true;
@@ -77,7 +77,7 @@ let
       expr =
         before != fingerprint (
           lib.recursiveUpdate home {
-            systemd.user.timers.amp-runner-update.Timer.OnUnitInactiveSec = 99;
+            systemd.user.timers.t3-update.Timer.OnUnitInactiveSec = 99;
           }
         );
       expected = true;
