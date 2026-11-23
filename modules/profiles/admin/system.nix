@@ -29,10 +29,21 @@ in
         age-keygen -y "$out/key" > "$out/key.pub"
       '';
     };
+
+    github-token = {
+      share = true;
+      prompts.token = {
+        description = "GitHub personal access token for gh";
+        type = "hidden";
+        persist = true;
+      };
+      files.token.owner = userName;
+    };
   };
 
   home-manager.users.${userName} = {
     liberion.cli.ssh.identityFile = generators.user-ssh.files.id_ed25519.path;
+    liberion.cli.git.githubTokenFile = generators.github-token.files.token.path;
     home.sessionVariables.SOPS_AGE_KEY_FILE = ageKeyFile;
     systemd.user.sessionVariables = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
       SOPS_AGE_KEY_FILE = ageKeyFile;
