@@ -41,6 +41,7 @@ in
       description = "ASUS PRIME B660-PLUS D4 - Intel Core i5-12400 & NVIDIA GTX 1080 Pascal - Headless Server";
       tags = [
         "admin"
+        "archived"
         "headless"
         "nvidia"
         "physical"
