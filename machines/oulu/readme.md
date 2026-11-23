@@ -1,68 +1,15 @@
 # oulu
 
-`oulu` is a 24/7 headless home server and remote build box running on repurposed Lenovo V15 G4 IRU laptop hardware.
-It is work-owned; deployment requires explicit owner authorization.
+Headless home server and remote build box on repurposed laptop hardware.
+It is work-owned: deploying it requires the owner's explicit authorization.
 
----
+## Hardware
 
-## Hardware & Platform
-
-| Component | Specification | Operational Role |
-|---|---|---|
-| **Chassis / Model** | Lenovo V15 G4 IRU | Repurposed laptop running headless 24/7. |
-| **CPU** | Intel Core i7-1355U (Raptor Lake) | 10 Cores / 12 Threads (2 Performance cores + 8 Efficient cores). |
-| **RAM** | 24 GB DDR4 (8 GB Soldered + 16 GB SO-DIMM) | Backed by 12 GB zstd ZRAM swap. |
-| **Storage** | 1 TB NVMe SSD (`SKHynix_HFS001TEJ4X112N`) | GPT layout formatted with XFS + Reflinks. |
-| **Networking** | Realtek RTL8111 (Gigabit Ethernet) + Realtek RTL8852BE (Wi-Fi 6) | Redundant dual-interface with automatic Ethernet priority. |
-
----
-
-## Kernel Selection & Tuning
-
-### Why Mainline (`pkgs.linuxPackages_latest`)?
-* **Intel Thread Director (ITD)**: Hybrid P/E core architectures require modern kernel scheduler support. Mainline Linux provides proper task placement so Nix compilations leverage P-cores while background services utilize E-cores.
-* **Driver Maturity**: Contains current upstream drivers for the `rtw89_8852be` Wi-Fi chip and Raptor Lake Iris Xe graphics.
-* **Hydra Binary Cache**: Zero local kernel compilation overhead and instant updates.
-
-### Sysctl Tuning (`server` profile, `modules/profiles/server/nixos.nix`)
-Rather than maintaining a custom forked kernel, the sysctls (BBR/CAKE, TCP Fast Open, NMI watchdog, dirty ratios) come from `modules/profiles/server/nixos.nix`.
-
----
-
-## Storage & Filesystem (`disko-xfs` feature, `modules/features/hardware/disko-xfs`)
-
-* **Partition 1 (1 GB FAT32 ESP)**: Mounted at `/boot` (`systemd-boot`, EFI variables enabled).
-* **Partition 2 (remaining space, XFS)**: Mounted at `/` with `crc=1,reflink=1`.
-  * **Why XFS Reflinks?**: Enables instant zero-copy file cloning for Nix builds, container layers, and state manipulation without the heavy RAM and CPU overhead of ZFS/Btrfs copy-on-write trees.
-
----
-
-## Memory & Swap Architecture (`server` profile, `modules/profiles/server`)
-
-ZRAM swap, swappiness, and page-cluster come from `modules/profiles/server/nixos.nix`.
-
----
-
-## Networking & Remote Access
-
-* **Tailscale**: Enabled with `--ssh=false`, `--hostname=oulu`, and route acceptance (`useRoutingFeatures = "client"`). Tailnet SSH uses OpenSSH and fleet keys.
-* **Dual-Interface Failover**:
-  * Physical Gigabit Ethernet (`enp3s0`): Primary route (metric `100`).
-  * Wi-Fi (`wlp2s0`): Automatic fallback route (metric `600`).
-  * `nmtui` / `nmcli`: Available for headless emergency wireless configuration.
-  * The `server-laptop` profile supplies NetworkManager-only management and
-    route metrics by device type for IPv4 and IPv6. Clan assigns the shared
-    home Wi-Fi credentials to that tag. Both links can stay connected;
-    Ethernet is preferred. This covers cable/link loss, not an upstream outage
-    while the Ethernet link stays up.
-* **OpenSSH**: Strict ED25519 public key authentication for the admin user only; root login and password authentication are disabled. Clan deploys connect as the admin user and escalate with `sudo`.
-
----
-
-## Secrets & Fleet Management
-
-* **Clan 26.05 Vars**: Secrets (root password, host SSH keys, Age encryption keys) are generated deterministically and encrypted with SOPS/Age under `vars/per-machine/oulu/`.
-* **Modular Flake Composition**: `server` supplies power and memory policy,
-  `headless` disables the graphical session, and `server-laptop` supplies the
-  shared laptop network policy. Machine-specific services and build limits
-  stay in `configuration.nix`; Amp's desktop mode is disabled.
+| Component | Specification |
+| --- | --- |
+| Model | Lenovo V15 G4 IRU |
+| CPU | Intel Core i7-1355U (Raptor Lake), 2 P-cores + 8 E-cores, 12 threads |
+| RAM | 24 GB DDR4 (8 GB soldered + 16 GB SO-DIMM) |
+| Storage | 1 TB NVMe SSD (`SKHynix_HFS001TEJ4X112N`) |
+| Ethernet | Realtek RTL8111, Gigabit |
+| Wi-Fi | Realtek RTL8852BE, Wi-Fi 6 |

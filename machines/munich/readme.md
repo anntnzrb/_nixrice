@@ -14,15 +14,6 @@
 | **Power Supply**     | EVGA BR 700 W 80+A                                  |
 | **Case**             | Corsair 4000D ATX                                   |
 
-## Role
-
-Always-on NixOS server with whole-disk XFS via disko and `systemd-boot`.
-
-The hardware runs Debian with the CLIProxyAPI gateway and Hermes. This directory
-is its NixOS target state: `clan machines update` and `just deploy` must not
-target it until it is installed with this configuration. Its
-`~/.ssh/authorized_keys` is maintained by hand until the migration.
-
 ## Peripherals
 
 | Component   | Desc                                |
