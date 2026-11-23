@@ -64,9 +64,7 @@ meaning outside their profile:
   `server` after `clan vars` exist for it
 - `archived`: retired machine kept as history; excluded from CI builds and
   Cachix (`scripts/ci/targets.nix`) and from fleet SSH peer lists
-  (`network/sshd`). On NixOS its profile pins a fixed `system.stateVersion`
-  because those machines predate Clan; the rest use the generated
-  state-version var.
+  (`network/sshd`).
   `clan machines update` without arguments skips them (`requireExplicitUpdate`)
 - `admin`: the allowlist of devices that control the fleet. Its profile
   generates a per-device user SSH key (`user-ssh`) and age key (`admin-age`)
