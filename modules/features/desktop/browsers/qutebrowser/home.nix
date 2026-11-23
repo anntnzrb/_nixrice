@@ -5,7 +5,7 @@ in
 {
   programs.qutebrowser = {
     enable = true;
-    package = if isDarwin then pkgs.emptyDirectory else pkgs.qutebrowser;
+    package = if isDarwin then pkgs.emptyDirectory else pkgs.unstable.qutebrowser;
 
     loadAutoconfig = false;
     enableDefaultBindings = true;
