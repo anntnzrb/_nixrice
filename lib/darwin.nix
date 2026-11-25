@@ -25,6 +25,22 @@
     liberion.darwin.homebrew.apps = apps;
   };
 
+  gatekeeperApproval =
+    apps:
+    { pkgs, ... }:
+    let
+      approval = pkgs.writeShellApplication {
+        name = "gatekeeper-approval";
+        runtimeInputs = [ pkgs.findutils ];
+        text = builtins.readFile ./gatekeeper-approval.sh;
+      };
+    in
+    {
+      system.activationScripts.postActivation.text = lib.mkAfter ''
+        ${lib.getExe approval} ${lib.escapeShellArgs apps}
+      '';
+    };
+
   wmHandoff = { pkgs, user }: import ./wm-handoff.nix { inherit lib pkgs user; };
 
   asUser =

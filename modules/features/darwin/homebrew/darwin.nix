@@ -19,7 +19,7 @@ let
     rustdesk = "rustdesk";
     stremio = "stremio";
     t3-code = "t3-code";
-    tinycast = "abue-ammar/tinycast/tinycast";
+    tinycast = "tinycast";
     vlc = "vlc";
     vscode = "visual-studio-code";
   };

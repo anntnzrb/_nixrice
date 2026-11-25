@@ -1,17 +1,22 @@
 { lib, ... }: {
   imports = [
     (lib.liberion.darwin.homebrewApps [ "tinycast" ])
+    (lib.liberion.darwin.gatekeeperApproval [ "/Applications/Tinycast.app" ])
     ./launcher-hotkey.nix
   ];
 
   liberion.darwin.owned.privacy = [
     {
       service = "Accessibility";
-      bundleId = "com.tinycast.app";
+      bundleId = "com.abueammar.tinycast";
+    }
+    {
+      service = "SystemPolicyAllFiles";
+      bundleId = "com.abueammar.tinycast";
     }
   ];
 
-  system.defaults.CustomUserPreferences."com.tinycast.app" = {
+  system.defaults.CustomUserPreferences."com.abueammar.tinycast" = {
     "hotkey.togglePalette" = builtins.toJSON {
       combo._0 = {
         carbonKeyCode = 49;
