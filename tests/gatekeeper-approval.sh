@@ -7,8 +7,9 @@ work=$(mktemp -d)
 trap 'rm -rf "${work}"' EXIT
 
 mkdir -p "${work}/bin"
-cat >"${work}/bin/xcrun" <<'FAKE'
-#!/usr/bin/env bash
+{
+    printf '#!%s\n' "${BASH}"
+    cat <<'FAKE'
 printf 'xcrun %s\n' "$*" >>"${CALLS}"
 target=${4}
 if [ "${2}" = validate ]; then
@@ -21,16 +22,20 @@ if [[ " ${FAIL_STAPLE:-} " == *" ${target} "* ]]; then
     exit 1
 fi
 FAKE
-cat >"${work}/bin/spctl" <<'FAKE'
-#!/usr/bin/env bash
+} >"${work}/bin/xcrun"
+{
+    printf '#!%s\n' "${BASH}"
+    cat <<'FAKE'
 printf 'spctl %s\n' "$*" >>"${CALLS}"
 target=${4}
 if [[ " ${REJECT_ASSESSMENT:-} " == *" ${target} "* ]]; then
     exit 3
 fi
 FAKE
-cat >"${work}/bin/xattr" <<'FAKE'
-#!/usr/bin/env bash
+} >"${work}/bin/spctl"
+{
+    printf '#!%s\n' "${BASH}"
+    cat <<'FAKE'
 printf 'xattr %s\n' "$*" >>"${CALLS}"
 case ${1} in
     -p)
@@ -46,6 +51,7 @@ case ${1} in
         ;;
 esac
 FAKE
+} >"${work}/bin/xattr"
 chmod +x "${work}/bin/xcrun" "${work}/bin/spctl" "${work}/bin/xattr"
 export PATH="${work}/bin:${PATH}" CALLS="${work}/calls"
 
