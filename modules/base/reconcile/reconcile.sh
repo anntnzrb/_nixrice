@@ -52,6 +52,11 @@ remove_file() {
 
 remove_privacy() {
     if ! "${as_user}" tccutil reset "${service}" "${bundle_id}" >"${work}/tcc.log" 2>&1; then
+        # Launch Services no longer knows -10814 bundle ids, so those grants are inert.
+        if grep -q -- '-10814' "${work}/tcc.log"; then
+            echo "reconcile: dropped inert ${service} grant for ${bundle_id}" >&2
+            return 0
+        fi
         echo "reconcile: could not revoke ${service} for ${bundle_id}" >&2
         carry
         return 0

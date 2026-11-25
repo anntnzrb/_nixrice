@@ -24,6 +24,11 @@ printf '%s\n' '[{"kind":"privacy","id":"grant","service":"Accessibility","bundle
 
 printf '%s\n' 'Failed to reset: OSStatus -10814' >"${TCC_RESULT}"
 bash "${reconcile}" "${work}/state.json" "${work}/manifest.json" "${user}" "${work}/bin/as-user" /usr/bin/true /usr/libexec/PlistBuddy
+jq -e '. == []' "${work}/state.json"
+
+printf '%s\n' '[{"kind":"privacy","id":"grant","service":"Accessibility","bundleId":"com.example.Removed","restart":[]}]' >"${work}/state.json"
+printf '%s\n' 'Failed to reset: service unavailable' >"${TCC_RESULT}"
+bash "${reconcile}" "${work}/state.json" "${work}/manifest.json" "${user}" "${work}/bin/as-user" /usr/bin/true /usr/libexec/PlistBuddy
 jq -e '. == [{"kind":"privacy","id":"grant","service":"Accessibility","bundleId":"com.example.Removed","restart":[]}]' "${work}/state.json"
 
 printf '%s\n' success >"${TCC_RESULT}"
